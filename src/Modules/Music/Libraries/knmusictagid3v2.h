@@ -22,6 +22,7 @@ public:
         QMap<QString, QByteArray> frames;
     };
     static QString id3v2String(QByteArray value);
+    static QPixmap id3v2Pixmap(QByteArray value);
 
     explicit KNMusicTagID3v2(QObject *parent = 0);
     bool readTag(const QString &filePath);

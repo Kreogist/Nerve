@@ -1,4 +1,5 @@
 #include <QDataStream>
+#include <QPixmap>
 #include <QFile>
 
 #include <QDebug>
@@ -22,6 +23,13 @@ QString KNMusicTagID3v2::id3v2String(QByteArray value)
     QByteArray content=value;
     content.remove(0,1);
     return QString::fromLocal8Bit(content).simplified();
+}
+
+QPixmap KNMusicTagID3v2::id3v2Pixmap(QByteArray value)
+{
+    QPixmap content;
+    content.loadFromData(value, "jpg");
+    return content;
 }
 
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
@@ -94,11 +102,10 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
             //If no tags, means behind of these datas are all '\0'.
             break;
         }
-        quint32 frameSize=(((quint32)rawTagData[rawPosition+4])<<24)+
-                (((quint32)rawTagData[rawPosition+5])<<16)+
-                (((quint32)rawTagData[rawPosition+6])<<8)+
-                ((quint32)rawTagData[rawPosition+7]);
-
+        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
+                ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
+                (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
+                (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
         char *rawFrameData=new char[frameSize];
         memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
         QByteArray currentFrameData;
