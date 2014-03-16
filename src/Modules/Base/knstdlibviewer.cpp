@@ -21,7 +21,7 @@ KNStdLibViewer::KNStdLibViewer(QWidget *parent) :
     m_layout->addWidget(m_category);
 
     m_listview=new KNWidgetSwitcher(this);
-    m_layout->addWidget(m_listview, 1);
+    m_layout->addWidget(m_listview);
 
     connect(m_category, SIGNAL(categoryChanged(int)),
             m_listview, SLOT(setCurrentIndex(int)));

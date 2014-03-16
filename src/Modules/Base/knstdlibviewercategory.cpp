@@ -14,6 +14,7 @@ KNStdLibViewerCategory::KNStdLibViewerCategory(QWidget *parent) :
     //Set properties.
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
+    setFixedHeight(30);
 
     m_layout=new QBoxLayout(QBoxLayout::LeftToRight, this);
     m_layout->setContentsMargins(0,0,0,0);

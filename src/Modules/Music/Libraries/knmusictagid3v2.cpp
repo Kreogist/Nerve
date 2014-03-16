@@ -69,11 +69,6 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                     ((quint32)header[7]<<14)+
                     ((quint32)header[8]<<7)+
                     header[9];
-    qDebug()<<(quint8)header[9]
-            <<(quint8)header[8]
-            <<(quint8)header[7]
-            <<(quint8)header[6]
-            <<tagSize;
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
@@ -102,7 +97,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
             //If no tags, means behind of these datas are all '\0'.
             break;
         }
-        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
+        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24) & 0b11111111000000000000000000000000)+
                 ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
                 (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
                 (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
@@ -110,6 +105,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
         memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
         QByteArray currentFrameData;
         currentFrameData.setRawData(rawFrameData, frameSize);
+        qDebug()<<id3v2String(currentFrameData);
         m_tagData.frames[rawFrameID]=currentFrameData;
         rawPosition+=(frameSize+10);
         delete[] rawFrameData;
@@ -117,4 +113,9 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     //All process code above.
     delete[] rawTagData; //Don't touch this.
     return true;
+}
+
+QString KNMusicTagID3v2::frameData(const QString &frameID)
+{
+    return id3v2String(m_tagData.frames[frameID]);
 }

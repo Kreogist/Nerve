@@ -28,6 +28,7 @@ KNWidgetSwitcher::KNWidgetSwitcher(QWidget *parent) :
 
 void KNWidgetSwitcher::addWidget(QWidget *widget)
 {
+    widget->setParent(this);
     if(m_widgets.count()==0)
     {
         m_currentIndex=0;

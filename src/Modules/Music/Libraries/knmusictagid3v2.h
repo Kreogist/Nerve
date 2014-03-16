@@ -27,6 +27,8 @@ public:
     explicit KNMusicTagID3v2(QObject *parent = 0);
     bool readTag(const QString &filePath);
 
+    QString frameData(const QString &frameID);
+
 signals:
 
 public slots:
