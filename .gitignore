@@ -1,13 +1,36 @@
-# Compiled Object files
+# C++ objects and libs
+
 *.slo
 *.lo
 *.o
-
-# Compiled Dynamic libraries
+*.a
+*.la
+*.lai
 *.so
+*.dll
 *.dylib
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+# Qt-es
+
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+qrc_*.cpp
+Makefile
+*-build-*
+
+# build dir
+/build
+
+#gedit temp file
+*~
+
+#Mac Spotlight Search
+
+.DS_Store
+
+#astyle temp files
+Thumbs.db
+
+#doxygen
+doc/html

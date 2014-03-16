@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Category">
+        <file>Resources/Category/01_musics.png</file>
+        <file>Resources/Category/02_artists.png</file>
+        <file>Resources/Category/03_ablums.png</file>
+        <file>Resources/Category/04_genres.png</file>
+        <file>Resources/Category/05_playlists.png</file>
+    </qresource>
+</RCC>
