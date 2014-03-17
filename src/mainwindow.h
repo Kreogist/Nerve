@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class QLabel;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -13,6 +14,9 @@ signals:
 
 public slots:
 
+private slots:
+
+private:
 };
 
 #endif // MAINWINDOW_H

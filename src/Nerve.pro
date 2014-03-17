@@ -20,7 +20,9 @@ SOURCES += \
     Modules/Base/knstdlibviewercategory.cpp \
     Modules/Base/knstdlibviewercategorybutton.cpp \
     Modules/Base/knwidgetswitcher.cpp \
-    Modules/Music/Widgets/knmusicviewer.cpp
+    Modules/Music/Widgets/knmusicviewer.cpp \
+    Modules/Base/kncutestyle.cpp \
+    Modules/knlocale.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -36,7 +38,9 @@ HEADERS += \
     Modules/Base/knstdlibviewercategory.h \
     Modules/Base/knstdlibviewercategorybutton.h \
     Modules/Base/knwidgetswitcher.h \
-    Modules/Music/Widgets/knmusicviewer.h
+    Modules/Music/Widgets/knmusicviewer.h \
+    Modules/Base/kncutestyle.h \
+    Modules/knlocale.h
 
 RESOURCES += \
     res.qrc

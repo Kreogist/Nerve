@@ -1,40 +1,44 @@
 #include <QDataStream>
-#include <QPixmap>
+#include <QTextCodec>
 #include <QFile>
 
 #include <QDebug>
 
 #include "knmusictagid3v2.h"
 
-QString KNMusicTagID3v2::id3v2String(QByteArray value)
-{
-    if(value.length()>2)
-    {
-        //Might be unicode string.
-        if(((quint8)(value.at(0))==0xFF && (quint8)(value.at(1))==0xFE) ||
-           ((quint8)(value.at(0))==0xFE && (quint8)(value.at(1))==0xFF))
-        {
-            //Unicode String!
-            QByteArray content=value;
-            content.remove(0,3);
-            return QString::fromUtf8(content).simplified();
-        }
-    }
-    QByteArray content=value;
-    content.remove(0,1);
-    return QString::fromLocal8Bit(content).simplified();
-}
-
-QPixmap KNMusicTagID3v2::id3v2Pixmap(QByteArray value)
-{
-    QPixmap content;
-    content.loadFromData(value, "jpg");
-    return content;
-}
-
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    m_beCodec=QTextCodec::codecForName("UTF-16BE");
+    m_leCodec=QTextCodec::codecForName("UTF-16LE");
+}
+
+QString KNMusicTagID3v2::id3v2String(const QByteArray &value)
+{
+    QByteArray content=value;
+    quint8 encoding=(quint8)(value.at(0));
+    switch(encoding)
+    {
+    case 0:
+        //ISO
+        content.remove(0,1);
+        return QString::fromLocal8Bit(content).simplified();
+    case 1:
+        content.remove(0,1);
+        if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
+        {
+            content.remove(0,2);
+            return m_beCodec->toUnicode(content).simplified();
+        }
+        if((quint8)content.at(0)==0xFF && (quint8)content.at(1)==0xFE)
+        {
+            content.remove(0,2);
+            return m_leCodec->toUnicode(content).simplified();
+        }
+        return QString::fromUtf8(content).simplified();
+    default:
+        return QString(content).simplified();
+    }
 }
 
 bool KNMusicTagID3v2::readTag(const QString &filePath)
@@ -97,16 +101,20 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
             //If no tags, means behind of these datas are all '\0'.
             break;
         }
-        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24) & 0b11111111000000000000000000000000)+
+        IDv2Frame currentFrame;
+        currentFrame.frameID=rawFrameID;
+        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
                 ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
                 (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
                 (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
         char *rawFrameData=new char[frameSize];
         memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
-        QByteArray currentFrameData;
-        currentFrameData.setRawData(rawFrameData, frameSize);
-        qDebug()<<id3v2String(currentFrameData);
-        m_tagData.frames[rawFrameID]=currentFrameData;
+        currentFrame.data.setRawData(rawFrameData, frameSize);
+        m_tagData.frames.append(currentFrame);
+        if(currentFrame.frameID=="APIC")
+        {
+            processAPIC(currentFrame.data);
+        }
         rawPosition+=(frameSize+10);
         delete[] rawFrameData;
     }
@@ -115,7 +123,39 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     return true;
 }
 
-QString KNMusicTagID3v2::frameData(const QString &frameID)
+void KNMusicTagID3v2::processAPIC(const QByteArray &value)
 {
-    return id3v2String(m_tagData.frames[frameID]);
+    ID3v2Image currentImage;
+    QByteArray content=value;
+    quint8 encoding=(quint8)(value.at(0));
+    int zeroCharEnd=content.indexOf('\0', 1);
+    QString mimeType(content.mid(1, zeroCharEnd-1)),
+            imageType=mimeType.mid(6);
+    quint8 pictureType=(quint8)(value.at(zeroCharEnd+1));
+    zeroCharEnd+=2;
+    int descriptionEnd;
+    switch(encoding)
+    {
+    case 0:
+        //ISO
+        descriptionEnd=content.indexOf('\0', zeroCharEnd);
+        currentImage.description=
+            QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
+        content.remove(0, zeroCharEnd+1);
+        break;
+    default:
+        break;
+    }
+    currentImage.image.loadFromData(content, imageType.toStdString().data());
+    m_tagImages[pictureType]=currentImage;
+}
+
+QMap<int, KNMusicTagID3v2::ID3v2Image> KNMusicTagID3v2::tagImages() const
+{
+    return m_tagImages;
+}
+
+void KNMusicTagID3v2::setTagImages(const QMap<int, KNMusicTagID3v2::ID3v2Image> &tagImages)
+{
+    m_tagImages = tagImages;
 }
