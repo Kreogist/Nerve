@@ -40,8 +40,11 @@ QString KNMusicTagID3v2::fromID3v2String(const QByteArray &value)
         }
         return QString::fromUtf8(content).simplified();
     default:
+#ifdef Q_OS_WIN
         return m_windowsCodec->toUnicode(content).simplified();
-        //return QString(content).simplified();
+#else
+        return QString(content).simplified();
+#endif
     }
 }
 
@@ -54,7 +57,6 @@ QString KNMusicTagID3v2::id3v2String(const QString &frameID)
     }
     else
     {
-        qDebug()<<fromID3v2String(m_tagData.frameData.at(frameDataIndex));
         return fromID3v2String(m_tagData.frameData.at(frameDataIndex));
     }
 }
@@ -115,19 +117,20 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     while(rawPosition<tagSize)
     {
         strncpy(rawFrameID, rawTagData+rawPosition, 4);
-        if(strlen(rawFrameID)==0)
+        int frameIDLength=strlen(rawFrameID);
+        if(frameIDLength==0)
         {
             //If no tags, means behind of these datas are all '\0'.
             break;
         }
-        quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
+        quint32 frameSize=((((quint32)rawTagData[rawPosition+frameIDLength])<<24)&0b11111111000000000000000000000000)+
+                ((((quint32)rawTagData[rawPosition+frameIDLength+1])<<16)&0b00000000111111110000000000000000)+
+                (((((quint32)rawTagData[rawPosition+frameIDLength+2]))<<8)&0b00000000000000001111111100000000)+
+                (((quint32)rawTagData[rawPosition+frameIDLength+3])&0b00000000000000000000000011111111);
         char *rawFrameData=new char[frameSize];
         memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
         QByteArray frameData;
-        frameData.setRawData(rawFrameData, frameSize);
+        frameData.append(rawFrameData, frameSize);
         m_tagData.frameID.append(rawFrameID);
         m_tagData.frameData.append(frameData);
         if(QString(rawFrameID)=="APIC")
@@ -169,12 +172,7 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     m_tagImages[pictureType]=currentImage;
 }
 
-QMap<int, KNMusicTagID3v2::ID3v2Image> KNMusicTagID3v2::tagImages() const
+KNMusicTagID3v2::ID3v2Image KNMusicTagID3v2::tagImages(const int &index) const
 {
-    return m_tagImages;
-}
-
-void KNMusicTagID3v2::setTagImages(const QMap<int, KNMusicTagID3v2::ID3v2Image> &tagImages)
-{
-    m_tagImages = tagImages;
+    return m_tagImages[index];
 }

@@ -39,8 +39,7 @@ public:
 
     bool readTag(const QString &filePath);
 
-    QMap<int, KNMusicTagID3v2::ID3v2Image> tagImages() const;
-    void setTagImages(const QMap<int, KNMusicTagID3v2::ID3v2Image> &tagImages);
+    KNMusicTagID3v2::ID3v2Image tagImages(const int &index) const;
 
 signals:
 

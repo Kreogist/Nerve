@@ -22,6 +22,8 @@ public slots:
 
 private:
     void resetMusicInfo();
+    void readID3v1Tag(const QString &value);
+    void readID3v2Tag(const QString &value);
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;
 
