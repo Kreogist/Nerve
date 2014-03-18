@@ -1,18 +1,31 @@
-#include <QDebug>
 
-#include "Modules/Base/kncutestyle.h"
-#include "Modules/Music/Libraries/knmusictagid3v2.h"
-#include "Modules/Music/Widgets/knmusicviewer.h"
+#include "Modules/Base/knpluginbase.h"
+#include "Modules/Base/knstdlibcategoryswitcher.h"
+
+#include "Modules/knglobal.h"
+
+#include "Modules/Music/knmusicpluin.h"
 
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    //Set style.
-    KNCuteStyle *style=new KNCuteStyle;
-    setStyle(style);
+    setContentsMargins(0,0,0,0);
 
-    KNMusicViewer *musicViewer=new KNMusicViewer(this);
-    setCentralWidget(musicViewer);
+    m_global=KNGlobal::instance();
+    m_global->setMainWindow(this);
+
+    m_mainWidget=new KNStdLibCategorySwitcher(this);
+    setCentralWidget(m_mainWidget);
+
+    KNMusicPluin *musicPlugin=new KNMusicPluin(this);
+    addPlugin(musicPlugin);
+}
+
+void MainWindow::addPlugin(KNPluginBase *plugin)
+{
+    connect(plugin, &KNPluginBase::requireAddCategory,
+            m_mainWidget, &KNStdLibCategorySwitcher::addCategory);
+    plugin->applyPlugin();
 }

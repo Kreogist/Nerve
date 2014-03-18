@@ -22,7 +22,17 @@ SOURCES += \
     Modules/Base/knwidgetswitcher.cpp \
     Modules/Music/Widgets/knmusicviewer.cpp \
     Modules/Base/kncutestyle.cpp \
-    Modules/knlocale.cpp
+    Modules/knlocale.cpp \
+    Modules/Music/Libraries/knmusicmodel.cpp \
+    Modules/Base/knpluginbase.cpp \
+    Modules/Music/knmusicpluin.cpp \
+    Modules/Base/knlibcategoryswitcher.cpp \
+    Modules/Base/knstdlibcategoryswitcher.cpp \
+    Modules/Base/knlibcategorylist.cpp \
+    Modules/Base/knstdlibcategorylist.cpp \
+    Modules/knglobal.cpp \
+    Modules/Music/Widgets/knmusiclistviewheader.cpp \
+    Modules/Music/knmusicglobal.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -40,7 +50,17 @@ HEADERS += \
     Modules/Base/knwidgetswitcher.h \
     Modules/Music/Widgets/knmusicviewer.h \
     Modules/Base/kncutestyle.h \
-    Modules/knlocale.h
+    Modules/knlocale.h \
+    Modules/Music/Libraries/knmusicmodel.h \
+    Modules/Base/knpluginbase.h \
+    Modules/Music/knmusicpluin.h \
+    Modules/Base/knlibcategoryswitcher.h \
+    Modules/Base/knstdlibcategoryswitcher.h \
+    Modules/Base/knlibcategorylist.h \
+    Modules/Base/knstdlibcategorylist.h \
+    Modules/knglobal.h \
+    Modules/Music/Widgets/knmusiclistviewheader.h \
+    Modules/Music/knmusicglobal.h
 
 RESOURCES += \
     res.qrc

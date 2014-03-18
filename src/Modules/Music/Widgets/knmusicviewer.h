@@ -4,11 +4,13 @@
 #include "../../Base/knstdlibviewer.h"
 
 class KNMusicListView;
+class KNMusicModel;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
+    void setDefaultHeader();
 
 signals:
 
@@ -26,8 +28,9 @@ private:
         Playlists,
         MusicCategoriesCount
     };
-    KNMusicListView *test[MusicCategoriesCount];
     QString m_categoryCaption[MusicCategoriesCount];
+    KNMusicListView *m_libraryView;
+    KNMusicModel *m_model;
 };
 
 #endif // KNMUSICVIEWER_H

@@ -1,23 +1,29 @@
+#include <QDebug>
+
 #include <QStyleFactory>
 
 #include "../../knlocale.h"
+
+#include "knmusiclistviewheader.h"
 
 #include "knmusiclistview.h"
 
 KNMusicListView::KNMusicListView(QWidget *parent) :
     QTreeView(parent)
 {
-    retranslate();
-    m_locale=KNLocale::instance();
-    connect(m_locale, SIGNAL(languageChanged()),
-            this, SLOT(retranslateAndSet()));
-
+    //Set properties.
     setStyle(QStyleFactory::create("fusion"));
+
+    //Set locale.
+    retranslate();
+    connect(KNLocale::instance(), SIGNAL(languageChanged()),
+            this, SLOT(retranslateAndSet()));
 }
 
 void KNMusicListView::retranslate()
 {
-    ;
+
+
 }
 
 void KNMusicListView::retranslateAndSet()

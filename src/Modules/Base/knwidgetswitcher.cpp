@@ -24,6 +24,8 @@ KNWidgetSwitcher::KNWidgetSwitcher(QWidget *parent) :
 
     m_switchAnime->addAnimation(m_flyInAnime);
     m_switchAnime->addAnimation(m_flyOutAnime);
+    connect(m_switchAnime, &QParallelAnimationGroup::finished,
+            this, &KNWidgetSwitcher::hideMovedOut);
 }
 
 void KNWidgetSwitcher::addWidget(QWidget *widget)
@@ -46,6 +48,11 @@ void KNWidgetSwitcher::addWidget(QWidget *widget)
 int KNWidgetSwitcher::currentIndex() const
 {
     return m_currentIndex;
+}
+
+int KNWidgetSwitcher::count() const
+{
+    return m_widgets.count();
 }
 
 void KNWidgetSwitcher::setCurrentIndex(int currentIndex)
