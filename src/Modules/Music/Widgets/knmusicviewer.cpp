@@ -13,10 +13,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_libraryView=new KNMusicListView(this);
 
-    m_model=new KNMusicModel(this);
-    m_libraryView->setModel(m_model);
-    setDefaultHeader();
-
     QWidget *empty1=new QWidget(this),
             *empty2=new QWidget(this),
             *empty3=new QWidget(this),
@@ -39,20 +35,10 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
                 empty4);
 }
 
-void KNMusicViewer::setDefaultHeader()
+void KNMusicViewer::setModel(KNMusicModel *model)
 {
-    for(int i=KNMusicGlobal::Name+1;
-        i<KNMusicGlobal::MusicHeaderCount;
-        i++)
-    {
-        m_libraryView->setColumnHidden(i, true);
-    }
-    m_libraryView->setColumnHidden(KNMusicGlobal::Time, false);
-    m_libraryView->setColumnHidden(KNMusicGlobal::Artist, false);
-    m_libraryView->setColumnHidden(KNMusicGlobal::Album, false);
-    m_libraryView->setColumnHidden(KNMusicGlobal::Genre, false);
-    m_libraryView->setColumnHidden(KNMusicGlobal::Rating, false);
-    m_libraryView->setColumnHidden(KNMusicGlobal::Plays, false);
+    m_libraryView->setModel(model);
+    m_libraryView->resetHeader();
 }
 
 void KNMusicViewer::retranslate()

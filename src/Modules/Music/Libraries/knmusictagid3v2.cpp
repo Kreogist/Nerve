@@ -9,11 +9,13 @@
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    m_isoCodec=QTextCodec::codecForName("ISO-8859-1");
+    m_windowsCodec=QTextCodec::codecForName("Windows-1250");
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
 }
 
-QString KNMusicTagID3v2::id3v2String(const QByteArray &value)
+QString KNMusicTagID3v2::fromID3v2String(const QByteArray &value)
 {
     QByteArray content=value;
     quint8 encoding=(quint8)(value.at(0));
@@ -22,8 +24,9 @@ QString KNMusicTagID3v2::id3v2String(const QByteArray &value)
     case 0:
         //ISO
         content.remove(0,1);
-        return QString::fromLocal8Bit(content).simplified();
+        return m_isoCodec->toUnicode(content).simplified();
     case 1:
+        //UTF-16 LE/BE
         content.remove(0,1);
         if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
         {
@@ -37,7 +40,22 @@ QString KNMusicTagID3v2::id3v2String(const QByteArray &value)
         }
         return QString::fromUtf8(content).simplified();
     default:
-        return QString(content).simplified();
+        return m_windowsCodec->toUnicode(content).simplified();
+        //return QString(content).simplified();
+    }
+}
+
+QString KNMusicTagID3v2::id3v2String(const QString &frameID)
+{
+    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    if(frameDataIndex==-1)
+    {
+        return QString("");
+    }
+    else
+    {
+        qDebug()<<fromID3v2String(m_tagData.frameData.at(frameDataIndex));
+        return fromID3v2String(m_tagData.frameData.at(frameDataIndex));
     }
 }
 
@@ -48,7 +66,8 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     m_tagData.unsynchronisation=false;
     m_tagData.extendedHeader=false;
     m_tagData.experimentalIndicator=false;
-    m_tagData.frames.clear();
+    m_tagData.frameID.clear();
+    m_tagData.frameData.clear();
 
     QFile mediaFile(filePath);
     if(mediaFile.size()<10)
@@ -101,19 +120,19 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
             //If no tags, means behind of these datas are all '\0'.
             break;
         }
-        IDv2Frame currentFrame;
-        currentFrame.frameID=rawFrameID;
         quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
                 ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
                 (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
                 (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
         char *rawFrameData=new char[frameSize];
         memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
-        currentFrame.data.setRawData(rawFrameData, frameSize);
-        m_tagData.frames.append(currentFrame);
-        if(currentFrame.frameID=="APIC")
+        QByteArray frameData;
+        frameData.setRawData(rawFrameData, frameSize);
+        m_tagData.frameID.append(rawFrameID);
+        m_tagData.frameData.append(frameData);
+        if(QString(rawFrameID)=="APIC")
         {
-            processAPIC(currentFrame.data);
+            processAPIC(frameData);
         }
         rawPosition+=(frameSize+10);
         delete[] rawFrameData;

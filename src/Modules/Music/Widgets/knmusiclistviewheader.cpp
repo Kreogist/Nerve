@@ -5,3 +5,8 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
 {
     ;
 }
+
+void KNMusicListViewHeader::moveToFirst(int logicalIndex)
+{
+    moveSection(visualIndex(logicalIndex), 0);
+}

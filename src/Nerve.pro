@@ -32,7 +32,9 @@ SOURCES += \
     Modules/Base/knstdlibcategorylist.cpp \
     Modules/knglobal.cpp \
     Modules/Music/Widgets/knmusiclistviewheader.cpp \
-    Modules/Music/knmusicglobal.cpp
+    Modules/Music/knmusicglobal.cpp \
+    Modules/Music/Libraries/knmusicsearcher.cpp \
+    Modules/Music/Libraries/knmusicinfocollector.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -60,7 +62,9 @@ HEADERS += \
     Modules/Base/knstdlibcategorylist.h \
     Modules/knglobal.h \
     Modules/Music/Widgets/knmusiclistviewheader.h \
-    Modules/Music/knmusicglobal.h
+    Modules/Music/knmusicglobal.h \
+    Modules/Music/Libraries/knmusicsearcher.h \
+    Modules/Music/Libraries/knmusicinfocollector.h
 
 RESOURCES += \
     res.qrc

@@ -2,6 +2,8 @@
 #define KNMUSICTAGID3V2_H
 
 #include <QMap>
+#include <QList>
+#include <QByteArray>
 #include <QPixmap>
 
 #include "knmusictagbase.h"
@@ -11,12 +13,6 @@ class KNMusicTagID3v2 : public KNMusicTagBase
 {
     Q_OBJECT
 public:
-    struct IDv2Frame
-    {
-        QString frameID;
-        QByteArray data;
-    };
-
     struct ID3v2Data
     {
         //Version
@@ -27,7 +23,8 @@ public:
         bool extendedHeader;
         bool experimentalIndicator;
         //Frames
-        QList<IDv2Frame> frames;
+        QStringList frameID;
+        QList<QByteArray> frameData;
     };
 
     struct ID3v2Image
@@ -37,7 +34,8 @@ public:
     };
 
     explicit KNMusicTagID3v2(QObject *parent = 0);
-    QString id3v2String(const QByteArray &value);
+    QString fromID3v2String(const QByteArray &value);
+    QString id3v2String(const QString &frameID);
 
     bool readTag(const QString &filePath);
 
@@ -52,7 +50,7 @@ private:
     void processAPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;
     ID3v2Data m_tagData;
-    QTextCodec *m_beCodec, *m_leCodec;
+    QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_windowsCodec;
 };
 
 #endif // KNMUSICTAGID3V2_H

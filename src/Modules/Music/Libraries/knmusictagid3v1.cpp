@@ -1,5 +1,8 @@
 #include <QDataStream>
 #include <QFile>
+#include <QTextCodec>
+
+#include <QDebug>
 
 #include <cstdlib>
 
@@ -9,6 +12,7 @@ KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
     KNMusicTagBase(parent)
 {
     m_genreList.clear();
+    m_codec=QTextCodec::codecForName("GBK");
     m_genreList<<"Blues"
                <<"Classic Rock"
                <<"Country"

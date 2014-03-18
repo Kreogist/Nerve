@@ -4,7 +4,9 @@
 #include "../Base/knpluginbase.h"
 
 class KNGlobal;
+class KNMusicModel;
 class KNMusicViewer;
+class KNMusicInfoCollector;
 class KNMusicPluin : public KNPluginBase
 {
     Q_OBJECT
@@ -19,6 +21,8 @@ public slots:
 private:
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
+    KNMusicModel *m_model;
+    KNMusicInfoCollector *m_inforCollector;
 };
 
 #endif // KNMUSICPLUIN_H

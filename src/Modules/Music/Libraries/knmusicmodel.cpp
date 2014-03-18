@@ -1,3 +1,8 @@
+#include <QList>
+#include <QStandardItem>
+
+#include <QDebug>
+
 #include "../../knlocale.h"
 
 #include "knmusicmodel.h"
@@ -7,7 +12,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
 {
     retranslate();
     QStringList header;
-    for(int i=0;i<KNMusicGlobal::MusicHeaderCount;i++)
+    for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
         header<<m_header[i];
     }
@@ -20,6 +25,19 @@ KNMusicModel::KNMusicModel(QObject *parent) :
 void KNMusicModel::resetHeader()
 {
     emit requireResetHeader();
+}
+
+void KNMusicModel::appendMusic(const QStringList &info)
+{
+    QList<QStandardItem *> musicItem;
+    for(int i=0;
+        i<info.count();
+        i++)
+    {
+        QStandardItem *infoItem=new QStandardItem(info.at(i));
+        musicItem.append(infoItem);
+    }
+    appendRow(musicItem);
 }
 
 void KNMusicModel::retranslate()

@@ -9,6 +9,7 @@ class KNMusicListView : public QTreeView
     Q_OBJECT
 public:
     explicit KNMusicListView(QWidget *parent = 0);
+    void resetHeader();
 
 signals:
 

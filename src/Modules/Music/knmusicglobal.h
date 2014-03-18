@@ -8,7 +8,7 @@ class KNMusicGlobal : public QObject
     Q_OBJECT
 public:
     static KNMusicGlobal *instance();
-    enum MusicHeader
+    enum MusicDatas
     {
         Name,
         Album,
@@ -44,7 +44,7 @@ public:
         Time,
         TrackNumber,
         Year,
-        MusicHeaderCount
+        MusicDataCount
     };
 
 signals:

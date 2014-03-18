@@ -5,6 +5,7 @@
 
 #include "knmusictagbase.h"
 
+class QTextCodec;
 class KNMusicTagID3v1 : public KNMusicTagBase
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ public slots:
 private:
     QString getGenre(const int &index);
     ID3v1Data m_tagData;
+    QTextCodec *m_codec;
     QStringList m_genreList;
 };
 

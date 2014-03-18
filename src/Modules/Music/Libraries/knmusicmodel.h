@@ -1,6 +1,8 @@
 #ifndef KNMUSICMODEL_H
 #define KNMUSICMODEL_H
 
+#include <QStringList>
+
 #include "../knmusicglobal.h"
 
 #include <QStandardItemModel>
@@ -16,11 +18,12 @@ signals:
     void requireResetHeader();
 
 public slots:
+    void appendMusic(const QStringList &info);
     void retranslate();
     void retranslateAndSet();
 
 private:
-    QString m_header[KNMusicGlobal::MusicHeaderCount];
+    QString m_header[KNMusicGlobal::MusicDataCount];
 };
 
 #endif // KNMUSICMODEL_H
