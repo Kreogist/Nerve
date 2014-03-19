@@ -27,7 +27,8 @@ void KNMusicModel::resetHeader()
     emit requireResetHeader();
 }
 
-void KNMusicModel::appendMusic(const QStringList &info)
+void KNMusicModel::appendMusic(const QStringList &info,
+                               const QPixmap &coverImage)
 {
     QList<QStandardItem *> musicItem;
     for(int i=0;
@@ -37,6 +38,8 @@ void KNMusicModel::appendMusic(const QStringList &info)
         QStandardItem *infoItem=new QStandardItem(info.at(i));
         musicItem.append(infoItem);
     }
+    QStandardItem *dataItem=musicItem.at(0);
+    dataItem->setData(coverImage);
     appendRow(musicItem);
 }
 

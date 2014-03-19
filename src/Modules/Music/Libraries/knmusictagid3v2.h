@@ -40,7 +40,8 @@ public:
 
     bool readTag(const QString &filePath);
 
-    KNMusicTagID3v2::ID3v2Image tagImages(const int &index) const;
+    QPixmap tagImage(const int &index) const;
+    QPixmap firstAvaliableImage() const;
 
 signals:
 

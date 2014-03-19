@@ -1,35 +1,52 @@
 
 #include <QDebug>
 
+#include <QAudioBuffer>
+#include <QDateTime>
 #include <QFileInfo>
 
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
+#include "knmusictagapev2.h"
+
+#include "../../knglobal.h"
 
 #include "knmusicinfocollector.h"
 
 KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     QObject(parent)
 {
+    m_global=KNGlobal::instance();
     m_tagID3v1=new KNMusicTagID3v1(this);
     m_tagID3v2=new KNMusicTagID3v2(this);
+    m_tagAPEv2=new KNMusicTagAPEv2(this);
 }
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
-{
+{   
     resetMusicInfo();
     QFileInfo currentFile(filePath);
     m_musicInfos[KNMusicGlobal::Name]=currentFile.fileName();
 
+    m_musicInfos[KNMusicGlobal::Size]=
+            m_global->byteToHigher(currentFile.size());
+    m_musicInfos[KNMusicGlobal::DateModified]=
+            currentFile.lastModified().toString("yyyy MMM dd, ddd");
+    m_musicInfos[KNMusicGlobal::LastPlayed]=
+            currentFile.lastRead().toString("yyyy MMM dd, ddd");
+
     readID3v1Tag(filePath);
     readID3v2Tag(filePath);
+    readAPEv2Tag(filePath);
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
         musicInfo.append(m_musicInfos[i]);
     }
-    emit requireAppendMusic(musicInfo);
+
+    emit requireAppendMusic(musicInfo,
+                            m_musicCover);
 }
 
 void KNMusicInfoCollector::resetMusicInfo()
@@ -38,6 +55,7 @@ void KNMusicInfoCollector::resetMusicInfo()
     {
         m_musicInfos[i].clear();
     }
+    m_musicCover=QPixmap();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)
@@ -47,12 +65,14 @@ void KNMusicInfoCollector::readID3v1Tag(const QString &value)
         KNMusicTagID3v1::ID3v1Data id3v1Info=m_tagID3v1->tagData();
         if(!id3v1Info.title.isEmpty())
         {
-            m_musicInfos[KNMusicGlobal::Name]=id3v1Info.title;
+            setMediaData(KNMusicGlobal::Name,id3v1Info.title);
         }
-        m_musicInfos[KNMusicGlobal::Artist]=id3v1Info.artist;
-        m_musicInfos[KNMusicGlobal::Album]=id3v1Info.album;
-        m_musicInfos[KNMusicGlobal::Genre]=id3v1Info.genre;
-        m_musicInfos[KNMusicGlobal::Year]=id3v1Info.year;
+        setMediaData(KNMusicGlobal::Artist,id3v1Info.artist);
+        setMediaData(KNMusicGlobal::Album,id3v1Info.album);
+        setMediaData(KNMusicGlobal::Genre,id3v1Info.genre);
+        setMediaData(KNMusicGlobal::Year,id3v1Info.year);
+        setMediaData(KNMusicGlobal::Comments,id3v1Info.comment);
+        setMediaData(KNMusicGlobal::TrackNumber,QString::number(id3v1Info.track));
     }
 }
 
@@ -65,32 +85,51 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             QString title=m_tagID3v2->id3v2String("TIT2");
             if(!title.isEmpty())
             {
-                m_musicInfos[KNMusicGlobal::Name]=title;
+                setMediaData(KNMusicGlobal::Name,title);
             }
-            m_musicInfos[KNMusicGlobal::Artist]=m_tagID3v2->id3v2String("TPE1");
-            m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TALB");
-            m_musicInfos[KNMusicGlobal::AlbumArtist]=m_tagID3v2->id3v2String("TPE2");
-            m_musicInfos[KNMusicGlobal::BeatsPerMinuate]=m_tagID3v2->id3v2String("TBPM");
-            m_musicInfos[KNMusicGlobal::Category]=m_tagID3v2->id3v2String("TIT1");
-            m_musicInfos[KNMusicGlobal::Composer]=m_tagID3v2->id3v2String("TCOM");
-            m_musicInfos[KNMusicGlobal::Genre]=m_tagID3v2->id3v2String("TCON");
-            m_musicInfos[KNMusicGlobal::Year]=m_tagID3v2->id3v2String("TYER");
+            setMediaData(KNMusicGlobal::Artist,m_tagID3v2->id3v2String("TPE1"));
+            setMediaData(KNMusicGlobal::Album,m_tagID3v2->id3v2String("TALB"));
+            setMediaData(KNMusicGlobal::AlbumArtist,m_tagID3v2->id3v2String("TPE2"));
+            setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBPM"));
+            setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TIT1"));
+            setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCOM"));
+            setMediaData(KNMusicGlobal::Genre,m_tagID3v2->id3v2String("TCON"));
+            setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
         }
         else
         {
             QString title=m_tagID3v2->id3v2String("TT2");
             if(!title.isEmpty())
             {
-                m_musicInfos[KNMusicGlobal::Name]=title;
+                setMediaData(KNMusicGlobal::Name,title);
             }
-            m_musicInfos[KNMusicGlobal::Artist]=m_tagID3v2->id3v2String("TP1");
-            m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TAL");
-            m_musicInfos[KNMusicGlobal::AlbumArtist]=m_tagID3v2->id3v2String("TP2");
-            m_musicInfos[KNMusicGlobal::BeatsPerMinuate]=m_tagID3v2->id3v2String("TBP");
-            m_musicInfos[KNMusicGlobal::Category]=m_tagID3v2->id3v2String("TT1");
-            m_musicInfos[KNMusicGlobal::Composer]=m_tagID3v2->id3v2String("TCM");
-            m_musicInfos[KNMusicGlobal::Genre]=m_tagID3v2->id3v2String("TCO");
-            m_musicInfos[KNMusicGlobal::Year]=m_tagID3v2->id3v2String("TYE");
+            setMediaData(KNMusicGlobal::Artist,m_tagID3v2->id3v2String("TP1"));
+            setMediaData(KNMusicGlobal::Album,m_tagID3v2->id3v2String("TAL"));
+            setMediaData(KNMusicGlobal::AlbumArtist,m_tagID3v2->id3v2String("TP2"));
+            setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBP"));
+            setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
+            setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCM"));
+            setMediaData(KNMusicGlobal::Genre,m_tagID3v2->id3v2String("TCO"));
+            setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
         }
+        m_musicCover=m_tagID3v2->tagImage(3); //3 is the Cover front.
+        if(m_musicCover.isNull())
+        {
+            m_musicCover=m_tagID3v2->firstAvaliableImage();
+        }
+    }
+}
+
+void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
+{
+    m_tagAPEv2->readTag(value);
+}
+
+void KNMusicInfoCollector::setMediaData(const int &index,
+                                        const QString &value)
+{
+    if(!value.isEmpty())
+    {
+        m_musicInfos[index]=value;
     }
 }

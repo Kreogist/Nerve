@@ -218,7 +218,16 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     m_tagImages[pictureType]=currentImage;
 }
 
-KNMusicTagID3v2::ID3v2Image KNMusicTagID3v2::tagImages(const int &index) const
+QPixmap KNMusicTagID3v2::tagImage(const int &index) const
 {
-    return m_tagImages[index];
+    return m_tagImages[index].image;
+}
+
+QPixmap KNMusicTagID3v2::firstAvaliableImage() const
+{
+    if(m_tagImages.count()!=0)
+    {
+        return m_tagImages.first().image;
+    }
+    return QPixmap();
 }

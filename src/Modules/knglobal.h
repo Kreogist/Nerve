@@ -10,6 +10,8 @@ class KNGlobal : public QObject
 public:
     static KNGlobal *instance();
 
+    QString byteToHigher(const qint64 &fileSize);
+
     QWidget *mainWindow() const;
     void setMainWindow(QWidget *mainWindow);
 
@@ -20,6 +22,7 @@ public slots:
 private:
     KNGlobal();
     static KNGlobal *m_instance;
+    QString m_storageUnit[5];
     QWidget *m_mainWindow;
 };
 

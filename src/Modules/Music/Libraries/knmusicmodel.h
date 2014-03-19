@@ -18,7 +18,7 @@ signals:
     void requireResetHeader();
 
 public slots:
-    void appendMusic(const QStringList &info);
+    void appendMusic(const QStringList &info, const QPixmap &coverImage);
     void retranslate();
     void retranslateAndSet();
 
