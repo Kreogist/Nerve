@@ -15,6 +15,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setStyle(QStyleFactory::create("fusion"));
     setAnimated(true);
     setSortingEnabled(true);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     //Set locale.
     retranslate();

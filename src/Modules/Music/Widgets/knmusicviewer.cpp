@@ -1,3 +1,7 @@
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+
 #include "knmusiclistview.h"
 
 #include "../Libraries/knmusicmodel.h"
@@ -10,6 +14,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 {
     retranslate();
     setContentsMargins(0,0,0,0);
+    setAcceptDrops(true);
 
     m_libraryView=new KNMusicListView(this);
 
@@ -53,4 +58,17 @@ void KNMusicViewer::retranslate()
 void KNMusicViewer::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls())
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void KNMusicViewer::dropEvent(QDropEvent *event)
+{
+    emit requireAnalysisUrls(event->mimeData()->urls());
 }

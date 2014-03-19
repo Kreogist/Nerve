@@ -7,6 +7,7 @@ class KNGlobal;
 class KNMusicModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
+class KNMusicSearcher;
 class KNMusicPluin : public KNPluginBase
 {
     Q_OBJECT
@@ -22,7 +23,8 @@ private:
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
     KNMusicModel *m_model;
-    KNMusicInfoCollector *m_inforCollector;
+    KNMusicInfoCollector *m_infoCollector;
+    KNMusicSearcher *m_searcher;
 };
 
 #endif // KNMUSICPLUIN_H

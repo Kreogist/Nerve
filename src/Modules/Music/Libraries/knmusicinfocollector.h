@@ -13,12 +13,12 @@ class KNMusicInfoCollector : public QObject
     Q_OBJECT
 public:
     explicit KNMusicInfoCollector(QObject *parent = 0);
-    void analysis(const QString &filePath);
 
 signals:
     void requireAppendMusic(const QStringList &value);
 
 public slots:
+    void analysis(const QString &filePath);
 
 private:
     void resetMusicInfo();

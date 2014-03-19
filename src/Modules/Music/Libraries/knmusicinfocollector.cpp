@@ -1,4 +1,6 @@
 
+#include <QDebug>
+
 #include <QFileInfo>
 
 #include "knmusictagid3v1.h"
@@ -58,18 +60,37 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
 {
     if(m_tagID3v2->readTag(value))
     {
-        QString title=m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TIT2");
-        if(!title.isEmpty())
+        if(m_tagID3v2->version()>2)
         {
-            m_musicInfos[KNMusicGlobal::Name]=title;
+            QString title=m_tagID3v2->id3v2String("TIT2");
+            if(!title.isEmpty())
+            {
+                m_musicInfos[KNMusicGlobal::Name]=title;
+            }
+            m_musicInfos[KNMusicGlobal::Artist]=m_tagID3v2->id3v2String("TPE1");
+            m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TALB");
+            m_musicInfos[KNMusicGlobal::AlbumArtist]=m_tagID3v2->id3v2String("TPE2");
+            m_musicInfos[KNMusicGlobal::BeatsPerMinuate]=m_tagID3v2->id3v2String("TBPM");
+            m_musicInfos[KNMusicGlobal::Category]=m_tagID3v2->id3v2String("TIT1");
+            m_musicInfos[KNMusicGlobal::Composer]=m_tagID3v2->id3v2String("TCOM");
+            m_musicInfos[KNMusicGlobal::Genre]=m_tagID3v2->id3v2String("TCON");
+            m_musicInfos[KNMusicGlobal::Year]=m_tagID3v2->id3v2String("TYER");
         }
-        m_musicInfos[KNMusicGlobal::Artist]=m_tagID3v2->id3v2String("TPE1");
-        m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TALB");
-        m_musicInfos[KNMusicGlobal::AlbumArtist]=m_tagID3v2->id3v2String("TPE2");
-        m_musicInfos[KNMusicGlobal::BeatsPerMinuate]=m_tagID3v2->id3v2String("TBPM");
-        m_musicInfos[KNMusicGlobal::Category]=m_tagID3v2->id3v2String("TIT1");
-        m_musicInfos[KNMusicGlobal::Composer]=m_tagID3v2->id3v2String("TCOM");
-        m_musicInfos[KNMusicGlobal::Genre]=m_tagID3v2->id3v2String("TCON");
-        m_musicInfos[KNMusicGlobal::Year]=m_tagID3v2->id3v2String("TYER");
+        else
+        {
+            QString title=m_tagID3v2->id3v2String("TT2");
+            if(!title.isEmpty())
+            {
+                m_musicInfos[KNMusicGlobal::Name]=title;
+            }
+            m_musicInfos[KNMusicGlobal::Artist]=m_tagID3v2->id3v2String("TP1");
+            m_musicInfos[KNMusicGlobal::Album]=m_tagID3v2->id3v2String("TAL");
+            m_musicInfos[KNMusicGlobal::AlbumArtist]=m_tagID3v2->id3v2String("TP2");
+            m_musicInfos[KNMusicGlobal::BeatsPerMinuate]=m_tagID3v2->id3v2String("TBP");
+            m_musicInfos[KNMusicGlobal::Category]=m_tagID3v2->id3v2String("TT1");
+            m_musicInfos[KNMusicGlobal::Composer]=m_tagID3v2->id3v2String("TCM");
+            m_musicInfos[KNMusicGlobal::Genre]=m_tagID3v2->id3v2String("TCO");
+            m_musicInfos[KNMusicGlobal::Year]=m_tagID3v2->id3v2String("TYE");
+        }
     }
 }

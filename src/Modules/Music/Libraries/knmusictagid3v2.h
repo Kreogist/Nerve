@@ -36,6 +36,7 @@ public:
     explicit KNMusicTagID3v2(QObject *parent = 0);
     QString fromID3v2String(const QByteArray &value);
     QString id3v2String(const QString &frameID);
+    int version();
 
     bool readTag(const QString &filePath);
 

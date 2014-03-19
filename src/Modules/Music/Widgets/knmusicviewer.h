@@ -1,8 +1,13 @@
 #ifndef KNMUSICVIEWER_H
 #define KNMUSICVIEWER_H
 
+#include <QList>
+#include <QUrl>
+
 #include "../../Base/knstdlibviewer.h"
 
+class QDragEnterEvent;
+class QDropEvent;
 class KNMusicListView;
 class KNMusicModel;
 class KNMusicViewer : public KNStdLibViewer
@@ -14,10 +19,15 @@ public:
     void setModel(KNMusicModel *model);
 
 signals:
+    void requireAnalysisUrls(QList<QUrl> urls);
 
 public slots:
     void retranslate();
     void retranslateAndSet();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
 private:
     enum MusicCategories

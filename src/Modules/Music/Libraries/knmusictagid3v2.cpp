@@ -61,6 +61,11 @@ QString KNMusicTagID3v2::id3v2String(const QString &frameID)
     }
 }
 
+int KNMusicTagID3v2::version()
+{
+    return m_tagData.version;
+}
+
 bool KNMusicTagID3v2::readTag(const QString &filePath)
 {
     m_tagData.version=0;
@@ -90,10 +95,10 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
         //Can't find 'ID3' from the very beginning.
         return false;
     }
-    quint32 tagSize=((quint32)header[6]<<21)+
-                    ((quint32)header[7]<<14)+
-                    ((quint32)header[8]<<7)+
-                    header[9];
+    quint32 tagSize=(((quint32)header[6]<<21)&0b00001111111000000000000000000000)+
+                    (((quint32)header[7]<<14)&0b00000000000111111100000000000000)+
+                    (((quint32)header[8]<<7) &0b00000000000000000011111110000000)+
+                    ((quint32)header[9]      &0b00000000000000000000000001111111);
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
@@ -101,6 +106,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
         return false;
     }
     m_tagData.version=(int)header[3];
+    bool id3v23=(m_tagData.version>2);
     m_tagData.revision=(int)header[4];
     //Process header: header[5]
     m_tagData.unsynchronisation     =(header[5]&0b10000000);
@@ -113,32 +119,72 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     //All process code here.
     quint32 rawPosition=0;
     char rawFrameID[5];
-    rawFrameID[4]='\0';
-    while(rawPosition<tagSize)
+    if(id3v23)
     {
-        strncpy(rawFrameID, rawTagData+rawPosition, 4);
-        int frameIDLength=strlen(rawFrameID);
-        if(frameIDLength==0)
+        rawFrameID[4]='\0';
+        while(rawPosition<tagSize)
         {
-            //If no tags, means behind of these datas are all '\0'.
-            break;
+            strncpy(rawFrameID, rawTagData+rawPosition, 4);
+            if(strlen(rawFrameID)==0)
+            {
+                //If no tags, means behind of these datas are all '\0'.
+                break;
+            }
+            quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
+                    ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
+                    (((((quint32)rawTagData[rawPosition+6]))<<8)&0b00000000000000001111111100000000)+
+                    (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
+            if(frameSize>tagSize)
+            {
+                //Reach an unexpect frame.
+                break;
+            }
+            char *rawFrameData=new char[frameSize];
+            memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
+            QByteArray frameData;
+            frameData.append(rawFrameData, frameSize);
+            m_tagData.frameID.append(rawFrameID);
+            m_tagData.frameData.append(frameData);
+            if(QString(rawFrameID)=="APIC")
+            {
+                processAPIC(frameData);
+            }
+            rawPosition+=(frameSize+10);
+            delete[] rawFrameData;
         }
-        quint32 frameSize=((((quint32)rawTagData[rawPosition+frameIDLength])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[rawPosition+frameIDLength+1])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)rawTagData[rawPosition+frameIDLength+2]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[rawPosition+frameIDLength+3])&0b00000000000000000000000011111111);
-        char *rawFrameData=new char[frameSize];
-        memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
-        QByteArray frameData;
-        frameData.append(rawFrameData, frameSize);
-        m_tagData.frameID.append(rawFrameID);
-        m_tagData.frameData.append(frameData);
-        if(QString(rawFrameID)=="APIC")
+    }
+    else
+    {
+        rawFrameID[3]='\0';
+        while(rawPosition<tagSize)
         {
-            processAPIC(frameData);
+            strncpy(rawFrameID, rawTagData+rawPosition, 3);
+            if(strlen(rawFrameID)==0)
+            {
+                //If no tags, means behind of these datas are all '\0'.
+                break;
+            }
+            quint32 frameSize=((((quint32)rawTagData[rawPosition+3])<<16)&0b00000000111111110000000000000000)+
+                              (((((quint32)rawTagData[rawPosition+4]))<<8)&0b00000000000000001111111100000000)+
+                              (((quint32)rawTagData[rawPosition+5])&0b00000000000000000000000011111111);
+            if(frameSize>tagSize)
+            {
+                //Reach an unexpect frame.
+                break;
+            }
+            char *rawFrameData=new char[frameSize];
+            memcpy(rawFrameData, rawTagData+rawPosition+6, frameSize);
+            QByteArray frameData;
+            frameData.append(rawFrameData, frameSize);
+            m_tagData.frameID.append(rawFrameID);
+            m_tagData.frameData.append(frameData);
+            if(QString(rawFrameID)=="PIC")
+            {
+                processAPIC(frameData);
+            }
+            rawPosition+=(frameSize+6);
+            delete[] rawFrameData;
         }
-        rawPosition+=(frameSize+10);
-        delete[] rawFrameData;
     }
     //All process code above.
     delete[] rawTagData; //Don't touch this.
