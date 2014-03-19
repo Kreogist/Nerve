@@ -139,8 +139,9 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                 //Reach an unexpect frame.
                 break;
             }
-            char *rawFrameData=new char[frameSize];
+            char *rawFrameData=new char[frameSize+1];
             memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
+            rawFrameData[frameSize]='\0';
             QByteArray frameData;
             frameData.append(rawFrameData, frameSize);
             m_tagData.frameID.append(rawFrameID);

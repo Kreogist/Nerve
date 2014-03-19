@@ -14,6 +14,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     //Set properties.
     setStyle(QStyleFactory::create("fusion"));
     setAnimated(true);
+    setUniformRowHeights(true);
     setSortingEnabled(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
