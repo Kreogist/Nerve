@@ -2,6 +2,7 @@
 #define KNMUSICGLOBAL_H
 
 #include <QObject>
+#include <QStringList>
 
 class KNMusicGlobal : public QObject
 {
@@ -46,6 +47,8 @@ public:
         Year,
         MusicDataCount
     };
+    QString getGenre(const int &index);
+    QString getGenre(const QString &value);
 
 signals:
 
@@ -54,7 +57,7 @@ public slots:
 private:
     static KNMusicGlobal *m_instance;
     KNMusicGlobal();
-
+    QStringList m_genreList;
 };
 
 #endif // KNMUSICGLOBAL_H

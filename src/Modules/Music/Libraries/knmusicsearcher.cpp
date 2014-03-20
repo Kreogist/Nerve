@@ -7,6 +7,49 @@
 KNMusicSearcher::KNMusicSearcher(QObject *parent) :
     QObject(parent)
 {
+    m_suffixs<<"mp3"
+             <<"m4a"
+             <<"wma"
+             <<"wav"
+             <<"flac"
+             <<"ape"
+             <<"ogg"
+             <<"tta"
+             <<"aiff"
+             <<"aifc"
+             <<"mp3pro"
+             <<"fla"
+             <<"tak"
+             <<"aif"
+             <<"aac"
+             <<"cda"
+             <<"mp+"
+             <<"mp4"
+             <<"mpa"
+             <<"mp2"
+             <<"mp1"
+             <<"midi"
+             <<"mid"
+             <<"mpc"
+             <<"aa"
+             <<"ra"
+             <<"mac"
+             <<"rmi"
+             <<"dtswav"
+             <<"dts"
+             <<"cur"
+             <<"snd"
+             <<"au"
+             <<"ac3"
+             <<"as2"
+             <<"xm"
+             <<"umx"
+             <<"stm"
+             <<"s3m"
+             <<"mtm"
+             <<"mod"
+             <<"it"
+             <<"far";
 }
 
 void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
@@ -30,7 +73,10 @@ void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
         }
         if(currentDetails.isFile())
         {
-            emit requireAnalysis(currentPath);
+            if(m_suffixs.indexOf(currentDetails.suffix())!=-1)
+            {
+                emit requireAnalysis(currentPath);
+            }
         }
     }
 }

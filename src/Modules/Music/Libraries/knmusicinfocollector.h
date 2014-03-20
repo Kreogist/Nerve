@@ -8,6 +8,7 @@
 #include "../knmusicglobal.h"
 
 class KNGlobal;
+class KNMusicGlobal;
 class KNMusicTagID3v1;
 class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
@@ -41,6 +42,7 @@ private:
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
     QPixmap m_musicCover;
     KNGlobal *m_global;
+    KNMusicGlobal *m_musicGlobal;
 };
 
 #endif // KNMUSICINFOCOLLECTOR_H

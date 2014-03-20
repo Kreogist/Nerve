@@ -34,14 +34,18 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
     m_headerPosition=0;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
+        m_headerPosition+=32;
+        bool result=readTagAt(m_headerPosition, mediaData);
         mediaFile.close();
-        return true;
+        return result;
     }
     m_headerPosition=mediaFile.size()-32;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
+        m_headerPosition=m_headerPosition-m_tagSize+32;
+        bool result=readTagAt(m_headerPosition, mediaData);
         mediaFile.close();
-        return readTagAt(m_headerPosition, mediaData);
+        return result;
     }
     mediaFile.close();
     return false;
@@ -86,7 +90,7 @@ bool KNMusicTagAPEv2::checkAPEHeaderAt(int position,
 bool KNMusicTagAPEv2::readTagAt(int position, QDataStream &mediaData)
 {
     mediaData.device()->reset();
-    mediaData.skipRawData(position-m_tagSize+32);
+    mediaData.skipRawData(position);
     char *rawTagData=new char[m_tagSize];
     mediaData.readRawData(rawTagData, m_tagSize);
 

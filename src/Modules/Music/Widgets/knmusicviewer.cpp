@@ -2,6 +2,8 @@
 #include <QDropEvent>
 #include <QMimeData>
 
+#include <QStyleFactory>
+
 #include <QDebug>
 
 #include "knmusiclistview.h"

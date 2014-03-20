@@ -31,7 +31,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
 void KNMusicListView::resetHeader()
 {
-    /*for(int i=KNMusicGlobal::Name+1;
+    for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
     {
@@ -42,7 +42,7 @@ void KNMusicListView::resetHeader()
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
     setColumnHidden(KNMusicGlobal::Rating, false);
-    setColumnHidden(KNMusicGlobal::Plays, false);*/
+    setColumnHidden(KNMusicGlobal::Plays, false);
     m_headerWidget->moveToFirst(KNMusicGlobal::Plays);
     m_headerWidget->moveToFirst(KNMusicGlobal::Rating);
     m_headerWidget->moveToFirst(KNMusicGlobal::Genre);

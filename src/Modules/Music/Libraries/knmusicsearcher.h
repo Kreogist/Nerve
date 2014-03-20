@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QUrl>
+#include <QStringList>
 
 #include <QObject>
 
@@ -20,6 +21,7 @@ public slots:
 
 private:
     void searchDir();
+    QStringList m_suffixs;
 };
 
 #endif // KNMUSICSEARCHER_H

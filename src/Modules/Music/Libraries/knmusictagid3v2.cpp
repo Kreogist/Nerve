@@ -18,6 +18,10 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
 QString KNMusicTagID3v2::fromID3v2String(const QByteArray &value)
 {
     QByteArray content=value;
+    if(content.at(content.length()-1)==0)
+    {
+        content.remove(content.length()-1, 1);
+    }
     quint8 encoding=(quint8)(value.at(0));
     switch(encoding)
     {

@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 
+#include "../knmusicglobal.h"
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"
@@ -18,6 +19,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     QObject(parent)
 {
     m_global=KNGlobal::instance();
+    m_musicGlobal=KNMusicGlobal::instance();
     m_tagID3v1=new KNMusicTagID3v1(this);
     m_tagID3v2=new KNMusicTagID3v2(this);
     m_tagAPEv2=new KNMusicTagAPEv2(this);
@@ -89,7 +91,8 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBPM"));
             setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TIT1"));
             setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCOM"));
-            setMediaData(KNMusicGlobal::Genre,m_tagID3v2->id3v2String("TCON"));
+            setMediaData(KNMusicGlobal::Genre,
+                         m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCON")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
         }
         else
@@ -101,7 +104,8 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBP"));
             setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
             setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCM"));
-            setMediaData(KNMusicGlobal::Genre,m_tagID3v2->id3v2String("TCO"));
+            setMediaData(KNMusicGlobal::Genre,
+                         m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCO")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
         }
         m_musicCover=m_tagID3v2->tagImage(3); //3 is the Cover front.
