@@ -14,7 +14,7 @@ KNMusicTagAPEv2::KNMusicTagAPEv2(QObject *parent) :
 
 QString KNMusicTagAPEv2::tagStringData(const QString &frameKey) const
 {
-    return QString::fromUtf8(m_frameDatas[frameKey]);
+    return QString::fromUtf8(m_frameDatas[frameKey]).simplified();
 }
 
 bool KNMusicTagAPEv2::readTag(const QString &filePath)
@@ -110,7 +110,8 @@ bool KNMusicTagAPEv2::readTagAt(int position, QDataStream &mediaData)
         labelLength=labelEnd-labelStart+1;
         char *frameLabel=new char[labelLength+1];
         memcpy(frameLabel, rawTagData+labelStart, labelLength);
-        char *rawFrameData=new char[currentFrameSize];
+        char *rawFrameData=new char[currentFrameSize+1];
+        memset(rawFrameData, 0, sizeof(char)*currentFrameSize);
         memcpy(rawFrameData, rawTagData+labelEnd+1, currentFrameSize);
         QByteArray frameData;
         frameData.append(rawFrameData);

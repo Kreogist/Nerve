@@ -35,7 +35,8 @@ SOURCES += \
     Modules/Music/knmusicglobal.cpp \
     Modules/Music/Libraries/knmusicsearcher.cpp \
     Modules/Music/Libraries/knmusicinfocollector.cpp \
-    Modules/Music/Libraries/knmusictagapev2.cpp
+    Modules/Music/Libraries/knmusictagapev2.cpp \
+    Modules/Music/Libraries/knmusictagwma.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -67,6 +68,7 @@ HEADERS += \
     Modules/Music/Libraries/knmusicsearcher.h \
     Modules/Music/Libraries/knmusicinfocollector.h \
     Modules/Music/Libraries/knmusictagapev2.h \
+    Modules/Music/Libraries/knmusictagwma.h
 
 RESOURCES += \
     res.qrc
