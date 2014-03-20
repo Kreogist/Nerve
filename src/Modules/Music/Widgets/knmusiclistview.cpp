@@ -17,7 +17,8 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setAnimated(true);
     setUniformRowHeights(true);
     setSortingEnabled(true);
-    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setAlternatingRowColors(true);
+    //setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     //Set locale.
     retranslate();

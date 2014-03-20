@@ -54,6 +54,7 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
 void KNMusicTagAPEv2::clearCache()
 {
     memset(m_apeHeader, 0, 32);
+    m_frameDatas.clear();
 }
 
 bool KNMusicTagAPEv2::checkAPEHeaderAt(int position,
