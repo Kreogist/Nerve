@@ -31,7 +31,8 @@ private:
     KNMusicInfoCollectorManager *m_infoCollectManager;
     KNMusicSearcher *m_searcher;
 
-    QThread m_collectThread;
+    QThread m_collectThread,
+            m_modelThread;
 };
 
 #endif // KNMUSICPLUIN_H

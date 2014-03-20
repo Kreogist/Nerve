@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+/*#include <QList>
+#include <QThread>*/
+
 class KNPluginBase;
 class KNStdLibCategorySwitcher;
 class KNGlobal;
@@ -22,6 +25,7 @@ private slots:
 private:
     KNStdLibCategorySwitcher *m_mainWidget;
     KNGlobal *m_global;
+    //QList<QThread> m_pluginThread;
 };
 
 #endif // MAINWINDOW_H

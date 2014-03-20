@@ -15,7 +15,8 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
     KNPluginBase(parent)
 {
     m_global=KNGlobal::instance();
-    m_model=new KNMusicModel(this);
+    m_model=new KNMusicModel;
+    m_model->moveToThread(&m_modelThread);
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
@@ -30,6 +31,8 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
             m_infoCollectManager, &KNMusicInfoCollectorManager::addAnalysisList);
     connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireAppendMusic,
             m_model, &KNMusicModel::appendMusic);
+
+    m_modelThread.start();
     m_collectThread.start();
 }
 
@@ -37,6 +40,11 @@ KNMusicPluin::~KNMusicPluin()
 {
     m_collectThread.quit();
     m_collectThread.wait();
+
+    m_modelThread.quit();
+    m_modelThread.wait();
+
+    m_model->deleteLater();
     m_infoCollectManager->deleteLater();
 }
 
