@@ -12,10 +12,15 @@ public:
     void resetHeader();
 
 signals:
+    void requireShowContextMenu(QPoint position,
+                                QModelIndex index);
 
 public slots:
     void retranslate();
     void retranslateAndSet();
+
+protected:
+    void mouseReleaseEvent(QMouseEvent *event);
 
 private:
     KNMusicListViewHeader *m_headerWidget;

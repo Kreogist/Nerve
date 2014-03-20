@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QUrl>
+#include <QModelIndex>
 
 #include "../../Base/knstdlibviewer.h"
 
@@ -10,6 +11,7 @@ class QDragEnterEvent;
 class QDropEvent;
 class KNMusicListView;
 class KNMusicModel;
+class KNMusicViewerMenu;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -29,6 +31,10 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
 
+private slots:
+    void showContextMenu(QPoint position,
+                          QModelIndex index);
+
 private:
     enum MusicCategories
     {
@@ -41,6 +47,7 @@ private:
     };
     QString m_categoryCaption[MusicCategoriesCount];
     KNMusicListView *m_libraryView;
+    KNMusicViewerMenu *m_libraryViewMenu;
 };
 
 #endif // KNMUSICVIEWER_H

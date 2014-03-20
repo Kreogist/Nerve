@@ -8,6 +8,7 @@
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"
+#include "knmusictagwma.h"
 
 #include "../../knglobal.h"
 
@@ -20,6 +21,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     m_tagID3v1=new KNMusicTagID3v1(this);
     m_tagID3v2=new KNMusicTagID3v2(this);
     m_tagAPEv2=new KNMusicTagAPEv2(this);
+    m_tagWMA=new KNMusicTagWma(this);
 }
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
@@ -38,6 +40,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readID3v1Tag(filePath);
     readID3v2Tag(filePath);
     readAPEv2Tag(filePath);
+    readWMATag(filePath);
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -123,6 +126,11 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
         setMediaData(KNMusicGlobal::Genre,m_tagAPEv2->tagStringData("Genre"));
         //setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
     }
+}
+
+void KNMusicInfoCollector::readWMATag(const QString &value)
+{
+    //m_tagWMA->readTag(value);
 }
 
 void KNMusicInfoCollector::setMediaData(const int &index,

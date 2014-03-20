@@ -23,7 +23,7 @@ private:
     void clearCache();
     bool checkAPEHeaderAt(int position, QDataStream &mediaData);
     bool readTagAt(int position, QDataStream &mediaData);
-    char m_apePreamble[9]={'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X', '\0'};
+    const char m_apePreamble[9]={'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X', '\0'};
 
     char m_apeHeader[32];
     char m_preambleCheck[9];

@@ -34,13 +34,16 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
     m_headerPosition=0;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
+        mediaFile.close();
         return true;
     }
     m_headerPosition=mediaFile.size()-32;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
+        mediaFile.close();
         return readTagAt(m_headerPosition, mediaData);
     }
+    mediaFile.close();
     return false;
 }
 

@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include <QStyleFactory>
+#include <QMouseEvent>
 
 #include "../../knlocale.h"
 
@@ -59,4 +60,19 @@ void KNMusicListView::retranslate()
 void KNMusicListView::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicListView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QTreeView::mouseReleaseEvent(event);
+    if(event->button()==Qt::RightButton &&
+          rect().contains(event->pos()))
+    {
+        QModelIndex posTest=indexAt(event->pos());
+        if(posTest.isValid())
+        {
+            emit requireShowContextMenu(event->globalPos(),
+                                        posTest);
+        }
+    }
 }

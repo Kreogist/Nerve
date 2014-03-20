@@ -2,7 +2,10 @@
 #include <QDropEvent>
 #include <QMimeData>
 
+#include <QDebug>
+
 #include "knmusiclistview.h"
+#include "knmusicviewermenu.h"
 
 #include "../Libraries/knmusicmodel.h"
 #include "../knmusicglobal.h"
@@ -17,6 +20,9 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setAcceptDrops(true);
 
     m_libraryView=new KNMusicListView(this);
+    m_libraryViewMenu=new KNMusicViewerMenu(this);
+    connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
+            this, &KNMusicViewer::showContextMenu);
 
     QWidget *empty1=new QWidget(this),
             *empty2=new QWidget(this),
@@ -71,4 +77,10 @@ void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 void KNMusicViewer::dropEvent(QDropEvent *event)
 {
     emit requireAnalysisUrls(event->mimeData()->urls());
+}
+
+void KNMusicViewer::showContextMenu(QPoint position,
+                                     QModelIndex index)
+{
+    m_libraryViewMenu->exec(position);
 }
