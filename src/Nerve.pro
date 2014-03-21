@@ -39,7 +39,8 @@ SOURCES += \
     Modules/Music/Libraries/knmusictagwma.cpp \
     Modules/Base/knmenu.cpp \
     Modules/Music/Widgets/knmusicviewermenu.cpp \
-    Modules/Music/Libraries/knmusicinfocollectormanager.cpp
+    Modules/Music/Libraries/knmusicinfocollectormanager.cpp \
+    Modules/Music/Libraries/knmusicsortmodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -74,7 +75,8 @@ HEADERS += \
     Modules/Music/Libraries/knmusictagwma.h \
     Modules/Base/knmenu.h \
     Modules/Music/Widgets/knmusicviewermenu.h \
-    Modules/Music/Libraries/knmusicinfocollectormanager.h
+    Modules/Music/Libraries/knmusicinfocollectormanager.h \
+    Modules/Music/Libraries/knmusicsortmodel.h
 
 RESOURCES += \
     res.qrc

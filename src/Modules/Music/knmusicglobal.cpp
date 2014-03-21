@@ -53,6 +53,7 @@ QString KNMusicGlobal::getGenre(const QString &value)
 KNMusicGlobal::KNMusicGlobal() :
     QObject()
 {
+    qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
     m_genreList<<"Blues"
                <<"Classic Rock"
                <<"Country"

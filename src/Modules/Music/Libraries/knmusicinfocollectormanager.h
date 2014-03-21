@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QStringList>
 
+#include "../knmusicglobal.h"
+
 #include <QObject>
 
 class KNMusicInfoCollector;
@@ -16,14 +18,14 @@ public:
 
 signals:
     void requireAppendMusic(const QStringList &value,
-                            const QPixmap &coverImage);
+                            const KNMusicGlobal::MusicDetailsInfo &datas);
 
 public slots:
     void addAnalysisList(const QString &filePath);
 
 private slots:
     void currentWorkDone(const QStringList &value,
-                         const QPixmap &coverImage);
+                         const KNMusicGlobal::MusicDetailsInfo &datas);
 
 private:
     KNMusicInfoCollector *m_collector;

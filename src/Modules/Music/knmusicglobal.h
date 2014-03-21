@@ -2,6 +2,9 @@
 #define KNMUSICGLOBAL_H
 
 #include <QObject>
+#include <QDateTime>
+#include <QPixmap>
+#include <QMetaType>
 #include <QStringList>
 
 class KNMusicGlobal : public QObject
@@ -9,6 +12,15 @@ class KNMusicGlobal : public QObject
     Q_OBJECT
 public:
     static KNMusicGlobal *instance();
+    struct MusicDetailsInfo
+    {
+        quint64 size;
+        QDateTime dateModified;
+        QDateTime lastPlayed;
+        QDateTime dateAdded;
+        QPixmap coverImage;
+    };
+
     enum MusicDatas
     {
         Name,

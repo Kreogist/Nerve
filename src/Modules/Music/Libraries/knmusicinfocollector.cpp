@@ -29,20 +29,29 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 void KNMusicInfoCollector::analysis(const QString &filePath)
 {   
     resetMusicInfo();
+    KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     QFileInfo currentFile(filePath);
     m_musicInfos[KNMusicGlobal::Name]=currentFile.fileName();
 
     m_musicInfos[KNMusicGlobal::Size]=
             m_global->byteToHigher(currentFile.size());
+    currentFileInfo.size=currentFile.size();
     m_musicInfos[KNMusicGlobal::DateModified]=
             currentFile.lastModified().toString("yyyy MMM dd, ddd");
+    currentFileInfo.dateModified=currentFile.lastModified();
     m_musicInfos[KNMusicGlobal::LastPlayed]=
             currentFile.lastRead().toString("yyyy MMM dd, ddd");
+    currentFileInfo.lastPlayed=currentFile.lastRead();
+    QDateTime addedDate=QDateTime::currentDateTime();
+    m_musicInfos[KNMusicGlobal::DateAdded]=
+            addedDate.toString("yyyy MMM dd, ddd");
+    currentFileInfo.dateAdded=addedDate;
 
     readID3v1Tag(filePath);
     readID3v2Tag(filePath);
     readAPEv2Tag(filePath);
     readWMATag(filePath);
+    currentFileInfo.coverImage=m_musicCover;
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -51,7 +60,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     }
 
     emit requireAppendMusic(musicInfo,
-                            m_musicCover);
+                            currentFileInfo);
 }
 
 void KNMusicInfoCollector::resetMusicInfo()

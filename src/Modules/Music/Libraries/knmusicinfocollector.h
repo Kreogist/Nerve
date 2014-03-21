@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QStringList>
-#include <QPixmap>
 
 #include "../knmusicglobal.h"
 
@@ -21,7 +20,7 @@ public:
 
 signals:
     void requireAppendMusic(const QStringList &value,
-                            const QPixmap &coverImage);
+                            const KNMusicGlobal::MusicDetailsInfo &info);
 
 public slots:
     void analysis(const QString &filePath);

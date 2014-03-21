@@ -32,9 +32,9 @@ void KNMusicInfoCollectorManager::addAnalysisList(const QString &filePath)
 }
 
 void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
-                                                  const QPixmap &coverImage)
+                                                  const KNMusicGlobal::MusicDetailsInfo &datas)
 {
-    emit requireAppendMusic(value, coverImage);
+    emit requireAppendMusic(value, datas);
     m_fileList.removeFirst();
     if(m_fileList.count()!=0)
     {
