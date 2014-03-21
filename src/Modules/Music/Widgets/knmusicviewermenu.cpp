@@ -1,5 +1,7 @@
 #include <QAction>
 
+#include "../../knglobal.h"
+
 #include "knmusicviewermenu.h"
 
 KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
@@ -9,15 +11,27 @@ KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     createActions();
 }
 
+void KNMusicViewerMenu::setFilePath(const QString &filePath)
+{
+    m_filePath=filePath;
+}
+
 void KNMusicViewerMenu::retranslate()
 {
-    m_actionTitle[Browse]=tr("Browse");
+#ifdef Q_OS_MAC
+    m_actionTitle[Browse]=tr("Show in Finder");
+#endif
     m_actionTitle[Copy]=tr("Copy");
 }
 
 void KNMusicViewerMenu::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicViewerMenu::onActionBrowse()
+{
+    KNGlobal::instance()->showInGraphicalShell(m_filePath);
 }
 
 void KNMusicViewerMenu::createActions()
@@ -27,4 +41,6 @@ void KNMusicViewerMenu::createActions()
         m_action[i]=new QAction(m_actionTitle[i] ,this);
         addAction(m_action[i]);
     }
+    connect(m_action[Browse], SIGNAL(triggered()),
+            this, SLOT(onActionBrowse()));
 }

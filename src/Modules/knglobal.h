@@ -14,6 +14,7 @@ public:
 
     QWidget *mainWindow() const;
     void setMainWindow(QWidget *mainWindow);
+    void showInGraphicalShell(const QString &filePath);
 
 signals:
 

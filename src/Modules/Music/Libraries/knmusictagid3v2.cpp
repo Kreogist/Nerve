@@ -79,6 +79,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     m_tagData.experimentalIndicator=false;
     m_tagData.frameID.clear();
     m_tagData.frameData.clear();
+    m_tagImages.clear();
 
     QFile mediaFile(filePath);
     if(mediaFile.size()<10)
@@ -203,7 +204,15 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     quint8 encoding=(quint8)(value.at(0));
     int zeroCharEnd=content.indexOf('\0', 1);
     QString mimeType(content.mid(1, zeroCharEnd-1)),
-            imageType=mimeType.mid(6);
+            imageType;
+    if(mimeType.left(6).toLower()=="image/")
+    {
+        imageType=mimeType.mid(6);
+    }
+    else
+    {
+        imageType=mimeType;
+    }
     quint8 pictureType=(quint8)(value.at(zeroCharEnd+1));
     zeroCharEnd+=2;
     int descriptionEnd;

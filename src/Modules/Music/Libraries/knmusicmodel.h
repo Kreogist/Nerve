@@ -16,6 +16,7 @@ public:
 
 signals:
     void requireResetHeader();
+    void musicAppend(const QModelIndex &index);
 
 public slots:
     void appendMusic(const QStringList &info,

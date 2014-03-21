@@ -31,8 +31,8 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     resetMusicInfo();
     KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     QFileInfo currentFile(filePath);
+    currentFileInfo.filePath=currentFile.absoluteFilePath();
     m_musicInfos[KNMusicGlobal::Name]=currentFile.fileName();
-
     m_musicInfos[KNMusicGlobal::Size]=
             m_global->byteToHigher(currentFile.size());
     currentFileInfo.size=currentFile.size();

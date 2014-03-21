@@ -43,5 +43,6 @@ void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
     else
     {
         m_working=false;
+        emit requireSortData();
     }
 }

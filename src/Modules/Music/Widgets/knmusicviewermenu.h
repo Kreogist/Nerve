@@ -8,12 +8,16 @@ class KNMusicViewerMenu : public KNMenu
     Q_OBJECT
 public:
     explicit KNMusicViewerMenu(QWidget *parent = 0);
+    void setFilePath(const QString &filePath);
 
 signals:
 
 public slots:
     void retranslate();
     void retranslateAndSet();
+
+private slots:
+    void onActionBrowse();
 
 private:
     enum MusicActions
@@ -25,6 +29,8 @@ private:
     QString m_actionTitle[MusicActionCount];
     QAction *m_action[MusicActionCount];
     void createActions();
+
+    QString m_filePath;
 };
 
 #endif // KNMUSICVIEWERMENU_H

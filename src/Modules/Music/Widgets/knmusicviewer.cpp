@@ -8,9 +8,9 @@
 
 #include "knmusiclistview.h"
 #include "knmusicartistview.h"
-#include "knmusicviewermenu.h"
 
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusicsortmodel.h"
+#include "../Libraries/knmusicartistmodel.h"
 #include "../knmusicglobal.h"
 
 #include "knmusicviewer.h"
@@ -22,12 +22,16 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setContentsMargins(0,0,0,0);
     setAcceptDrops(true);
 
+    m_listViewModel=new KNMusicSortModel(this);
+    m_artistModel=new KNMusicArtistModel(this);
+
     m_libraryView=new KNMusicListView(this);
-    m_libraryViewMenu=new KNMusicViewerMenu(this);
+    m_libraryView->setModel(m_listViewModel);
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
-            this, &KNMusicViewer::showContextMenu);
+            this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
     m_artistView=new KNMusicArtistView(this);
+    m_artistView->setModel(m_artistModel);
 
     QWidget *empty2=new QWidget(this),
             *empty3=new QWidget(this),
@@ -52,7 +56,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
 void KNMusicViewer::setModel(QAbstractItemModel *model)
 {
-    m_libraryView->setModel(model);
+    m_listViewModel->setSourceModel(model);
+    m_artistModel->setSourceModel(model);
     m_libraryView->resetHeader();
 }
 
@@ -83,8 +88,9 @@ void KNMusicViewer::dropEvent(QDropEvent *event)
     emit requireAnalysisUrls(event->mimeData()->urls());
 }
 
-void KNMusicViewer::showContextMenu(const QPoint &position,
-                                    const QModelIndex &index)
+void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
+                                                       const QModelIndex &index)
 {
-    m_libraryViewMenu->exec(position);
+    QModelIndex sourceIndex=m_listViewModel->mapToSource(index);
+    emit requireShowContextMenu(position, sourceIndex);
 }

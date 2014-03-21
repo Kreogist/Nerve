@@ -7,11 +7,11 @@
 
 class KNGlobal;
 class KNMusicModel;
-class KNMusicSortModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
 class KNMusicSearcher;
+class KNMusicViewerMenu;
 class KNMusicPluin : public KNPluginBase
 {
     Q_OBJECT
@@ -24,14 +24,19 @@ signals:
 
 public slots:
 
+private slots:
+    void showContextMenu(const QPoint &position,
+                          const QModelIndex &index);
+
+
 private:
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
     KNMusicModel *m_model;
-    KNMusicSortModel *m_listViewModel;
     KNMusicInfoCollector *m_infoCollector;
     KNMusicInfoCollectorManager *m_infoCollectManager;
     KNMusicSearcher *m_searcher;
+    KNMusicViewerMenu *m_libraryViewMenu;
 
     QThread m_collectThread,
             m_modelThread;

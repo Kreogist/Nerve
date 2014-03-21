@@ -11,7 +11,8 @@ class QDragEnterEvent;
 class QDropEvent;
 class KNMusicListView;
 class KNMusicArtistView;
-class KNMusicViewerMenu;
+class KNMusicSortModel;
+class KNMusicArtistModel;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -22,6 +23,8 @@ public:
 
 signals:
     void requireAnalysisUrls(QList<QUrl> urls);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -32,8 +35,8 @@ protected:
     void dropEvent(QDropEvent *event);
 
 private slots:
-    void showContextMenu(const QPoint &position,
-                          const QModelIndex &index);
+    void onActionLibraryViewShowContextMenu(const QPoint &position,
+                                            const QModelIndex &index);
 
 private:
     enum MusicCategories
@@ -48,7 +51,8 @@ private:
     QString m_categoryCaption[MusicCategoriesCount];
     KNMusicListView *m_libraryView;
     KNMusicArtistView *m_artistView;
-    KNMusicViewerMenu *m_libraryViewMenu;
+    KNMusicSortModel *m_listViewModel;
+    KNMusicArtistModel *m_artistModel;
 };
 
 #endif // KNMUSICVIEWER_H

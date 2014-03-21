@@ -3,12 +3,14 @@
 #include <QList>
 #include <QUrl>
 
+#include <QDebug>
+
 #include "Libraries/knmusicmodel.h"
-#include "Libraries/knmusicsortmodel.h"
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
 #include "Widgets/knmusicviewer.h"
+#include "Widgets/knmusicviewermenu.h"
 
 #include "knmusicpluin.h"
 
@@ -19,11 +21,13 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
 
-    m_listViewModel=new KNMusicSortModel(this);
-    m_listViewModel->setSourceModel(m_model);
-
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
-    m_musicViewer->setModel(m_listViewModel);
+    m_musicViewer->setModel(m_model);
+
+    m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
+
+    connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
+            this, &KNMusicPluin::showContextMenu);
 
     m_searcher=new KNMusicSearcher(this);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
@@ -54,7 +58,14 @@ KNMusicPluin::~KNMusicPluin()
 
 void KNMusicPluin::applyPlugin()
 {
-    emit requireAddCategory("test",
+    emit requireAddCategory("Music",
                             QPixmap(),
                             m_musicViewer);
+}
+
+void KNMusicPluin::showContextMenu(const QPoint &position,
+                                   const QModelIndex &index)
+{
+    m_libraryViewMenu->setFilePath(m_model->item(index.row(),KNMusicGlobal::Name)->data(Qt::UserRole).toString());
+    m_libraryViewMenu->exec(position);
 }

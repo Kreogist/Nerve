@@ -15,6 +15,7 @@ public:
     struct MusicDetailsInfo
     {
         quint64 size;
+        QString filePath;
         QDateTime dateModified;
         QDateTime lastPlayed;
         QDateTime dateAdded;

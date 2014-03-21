@@ -41,7 +41,7 @@ void KNMusicModel::appendMusic(const QStringList &info,
         QStandardItem *infoItem=new QStandardItem(info.at(i));
         musicItem.append(infoItem);
     }
-    QStandardItem *dataItem=musicItem.at(KNMusicGlobal::Name);
+    QStandardItem *dataItem=musicItem.at(KNMusicGlobal::Time);
     dataItem->setData(datas.coverImage, Qt::UserRole);
     dataItem=musicItem.at(KNMusicGlobal::DateModified);
     dataItem->setData(datas.dateModified, Qt::UserRole);
@@ -49,7 +49,11 @@ void KNMusicModel::appendMusic(const QStringList &info,
     dataItem->setData(datas.lastPlayed, Qt::UserRole);
     dataItem=musicItem.at(KNMusicGlobal::Size);
     dataItem->setData(datas.size, Qt::UserRole);
+
+    dataItem=musicItem.at(KNMusicGlobal::Name);
+    dataItem->setData(datas.filePath, Qt::UserRole);
     appendRow(musicItem);
+    emit musicAppend(indexFromItem(dataItem));
 }
 
 void KNMusicModel::retranslate()

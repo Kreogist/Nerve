@@ -19,6 +19,7 @@ public:
 signals:
     void requireAppendMusic(const QStringList &value,
                             const KNMusicGlobal::MusicDetailsInfo &datas);
+    void requireSortData();
 
 public slots:
     void addAnalysisList(const QString &filePath);
