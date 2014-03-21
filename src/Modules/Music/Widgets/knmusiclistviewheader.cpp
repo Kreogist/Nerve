@@ -3,8 +3,8 @@
 KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     QHeaderView(Qt::Horizontal, parent)
 {
-   setStretchLastSection(true);
    setSectionsMovable(true);
+   setDefaultAlignment(Qt::AlignLeft);
 }
 
 void KNMusicListViewHeader::moveToFirst(int logicalIndex)

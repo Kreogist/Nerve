@@ -37,14 +37,14 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
             m_global->byteToHigher(currentFile.size());
     currentFileInfo.size=currentFile.size();
     m_musicInfos[KNMusicGlobal::DateModified]=
-            currentFile.lastModified().toString("yyyy MMM dd, ddd");
+            currentFile.lastModified().toString("yyyy-MM-dd APhh:mm");
     currentFileInfo.dateModified=currentFile.lastModified();
     m_musicInfos[KNMusicGlobal::LastPlayed]=
-            currentFile.lastRead().toString("yyyy MMM dd, ddd");
+            currentFile.lastRead().toString("yyyy-MM-dd APhh:mm");
     currentFileInfo.lastPlayed=currentFile.lastRead();
     QDateTime addedDate=QDateTime::currentDateTime();
     m_musicInfos[KNMusicGlobal::DateAdded]=
-            addedDate.toString("yyyy MMM dd, ddd");
+            addedDate.toString("yyyy-MM-dd APhh:mm");
     currentFileInfo.dateAdded=addedDate;
 
     readID3v1Tag(filePath);
@@ -83,7 +83,7 @@ void KNMusicInfoCollector::readID3v1Tag(const QString &value)
         setMediaData(KNMusicGlobal::Genre,id3v1Info.genre);
         setMediaData(KNMusicGlobal::Year,id3v1Info.year);
         setMediaData(KNMusicGlobal::Comments,id3v1Info.comment);
-        setMediaData(KNMusicGlobal::TrackNumber,QString::number(id3v1Info.track));
+        setMediaData(KNMusicGlobal::TrackNumber,QString::number((quint8)id3v1Info.track));
     }
 }
 
@@ -103,6 +103,13 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::Genre,
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCON")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
+            QString trackInfo=m_tagID3v2->id3v2String("TRCK");
+            int diagonalPos=trackInfo.indexOf("/");
+            if(diagonalPos!=-1)
+            {
+                trackInfo=trackInfo.left(diagonalPos);
+            }
+            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
         }
         else
         {

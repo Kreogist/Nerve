@@ -7,6 +7,7 @@
 
 class KNGlobal;
 class KNMusicModel;
+class KNMusicSortModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
@@ -27,6 +28,7 @@ private:
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
     KNMusicModel *m_model;
+    KNMusicSortModel *m_listViewModel;
     KNMusicInfoCollector *m_infoCollector;
     KNMusicInfoCollectorManager *m_infoCollectManager;
     KNMusicSearcher *m_searcher;

@@ -4,6 +4,7 @@
 #include <QUrl>
 
 #include "Libraries/knmusicmodel.h"
+#include "Libraries/knmusicsortmodel.h"
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
@@ -18,8 +19,11 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
 
+    m_listViewModel=new KNMusicSortModel(this);
+    m_listViewModel->setSourceModel(m_model);
+
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
-    m_musicViewer->setModel(m_model);
+    m_musicViewer->setModel(m_listViewModel);
 
     m_searcher=new KNMusicSearcher(this);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,

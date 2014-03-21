@@ -12,8 +12,8 @@ public:
     void resetHeader();
 
 signals:
-    void requireShowContextMenu(QPoint position,
-                                QModelIndex index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 public slots:
     void retranslate();

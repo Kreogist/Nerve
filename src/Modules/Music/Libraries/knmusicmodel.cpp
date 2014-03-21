@@ -18,6 +18,9 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     }
     setHorizontalHeaderLabels(header);
 
+    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 1, Qt::UserRole);
+    setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, 2, Qt::UserRole);
+
     connect(KNLocale::instance(), SIGNAL(languageChanged()),
             this, SLOT(retranslateAndSet()));
 }
@@ -39,11 +42,13 @@ void KNMusicModel::appendMusic(const QStringList &info,
         musicItem.append(infoItem);
     }
     QStandardItem *dataItem=musicItem.at(KNMusicGlobal::Name);
-    dataItem->setData(datas.coverImage);
+    dataItem->setData(datas.coverImage, Qt::UserRole);
     dataItem=musicItem.at(KNMusicGlobal::DateModified);
-    dataItem->setData(datas.dateModified);
+    dataItem->setData(datas.dateModified, Qt::UserRole);
     dataItem=musicItem.at(KNMusicGlobal::LastPlayed);
-    dataItem->setData(datas.lastPlayed);
+    dataItem->setData(datas.lastPlayed, Qt::UserRole);
+    dataItem=musicItem.at(KNMusicGlobal::Size);
+    dataItem->setData(datas.size, Qt::UserRole);
     appendRow(musicItem);
 }
 
@@ -72,9 +77,7 @@ void KNMusicModel::retranslate()
     m_header[KNMusicGlobal::LastPlayed]=tr("Last Played");
     m_header[KNMusicGlobal::LastSkipped]=tr("Last Skipped");
     m_header[KNMusicGlobal::Plays]=tr("Plays");
-    m_header[KNMusicGlobal::PurchaseDate]=tr("Purchase Date");
     m_header[KNMusicGlobal::Rating]=tr("Rating");
-    m_header[KNMusicGlobal::ReleaseData]=tr("Release Data");
     m_header[KNMusicGlobal::SampleRate]=tr("Sample Rate");
     m_header[KNMusicGlobal::Season]=tr("Season");
     m_header[KNMusicGlobal::Show]=tr("Show");

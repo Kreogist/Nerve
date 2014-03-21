@@ -16,7 +16,7 @@ QString KNGlobal::byteToHigher(const qint64 &fileSize)
         dFileSize/=1024.0;
         unitPointer++;
     }
-    return QString::number(dFileSize, 'g', 2) + m_storageUnit[unitPointer];
+    return QString::number(dFileSize, 'g', 2) + " " + m_storageUnit[unitPointer];
 }
 
 KNGlobal::KNGlobal() :
