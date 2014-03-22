@@ -6,4 +6,7 @@
         <file>Resources/Category/04_genres.png</file>
         <file>Resources/Category/05_playlists.png</file>
     </qresource>
+    <qresource prefix="/Music">
+        <file>Resources/Music/noalbum.png</file>
+    </qresource>
 </RCC>

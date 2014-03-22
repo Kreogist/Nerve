@@ -1,11 +1,11 @@
 #ifndef KNMUSICARTISTVIEW_H
 #define KNMUSICARTISTVIEW_H
 
-#include <QWidget>
+#include <QSplitter>
 
 class QListView;
 class QAbstractItemModel;
-class KNMusicArtistView : public QWidget
+class KNMusicArtistView : public QSplitter
 {
     Q_OBJECT
 public:

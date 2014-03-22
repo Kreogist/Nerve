@@ -43,7 +43,8 @@ SOURCES += \
     Modules/Music/Libraries/knmusicsortmodel.cpp \
     Modules/Music/Widgets/knmusicartistview.cpp \
     Modules/Music/Libraries/knmusicartistitem.cpp \
-    Modules/Music/Libraries/knmusicartistmodel.cpp
+    Modules/Music/Libraries/knmusicartistmodel.cpp \
+    Modules/Music/Libraries/knmusictagm4a.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -82,7 +83,8 @@ HEADERS += \
     Modules/Music/Libraries/knmusicsortmodel.h \
     Modules/Music/Widgets/knmusicartistview.h \
     Modules/Music/Libraries/knmusicartistitem.h \
-    Modules/Music/Libraries/knmusicartistmodel.h
+    Modules/Music/Libraries/knmusicartistmodel.h \
+    Modules/Music/Libraries/knmusictagm4a.h
 
 RESOURCES += \
     res.qrc

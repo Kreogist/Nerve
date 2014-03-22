@@ -150,7 +150,7 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
 
 void KNMusicInfoCollector::readWMATag(const QString &value)
 {
-    //m_tagWMA->readTag(value);
+    m_tagWMA->readTag(value);
 }
 
 void KNMusicInfoCollector::setMediaData(const int &index,

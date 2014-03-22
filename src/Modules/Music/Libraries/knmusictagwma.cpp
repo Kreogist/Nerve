@@ -12,11 +12,12 @@
 KNMusicTagWma::KNMusicTagWma(QObject *parent) :
     KNMusicTagBase(parent)
 {
-    m_utf16Codec=QTextCodec::codecForName("UTF-16");
+    m_utf16Codec=QTextCodec::codecForName("UTF-16LE");
 }
 
 bool KNMusicTagWma::readTag(const QString &filePath)
 {
+    resetCache();
     QFile mediaFile(filePath);
     if(mediaFile.size()<16)
     {
@@ -47,64 +48,64 @@ bool KNMusicTagWma::readTag(const QString &filePath)
                     ((((quint64)rawTagSize[1])<<8) &0b0000000000000000000000000000000000000000000000001111111100000000)+
                     (((quint64)rawTagSize[0])      &0b0000000000000000000000000000000000000000000000000000000011111111);
 
+    //Remove the file header and size of tagSize.
+    tagSize-=30;
+
     char *rawTagData=new char[tagSize];
     mediaData.readRawData(rawTagData, tagSize);
-    mediaFile.close();
+    quint64 tagPosition=0;
 
-    //All process here.
-    quint64 position=0;
-    char standardHeader[17];
-    memcpy(standardHeader, rawTagData, 16);
-    if(memcmp(standardHeader, m_standardFrame, 16)!=0)
+    char standardFrameTest[17];
+    memcpy(standardFrameTest, rawTagData, 16);
+    if(memcmp(standardFrameTest, m_standardFrame, 16)!=0)
     {
-        //Can't find standard tags.
+        //Can't find standard frame.
         delete[] rawTagData;
         return false;
     }
-    position+=16;
-    quint8 titleLength=(quint8)rawTagData[position],
-           artistLength=(quint8)rawTagData[position+1],
-           copyrightLength=(quint8)rawTagData[position+2],
-           commentLength=(quint8)rawTagData[position+3],
-           unknownLength=(quint8)rawTagData[position+4];
-    char *rawStandardData;
-    position+=4;
+    tagPosition+=16;
 
-    rawStandardData=new char[titleLength+1];
-    rawStandardData[titleLength]='\0';
-    memcpy(rawStandardData, rawTagData+position, titleLength);
-    m_wmaTags[WMA_FRAMEID_TITLE]=
-            m_utf16Codec->toUnicode(rawStandardData).simplified();
-    delete[] rawStandardData;
-    position+=titleLength;
+    quint64 stdSize=
+            ((((quint64)rawTagData[tagPosition+7])<<56)&0b1111111100000000000000000000000000000000000000000000000000000000)+
+            ((((quint64)rawTagData[tagPosition+6])<<48)&0b0000000011111111000000000000000000000000000000000000000000000000)+
+            ((((quint64)rawTagData[tagPosition+5])<<40)&0b0000000000000000111111110000000000000000000000000000000000000000)+
+            ((((quint64)rawTagData[tagPosition+4])<<32)&0b0000000000000000000000001111111100000000000000000000000000000000)+
+            ((((quint64)rawTagData[tagPosition+3])<<24)&0b0000000000000000000000000000000011111111000000000000000000000000)+
+            ((((quint64)rawTagData[tagPosition+2])<<16)&0b0000000000000000000000000000000000000000111111110000000000000000)+
+            ((((quint64)rawTagData[tagPosition+1])<<8) &0b0000000000000000000000000000000000000000000000001111111100000000)+
+            (((quint64)rawTagData[tagPosition])        &0b0000000000000000000000000000000000000000000000000000000011111111);
 
-    rawStandardData=new char[artistLength+1];
-    rawStandardData[artistLength]='\0';
-    memcpy(rawStandardData, rawTagData, artistLength);
-    m_wmaTags[WMA_FRAMEID_AUTHOR]=rawStandardData;
-    delete[] rawStandardData;
+    quint16 stdItemLength[5];
+    int standardItemCounter=Title,
+        stdItemIndex[5]={WMA_FRAMEID_TITLE,
+                              WMA_FRAMEID_AUTHOR,
+                              WMA_FRAMEID_COPYRIGHT,
+                              WMA_FRAMEID_DESCRIPTION,
+                              WMA_FRAMEID_RATING};
 
-    rawStandardData=new char[copyrightLength+1];
-    rawStandardData[copyrightLength]='\0';
-    memcpy(rawStandardData, rawTagData, copyrightLength);
-    m_wmaTags[WMA_FRAMEID_COPYRIGHT]=rawStandardData;
-    delete[] rawStandardData;
+    for(int i=8; i<18; i+=2)
+    {
+        stdItemLength[standardItemCounter]=
+                        (((quint16)rawTagData[tagPosition+i+1]<<8)&0b1111111100000000)+
+                        (((quint16)rawTagData[tagPosition+i])     &0b0000000011111111);
+        standardItemCounter++;
+    }
 
-    rawStandardData=new char[commentLength+1];
-    rawStandardData[commentLength]='\0';
-    memcpy(rawStandardData, rawTagData, commentLength);
-    m_wmaTags[WMA_FRAMEID_DESCRIPTION]=rawStandardData;
+    tagPosition+=18;
+    quint16 stringLength;
 
-    rawStandardData=new char[unknownLength+1];
-    rawStandardData[unknownLength]='\0';
-    memcpy(rawStandardData, rawTagData, unknownLength);
-    m_wmaTags[WMA_FRAMEID_UNKNOWN]=rawStandardData;
-    delete[] rawStandardData;
-
-    qDebug()<<m_wmaTags[WMA_FRAMEID_TITLE];
-    //All process above.
+    for(int i=0; i<5; i++)
+    {
+        char *stdItemString=new char[stdItemLength[i]];
+        memcpy(stdItemString, rawTagData+tagPosition, stdItemLength[i]);
+        stringLength=stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i];
+        m_wmaTags[stdItemIndex[i]].append(stdItemString, stringLength);
+        delete[] stdItemString;
+        tagPosition+=stdItemLength[i];
+    }
 
     delete[] rawTagData;
+
     return true;
 }
 

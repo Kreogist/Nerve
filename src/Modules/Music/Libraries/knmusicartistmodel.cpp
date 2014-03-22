@@ -10,7 +10,7 @@
 KNMusicArtistModel::KNMusicArtistModel(QObject *parent) :
     QStandardItemModel(parent)
 {
-    ;
+    m_noAlbumIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
 }
 
 void KNMusicArtistModel::onMusicAdded(const QModelIndex &index)
@@ -24,7 +24,11 @@ void KNMusicArtistModel::onMusicAdded(const QModelIndex &index)
         currentArtist=new KNMusicArtistItem(artistName);
         currentArtist->addSongs(index);
         QPixmap albumArt=m_sourceModel->item(index.row(),KNMusicGlobal::Time)->data(Qt::UserRole).value<QPixmap>();
-        if(!albumArt.isNull())
+        if(albumArt.isNull())
+        {
+            currentArtist->setIcon(m_noAlbumIcon);
+        }
+        else
         {
             currentArtist->setIcon(QIcon(albumArt));
         }

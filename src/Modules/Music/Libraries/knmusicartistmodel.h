@@ -3,8 +3,11 @@
 
 #include "knmusicartistmodel.h"
 
+#include <QIcon>
+
 #include <QStandardItemModel>
 
+class QSplitter;
 class KNMusicModel;
 class KNMusicArtistModel : public QStandardItemModel
 {
@@ -20,6 +23,7 @@ public slots:
 
 private:
     KNMusicModel *m_sourceModel;
+    QIcon m_noAlbumIcon;
 };
 
 #endif // KNMUSICARTISTMODEL_H

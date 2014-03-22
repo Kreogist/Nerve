@@ -1,6 +1,8 @@
 #ifndef KNMUSICTAGWMA_H
 #define KNMUSICTAGWMA_H
 
+#include <QByteArray>
+
 #include "knmusictagbase.h"
 
 class QTextCodec;
@@ -29,6 +31,16 @@ private:
                                        0x07, 0xE3, 0xD2, 0x11,
                                        0x97, 0xF0, 0x00, 0xA0,
                                        0xC9, 0x5E, 0xA8, 0x50};
+
+    enum WMAStandardFrame
+    {
+        Title=0,
+        Author,
+        Copyright,
+        Description,
+        Rating
+    };
+
     enum WMA_FRAMEID_T
     {
         WMA_FRAMEID_AUTHOR = 0,
@@ -121,7 +133,7 @@ private:
         WMA_FRAMEID_UNKNOWN,
         WMAFrameCount
     };
-    QString m_wmaTags[WMAFrameCount];
+    QByteArray m_wmaTags[WMAFrameCount];
     QTextCodec *m_utf16Codec;
 
     void resetCache();

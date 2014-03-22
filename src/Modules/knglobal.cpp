@@ -1,6 +1,10 @@
 #include <QProcess>
 #include <QStringList>
 
+#ifdef Q_OS_WIN
+#include <QDir>
+#endif
+
 #include "knglobal.h"
 
 KNGlobal *KNGlobal::m_instance=nullptr;
