@@ -123,6 +123,13 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::Genre,
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCO")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
+            QString trackInfo=m_tagID3v2->id3v2String("TRK");
+            int diagonalPos=trackInfo.indexOf("/");
+            if(diagonalPos!=-1)
+            {
+                trackInfo=trackInfo.left(diagonalPos);
+            }
+            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
         }
         m_musicCover=m_tagID3v2->tagImage(3); //3 is the Cover front.
         if(m_musicCover.isNull())
@@ -144,13 +151,22 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
         //setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
         setMediaData(KNMusicGlobal::Composer,m_tagAPEv2->tagStringData("Composer"));
         setMediaData(KNMusicGlobal::Genre,m_tagAPEv2->tagStringData("Genre"));
-        //setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
+        setMediaData(KNMusicGlobal::Year,m_tagAPEv2->tagStringData("Year"));
+        setMediaData(KNMusicGlobal::TrackNumber,m_tagAPEv2->tagStringData("Track"));
     }
 }
 
 void KNMusicInfoCollector::readWMATag(const QString &value)
 {
-    m_tagWMA->readTag(value);
+    if(m_tagWMA->readTag(value))
+    {
+        setMediaData(KNMusicGlobal::Name, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_TITLE));
+        setMediaData(KNMusicGlobal::Artist, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_AUTHOR));
+        setMediaData(KNMusicGlobal::Album, m_tagWMA->tagStringData("WM/AlbumTitle"));
+        setMediaData(KNMusicGlobal::Genre, m_tagWMA->tagStringData("WM/Genre"));
+        setMediaData(KNMusicGlobal::Year, m_tagWMA->tagStringData("WM/Year"));
+        setMediaData(KNMusicGlobal::TrackNumber,m_tagWMA->tagStringData("WM/TrackNumber"));
+    }
 }
 
 void KNMusicInfoCollector::setMediaData(const int &index,
