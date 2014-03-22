@@ -39,6 +39,8 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
             m_infoCollectManager, &KNMusicInfoCollectorManager::addAnalysisList);
     connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireAppendMusic,
             m_model, &KNMusicModel::appendMusic);
+    connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireSortData,
+            m_musicViewer, &KNMusicViewer::resort);
 
     m_modelThread.start();
     m_collectThread.start();
@@ -66,6 +68,7 @@ void KNMusicPluin::applyPlugin()
 void KNMusicPluin::showContextMenu(const QPoint &position,
                                    const QModelIndex &index)
 {
-    m_libraryViewMenu->setFilePath(m_model->item(index.row(),KNMusicGlobal::Name)->data(Qt::UserRole).toString());
+    m_libraryViewMenu->setFilePath(m_model->item(index.row(),
+                                                 KNMusicGlobal::Name)->data(Qt::UserRole).toString());
     m_libraryViewMenu->exec(position);
 }

@@ -18,6 +18,9 @@ void KNMusicViewerMenu::setFilePath(const QString &filePath)
 
 void KNMusicViewerMenu::retranslate()
 {
+#ifdef Q_OS_WIN
+    m_actionTitle[Browse]=tr("Show in Explorer");
+#endif
 #ifdef Q_OS_MAC
     m_actionTitle[Browse]=tr("Show in Finder");
 #endif

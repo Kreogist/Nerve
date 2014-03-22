@@ -75,6 +75,11 @@ void KNMusicViewer::retranslateAndSet()
     retranslate();
 }
 
+void KNMusicViewer::resort()
+{
+    m_artistView->resort();
+}
+
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls())

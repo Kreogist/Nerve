@@ -15,6 +15,8 @@ signals:
 
 public slots:
 
+private:
+    char m_m4aHeader[4]={'f', 't', 'y', 'p'};
 };
 
 #endif // KNMUSICTAGM4A_H

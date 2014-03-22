@@ -29,6 +29,7 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void resort();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
