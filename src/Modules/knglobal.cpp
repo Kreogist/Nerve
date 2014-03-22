@@ -1,9 +1,6 @@
 #include <QProcess>
-#include <QStringList>
-
-#ifdef Q_OS_WIN
 #include <QDir>
-#endif
+#include <QStringList>
 
 #include <QDebug>
 

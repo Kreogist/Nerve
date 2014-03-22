@@ -7,6 +7,7 @@
 KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     KNMenu(parent)
 {
+    m_global=KNGlobal::instance();
     retranslate();
     createActions();
 }
@@ -34,7 +35,7 @@ void KNMusicViewerMenu::retranslateAndSet()
 
 void KNMusicViewerMenu::onActionBrowse()
 {
-    KNGlobal::instance()->showInGraphicalShell(m_filePath);
+    m_global->showInGraphicalShell(m_filePath);
 }
 
 void KNMusicViewerMenu::createActions()

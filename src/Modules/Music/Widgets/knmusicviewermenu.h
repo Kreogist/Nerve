@@ -3,6 +3,7 @@
 
 #include "../../../Modules/Base/knmenu.h"
 
+class KNGlobal;
 class KNMusicViewerMenu : public KNMenu
 {
     Q_OBJECT
@@ -31,6 +32,7 @@ private:
     void createActions();
 
     QString m_filePath;
+    KNGlobal *m_global;
 };
 
 #endif // KNMUSICVIEWERMENU_H
