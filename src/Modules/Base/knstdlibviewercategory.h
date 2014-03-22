@@ -25,14 +25,19 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void enterEvent(QEvent *e);
+    void leaveEvent(QEvent *e);
 
 private slots:
     void categoryClicked(int index);
+    void changeBackground(int frameData);
 
 private:
     QColor m_backgroundColor;
     QBoxLayout *m_layout;
+    QPalette m_palette;
     QSignalMapper *m_categoryClicked;
+    QTimeLine *m_mouseIn, *m_mouseOut;
 
     QList<KNStdLibViewerCategoryButton *> m_categories;
     int m_currentCategory=-1;

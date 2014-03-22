@@ -3,6 +3,7 @@
 
 #include <QTreeView>
 
+class QTimeLine;
 class KNMusicListViewHeader;
 class KNMusicListView : public QTreeView
 {
@@ -22,8 +23,11 @@ public slots:
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
+private slots:
+
 private:
     KNMusicListViewHeader *m_headerWidget;
+    QTimeLine *m_mouseIn;
 };
 
 #endif // KNMUSICLISTVIEW_H

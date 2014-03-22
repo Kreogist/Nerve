@@ -4,6 +4,7 @@
 #include <QAudioBuffer>
 #include <QDateTime>
 #include <QFileInfo>
+#include <QUrl>
 
 #include "../knmusicglobal.h"
 #include "knmusictagid3v1.h"
@@ -31,6 +32,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 void KNMusicInfoCollector::analysis(const QString &filePath)
 {   
     resetMusicInfo();
+
     KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     QFileInfo currentFile(filePath);
     currentFileInfo.filePath=currentFile.absoluteFilePath();

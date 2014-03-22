@@ -46,7 +46,7 @@ private:
               *m_mouseDownAnime, *m_mouseUpAnime;
     QGraphicsOpacityEffect *m_iconOpacity;
     QPalette m_pal;
-    QColor m_backcolor=QColor(150,150,150,0);
+    QColor m_backcolor=QColor(0x85,0x85,0x85,0);
     QFont m_captionFont;
     int m_defaultFontSize, m_pressedFontSize;
     bool m_mousePressed=false;
