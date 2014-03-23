@@ -22,12 +22,17 @@ public slots:
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
+    void enterEvent(QEvent *e);
+    void leaveEvent(QEvent *e);
 
 private slots:
+    void changeBackground(int frameData);
 
 private:
     KNMusicListViewHeader *m_headerWidget;
-    QTimeLine *m_mouseIn;
+    QTimeLine *m_mouseIn, *m_mouseOut;
+    QColor m_backgroundColor;
+    QPalette m_palette;
 };
 
 #endif // KNMUSICLISTVIEW_H

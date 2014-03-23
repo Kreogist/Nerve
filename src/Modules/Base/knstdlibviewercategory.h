@@ -24,7 +24,6 @@ signals:
 public slots:
 
 protected:
-    void paintEvent(QPaintEvent *event);
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
 

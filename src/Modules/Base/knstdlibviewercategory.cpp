@@ -1,6 +1,4 @@
 #include <QBoxLayout>
-#include <QPaintEvent>
-#include <QPainter>
 #include <QSignalMapper>
 #include <QTimeLine>
 
@@ -35,7 +33,7 @@ KNStdLibViewerCategory::KNStdLibViewerCategory(QWidget *parent) :
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(2);
-    m_mouseIn->setEndFrame(0x45);
+    m_mouseIn->setEndFrame(0x40);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategory::changeBackground);
 
@@ -72,11 +70,6 @@ void KNStdLibViewerCategory::setText(const int &index,
         KNStdLibViewerCategoryButton *button=m_categories.at(index);
         button->setText(text);
     }
-}
-
-void KNStdLibViewerCategory::paintEvent(QPaintEvent *event)
-{
-    KNLibViewerCategory::paintEvent(event);
 }
 
 void KNStdLibViewerCategory::enterEvent(QEvent *e)
@@ -117,5 +110,5 @@ void KNStdLibViewerCategory::changeBackground(int frameData)
 {
     m_backgroundColor=QColor(frameData, frameData, frameData);
     m_palette.setColor(QPalette::Window, m_backgroundColor);
-    setPalette(m_palette);;
+    setPalette(m_palette);
 }
