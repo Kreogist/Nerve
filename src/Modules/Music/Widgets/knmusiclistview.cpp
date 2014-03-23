@@ -127,5 +127,5 @@ void KNMusicListView::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
-    setPalette(m_palette);;
+    setPalette(m_palette);
 }
