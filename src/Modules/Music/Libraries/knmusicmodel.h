@@ -25,7 +25,7 @@ public slots:
     void retranslateAndSet();
 
 private:
-    QString m_header[KNMusicGlobal::MusicDataCount];
+    KNMusicGlobal *instance;
 };
 
 #endif // KNMUSICMODEL_H

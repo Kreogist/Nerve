@@ -50,9 +50,56 @@ QString KNMusicGlobal::getGenre(const QString &value)
     return resultValue;
 }
 
+QString KNMusicGlobal::getHeader(const int &index)
+{
+    return m_header[index];
+}
+
+void KNMusicGlobal::retranslate()
+{
+    m_header[Name]=tr("Name");
+    m_header[Album]=tr("Album");
+    m_header[AlbumArtist]=tr("Album Artist");
+    m_header[AlbumRating]=tr("Album Rating");
+    m_header[Artist]=tr("Artist");
+    m_header[BeatsPerMinuate]=tr("Beats Per Minuate");
+    m_header[BitRate]=tr("Bit Rate");
+    m_header[Category]=tr("Category");
+    m_header[Comments]=tr("Comments");
+    m_header[Composer]=tr("Composer");
+    m_header[DateAdded]=tr("Date Added");
+    m_header[DateModified]=tr("Date Modified");
+    m_header[Description]=tr("Description");
+    m_header[DiscNumber]=tr("Disc Number");
+    m_header[EpisodeID]=tr("Episode ID");
+    m_header[EpisodeNumber]=tr("Episode Number");
+    m_header[Equalizer]=tr("Equalizer");
+    m_header[Genre]=tr("Genre");
+    m_header[Grouping]=tr("Grouping");
+    m_header[Kind]=tr("Kind");
+    m_header[LastPlayed]=tr("Last Played");
+    m_header[LastSkipped]=tr("Last Skipped");
+    m_header[Plays]=tr("Plays");
+    m_header[Rating]=tr("Rating");
+    m_header[SampleRate]=tr("Sample Rate");
+    m_header[Season]=tr("Season");
+    m_header[Show]=tr("Show");
+    m_header[Size]=tr("Size");
+    m_header[Skips]=tr("Skips");
+    m_header[Time]=tr("Time");
+    m_header[TrackNumber]=tr("Track Number");
+    m_header[Year]=tr("Year");
+}
+
+void KNMusicGlobal::retranslateAndSet()
+{
+    retranslate();
+}
+
 KNMusicGlobal::KNMusicGlobal() :
     QObject()
 {
+    retranslate();
     qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
     m_genreList<<"Blues"
                <<"Classic Rock"

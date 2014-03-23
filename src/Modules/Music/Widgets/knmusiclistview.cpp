@@ -42,6 +42,8 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     //Set music header.
     m_headerWidget=new KNMusicListViewHeader(this);
     setHeader(m_headerWidget);
+    connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
+            this, &KNMusicListView::onSectionVisibleChanged);
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(2);
@@ -128,4 +130,10 @@ void KNMusicListView::changeBackground(int frameData)
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
     setPalette(m_palette);
+}
+
+void KNMusicListView::onSectionVisibleChanged(const int &index,
+                                              const bool &visible)
+{
+    setColumnHidden(index, !visible);
 }

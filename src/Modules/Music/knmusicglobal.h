@@ -60,15 +60,19 @@ public:
     };
     QString getGenre(const int &index);
     QString getGenre(const QString &value);
+    QString getHeader(const int &index);
 
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
 
 private:
     static KNMusicGlobal *m_instance;
     KNMusicGlobal();
     QStringList m_genreList;
+    QString m_header[MusicDataCount];
 };
 
 #endif // KNMUSICGLOBAL_H

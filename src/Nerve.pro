@@ -44,7 +44,8 @@ SOURCES += \
     Modules/Music/Widgets/knmusicartistview.cpp \
     Modules/Music/Libraries/knmusicartistitem.cpp \
     Modules/Music/Libraries/knmusicartistmodel.cpp \
-    Modules/Music/Libraries/knmusictagm4a.cpp
+    Modules/Music/Libraries/knmusictagm4a.cpp \
+    Modules/Music/Widgets/knmusiclistviewheadermenu.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -84,7 +85,8 @@ HEADERS += \
     Modules/Music/Widgets/knmusicartistview.h \
     Modules/Music/Libraries/knmusicartistitem.h \
     Modules/Music/Libraries/knmusicartistmodel.h \
-    Modules/Music/Libraries/knmusictagm4a.h
+    Modules/Music/Libraries/knmusictagm4a.h \
+    Modules/Music/Widgets/knmusiclistviewheadermenu.h
 
 RESOURCES += \
     res.qrc

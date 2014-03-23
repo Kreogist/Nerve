@@ -27,6 +27,8 @@ protected:
 
 private slots:
     void changeBackground(int frameData);
+    void onSectionVisibleChanged(const int &index,
+                                 const bool &visible);
 
 private:
     KNMusicListViewHeader *m_headerWidget;

@@ -1,5 +1,7 @@
 #include <QTimeLine>
 
+#include "knmusiclistviewheadermenu.h"
+
 #include "knmusiclistviewheader.h"
 
 KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
@@ -7,8 +9,14 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
 {
     //Set properties.
     setSectionsMovable(true);
-    setStretchLastSection(true);
     setDefaultAlignment(Qt::AlignLeft);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    m_viewerMenu=new KNMusicListViewHeaderMenu(this);
+    connect(this, &KNMusicListViewHeader::customContextMenuRequested,
+            this, &KNMusicListViewHeader::showContextMenu);
+    connect(m_viewerMenu, &KNMusicListViewHeaderMenu::requireChangeVisible,
+            this, &KNMusicListViewHeader::requireChangeVisible);
 
     //Set palette.
     int minGrey=0x20;
@@ -65,4 +73,13 @@ void KNMusicListViewHeader::changeBackground(int frameData)
     m_palette.setColor(QPalette::Window, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
     setPalette(m_palette);
+}
+
+void KNMusicListViewHeader::showContextMenu(const QPoint &mousePoint)
+{
+    for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
+    {
+        m_viewerMenu->setHeaderValue(i, !isSectionHidden(i));
+    }
+    m_viewerMenu->exec(mousePoint);
 }
