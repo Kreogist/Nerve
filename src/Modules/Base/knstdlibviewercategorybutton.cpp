@@ -52,7 +52,7 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
 
     //Init animes.
     m_mouseInAnime=new QTimeLine(animeDuration, this);
-    m_mouseInAnime->setUpdateInterval(2);
+    m_mouseInAnime->setUpdateInterval(5);
     m_mouseInAnime->setEndFrame(0);
     m_mouseInAnime->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseInAnime, SIGNAL(frameChanged(int)),
@@ -61,7 +61,7 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
             this, SLOT(mouseInAnime(qreal)));
 
     m_mouseOutAnime=new QTimeLine(animeDuration, this);
-    m_mouseOutAnime->setUpdateInterval(2);
+    m_mouseOutAnime->setUpdateInterval(5);
     m_mouseOutAnime->setEndFrame(-height());
     m_mouseOutAnime->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseOutAnime, SIGNAL(frameChanged(int)),

@@ -30,14 +30,14 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseIn->setUpdateInterval(2);
+    m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x40);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNMusicListViewHeader::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseOut->setUpdateInterval(2);
+    m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEndFrame(minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicListViewHeader::changeBackground);
@@ -81,5 +81,5 @@ void KNMusicListViewHeader::showContextMenu(const QPoint &mousePoint)
     {
         m_viewerMenu->setHeaderValue(i, !isSectionHidden(i));
     }
-    m_viewerMenu->exec(mousePoint);
+    m_viewerMenu->exec(mapToGlobal(mousePoint));
 }

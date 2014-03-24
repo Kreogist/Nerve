@@ -32,13 +32,15 @@ KNStdLibViewerCategory::KNStdLibViewerCategory(QWidget *parent) :
             this, SLOT(categoryClicked(int)));
 
     m_mouseIn=new QTimeLine(200, this);
-    m_mouseIn->setUpdateInterval(2);
+    m_mouseIn->setUpdateInterval(5);
+    m_mouseIn->setEasingCurve(QEasingCurve::InCubic);
     m_mouseIn->setEndFrame(0x40);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategory::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
-    m_mouseOut->setUpdateInterval(2);
+    m_mouseOut->setUpdateInterval(5);
+    m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseOut->setEndFrame(minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategory::changeBackground);

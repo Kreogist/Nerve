@@ -25,7 +25,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, m_backgroundColor);
-    m_palette.setColor(QPalette::AlternateBase, QColor(0x30, 0x30, 0x30));
+    m_palette.setColor(QPalette::AlternateBase, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Window, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Button, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Text, QColor(0xff, 0xff, 0xff));
@@ -45,13 +45,13 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
             this, &KNMusicListView::onSectionVisibleChanged);
 
     m_mouseIn=new QTimeLine(200, this);
-    m_mouseIn->setUpdateInterval(2);
+    m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x40);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
-    m_mouseOut->setUpdateInterval(2);
+    m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEndFrame(minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);
@@ -126,7 +126,7 @@ void KNMusicListView::leaveEvent(QEvent *e)
 void KNMusicListView::changeBackground(int frameData)
 {
     m_backgroundColor=QColor(frameData, frameData, frameData);
-    m_palette.setColor(QPalette::Base, m_backgroundColor);
+    m_palette.setColor(QPalette::AlternateBase, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
     setPalette(m_palette);
 }
