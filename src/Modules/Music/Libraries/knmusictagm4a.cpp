@@ -36,11 +36,16 @@ bool KNMusicTagM4A::readTag(const QString &filePath)
         mediaFile.close();
         return false;
     }
-    headerSize-=4;
-    char *rawHeader=new char[headerSize];
-    mediaData.readRawData(rawHeader, headerSize);
-    int position=0;
-    position=8; //Skip 8 type byte.
+    headerSize-=8;
+    mediaData.skipRawData(headerSize);
 
+    quint32 headerLength;
+    mediaData>>headerLength;
+    headerLength-=4;
+    char *rawTagData=new char[headerLength];
+    mediaData.readRawData(rawTagData, headerLength);
+    mediaFile.close();
+    ;
+    delete[] rawTagData;
     return true;
 }

@@ -12,12 +12,12 @@ KNMenu::KNMenu(QWidget *parent) :
 
 void KNMenu::showEvent(QShowEvent *e)
 {
-    QRect endPosition=geometry();
+    /*QRect endPosition=geometry();
     QRect startPostion=endPosition;
     startPostion.setHeight(0);
     m_showAnimation->setStartValue(startPostion);
     m_showAnimation->setEndValue(endPosition);
-    m_showAnimation->start();
+    m_showAnimation->start();*/
     QMenu::showEvent(e);
 }
 
