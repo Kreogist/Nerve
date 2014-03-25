@@ -1,7 +1,7 @@
 #ifndef KNMUSICTAGM4A_H
 #define KNMUSICTAGM4A_H
 
-#include <QList>
+#include <QMap>
 
 #include "knmusictagbase.h"
 
@@ -18,17 +18,20 @@ signals:
 public slots:
 
 private:
-    struct m4aAtom
+    struct tagData
     {
-        QString id;
         int start;
         int end;
     };
 
-    void readAtom(m4aAtom &atomData);
+    void clearCache();
+    void searchIn(const char *rawTagData,
+                  const int &start,
+                  const int &end);
     char m_m4aHeader[4]={'f', 't', 'y', 'p'};
     char m_idCache[5];
-    QList<m4aAtom> m_atomList;
+    QByteArray m_rawData;
+    QMap<QString, tagData> m_tagData;
 };
 
 #endif // KNMUSICTAGM4A_H

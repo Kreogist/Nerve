@@ -55,7 +55,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readID3v2Tag(filePath);
     readAPEv2Tag(filePath);
     readWMATag(filePath);
-    //readM4ATag(filePath);
+    readM4ATag(filePath);
     currentFileInfo.coverImage=m_musicCover;
 
     QStringList musicInfo;
