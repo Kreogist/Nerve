@@ -119,8 +119,8 @@ bool KNMusicTagAPEv2::readTagAt(int position, QDataStream &mediaData)
         char *frameLabel=new char[labelLength+1];
         memcpy(frameLabel, rawTagData+labelStart, labelLength);
         char *rawFrameData=new char[currentFrameSize+1];
-        memset(rawFrameData, 0, sizeof(char)*currentFrameSize);
         memcpy(rawFrameData, rawTagData+labelEnd+1, currentFrameSize);
+        rawFrameData[currentFrameSize]='\0';
         QByteArray frameData;
         frameData.append(rawFrameData);
         m_frameDatas[frameLabel]=rawFrameData;

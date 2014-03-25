@@ -136,9 +136,9 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                 break;
             }
             quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
-                    ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
-                    ((((quint32)rawTagData[rawPosition+6])<<8)&0b00000000000000001111111100000000)+
-                    (((quint32)rawTagData[rawPosition+7])&0b00000000000000000000000011111111);
+                              ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
+                              ((((quint32)rawTagData[rawPosition+6])<<8) &0b00000000000000001111111100000000)+
+                              (((quint32)rawTagData[rawPosition+7])      &0b00000000000000000000000011111111);
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.
