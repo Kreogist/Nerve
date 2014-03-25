@@ -176,7 +176,19 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
 
 void KNMusicInfoCollector::readM4ATag(const QString &value)
 {
-    m_tagM4A->readTag(value);
+    if(m_tagM4A->readTag(value))
+    {
+        setMediaData(KNMusicGlobal::Name, m_tagM4A->metaData(KNMusicTagM4A::Title));
+        setMediaData(KNMusicGlobal::Artist, m_tagM4A->metaData(KNMusicTagM4A::Artist));
+        setMediaData(KNMusicGlobal::Album, m_tagM4A->metaData(KNMusicTagM4A::Album));
+        setMediaData(KNMusicGlobal::AlbumArtist, m_tagM4A->metaData(KNMusicTagM4A::AlbumArtist));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate, m_tagM4A->metaData(KNMusicTagM4A::BPM));
+        setMediaData(KNMusicGlobal::Genre, m_tagM4A->metaData(KNMusicTagM4A::Genre));
+        setMediaData(KNMusicGlobal::TrackNumber, m_tagM4A->metaData(KNMusicTagM4A::Tracknumber));
+        setMediaData(KNMusicGlobal::Year, m_tagM4A->metaData(KNMusicTagM4A::Year));
+        setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
+        setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
+    }
 }
 
 void KNMusicInfoCollector::setMediaData(const int &index,
