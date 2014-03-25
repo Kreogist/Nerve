@@ -80,7 +80,7 @@ KNMusicTagM4A::KNMusicTagM4A(QObject *parent) :
 
 }
 
-QString KNMusicTagM4A::metaDataName(const int &index)
+QString KNMusicTagM4A::metaDataName(const int &index) const
 {
     if(index<M4AMetaDataCount)
     {
@@ -89,12 +89,12 @@ QString KNMusicTagM4A::metaDataName(const int &index)
     return QString();
 }
 
-QByteArray KNMusicTagM4A::metaData(const QString &name)
+QByteArray KNMusicTagM4A::metaData(const QString &name) const
 {
     return m_ilstData[name];
 }
 
-QByteArray KNMusicTagM4A::metaData(const int &index)
+QByteArray KNMusicTagM4A::metaData(const int &index) const
 {
     QString metaName=metaDataName(index);
     if(metaName.isNull())

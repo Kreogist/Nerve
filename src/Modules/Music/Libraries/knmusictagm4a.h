@@ -11,9 +11,9 @@ class KNMusicTagM4A : public KNMusicTagBase
     Q_OBJECT
 public:
     explicit KNMusicTagM4A(QObject *parent = 0);
-    QString metaDataName(const int &index);
-    QByteArray metaData(const QString &name);
-    QByteArray metaData(const int &index);
+    QString metaDataName(const int &index) const;
+    QByteArray metaData(const QString &name) const;
+    QByteArray metaData(const int &index) const;
     bool readTag(const QString &filePath);
     enum M4AMetaData
     {

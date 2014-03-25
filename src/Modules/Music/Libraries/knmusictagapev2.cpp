@@ -17,6 +17,11 @@ QString KNMusicTagAPEv2::tagStringData(const QString &frameKey) const
     return QString::fromUtf8(m_frameDatas[frameKey]).simplified();
 }
 
+QByteArray KNMusicTagAPEv2::tagRawData(const QString &frameKey) const
+{
+    return m_frameDatas[frameKey];
+}
+
 bool KNMusicTagAPEv2::readTag(const QString &filePath)
 {
     clearCache();

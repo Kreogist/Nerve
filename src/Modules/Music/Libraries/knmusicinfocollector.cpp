@@ -52,8 +52,8 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     currentFileInfo.dateAdded=addedDate;
 
     readID3v1Tag(filePath);
-    readID3v2Tag(filePath);
     readAPEv2Tag(filePath);
+    readID3v2Tag(filePath);
     readWMATag(filePath);
     readM4ATag(filePath);
     currentFileInfo.coverImage=m_musicCover;
@@ -167,7 +167,9 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
     {
         setMediaData(KNMusicGlobal::Name, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_TITLE));
         setMediaData(KNMusicGlobal::Artist, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_AUTHOR));
+        setMediaData(KNMusicGlobal::AlbumArtist, m_tagWMA->tagStringData("WM/AlbumArtist"));
         setMediaData(KNMusicGlobal::Album, m_tagWMA->tagStringData("WM/AlbumTitle"));
+        setMediaData(KNMusicGlobal::Composer, m_tagWMA->tagStringData("WM/Composer"));
         setMediaData(KNMusicGlobal::Genre, m_tagWMA->tagStringData("WM/Genre"));
         setMediaData(KNMusicGlobal::Year, m_tagWMA->tagStringData("WM/Year"));
         setMediaData(KNMusicGlobal::TrackNumber,m_tagWMA->tagStringData("WM/TrackNumber"));
