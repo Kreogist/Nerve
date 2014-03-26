@@ -55,7 +55,7 @@ private:
     QTimeLine *m_mouseIn, *m_mouseOut;
     QPalette m_palette;
     QColor m_backgroundColor;
-    int m_minGrey=0x20;
+    int m_minGrey=0x30;
 };
 
 class KNMusicArtistView : public QSplitter
