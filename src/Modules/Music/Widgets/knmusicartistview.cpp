@@ -129,14 +129,14 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     QSplitter(parent)
 {
     setContentsMargins(0,0,0,0);
-    setHandleWidth(0);
+    setChildrenCollapsible(false);
+    setOpaqueResize(false);
 
     m_artistList=new KNMusicArtistList(this);
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicArtistDetailsDisplay(this);
     addWidget(m_artistDetails);
-    setCollapsible(1, false);
     setStretchFactor(1, 1);
 }
 
