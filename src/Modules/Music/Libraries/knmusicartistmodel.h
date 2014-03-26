@@ -9,11 +9,13 @@
 
 class QSplitter;
 class KNMusicModel;
+class KNMusicArtistItem;
 class KNMusicArtistModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
     explicit KNMusicArtistModel(QObject *parent = 0);
+    KNMusicArtistItem *artistItem(const QModelIndex &index);
 
 signals:
 

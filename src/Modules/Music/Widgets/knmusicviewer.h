@@ -13,6 +13,7 @@ class KNMusicListView;
 class KNMusicArtistView;
 class KNMusicSortModel;
 class KNMusicArtistModel;
+class KNMusicArtistDetailModel;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -54,6 +55,7 @@ private:
     KNMusicArtistView *m_artistView;
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
+    KNMusicArtistDetailModel *m_detailModel;
 };
 
 #endif // KNMUSICVIEWER_H
