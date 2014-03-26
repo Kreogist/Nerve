@@ -32,6 +32,10 @@ KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
     m_songs=tr("%1 songs");
 
     m_artistName=new QLabel(this);
+    QFont artistFont=font();
+    artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
+    artistFont.setBold(true);
+    m_artistName->setFont(artistFont);
     m_layout->addWidget(m_artistName);
     m_artistInfo=new QLabel(this);
     m_layout->addWidget(m_artistInfo);
@@ -125,7 +129,7 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     QSplitter(parent)
 {
     setContentsMargins(0,0,0,0);
-    setHandleWidth(2);
+    setHandleWidth(0);
 
     m_artistList=new KNMusicArtistList(this);
     addWidget(m_artistList);
