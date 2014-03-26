@@ -36,13 +36,11 @@ void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
 {
     emit requireAppendMusic(value, datas);
     m_fileList.removeFirst();
-    if(m_fileList.count()!=0)
-    {
-        m_collector->analysis(m_fileList.at(0));
-    }
-    else
+    if(m_fileList.count()==0)
     {
         m_working=false;
         emit requireSortData();
+        return;
     }
+    m_collector->analysis(m_fileList.at(0));
 }
