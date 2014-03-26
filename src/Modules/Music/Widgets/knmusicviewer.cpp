@@ -11,6 +11,7 @@
 
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
+#include "../Libraries/knmusicartistdetailmodel.h"
 #include "../knmusicglobal.h"
 
 #include "knmusicviewer.h"
@@ -52,12 +53,17 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
                 m_categoryCaption[Playlists],
                 empty4);
+
+    m_detailModel=new KNMusicArtistDetailModel(this);
+    m_detailModel->setArtistModel(m_artistModel);
+    m_artistView->setDetailModel(m_detailModel);
 }
 
 void KNMusicViewer::setModel(QAbstractItemModel *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
+    m_detailModel->setSourceModel(model);
     m_libraryView->resetHeader();
 }
 

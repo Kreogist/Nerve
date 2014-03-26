@@ -52,10 +52,10 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     currentFileInfo.dateAdded=addedDate;
 
     readID3v1Tag(filePath);
-    readID3v2Tag(filePath);
     readAPEv2Tag(filePath);
+    readID3v2Tag(filePath);
     readWMATag(filePath);
-    //readM4ATag(filePath);
+    readM4ATag(filePath);
     currentFileInfo.coverImage=m_musicCover;
 
     QStringList musicInfo;
@@ -167,7 +167,9 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
     {
         setMediaData(KNMusicGlobal::Name, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_TITLE));
         setMediaData(KNMusicGlobal::Artist, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_AUTHOR));
+        setMediaData(KNMusicGlobal::AlbumArtist, m_tagWMA->tagStringData("WM/AlbumArtist"));
         setMediaData(KNMusicGlobal::Album, m_tagWMA->tagStringData("WM/AlbumTitle"));
+        setMediaData(KNMusicGlobal::Composer, m_tagWMA->tagStringData("WM/Composer"));
         setMediaData(KNMusicGlobal::Genre, m_tagWMA->tagStringData("WM/Genre"));
         setMediaData(KNMusicGlobal::Year, m_tagWMA->tagStringData("WM/Year"));
         setMediaData(KNMusicGlobal::TrackNumber,m_tagWMA->tagStringData("WM/TrackNumber"));
@@ -176,7 +178,19 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
 
 void KNMusicInfoCollector::readM4ATag(const QString &value)
 {
-    m_tagM4A->readTag(value);
+    if(m_tagM4A->readTag(value))
+    {
+        setMediaData(KNMusicGlobal::Name, m_tagM4A->metaData(KNMusicTagM4A::Title));
+        setMediaData(KNMusicGlobal::Artist, m_tagM4A->metaData(KNMusicTagM4A::Artist));
+        setMediaData(KNMusicGlobal::Album, m_tagM4A->metaData(KNMusicTagM4A::Album));
+        setMediaData(KNMusicGlobal::AlbumArtist, m_tagM4A->metaData(KNMusicTagM4A::AlbumArtist));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate, m_tagM4A->metaData(KNMusicTagM4A::BPM));
+        setMediaData(KNMusicGlobal::Genre, m_tagM4A->metaData(KNMusicTagM4A::Genre));
+        setMediaData(KNMusicGlobal::TrackNumber, m_tagM4A->metaData(KNMusicTagM4A::Tracknumber));
+        setMediaData(KNMusicGlobal::Year, m_tagM4A->metaData(KNMusicTagM4A::Year));
+        setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
+        setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
+    }
 }
 
 void KNMusicInfoCollector::setMediaData(const int &index,

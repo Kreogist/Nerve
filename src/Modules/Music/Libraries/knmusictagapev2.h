@@ -12,7 +12,7 @@ class KNMusicTagAPEv2 : public KNMusicTagBase
 public:
     explicit KNMusicTagAPEv2(QObject *parent = 0);
     QString tagStringData(const QString &frameKey) const;
-
+    QByteArray tagRawData(const QString &frameKey) const;
     bool readTag(const QString &filePath);
 
 signals:

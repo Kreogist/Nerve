@@ -13,6 +13,11 @@ KNMusicArtistModel::KNMusicArtistModel(QObject *parent) :
     m_noAlbumIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
 }
 
+KNMusicArtistItem *KNMusicArtistModel::artistItem(const QModelIndex &index)
+{
+    return static_cast<KNMusicArtistItem *>(itemFromIndex(index));
+}
+
 void KNMusicArtistModel::onMusicAdded(const QModelIndex &index)
 {
     QString artistName=m_sourceModel->item(index.row(),
