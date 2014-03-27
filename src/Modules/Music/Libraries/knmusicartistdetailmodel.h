@@ -1,6 +1,8 @@
 #ifndef KNMUSICARTISTDETAILMODEL_H
 #define KNMUSICARTISTDETAILMODEL_H
 
+#include <QRegExp>
+
 #include <QSortFilterProxyModel>
 
 class KNMusicArtistModel;
@@ -13,12 +15,14 @@ public:
     void reset();
 
 signals:
+    void requireDetailSizeChange(const int &value);
 
 public slots:
     void setArtistIndex(const QModelIndex &index);
 
 private:
     KNMusicArtistModel *m_artistModel;
+    QRegExp m_nameFilter;
 };
 
 #endif // KNMUSICARTISTDETAILMODEL_H

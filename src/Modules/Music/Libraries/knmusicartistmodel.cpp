@@ -10,7 +10,12 @@
 KNMusicArtistModel::KNMusicArtistModel(QObject *parent) :
     QStandardItemModel(parent)
 {
+    retranslate();
+
     m_noAlbumIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
+    setSortRole(Qt::UserRole);
+
+    resetModel();
 }
 
 KNMusicArtistItem *KNMusicArtistModel::artistItem(const QModelIndex &index)
@@ -18,16 +23,38 @@ KNMusicArtistItem *KNMusicArtistModel::artistItem(const QModelIndex &index)
     return static_cast<KNMusicArtistItem *>(itemFromIndex(index));
 }
 
+void KNMusicArtistModel::resetModel()
+{
+    clear();
+    KNMusicArtistItem *currentArtist=new KNMusicArtistItem(m_noArtist);
+    currentArtist->setIcon(m_noAlbumIcon);
+    appendRow(currentArtist);
+}
+
+void KNMusicArtistModel::retranslate()
+{
+    m_noArtist=tr("No Artist");
+}
+
+void KNMusicArtistModel::retranslateAndSet()
+{
+    retranslate();
+}
+
 void KNMusicArtistModel::onMusicAdded(const QModelIndex &index)
 {
     QString artistName=m_sourceModel->item(index.row(),
                                            KNMusicGlobal::Artist)->data(Qt::DisplayRole).toString();
-    QList<QStandardItem *> searchResult=findItems(artistName);
     KNMusicArtistItem *currentArtist;
+    if(artistName.isEmpty())
+    {
+        return;
+    }
+    QList<QStandardItem *> searchResult=findItems(artistName);
     if(searchResult.size()==0)
     {
         currentArtist=new KNMusicArtistItem(artistName);
-        currentArtist->addSongs(index);
+        currentArtist->setData(artistName, Qt::UserRole);
         QPixmap albumArt=m_sourceModel->item(index.row(),KNMusicGlobal::Time)->data(Qt::UserRole).value<QPixmap>();
         if(albumArt.isNull())
         {
@@ -39,11 +66,6 @@ void KNMusicArtistModel::onMusicAdded(const QModelIndex &index)
         }
         searchResult.append(currentArtist);
         appendRow(currentArtist);
-    }
-    else
-    {
-        currentArtist=static_cast<KNMusicArtistItem *>(searchResult.at(0));
-        currentArtist->addSongs(index);
     }
 }
 

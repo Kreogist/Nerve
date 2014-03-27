@@ -22,6 +22,7 @@ public:
     };
     explicit KNMusicTagID3v1(QObject *parent = 0);
     bool readTag(const QString &filePath);
+    void clearCache();
 
     KNMusicTagID3v1::ID3v1Data tagData() const;
     void setTagData(const ID3v1Data &tagData);

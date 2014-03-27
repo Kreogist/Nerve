@@ -4,3 +4,8 @@ KNMusicTagBase::KNMusicTagBase(QObject *parent) :
     QObject(parent)
 {
 }
+
+void KNMusicTagBase::clearCache()
+{
+    ;
+}

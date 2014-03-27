@@ -16,7 +16,7 @@ KNMusicTagWma::KNMusicTagWma(QObject *parent) :
 
 bool KNMusicTagWma::readTag(const QString &filePath)
 {
-    resetCache();
+    clearCache();
     QFile mediaFile(filePath);
     if(mediaFile.size()<16)
     {
@@ -169,7 +169,7 @@ QString KNMusicTagWma::standardTag(const int &index) const
     return m_utf16Codec->toUnicode(m_wmaTags[index]);
 }
 
-void KNMusicTagWma::resetCache()
+void KNMusicTagWma::clearCache()
 {
     for(int i=0; i<WMAFrameCount; i++)
     {

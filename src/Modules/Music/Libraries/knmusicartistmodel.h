@@ -16,16 +16,20 @@ class KNMusicArtistModel : public QStandardItemModel
 public:
     explicit KNMusicArtistModel(QObject *parent = 0);
     KNMusicArtistItem *artistItem(const QModelIndex &index);
+    void resetModel();
 
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
     void onMusicAdded(const QModelIndex &index);
     void setSourceModel(QAbstractItemModel *sourceModel);
 
 private:
     KNMusicModel *m_sourceModel;
     QIcon m_noAlbumIcon;
+    QString m_noArtist;
 };
 
 #endif // KNMUSICARTISTMODEL_H

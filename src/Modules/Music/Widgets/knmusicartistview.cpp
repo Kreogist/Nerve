@@ -3,6 +3,7 @@
 #include <QScrollBar>
 #include <QLabel>
 #include <QTimeLine>
+#include <QHeaderView>
 #include <QBoxLayout>
 
 #include <QDebug>
@@ -11,12 +12,20 @@
 #include "../Libraries/knmusicartistmodel.h"
 #include "../Libraries/knmusicartistdetailmodel.h"
 
+#include "../knmusicglobal.h"
+
 #include "knmusicartistview.h"
 
 KNMusicArtistSongs::KNMusicArtistSongs(QWidget *parent) :
-    QTreeView(parent)
+    KNMusicListView(parent)
 {
     ;
+}
+
+void KNMusicArtistSongs::resetHeader()
+{
+    KNMusicListView::resetHeader();
+    setColumnHidden(header()->visualIndex(KNMusicGlobal::Artist), true);
 }
 
 KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
@@ -86,15 +95,26 @@ void KNMusicArtistDetailsDisplay::setDetailModel(KNMusicArtistDetailModel *model
     m_songViewer->setModel(model);
 }
 
+void KNMusicArtistDetailsDisplay::resetHeader()
+{
+    m_songViewer->resetHeader();
+}
+
 KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     QListView(parent)
 {
+    setAutoFillBackground(true);
     setIconSize(QSize(40, 40));
+    setLineWidth(0);
+    setMinimumWidth(200);
     setSelectionMode(QAbstractItemView::SingleSelection);
-    setUniformItemSizes(true);
     setSpacing(2);
+    setUniformItemSizes(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(onVerticalScrollValueChange(int)));
 
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();
@@ -142,8 +162,14 @@ void KNMusicArtistList::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     int baseGrey=((frameData-m_minGrey)>>1)+m_minGrey;
     m_palette.setColor(QPalette::Base, QColor(baseGrey, baseGrey, baseGrey));
+    m_palette.setColor(QPalette::Window, QColor(baseGrey, baseGrey, baseGrey));
     m_palette.setColor(QPalette::Button, m_backgroundColor);
     setPalette(m_palette);
+}
+
+void KNMusicArtistList::onVerticalScrollValueChange(int value)
+{
+    verticalScrollBar()->show();
 }
 
 KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
@@ -172,6 +198,11 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     setStretchFactor(1, 1);
 }
 
+void KNMusicArtistView::resetHeader()
+{
+    m_artistDetails->resetHeader();
+}
+
 void KNMusicArtistView::setModel(KNMusicArtistModel *model)
 {
     m_artistList->setModel(model);
@@ -192,13 +223,15 @@ void KNMusicArtistView::resort()
     m_artistList->model()->sort(0);
 }
 
+void KNMusicArtistView::onActionDetailCountChange(const int &value)
+{
+    m_artistDetails->setSongNumber(value);
+}
+
 void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
                                              const QModelIndex &previous)
 {
     Q_UNUSED(previous);
     m_artistDetails->setArtistName(m_artistModel->data(current,Qt::DisplayRole).toString());
-    KNMusicArtistItem *currentArtist=
-            static_cast<KNMusicArtistItem *>(m_artistModel->itemFromIndex(current));
-    m_artistDetails->setSongNumber(currentArtist->songs().count());
     emit requireDisplayDetails(current);
 }

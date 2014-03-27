@@ -15,6 +15,7 @@ public:
     QByteArray metaData(const QString &name) const;
     QByteArray metaData(const int &index) const;
     bool readTag(const QString &filePath);
+    void clearCache();
     enum M4AMetaData
     {
         Album,
@@ -72,7 +73,6 @@ private:
     void parseMeta(const char *rawTagData,
                    const int &start,
                    const int &end);
-    void clearCache();
     void searchIn(const char *rawTagData,
                   const int &start,
                   const int &end,

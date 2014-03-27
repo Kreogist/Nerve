@@ -14,11 +14,10 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     QTreeView(parent)
 {
     //Set properties.
-    setStyle(QStyleFactory::create("fusion"));
     setUniformRowHeights(true);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
-    //setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     //Set palette.
     int minGrey=0x20;

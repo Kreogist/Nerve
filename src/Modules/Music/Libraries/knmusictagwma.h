@@ -22,6 +22,7 @@ public:
     };
     explicit KNMusicTagWma(QObject *parent = 0);
 
+    void clearCache();
     bool readTag(const QString &filePath);
     QString tagStringData(const QString &frameKey) const;
     QString standardTag(const int &index) const;
@@ -56,8 +57,6 @@ private:
     QByteArray m_wmaTags[WMAFrameCount];
     QTextCodec *m_utf16Codec;
     QMap<QString, QByteArray> m_frameDatas;
-
-    void resetCache();
 };
 
 #endif // KNMUSICTAGWMA_H

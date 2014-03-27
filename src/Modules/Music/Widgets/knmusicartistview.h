@@ -7,20 +7,22 @@
 #include <QThread>
 #include <QScopedPointer>
 
+#include "knmusiclistview.h"
+
 class QLabel;
 class QTimeLine;
 class QStandardItemModel;
 class KNMusicArtistModel;
 class KNMusicArtistDetailModel;
 
-class KNMusicArtistSongs : public QTreeView
+class KNMusicArtistSongs : public KNMusicListView
 {
     Q_OBJECT
 public:
     explicit KNMusicArtistSongs(QWidget *parent = 0);
+    void resetHeader();
 
 private:
-
 };
 
 class KNMusicArtistDetailsDisplay : public QWidget
@@ -31,6 +33,7 @@ public:
     void setArtistName(const QString &artistName);
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicArtistDetailModel *model);
+    void resetHeader();
 
 private:
     QLabel *m_artistName, *m_artistInfo;
@@ -50,6 +53,7 @@ protected:
 
 private slots:
     void changeBackground(int frameData);
+    void onVerticalScrollValueChange(int value);
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;
@@ -63,6 +67,7 @@ class KNMusicArtistView : public QSplitter
     Q_OBJECT
 public:
     explicit KNMusicArtistView(QWidget *parent = 0);
+    void resetHeader();
     void setModel(KNMusicArtistModel *model);
     void setDetailModel(KNMusicArtistDetailModel *model);
 
@@ -71,6 +76,7 @@ signals:
 
 public slots:
     void resort();
+    void onActionDetailCountChange(const int &value);
 
 private slots:
     void onActionItemActivate(const QModelIndex & current,

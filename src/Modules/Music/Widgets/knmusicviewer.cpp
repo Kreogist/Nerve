@@ -34,6 +34,12 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView=new KNMusicArtistView(this);
     m_artistView->setModel(m_artistModel);
 
+    m_detailModel=new KNMusicArtistDetailModel(this);
+    m_detailModel->setArtistModel(m_artistModel);
+    m_artistView->setDetailModel(m_detailModel);
+    connect(m_detailModel, &KNMusicArtistDetailModel::requireDetailSizeChange,
+            m_artistView, &KNMusicArtistView::onActionDetailCountChange);
+
     QWidget *empty2=new QWidget(this),
             *empty3=new QWidget(this),
             *empty4=new QWidget(this);
@@ -53,10 +59,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
                 m_categoryCaption[Playlists],
                 empty4);
-
-    m_detailModel=new KNMusicArtistDetailModel(this);
-    m_detailModel->setArtistModel(m_artistModel);
-    m_artistView->setDetailModel(m_detailModel);
 }
 
 void KNMusicViewer::setModel(QAbstractItemModel *model)
@@ -65,6 +67,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_artistModel->setSourceModel(model);
     m_detailModel->setSourceModel(model);
     m_libraryView->resetHeader();
+    m_artistView->resetHeader();
 }
 
 void KNMusicViewer::retranslate()

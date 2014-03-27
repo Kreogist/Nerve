@@ -8,6 +8,7 @@ class KNMusicTagBase : public QObject
     Q_OBJECT
 public:
     explicit KNMusicTagBase(QObject *parent = 0);
+    virtual void clearCache();
 
 signals:
 

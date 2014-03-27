@@ -14,7 +14,7 @@ KNMusicTagAPEv2::KNMusicTagAPEv2(QObject *parent) :
 
 QString KNMusicTagAPEv2::tagStringData(const QString &frameKey) const
 {
-    return QString::fromUtf8(m_frameDatas[frameKey]).simplified();
+    return QString(m_frameDatas[frameKey]).simplified();
 }
 
 QByteArray KNMusicTagAPEv2::tagRawData(const QString &frameKey) const
@@ -45,6 +45,14 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
         return result;
     }
     m_headerPosition=mediaFile.size()-32;
+    if(checkAPEHeaderAt(m_headerPosition, mediaData))
+    {
+        m_headerPosition=m_headerPosition-m_tagSize+32;
+        bool result=readTagAt(m_headerPosition, mediaData);
+        mediaFile.close();
+        return result;
+    }
+    m_headerPosition=mediaFile.size()-160;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
         m_headerPosition=m_headerPosition-m_tagSize+32;

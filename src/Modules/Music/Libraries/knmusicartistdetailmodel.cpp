@@ -10,7 +10,9 @@ KNMusicArtistDetailModel::KNMusicArtistDetailModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     setFilterKeyColumn(KNMusicGlobal::Artist);
-    setFilterFixedString(" ");
+    m_nameFilter.setPattern("");
+    m_nameFilter.setPatternSyntax(QRegExp::FixedString);
+    setFilterRegExp(m_nameFilter);
 }
 
 void KNMusicArtistDetailModel::setArtistModel(KNMusicArtistModel *artistModel)
@@ -20,5 +22,7 @@ void KNMusicArtistDetailModel::setArtistModel(KNMusicArtistModel *artistModel)
 
 void KNMusicArtistDetailModel::setArtistIndex(const QModelIndex &index)
 {
-    setFilterFixedString(m_artistModel->artistItem(index)->text());
+    m_nameFilter.setPattern(m_artistModel->artistItem(index)->text());
+    setFilterRegExp(m_nameFilter);
+    emit requireDetailSizeChange(rowCount());
 }

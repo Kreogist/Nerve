@@ -65,12 +65,7 @@ QString KNMusicTagID3v2::id3v2String(const QString &frameID)
     }
 }
 
-int KNMusicTagID3v2::version()
-{
-    return m_tagData.version;
-}
-
-bool KNMusicTagID3v2::readTag(const QString &filePath)
+void KNMusicTagID3v2::clearCache()
 {
     m_tagData.version=0;
     m_tagData.revision=0;
@@ -80,7 +75,16 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     m_tagData.frameID.clear();
     m_tagData.frameData.clear();
     m_tagImages.clear();
+}
 
+int KNMusicTagID3v2::version()
+{
+    return m_tagData.version;
+}
+
+bool KNMusicTagID3v2::readTag(const QString &filePath)
+{
+    clearCache();
     QFile mediaFile(filePath);
     if(mediaFile.size()<10)
     {

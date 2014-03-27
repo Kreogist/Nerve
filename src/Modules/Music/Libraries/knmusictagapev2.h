@@ -14,13 +14,13 @@ public:
     QString tagStringData(const QString &frameKey) const;
     QByteArray tagRawData(const QString &frameKey) const;
     bool readTag(const QString &filePath);
+    void clearCache();
 
 signals:
 
 public slots:
 
 private:
-    void clearCache();
     bool checkAPEHeaderAt(int position, QDataStream &mediaData);
     bool readTagAt(int position, QDataStream &mediaData);
     const char m_apePreamble[9]={'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X', '\0'};

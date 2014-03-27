@@ -18,14 +18,7 @@ KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
 
 bool KNMusicTagID3v1::readTag(const QString &filePath)
 {
-    m_tagData.title.clear();
-    m_tagData.artist.clear();
-    m_tagData.album.clear();
-    m_tagData.year.clear();
-    m_tagData.comment.clear();
-    m_tagData.track=0;
-    m_tagData.genre.clear();
-
+    clearCache();
     //Get raw tag data
     QFile mediaFile(filePath);
     if(mediaFile.size()<128)
@@ -72,6 +65,17 @@ bool KNMusicTagID3v1::readTag(const QString &filePath)
     }
     m_tagData.genre=KNMusicGlobal::instance()->getGenre((int)rawTagData[127]);
     return true;
+}
+
+void KNMusicTagID3v1::clearCache()
+{
+    m_tagData.title.clear();
+    m_tagData.artist.clear();
+    m_tagData.album.clear();
+    m_tagData.year.clear();
+    m_tagData.comment.clear();
+    m_tagData.track=0;
+    m_tagData.genre.clear();
 }
 
 KNMusicTagID3v1::ID3v1Data KNMusicTagID3v1::tagData() const

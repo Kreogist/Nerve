@@ -10,7 +10,7 @@ class KNMusicListView : public QTreeView
     Q_OBJECT
 public:
     explicit KNMusicListView(QWidget *parent = 0);
-    void resetHeader();
+    virtual void resetHeader();
 
 signals:
     void requireShowContextMenu(const QPoint &position,
