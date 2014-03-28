@@ -1,9 +1,6 @@
 #ifndef KNMUSICARTISTITEM_H
 #define KNMUSICARTISTITEM_H
 
-#include <QList>
-#include <QModelIndex>
-
 #include <QStandardItem>
 
 class KNMusicArtistItem : public QStandardItem

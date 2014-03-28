@@ -10,11 +10,10 @@
 #include "knmusiclistview.h"
 
 class QLabel;
-class QTimeLine;
 class QStandardItemModel;
-class KNMusicArtistModel;
-class KNMusicArtistDetailModel;
-
+class KNMusicArtistList;
+class KNMusicCategoryModel;
+class KNMusicCategoryDetailModel;
 class KNMusicArtistSongs : public KNMusicListView
 {
     Q_OBJECT
@@ -32,7 +31,7 @@ public:
     explicit KNMusicArtistDetailsDisplay(QWidget *parent = 0);
     void setArtistName(const QString &artistName);
     void setSongNumber(const int &index);
-    void setDetailModel(KNMusicArtistDetailModel *model);
+    void setDetailModel(KNMusicCategoryDetailModel *model);
     void resetHeader();
 
 signals:
@@ -44,35 +43,14 @@ private:
     KNMusicArtistSongs *m_songViewer;
 };
 
-class KNMusicArtistList : public QListView
-{
-    Q_OBJECT
-public:
-    explicit KNMusicArtistList(QWidget *parent = 0);
-
-protected:
-    void enterEvent(QEvent *e);
-    void leaveEvent(QEvent *e);
-
-private slots:
-    void changeBackground(int frameData);
-    void onVerticalScrollValueChange(int value);
-
-private:
-    QTimeLine *m_mouseIn, *m_mouseOut;
-    QPalette m_palette;
-    QColor m_backgroundColor;
-    int m_minGrey=0x30;
-};
-
 class KNMusicArtistView : public QSplitter
 {
     Q_OBJECT
 public:
     explicit KNMusicArtistView(QWidget *parent = 0);
     void resetHeader();
-    void setModel(KNMusicArtistModel *model);
-    void setDetailModel(KNMusicArtistDetailModel *model);
+    void setModel(KNMusicCategoryModel *model);
+    void setDetailModel(KNMusicCategoryDetailModel *model);
 
 signals:
     void requireDisplayDetails(const QModelIndex &current);
@@ -89,7 +67,7 @@ private slots:
 private:
     KNMusicArtistList *m_artistList;
     KNMusicArtistDetailsDisplay *m_artistDetails;
-    KNMusicArtistModel *m_artistModel;
+    KNMusicCategoryModel *m_artistModel;
 };
 
 #endif // KNMUSICARTISTVIEW_H

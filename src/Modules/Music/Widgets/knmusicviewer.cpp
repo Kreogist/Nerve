@@ -12,7 +12,8 @@
 
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
-#include "../Libraries/knmusicartistdetailmodel.h"
+#include "../Libraries/knmusicgenremodel.h"
+#include "../Libraries/knmusiccategorydetailmodel.h"
 #include "../knmusicglobal.h"
 
 #include "knmusicviewer.h"
@@ -26,6 +27,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_listViewModel=new KNMusicSortModel(this);
     m_artistModel=new KNMusicArtistModel(this);
+    m_genreModel=new KNMusicGenreModel(this);
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
@@ -39,14 +41,16 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionArtistOpenUrl);
     m_artistView->setModel(m_artistModel);
 
-    m_detailModel=new KNMusicArtistDetailModel(this);
-    m_detailModel->setArtistModel(m_artistModel);
-    m_artistView->setDetailModel(m_detailModel);
-    connect(m_detailModel, &KNMusicArtistDetailModel::requireDetailSizeChange,
+    m_genreView=new KNMusicArtistView(this);
+    m_genreView->setModel(m_genreModel);
+
+    m_artistDetails=new KNMusicCategoryDetailModel(this);
+    m_artistDetails->setCategoryModel(m_artistModel);
+    m_artistView->setDetailModel(m_artistDetails);
+    connect(m_artistDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
             m_artistView, &KNMusicArtistView::onActionDetailCountChange);
 
     QWidget *empty2=new QWidget(this),
-            *empty3=new QWidget(this),
             *empty4=new QWidget(this);
 
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
@@ -60,7 +64,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
                 empty2);
     addCategory(QPixmap(":/Category/Resources/Category/04_genres.png"),
                 m_categoryCaption[Genres],
-                empty3);
+                m_genreView);
     addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
                 m_categoryCaption[Playlists],
                 empty4);
@@ -70,7 +74,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
-    m_detailModel->setSourceModel(model);
+    m_artistDetails->setSourceModel(model);
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
 }
@@ -121,5 +125,5 @@ void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
 
 void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_detailModel->mapToSource(index));
+    emit requireOpenUrl(m_artistDetails->mapToSource(index));
 }

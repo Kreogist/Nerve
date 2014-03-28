@@ -13,7 +13,8 @@ class KNMusicListView;
 class KNMusicArtistView;
 class KNMusicSortModel;
 class KNMusicArtistModel;
-class KNMusicArtistDetailModel;
+class KNMusicGenreModel;
+class KNMusicCategoryDetailModel;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -55,10 +56,12 @@ private:
     };
     QString m_categoryCaption[MusicCategoriesCount];
     KNMusicListView *m_libraryView;
-    KNMusicArtistView *m_artistView;
+    KNMusicArtistView *m_artistView,
+                      *m_genreView;
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
-    KNMusicArtistDetailModel *m_detailModel;
+    KNMusicGenreModel *m_genreModel;
+    KNMusicCategoryDetailModel *m_artistDetails;
 };
 
 #endif // KNMUSICVIEWER_H

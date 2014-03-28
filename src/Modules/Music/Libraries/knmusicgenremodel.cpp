@@ -4,27 +4,27 @@
 
 #include "../knmusicglobal.h"
 
-#include "knmusicartistmodel.h"
+#include "knmusicgenremodel.h"
 
-KNMusicArtistModel::KNMusicArtistModel(QObject *parent) :
+KNMusicGenreModel::KNMusicGenreModel(QObject *parent) :
     KNMusicCategoryModel(parent)
 {
     retranslateAndSet();
 }
 
-void KNMusicArtistModel::retranslate()
+void KNMusicGenreModel::retranslate()
 {
-    setNoCategoryText(tr("No Artist"));
+    setNoCategoryText(tr("Unknown Genre"));
 }
 
-void KNMusicArtistModel::retranslateAndSet()
+void KNMusicGenreModel::retranslateAndSet()
 {
     retranslate();
     QStandardItem *noArtistItem=item(0);
     noArtistItem->setText(noCategoryText());
 }
 
-QIcon KNMusicArtistModel::itemIcon(const int &index) const
+QIcon KNMusicGenreModel::itemIcon(const int &index) const
 {
     QPixmap albumArt=m_sourceModel->item(index, KNMusicGlobal::Time)->data(Qt::UserRole).value<QPixmap>();
     if(albumArt.isNull())
@@ -34,8 +34,8 @@ QIcon KNMusicArtistModel::itemIcon(const int &index) const
     return QIcon(albumArt);
 }
 
-QString KNMusicArtistModel::categoryName(const int &index) const
+QString KNMusicGenreModel::categoryName(const int &index) const
 {
     return m_sourceModel->item(index,
-                               KNMusicGlobal::Artist)->data(Qt::DisplayRole).toString();
+                               KNMusicGlobal::Genre)->data(Qt::DisplayRole).toString();
 }

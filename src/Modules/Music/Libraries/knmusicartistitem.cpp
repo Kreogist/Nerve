@@ -4,4 +4,3 @@ KNMusicArtistItem::KNMusicArtistItem(QString name) :
     QStandardItem(name)
 {
 }
-

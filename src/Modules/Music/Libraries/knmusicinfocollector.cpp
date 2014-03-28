@@ -151,9 +151,6 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
         setMediaData(KNMusicGlobal::Name,m_tagAPEv2->tagStringData("Title"));
         setMediaData(KNMusicGlobal::Artist,m_tagAPEv2->tagStringData("Artist"));
         setMediaData(KNMusicGlobal::Album,m_tagAPEv2->tagStringData("Album"));
-        //setMediaData(KNMusicGlobal::AlbumArtist,m_tagAPEv2->tagData("TP2"));
-        //setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBP"));
-        //setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
         setMediaData(KNMusicGlobal::Composer,m_tagAPEv2->tagStringData("Composer"));
         setMediaData(KNMusicGlobal::Genre,m_tagAPEv2->tagStringData("Genre"));
         setMediaData(KNMusicGlobal::Year,m_tagAPEv2->tagStringData("Year"));

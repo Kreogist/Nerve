@@ -1,13 +1,13 @@
-#ifndef KNMUSICARTISTMODEL_H
-#define KNMUSICARTISTMODEL_H
+#ifndef KNMUSICGENREMODEL_H
+#define KNMUSICGENREMODEL_H
 
 #include "knmusiccategorymodel.h"
 
-class KNMusicArtistModel : public KNMusicCategoryModel
+class KNMusicGenreModel : public KNMusicCategoryModel
 {
     Q_OBJECT
 public:
-    explicit KNMusicArtistModel(QObject *parent = 0);
+    explicit KNMusicGenreModel(QObject *parent = 0);
 
 signals:
 
@@ -19,7 +19,6 @@ protected:
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
 
-private:
 };
 
-#endif // KNMUSICARTISTMODEL_H
+#endif // KNMUSICGENREMODEL_H

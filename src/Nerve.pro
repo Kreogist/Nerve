@@ -45,8 +45,11 @@ SOURCES += \
     Modules/Music/Libraries/knmusicartistmodel.cpp \
     Modules/Music/Libraries/knmusictagm4a.cpp \
     Modules/Music/Widgets/knmusiclistviewheadermenu.cpp \
-    Modules/Music/Libraries/knmusicartistdetailmodel.cpp \
-    Modules/Music/Libraries/knmusicartistitem.cpp
+    Modules/Music/Libraries/knmusicartistitem.cpp \
+    Modules/Music/Libraries/knmusiccategorymodel.cpp \
+    Modules/Music/Libraries/knmusicgenremodel.cpp \
+    Modules/Music/Widgets/knmusicartistlist.cpp \
+    Modules/Music/Libraries/knmusiccategorydetailmodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -87,8 +90,11 @@ HEADERS += \
     Modules/Music/Libraries/knmusicartistmodel.h \
     Modules/Music/Libraries/knmusictagm4a.h \
     Modules/Music/Widgets/knmusiclistviewheadermenu.h \
-    Modules/Music/Libraries/knmusicartistdetailmodel.h \
-    Modules/Music/Libraries/knmusicartistitem.h
+    Modules/Music/Libraries/knmusicartistitem.h \
+    Modules/Music/Libraries/knmusiccategorymodel.h \
+    Modules/Music/Libraries/knmusicgenremodel.h \
+    Modules/Music/Widgets/knmusicartistlist.h \
+    Modules/Music/Libraries/knmusiccategorydetailmodel.h
 
 RESOURCES += \
     res.qrc

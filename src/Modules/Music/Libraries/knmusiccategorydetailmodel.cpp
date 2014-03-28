@@ -2,11 +2,12 @@
 
 #include "../knmusicglobal.h"
 
-#include "knmusicartistdetailmodel.h"
 #include "knmusicartistitem.h"
-#include "knmusicartistmodel.h"
+#include "knmusiccategorymodel.h"
 
-KNMusicArtistDetailModel::KNMusicArtistDetailModel(QObject *parent) :
+#include "knmusiccategorydetailmodel.h"
+
+KNMusicCategoryDetailModel::KNMusicCategoryDetailModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     setFilterKeyColumn(KNMusicGlobal::Artist);
@@ -15,12 +16,12 @@ KNMusicArtistDetailModel::KNMusicArtistDetailModel(QObject *parent) :
     setFilterRegExp(m_nameFilter);
 }
 
-void KNMusicArtistDetailModel::setArtistModel(KNMusicArtistModel *artistModel)
+void KNMusicCategoryDetailModel::setCategoryModel(KNMusicCategoryModel *artistModel)
 {
     m_artistModel=artistModel;
 }
 
-void KNMusicArtistDetailModel::setArtistIndex(const QModelIndex &index)
+void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
 {
     if(index.row()==0)
     {
