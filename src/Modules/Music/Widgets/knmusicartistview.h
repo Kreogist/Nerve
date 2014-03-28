@@ -35,6 +35,9 @@ public:
     void setDetailModel(KNMusicArtistDetailModel *model);
     void resetHeader();
 
+signals:
+    void requireOpenUrl(const QModelIndex &index);
+
 private:
     QLabel *m_artistName, *m_artistInfo;
     QString m_song, m_songs;
@@ -73,6 +76,7 @@ public:
 
 signals:
     void requireDisplayDetails(const QModelIndex &current);
+    void requireOpenUrl(const QModelIndex &index);
 
 public slots:
     void resort();

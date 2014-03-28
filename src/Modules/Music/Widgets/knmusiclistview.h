@@ -31,7 +31,7 @@ private slots:
     void changeBackground(int frameData);
     void onSectionVisibleChanged(const int &index,
                                  const bool &visible);
-    void onDoubleClicked(const QModelIndex &index);
+    void onItemActived(const QModelIndex &index);
 
 private:
     KNMusicListViewHeader *m_headerWidget;

@@ -44,7 +44,9 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
             this, &KNMusicListView::onSectionVisibleChanged);
 
     connect(this, &KNMusicListView::doubleClicked,
-            this, &KNMusicListView::onDoubleClicked);
+            this, &KNMusicListView::onItemActived);
+    connect(this, &KNMusicListView::activated,
+            this, &KNMusicListView::onItemActived);
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
@@ -144,7 +146,7 @@ void KNMusicListView::onSectionVisibleChanged(const int &index,
     setColumnHidden(index, !visible);
 }
 
-void KNMusicListView::onDoubleClicked(const QModelIndex &index)
+void KNMusicListView::onItemActived(const QModelIndex &index)
 {
     if(index.isValid())
     {

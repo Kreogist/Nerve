@@ -35,6 +35,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
     m_artistView=new KNMusicArtistView(this);
+    connect(m_artistView, &KNMusicArtistView::requireOpenUrl,
+            this, &KNMusicViewer::onActionArtistOpenUrl);
     m_artistView->setModel(m_artistModel);
 
     m_detailModel=new KNMusicArtistDetailModel(this);
@@ -115,4 +117,9 @@ void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
 void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
 {
     emit requireOpenUrl(m_listViewModel->mapToSource(index));
+}
+
+void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
+{
+    emit requireOpenUrl(m_detailModel->mapToSource(index));
 }

@@ -85,6 +85,8 @@ KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
     m_layout->addSpacing(20);
 
     m_songViewer=new KNMusicArtistSongs(this);
+    connect(m_songViewer, &KNMusicArtistSongs::requireOpenUrl,
+            this, &KNMusicArtistDetailsDisplay::requireOpenUrl);
     m_layout->addWidget(m_songViewer, 1);
 }
 
@@ -208,6 +210,8 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicArtistDetailsDisplay(this);
+    connect(m_artistDetails, SIGNAL(requireOpenUrl(QModelIndex)),
+            this, SIGNAL(requireOpenUrl(QModelIndex)));
     addWidget(m_artistDetails);
     setCollapsible(1, false);
     setStretchFactor(1, 1);

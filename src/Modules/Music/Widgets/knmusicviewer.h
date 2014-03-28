@@ -41,6 +41,7 @@ private slots:
     void onActionLibraryViewShowContextMenu(const QPoint &position,
                                             const QModelIndex &index);
     void onActionListviewOpenUrl(const QModelIndex &index);
+    void onActionArtistOpenUrl(const QModelIndex &index);
 
 private:
     enum MusicCategories
