@@ -11,10 +11,12 @@ class KNMusicListView : public QTreeView
 public:
     explicit KNMusicListView(QWidget *parent = 0);
     virtual void resetHeader();
+    void moveToFirst(const int &logicalHeaderIndex);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
+    void requireOpenUrl(const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -29,6 +31,7 @@ private slots:
     void changeBackground(int frameData);
     void onSectionVisibleChanged(const int &index,
                                  const bool &visible);
+    void onDoubleClicked(const QModelIndex &index);
 
 private:
     KNMusicListViewHeader *m_headerWidget;

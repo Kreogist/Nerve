@@ -1,6 +1,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
+#include <QModelIndex>
 
 #include <QStyleFactory>
 
@@ -28,6 +29,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
+    connect(m_libraryView, SIGNAL(requireOpenUrl(QModelIndex)),
+            this, SLOT(onActionListviewOpenUrl(QModelIndex)));
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
@@ -107,4 +110,9 @@ void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
 {
     QModelIndex sourceIndex=m_listViewModel->mapToSource(index);
     emit requireShowContextMenu(position, sourceIndex);
+}
+
+void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
+{
+    emit requireOpenUrl(m_listViewModel->mapToSource(index));
 }

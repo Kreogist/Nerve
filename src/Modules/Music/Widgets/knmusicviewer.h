@@ -26,6 +26,7 @@ signals:
     void requireAnalysisUrls(QList<QUrl> urls);
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
+    void requireOpenUrl(const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -39,6 +40,7 @@ protected:
 private slots:
     void onActionLibraryViewShowContextMenu(const QPoint &position,
                                             const QModelIndex &index);
+    void onActionListviewOpenUrl(const QModelIndex &index);
 
 private:
     enum MusicCategories

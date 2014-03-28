@@ -52,7 +52,6 @@ public:
         Season,
         Show,
         Size,
-        Skips,
         Time,
         TrackNumber,
         Year,

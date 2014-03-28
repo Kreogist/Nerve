@@ -24,8 +24,23 @@ KNMusicArtistSongs::KNMusicArtistSongs(QWidget *parent) :
 
 void KNMusicArtistSongs::resetHeader()
 {
-    KNMusicListView::resetHeader();
-    setColumnHidden(header()->visualIndex(KNMusicGlobal::Artist), true);
+    for(int i=KNMusicGlobal::Name+1;
+        i<KNMusicGlobal::MusicDataCount;
+        i++)
+    {
+        setColumnHidden(i, true);
+    }
+    setColumnHidden(KNMusicGlobal::Time, false);
+    setColumnHidden(KNMusicGlobal::Album, false);
+    setColumnHidden(KNMusicGlobal::Genre, false);
+    setColumnHidden(KNMusicGlobal::Rating, false);
+    setColumnHidden(KNMusicGlobal::Plays, false);
+    moveToFirst(KNMusicGlobal::Plays);
+    moveToFirst(KNMusicGlobal::Rating);
+    moveToFirst(KNMusicGlobal::Genre);
+    moveToFirst(KNMusicGlobal::Album);
+    moveToFirst(KNMusicGlobal::Time);
+    moveToFirst(KNMusicGlobal::Name);
 }
 
 KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
@@ -93,6 +108,7 @@ void KNMusicArtistDetailsDisplay::setSongNumber(const int &index)
 void KNMusicArtistDetailsDisplay::setDetailModel(KNMusicArtistDetailModel *model)
 {
     m_songViewer->setModel(model);
+    m_songViewer->resetHeader();
 }
 
 void KNMusicArtistDetailsDisplay::resetHeader()
@@ -112,7 +128,6 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     setUniformItemSizes(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
             this, SLOT(onVerticalScrollValueChange(int)));
 

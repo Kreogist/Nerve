@@ -13,6 +13,7 @@ class KNMusicModel : public QStandardItemModel
 public:
     explicit KNMusicModel(QObject *parent = 0);
     void resetHeader();
+    QString filePathFromIndex(const QModelIndex &index);
 
 signals:
     void requireResetHeader();

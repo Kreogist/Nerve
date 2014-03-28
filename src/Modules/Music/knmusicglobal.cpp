@@ -85,7 +85,6 @@ void KNMusicGlobal::retranslate()
     m_header[Season]=tr("Season");
     m_header[Show]=tr("Show");
     m_header[Size]=tr("Size");
-    m_header[Skips]=tr("Skips");
     m_header[Time]=tr("Time");
     m_header[TrackNumber]=tr("Track Number");
     m_header[Year]=tr("Year");

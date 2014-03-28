@@ -26,8 +26,8 @@ public slots:
 
 private slots:
     void showContextMenu(const QPoint &position,
-                          const QModelIndex &index);
-
+                         const QModelIndex &index);
+    void onActionOpenUrl(const QModelIndex &index);
 
 private:
     KNMusicViewer *m_musicViewer;

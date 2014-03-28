@@ -186,7 +186,8 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
         setMediaData(KNMusicGlobal::AlbumArtist, m_tagM4A->metaData(KNMusicTagM4A::AlbumArtist));
         setMediaData(KNMusicGlobal::BeatsPerMinuate, m_tagM4A->metaData(KNMusicTagM4A::BPM));
         setMediaData(KNMusicGlobal::Genre, m_tagM4A->metaData(KNMusicTagM4A::Genre));
-        setMediaData(KNMusicGlobal::TrackNumber, m_tagM4A->metaData(KNMusicTagM4A::Tracknumber));
+        QByteArray trackData=m_tagM4A->metaData(KNMusicTagM4A::Tracknumber);
+        setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
         setMediaData(KNMusicGlobal::Year, m_tagM4A->metaData(KNMusicTagM4A::Year));
         setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
         setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));

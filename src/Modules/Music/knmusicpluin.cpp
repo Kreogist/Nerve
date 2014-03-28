@@ -2,6 +2,7 @@
 
 #include <QList>
 #include <QUrl>
+#include <QDesktopServices>
 
 #include <QDebug>
 
@@ -23,6 +24,8 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
+    connect(m_musicViewer, SIGNAL(requireOpenUrl(QModelIndex)),
+            this, SLOT(onActionOpenUrl(QModelIndex)));
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
 
@@ -71,4 +74,9 @@ void KNMusicPluin::showContextMenu(const QPoint &position,
     m_libraryViewMenu->setFilePath(m_model->item(index.row(),
                                                  KNMusicGlobal::Name)->data(Qt::UserRole).toString());
     m_libraryViewMenu->exec(position);
+}
+
+void KNMusicPluin::onActionOpenUrl(const QModelIndex &index)
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(m_model->filePathFromIndex(index)));
 }

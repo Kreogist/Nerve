@@ -43,6 +43,9 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
             this, &KNMusicListView::onSectionVisibleChanged);
 
+    connect(this, &KNMusicListView::doubleClicked,
+            this, &KNMusicListView::onDoubleClicked);
+
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x40);
@@ -58,7 +61,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
 void KNMusicListView::resetHeader()
 {
-    for(int i=KNMusicGlobal::Name+1;
+    /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
     {
@@ -69,14 +72,19 @@ void KNMusicListView::resetHeader()
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
     setColumnHidden(KNMusicGlobal::Rating, false);
-    setColumnHidden(KNMusicGlobal::Plays, false);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Plays);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Rating);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Genre);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Album);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Artist);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Time);
-    m_headerWidget->moveToFirst(KNMusicGlobal::Name);
+    setColumnHidden(KNMusicGlobal::Plays, false);*/
+    moveToFirst(KNMusicGlobal::Plays);
+    moveToFirst(KNMusicGlobal::Rating);
+    moveToFirst(KNMusicGlobal::Genre);
+    moveToFirst(KNMusicGlobal::Album);
+    moveToFirst(KNMusicGlobal::Artist);
+    moveToFirst(KNMusicGlobal::Time);
+    moveToFirst(KNMusicGlobal::Name);
+}
+
+void KNMusicListView::moveToFirst(const int &logicalHeaderIndex)
+{
+    m_headerWidget->moveToFirst(logicalHeaderIndex);
 }
 
 void KNMusicListView::retranslate()
@@ -134,4 +142,12 @@ void KNMusicListView::onSectionVisibleChanged(const int &index,
                                               const bool &visible)
 {
     setColumnHidden(index, !visible);
+}
+
+void KNMusicListView::onDoubleClicked(const QModelIndex &index)
+{
+    if(index.isValid())
+    {
+        emit requireOpenUrl(index);
+    }
 }

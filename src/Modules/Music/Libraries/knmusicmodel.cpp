@@ -31,6 +31,11 @@ void KNMusicModel::resetHeader()
     emit requireResetHeader();
 }
 
+QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
+{
+    return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
+}
+
 void KNMusicModel::appendMusic(const QStringList &info,
                                const KNMusicGlobal::MusicDetailsInfo &datas)
 {
@@ -40,6 +45,7 @@ void KNMusicModel::appendMusic(const QStringList &info,
         i++)
     {
         QStandardItem *infoItem=new QStandardItem(info.at(i));
+        infoItem->setEditable(false);
         musicItem.append(infoItem);
     }
     QStandardItem *dataItem=musicItem.at(KNMusicGlobal::Time);
