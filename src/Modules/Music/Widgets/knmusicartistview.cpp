@@ -34,8 +34,6 @@ void KNMusicArtistSongs::resetHeader()
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
     setColumnHidden(KNMusicGlobal::Rating, false);
-    setColumnHidden(KNMusicGlobal::Plays, false);
-    moveToFirst(KNMusicGlobal::Plays);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);

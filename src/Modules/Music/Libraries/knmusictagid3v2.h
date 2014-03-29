@@ -34,8 +34,9 @@ public:
     };
 
     explicit KNMusicTagID3v2(QObject *parent = 0);
-    QString fromID3v2String(const QByteArray &value);
-    QString id3v2String(const QString &frameID);
+    QString id3v2String(const QString &frameID) const;
+    int id3v2DataToRating(const QString &frameID) const;
+    QByteArray id3v2Raw(const QString &frameID) const;
     void clearCache();
     int version();
 
@@ -49,6 +50,8 @@ signals:
 public slots:
 
 private:
+    QString id3v2DataToString(const QByteArray &value) const;
+    int hexTo5Rating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;
     ID3v2Data m_tagData;

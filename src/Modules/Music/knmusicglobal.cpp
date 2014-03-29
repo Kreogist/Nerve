@@ -84,8 +84,6 @@ void KNMusicGlobal::retranslate()
     m_header[Grouping]=tr("Grouping");
     m_header[Kind]=tr("Kind");
     m_header[LastPlayed]=tr("Last Played");
-    m_header[LastSkipped]=tr("Last Skipped");
-    m_header[Plays]=tr("Plays");
     m_header[Rating]=tr("Rating");
     m_header[SampleRate]=tr("Sample Rate");
     m_header[Season]=tr("Season");

@@ -15,7 +15,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
 }
 
-QString KNMusicTagID3v2::fromID3v2String(const QByteArray &value)
+QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
 {
     QByteArray content=value;
     if(content.at(content.length()-1)==0)
@@ -52,17 +52,65 @@ QString KNMusicTagID3v2::fromID3v2String(const QByteArray &value)
     }
 }
 
-QString KNMusicTagID3v2::id3v2String(const QString &frameID)
+int KNMusicTagID3v2::hexTo5Rating(const quint8 &hex) const
+{
+    if(hex>0 && hex<32)
+    {
+        return 1;
+    }
+    if(hex>31 && hex<96)
+    {
+        return 2;
+    }
+    if(hex>95 && hex<160)
+    {
+        return 3;
+    }
+    if(hex>159 && hex<224)
+    {
+        return 4;
+    }
+    if(hex>223 && hex<256)
+    {
+        return 5;
+    }
+    return 0;
+}
+
+QString KNMusicTagID3v2::id3v2String(const QString &frameID) const
 {
     int frameDataIndex=m_tagData.frameID.indexOf(frameID);
     if(frameDataIndex==-1)
     {
-        return QString("");
+        return QString();
     }
-    else
+    return id3v2DataToString(m_tagData.frameData.at(frameDataIndex));
+}
+
+int KNMusicTagID3v2::id3v2DataToRating(const QString &frameID) const
+{
+    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    if(frameDataIndex==-1)
     {
-        return fromID3v2String(m_tagData.frameData.at(frameDataIndex));
+        return 0;
     }
+    QByteArray ratingRaw=m_tagData.frameData.at(frameDataIndex);
+    QString windowsMediaTest=QString(ratingRaw);
+    if(windowsMediaTest.indexOf("Windows Media Player")!=-1)
+    {
+        return hexTo5Rating((quint8)ratingRaw.at(ratingRaw.size()-1));
+    }
+    return 0;
+}
+
+QByteArray KNMusicTagID3v2::id3v2Raw(const QString &frameID) const
+{
+    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    if(frameDataIndex==-1)
+    {
+        return QByteArray();
+    }
+    return m_tagData.frameData.at(frameDataIndex);
 }
 
 void KNMusicTagID3v2::clearCache()

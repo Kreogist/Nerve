@@ -18,6 +18,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setSortingEnabled(true);
     setAlternatingRowColors(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setAllColumnsShowFocus(true);
 
     //Set palette.
     int minGrey=0x20;
@@ -73,9 +74,7 @@ void KNMusicListView::resetHeader()
     setColumnHidden(KNMusicGlobal::Artist, false);
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);
-    setColumnHidden(KNMusicGlobal::Plays, false);*/
-    moveToFirst(KNMusicGlobal::Plays);
+    setColumnHidden(KNMusicGlobal::Rating, false);*/
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);

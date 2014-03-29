@@ -46,8 +46,6 @@ public:
         Grouping,
         Kind,
         LastPlayed,
-        LastSkipped,
-        Plays,
         Rating,
         SampleRate,
         Season,
