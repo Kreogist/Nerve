@@ -24,11 +24,11 @@ public:
 private:
 };
 
-class KNMusicArtistDetailsDisplay : public QWidget
+class KNMusicCategoryDetailsDisplay : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KNMusicArtistDetailsDisplay(QWidget *parent = 0);
+    explicit KNMusicCategoryDetailsDisplay(QWidget *parent = 0);
     void setArtistName(const QString &artistName);
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicCategoryDetailModel *model);
@@ -66,7 +66,7 @@ private slots:
 
 private:
     KNMusicArtistList *m_artistList;
-    KNMusicArtistDetailsDisplay *m_artistDetails;
+    KNMusicCategoryDetailsDisplay *m_artistDetails;
     KNMusicCategoryModel *m_artistModel;
 };
 

@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QMetaType>
 #include <QStringList>
+#include <QMap>
 
 class KNMusicGlobal : public QObject
 {
@@ -73,8 +74,8 @@ private:
     static KNMusicGlobal *m_instance;
     KNMusicGlobal();
     QStringList m_genreList;
-    QStringList m_genreImage;
     QString m_header[MusicDataCount];
+    QMap<QString, QString> m_genreImage;
 };
 
 #endif // KNMUSICGLOBAL_H

@@ -42,15 +42,19 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView->setModel(m_artistModel);
 
     m_genreView=new KNMusicArtistView(this);
+    connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
+            this, &KNMusicViewer::onActionGenreOpenUrl);
     m_genreView->setModel(m_genreModel);
 
     m_artistDetails=new KNMusicCategoryDetailModel(this);
+    m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
     connect(m_artistDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
             m_artistView, &KNMusicArtistView::onActionDetailSizeChange);
 
     m_genreDetails=new KNMusicCategoryDetailModel(this);
+    m_genreDetails->setFilterKeyColumn(KNMusicGlobal::Genre);
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
     connect(m_genreDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
@@ -82,6 +86,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_artistModel->setSourceModel(model);
     m_artistDetails->setSourceModel(model);
     m_genreModel->setSourceModel(model);
+    m_genreDetails->setSourceModel(model);
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
     m_genreView->resetHeader();
@@ -104,6 +109,7 @@ void KNMusicViewer::retranslateAndSet()
 void KNMusicViewer::resort()
 {
     m_artistView->resort();
+    m_genreView->resort();
 }
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
@@ -134,4 +140,9 @@ void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
 void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
 {
     emit requireOpenUrl(m_artistDetails->mapToSource(index));
+}
+
+void KNMusicViewer::onActionGenreOpenUrl(const QModelIndex &index)
+{
+    emit requireOpenUrl(m_genreDetails->mapToSource(index));
 }

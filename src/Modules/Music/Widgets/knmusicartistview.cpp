@@ -43,7 +43,7 @@ void KNMusicArtistSongs::resetHeader()
     moveToFirst(KNMusicGlobal::Name);
 }
 
-KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
+KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     QWidget(parent)
 {
     setAutoFillBackground(true);
@@ -86,16 +86,16 @@ KNMusicArtistDetailsDisplay::KNMusicArtistDetailsDisplay(QWidget *parent) :
 
     m_songViewer=new KNMusicArtistSongs(this);
     connect(m_songViewer, &KNMusicArtistSongs::requireOpenUrl,
-            this, &KNMusicArtistDetailsDisplay::requireOpenUrl);
+            this, &KNMusicCategoryDetailsDisplay::requireOpenUrl);
     m_layout->addWidget(m_songViewer, 1);
 }
 
-void KNMusicArtistDetailsDisplay::setArtistName(const QString &artistName)
+void KNMusicCategoryDetailsDisplay::setArtistName(const QString &artistName)
 {
     m_artistName->setText(artistName);
 }
 
-void KNMusicArtistDetailsDisplay::setSongNumber(const int &index)
+void KNMusicCategoryDetailsDisplay::setSongNumber(const int &index)
 {
     if(index==1)
     {
@@ -107,13 +107,13 @@ void KNMusicArtistDetailsDisplay::setSongNumber(const int &index)
     }
 }
 
-void KNMusicArtistDetailsDisplay::setDetailModel(KNMusicCategoryDetailModel *model)
+void KNMusicCategoryDetailsDisplay::setDetailModel(KNMusicCategoryDetailModel *model)
 {
     m_songViewer->setModel(model);
     m_songViewer->resetHeader();
 }
 
-void KNMusicArtistDetailsDisplay::resetHeader()
+void KNMusicCategoryDetailsDisplay::resetHeader()
 {
     m_songViewer->resetHeader();
 }
@@ -138,7 +138,7 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     m_artistList=new KNMusicArtistList(this);
     addWidget(m_artistList);
 
-    m_artistDetails=new KNMusicArtistDetailsDisplay(this);
+    m_artistDetails=new KNMusicCategoryDetailsDisplay(this);
     connect(m_artistDetails, SIGNAL(requireOpenUrl(QModelIndex)),
             this, SIGNAL(requireOpenUrl(QModelIndex)));
     addWidget(m_artistDetails);

@@ -10,7 +10,6 @@
 KNMusicCategoryDetailModel::KNMusicCategoryDetailModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
-    setFilterKeyColumn(KNMusicGlobal::Artist);
     m_nameFilter.setPattern("^$");
     m_nameFilter.setPatternSyntax(QRegExp::RegExp);
     setFilterRegExp(m_nameFilter);

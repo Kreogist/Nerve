@@ -15,7 +15,7 @@ KNMusicGenreModel::KNMusicGenreModel(QObject *parent) :
 
 void KNMusicGenreModel::retranslate()
 {
-    setNoCategoryText(tr("Unknown Genre"));
+    setNoCategoryText(tr("No Genre"));
 }
 
 void KNMusicGenreModel::retranslateAndSet()

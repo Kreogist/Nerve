@@ -11,7 +11,7 @@ KNMusicCategoryModel::KNMusicCategoryModel(QObject *parent) :
 {
     retranslate();
 
-    m_noAlbumIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
+    m_noAlbumArtIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
     setSortRole(Qt::UserRole);
 
     resetModel();
@@ -25,9 +25,9 @@ KNMusicArtistItem *KNMusicCategoryModel::artistItem(const QModelIndex &index)
 void KNMusicCategoryModel::resetModel()
 {
     clear();
-    KNMusicArtistItem *currentArtist=new KNMusicArtistItem(m_noCategoryText);
-    currentArtist->setIcon(m_noAlbumIcon);
-    appendRow(currentArtist);
+    KNMusicArtistItem *currentCategory=new KNMusicArtistItem(m_noCategoryText);
+    currentCategory->setIcon(m_noAlbumArtIcon);
+    appendRow(currentCategory);
 }
 
 QString KNMusicCategoryModel::noCategoryText() const
@@ -75,7 +75,7 @@ void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
 QIcon KNMusicCategoryModel::itemIcon(const int &index) const
 {
     Q_UNUSED(index);
-    return m_noAlbumIcon;
+    return m_noAlbumArtIcon;
 }
 
 QString KNMusicCategoryModel::categoryName(const int &index) const

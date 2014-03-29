@@ -33,7 +33,7 @@ protected:
     KNMusicModel *m_sourceModel;
 
 private:
-    QIcon m_noAlbumIcon;
+    QIcon m_noAlbumArtIcon;
     QString m_noCategoryText;
 };
 
