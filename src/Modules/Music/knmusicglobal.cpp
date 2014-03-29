@@ -268,8 +268,8 @@ KNMusicGlobal::KNMusicGlobal() :
     m_genreImage["new age"]="New Age";
     m_genreImage["oldies"]="Oldies";
     m_genreImage["other"]="Other";
-    m_genreImage["pop"]="genre-hiphop.jpg";
-    m_genreImage["r&b"]="R&B";
+    m_genreImage["pop"]="genre-pop.jpg";
+    m_genreImage["r&b"]="genre-rb.jpg";
     m_genreImage["rap"]="Rap";
     m_genreImage["reggae"]="Reggae";
     m_genreImage["rock"]="genre-rock.jpg";
@@ -308,8 +308,8 @@ KNMusicGlobal::KNMusicGlobal() :
     m_genreImage["darkwave"]="Darkwave";
     m_genreImage["techno-industrial"]="Techno-Industrial";
     m_genreImage["electronic"]="genre-electronic.jpg";
-    m_genreImage["pop-folk"]="Pop-Folk";
-    m_genreImage["eurodance"]="Eurodance";
+    m_genreImage["pop-folk"]="genre-folk.jpg";
+    m_genreImage["eurodance"]="genre-dance.jpg";
     m_genreImage["dream"]="Dream";
     m_genreImage["southern rock"]="Southern Rock";
     m_genreImage["comedy"]="Comedy";
@@ -335,7 +335,7 @@ KNMusicGlobal::KNMusicGlobal() :
     m_genreImage["musical"]="genre-music.jpg";
     m_genreImage["rock & roll"]="Rock & Roll";
     m_genreImage["hard rock"]="Hard Rock";
-    m_genreImage["folk"]="Folk";
+    m_genreImage["folk"]="genre-folk.jpg";
     m_genreImage["folk-rock"]="Folk-Rock";
     m_genreImage["national folk"]="National Folk";
     m_genreImage["swing"]="Swing";
