@@ -61,7 +61,8 @@ private:
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
     KNMusicGenreModel *m_genreModel;
-    KNMusicCategoryDetailModel *m_artistDetails;
+    KNMusicCategoryDetailModel *m_artistDetails,
+                               *m_genreDetails;
 };
 
 #endif // KNMUSICVIEWER_H

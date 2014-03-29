@@ -9,7 +9,7 @@ KNMusicGlobal *KNMusicGlobal::instance()
     return m_instance==nullptr?m_instance=new KNMusicGlobal:m_instance;
 }
 
-QString KNMusicGlobal::getGenre(const int &index)
+QString KNMusicGlobal::getGenre(const int &index) const
 {
     quint8 genreIndex=(quint8)index;
     if(genreIndex<m_genreList.count())
@@ -19,7 +19,7 @@ QString KNMusicGlobal::getGenre(const int &index)
     return QString("Unknown");
 }
 
-QString KNMusicGlobal::getGenre(const QString &value)
+QString KNMusicGlobal::getGenre(const QString &value) const
 {
     if(value.count()<2)
     {
@@ -48,6 +48,25 @@ QString KNMusicGlobal::getGenre(const QString &value)
         return resultValue;
     }
     return resultValue;
+}
+
+QPixmap KNMusicGlobal::getGenreImage(const int &index) const
+{
+    if(index<0)
+    {
+        return QPixmap();
+    }
+    quint8 genreIndex=(quint8)index;
+    if(genreIndex<m_genreImage.count())
+    {
+        return QPixmap(":/MusicGenre/Resources/Music/genres/"+m_genreImage.at(index));
+    }
+    return QPixmap();
+}
+
+QPixmap KNMusicGlobal::getGenreImage(const QString &value) const
+{
+    return getGenreImage(m_genreList.indexOf(value));
 }
 
 QString KNMusicGlobal::getHeader(const int &index)
@@ -248,4 +267,153 @@ KNMusicGlobal::KNMusicGlobal() :
                <<"Anime"
                <<"JPop"
                <<"Synthpop";
+
+    m_genreImage<<"genre-blues.jpg"
+                <<"Classic Rock"
+                <<"genre-country.jpg"
+                <<"genre-dance.jpg"
+                <<"Disco"
+                <<"Funk"
+                <<"Grunge"
+                <<"genre-hiphop.jpg"
+                <<"genre-jazz.jpg"
+                <<"Metal"
+                <<"New Age"
+                <<"Oldies"
+                <<"Other"
+                <<"genre-hiphop.jpg"
+                <<"R&B"
+                <<"Rap"
+                <<"Reggae"
+                <<"genre-rock.jpg"
+                <<"Techno"
+                <<"Industrial"
+                <<"genre-alternative.jpg"
+                <<"Ska"
+                <<"Death Metal"
+                <<"Pranks"
+                <<"genre-soundtrack.jpg"
+                <<"Euro-Techno"
+                <<"Ambient"
+                <<"Trip-Hop"
+                <<"genre-vocal.jpg"
+                <<"Jazz+Funk"
+                <<"Fusion"
+                <<"Trance"
+                <<"genre-classical.jpg"
+                <<"Instrumental"
+                <<"Acid"
+                <<"House"
+                <<"Game"
+                <<"Sound Clip"
+                <<"Gospel"
+                <<"Noise"
+                <<"Alternative Rock"
+                <<"Bass"
+                <<"Soul"
+                <<"Punk"
+                <<"Space"
+                <<"Meditative"
+                <<"Instrumental Pop"
+                <<"Instrumental Rock"
+                <<"Ethnic"
+                <<"Gothic"
+                <<"Darkwave"
+                <<"Techno-Industrial"
+                <<"genre-electronic.jpg"
+                <<"Pop-Folk"
+                <<"Eurodance"
+                <<"Dream"
+                <<"Southern Rock"
+                <<"Comedy"
+                <<"Cult"
+                <<"Gangsta"
+                <<"Top 40"
+                <<"Christian Rap"
+                <<"genre-pop.jpg"
+                <<"Jungle"
+                <<"Native US"
+                <<"Cabaret"
+                <<"New Wave"
+                <<"Psychadelic"
+                <<"Rave"
+                <<"Showtunes"
+                <<"Trailer"
+                <<"Lo-Fi"
+                <<"Tribal"
+                <<"Acid Punk"
+                <<"Acid Jazz"
+                <<"Polka"
+                <<"Retro"
+                <<"genre-music.jpg"
+                <<"Rock & Roll"
+                <<"Hard Rock"
+                <<"Folk"
+                <<"Folk-Rock"
+                <<"National Folk"
+                <<"Swing"
+                <<"Fast Fusion"
+                <<"Bebob"
+                <<"Latin"
+                <<"Revival"
+                <<"Celtic"
+                <<"Bluegrass"
+                <<"Avantgarde"
+                <<"Gothic Rock"
+                <<"Progressive Rock"
+                <<"Psychedelic Rock"
+                <<"Symphonic Rock"
+                <<"Slow Rock"
+                <<"Big Band"
+                <<"Chorus"
+                <<"Easy Listening"
+                <<"Acoustic"
+                <<"Humour"
+                <<"Speech"
+                <<"Chanson"
+                <<"Opera"
+                <<"Chamber Music"
+                <<"Sonata"
+                <<"Symphony"
+                <<"Booty Bass"
+                <<"Primus"
+                <<"Porn Groove"
+                <<"Satire"
+                <<"Slow Jam"
+                <<"Club"
+                <<"Tango"
+                <<"Samba"
+                <<"Folklore"
+                <<"Ballad"
+                <<"Power Ballad"
+                <<"Rhythmic Soul"
+                <<"Freestyle"
+                <<"Duet"
+                <<"Punk Rock"
+                <<"Drum Solo"
+                <<"Acapella"
+                <<"Euro-House"
+                <<"Dance Hall"
+                <<"Goa"
+                <<"Drum & Bass"
+                <<"Club House"
+                <<"Hardcore"
+                <<"Terror"
+                <<"Indie"
+                <<"BritPop"
+                <<"Negerpunk"
+                <<"Polsk Punk"
+                <<"Beat"
+                <<"Christian Gangsta Rap"
+                <<"Heavy Metal"
+                <<"Black Metal"
+                <<"Crossover"
+                <<"Contemporary Christian"
+                <<"Christian Rock"
+                <<"Merengue"
+                <<"Salsa"
+                <<"Thrash Metal"
+                <<"genre-animation.jpg"
+                <<"genre-jpop.jpg"
+                <<"Synthpop";
 }

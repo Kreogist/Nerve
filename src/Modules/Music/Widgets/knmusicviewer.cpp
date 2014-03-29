@@ -48,7 +48,13 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
     connect(m_artistDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
-            m_artistView, &KNMusicArtistView::onActionDetailCountChange);
+            m_artistView, &KNMusicArtistView::onActionDetailSizeChange);
+
+    m_genreDetails=new KNMusicCategoryDetailModel(this);
+    m_genreDetails->setCategoryModel(m_genreModel);
+    m_genreView->setDetailModel(m_genreDetails);
+    connect(m_genreDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
+            m_genreView, &KNMusicArtistView::onActionDetailSizeChange);
 
     QWidget *empty2=new QWidget(this),
             *empty4=new QWidget(this);
@@ -75,8 +81,10 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
     m_artistDetails->setSourceModel(model);
+    m_genreModel->setSourceModel(model);
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
+    m_genreView->resetHeader();
 }
 
 void KNMusicViewer::retranslate()

@@ -10,6 +10,7 @@ KNMusicGenreModel::KNMusicGenreModel(QObject *parent) :
     KNMusicCategoryModel(parent)
 {
     retranslateAndSet();
+    m_musicGlobal=KNMusicGlobal::instance();
 }
 
 void KNMusicGenreModel::retranslate()
@@ -26,12 +27,12 @@ void KNMusicGenreModel::retranslateAndSet()
 
 QIcon KNMusicGenreModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=m_sourceModel->item(index, KNMusicGlobal::Time)->data(Qt::UserRole).value<QPixmap>();
-    if(albumArt.isNull())
+    QPixmap genreArt=m_musicGlobal->getGenreImage(m_sourceModel->item(index, KNMusicGlobal::Genre)->text());
+    if(genreArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);
     }
-    return QIcon(albumArt);
+    return QIcon(genreArt);
 }
 
 QString KNMusicGenreModel::categoryName(const int &index) const

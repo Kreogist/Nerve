@@ -58,7 +58,7 @@ signals:
 
 public slots:
     void resort();
-    void onActionDetailCountChange(const int &value);
+    void onActionDetailSizeChange(const int &value);
 
 private slots:
     void onActionItemActivate(const QModelIndex & current,

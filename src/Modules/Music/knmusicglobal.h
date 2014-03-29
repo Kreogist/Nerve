@@ -57,8 +57,10 @@ public:
         Year,
         MusicDataCount
     };
-    QString getGenre(const int &index);
-    QString getGenre(const QString &value);
+    QString getGenre(const int &index) const;
+    QString getGenre(const QString &value) const;
+    QPixmap getGenreImage(const int &index) const;
+    QPixmap getGenreImage(const QString &value) const;
     QString getHeader(const int &index);
 
 signals:
@@ -71,6 +73,7 @@ private:
     static KNMusicGlobal *m_instance;
     KNMusicGlobal();
     QStringList m_genreList;
+    QStringList m_genreImage;
     QString m_header[MusicDataCount];
 };
 
