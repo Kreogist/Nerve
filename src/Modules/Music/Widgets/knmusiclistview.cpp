@@ -22,8 +22,8 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setAllColumnsShowFocus(true);
 
-    horizontalScrollBar()->setSingleStep(2);
-    verticalScrollBar()->setSingleStep(2);
+    horizontalScrollBar()->setSingleStep(5);
+    verticalScrollBar()->setSingleStep(4);
 
     //Set palette.
     int minGrey=0x20;

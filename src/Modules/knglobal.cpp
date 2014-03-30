@@ -1,6 +1,12 @@
-#include <QProcess>
+#include <QApplication>
+#include <QClipboard>
+#include <QDesktopServices>
 #include <QDir>
+#include <QMimeData>
+#include <QList>
+#include <QProcess>
 #include <QStringList>
+#include <QUrl>
 
 #include <QDebug>
 
@@ -67,4 +73,22 @@ void KNGlobal::showInGraphicalShell(const QString &filePath)
 #endif
 }
 
+void KNGlobal::openLocalUrl(const QString &filePath)
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}
 
+void KNGlobal::copyFileToClipboard(const QStringList &files)
+{
+    QMimeData fileData;
+    QList<QUrl> fileUrlList;
+    for(int i=0, fileCount=files.count();
+        i<fileCount;
+        i++)
+    {
+        QUrl currentUrl=QUrl::fromLocalFile(files.at(i));
+        fileUrlList.append(currentUrl);
+    }
+    fileData.setUrls(fileUrlList);
+    QApplication::clipboard()->setMimeData(&fileData);
+}

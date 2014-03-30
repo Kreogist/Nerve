@@ -1,8 +1,6 @@
 #include "../knglobal.h"
 
 #include <QList>
-#include <QUrl>
-#include <QDesktopServices>
 
 #include <QDebug>
 
@@ -78,5 +76,5 @@ void KNMusicPluin::showContextMenu(const QPoint &position,
 
 void KNMusicPluin::onActionOpenUrl(const QModelIndex &index)
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(m_model->filePathFromIndex(index)));
+    m_global->openLocalUrl(m_model->filePathFromIndex(index));
 }

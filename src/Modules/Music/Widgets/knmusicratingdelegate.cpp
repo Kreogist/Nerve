@@ -57,9 +57,9 @@ QWidget *KNMusicRatingDelegate::createEditor(QWidget *parent,
 {
     if (index.data().canConvert<KNMusicStarRating>())
     {
-        KNMusicRatingEditor *editor = new KNMusicRatingEditor(parent);
-        connect(editor, SIGNAL(editingFinished()),
-                this, SLOT(commitAndCloseEditor()));
+        KNMusicRatingEditor *editor=new KNMusicRatingEditor(parent);
+        connect(editor, &KNMusicRatingEditor::editingFinished,
+                this, &KNMusicRatingDelegate::commitAndCloseEditor);
         return editor;
     }
     else
@@ -97,7 +97,7 @@ void KNMusicRatingDelegate::setModelData(QWidget *editor,
 
 void KNMusicRatingDelegate::commitAndCloseEditor()
 {
-    KNMusicRatingEditor *editor = qobject_cast<KNMusicRatingEditor *>(sender());
+    KNMusicRatingEditor *editor=qobject_cast<KNMusicRatingEditor *>(sender());
     emit commitData(editor);
     emit closeEditor(editor);
 }

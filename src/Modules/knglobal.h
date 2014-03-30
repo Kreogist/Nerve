@@ -1,8 +1,8 @@
 #ifndef KNGLOBAL_H
 #define KNGLOBAL_H
 
-#include <QWidget>
 #include <QObject>
+#include <QWidget>
 
 class KNGlobal : public QObject
 {
@@ -14,7 +14,9 @@ public:
 
     QWidget *mainWindow() const;
     void setMainWindow(QWidget *mainWindow);
-    void showInGraphicalShell(const QString &filePath);
+    static void showInGraphicalShell(const QString &filePath);
+    static void openLocalUrl(const QString &filePath);
+    void copyFileToClipboard(const QStringList &files);
 
 signals:
 

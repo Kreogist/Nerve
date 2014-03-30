@@ -18,11 +18,14 @@ public slots:
     void retranslateAndSet();
 
 private slots:
+    void onActionCopy();
+    void onActionPlay();
     void onActionBrowse();
 
 private:
     enum MusicActions
     {
+        Play,
         Browse,
         Copy,
         MusicActionCount
