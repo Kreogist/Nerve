@@ -11,6 +11,7 @@ class QDragEnterEvent;
 class QDropEvent;
 class KNMusicListView;
 class KNMusicArtistView;
+class KNMusicAlbumView;
 class KNMusicSortModel;
 class KNMusicArtistModel;
 class KNMusicGenreModel;
@@ -59,6 +60,7 @@ private:
     KNMusicListView *m_libraryView;
     KNMusicArtistView *m_artistView,
                       *m_genreView;
+    KNMusicAlbumView *m_albumView;
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
     KNMusicGenreModel *m_genreModel;

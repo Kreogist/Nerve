@@ -8,6 +8,7 @@
 KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     QListView(parent)
 {
+    viewport()->setContentsMargins(0,0,0,0);
     setAutoFillBackground(true);
     setIconSize(QSize(40, 40));
     setLineWidth(0);

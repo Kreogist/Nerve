@@ -9,6 +9,7 @@
 
 #include "knmusiclistview.h"
 #include "knmusicartistview.h"
+#include "knmusicalbumview.h"
 
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
@@ -41,6 +42,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionArtistOpenUrl);
     m_artistView->setModel(m_artistModel);
 
+    m_albumView=new KNMusicAlbumView(this);
+
     m_genreView=new KNMusicArtistView(this);
     connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
             this, &KNMusicViewer::onActionGenreOpenUrl);
@@ -60,8 +63,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     connect(m_genreDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
             m_genreView, &KNMusicArtistView::onActionDetailSizeChange);
 
-    QWidget *empty2=new QWidget(this),
-            *empty4=new QWidget(this);
+    QWidget *empty4=new QWidget(this);
 
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
@@ -71,7 +73,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
                 m_artistView);
     addCategory(QPixmap(":/Category/Resources/Category/03_ablums.png"),
                 m_categoryCaption[Albums],
-                empty2);
+                m_albumView);
     addCategory(QPixmap(":/Category/Resources/Category/04_genres.png"),
                 m_categoryCaption[Genres],
                 m_genreView);
