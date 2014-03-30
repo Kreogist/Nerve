@@ -13,6 +13,7 @@
 
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
+#include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusicgenremodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 #include "../knmusicglobal.h"
@@ -28,6 +29,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_listViewModel=new KNMusicSortModel(this);
     m_artistModel=new KNMusicArtistModel(this);
+    m_albumModel=new KNMusicAlbumModel(this);
     m_genreModel=new KNMusicGenreModel(this);
 
     m_libraryView=new KNMusicListView(this);
@@ -43,6 +45,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView->setModel(m_artistModel);
 
     m_albumView=new KNMusicAlbumView(this);
+    m_albumView->setModel(m_albumModel);
 
     m_genreView=new KNMusicArtistView(this);
     connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
@@ -87,6 +90,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
     m_artistDetails->setSourceModel(model);
+    m_albumModel->setSourceModel(model);
     m_genreModel->setSourceModel(model);
     m_genreDetails->setSourceModel(model);
     m_libraryView->resetHeader();

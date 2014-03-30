@@ -14,6 +14,7 @@ class KNMusicArtistView;
 class KNMusicAlbumView;
 class KNMusicSortModel;
 class KNMusicArtistModel;
+class KNMusicAlbumModel;
 class KNMusicGenreModel;
 class KNMusicCategoryDetailModel;
 class KNMusicViewer : public KNStdLibViewer
@@ -63,6 +64,7 @@ private:
     KNMusicAlbumView *m_albumView;
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
+    KNMusicAlbumModel *m_albumModel;
     KNMusicGenreModel *m_genreModel;
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
