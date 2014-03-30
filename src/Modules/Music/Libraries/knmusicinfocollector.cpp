@@ -46,16 +46,17 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     m_musicInfos[KNMusicGlobal::LastPlayed]=
             currentFile.lastRead().toString("yyyy-MM-dd APhh:mm");
     currentFileInfo.lastPlayed=currentFile.lastRead();
-    QDateTime addedDate=QDateTime::currentDateTime();
+    QDateTime musicAddDate=QDateTime::currentDateTime();
     m_musicInfos[KNMusicGlobal::DateAdded]=
-            addedDate.toString("yyyy-MM-dd APhh:mm");
-    currentFileInfo.dateAdded=addedDate;
+            musicAddDate.toString("yyyy-MM-dd APhh:mm");
+    currentFileInfo.dateAdded=musicAddDate;
 
     readID3v1Tag(filePath);
     readAPEv2Tag(filePath);
     readID3v2Tag(filePath);
     readWMATag(filePath);
     readM4ATag(filePath);
+    currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
 
     QStringList musicInfo;
@@ -74,6 +75,7 @@ void KNMusicInfoCollector::resetMusicInfo()
     {
         m_musicInfos[i].clear();
     }
+    m_musicRating=0;
     m_musicCover=QPixmap();
 }
 
@@ -115,6 +117,7 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
                 trackInfo=trackInfo.left(diagonalPos);
             }
             setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
+            m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
         }
         else
         {
@@ -135,6 +138,7 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
                 trackInfo=trackInfo.left(diagonalPos);
             }
             setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
+            m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
         }
         m_musicCover=m_tagID3v2->tagImage(3); //3 is the Cover front.
         if(m_musicCover.isNull())
@@ -166,7 +170,10 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
         setMediaData(KNMusicGlobal::Artist, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_AUTHOR));
         setMediaData(KNMusicGlobal::AlbumArtist, m_tagWMA->tagStringData("WM/AlbumArtist"));
         setMediaData(KNMusicGlobal::Album, m_tagWMA->tagStringData("WM/AlbumTitle"));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate, m_tagWMA->tagStringData("WM/BeatsPerMinute"));
+        setMediaData(KNMusicGlobal::Comments, m_tagWMA->tagStringData("WM/Text"));
         setMediaData(KNMusicGlobal::Composer, m_tagWMA->tagStringData("WM/Composer"));
+        setMediaData(KNMusicGlobal::Description, m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_DESCRIPTION));
         setMediaData(KNMusicGlobal::Genre, m_tagWMA->tagStringData("WM/Genre"));
         setMediaData(KNMusicGlobal::Year, m_tagWMA->tagStringData("WM/Year"));
         setMediaData(KNMusicGlobal::TrackNumber,m_tagWMA->tagStringData("WM/TrackNumber"));

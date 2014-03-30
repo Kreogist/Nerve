@@ -43,6 +43,7 @@ private:
 
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
     QPixmap m_musicCover;
+    int m_musicRating;
     KNGlobal *m_global;
     KNMusicGlobal *m_musicGlobal;
 };

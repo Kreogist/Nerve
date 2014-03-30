@@ -16,6 +16,7 @@ public:
     struct MusicDetailsInfo
     {
         quint64 size;
+        int rating;
         QString filePath;
         QDateTime dateModified;
         QDateTime lastPlayed;
@@ -46,8 +47,6 @@ public:
         Grouping,
         Kind,
         LastPlayed,
-        LastSkipped,
-        Plays,
         Rating,
         SampleRate,
         Season,

@@ -49,7 +49,10 @@ SOURCES += \
     Modules/Music/Libraries/knmusiccategorymodel.cpp \
     Modules/Music/Libraries/knmusicgenremodel.cpp \
     Modules/Music/Widgets/knmusicartistlist.cpp \
-    Modules/Music/Libraries/knmusiccategorydetailmodel.cpp
+    Modules/Music/Libraries/knmusiccategorydetailmodel.cpp \
+    Modules/Music/Widgets/knmusicratingdelegate.cpp \
+    Modules/Music/Libraries/knmusicstarrating.cpp \
+    Modules/Music/Widgets/knmusicratingeditor.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -94,7 +97,10 @@ HEADERS += \
     Modules/Music/Libraries/knmusiccategorymodel.h \
     Modules/Music/Libraries/knmusicgenremodel.h \
     Modules/Music/Widgets/knmusicartistlist.h \
-    Modules/Music/Libraries/knmusiccategorydetailmodel.h
+    Modules/Music/Libraries/knmusiccategorydetailmodel.h \
+    Modules/Music/Widgets/knmusicratingdelegate.h \
+    Modules/Music/Libraries/knmusicstarrating.h \
+    Modules/Music/Widgets/knmusicratingeditor.h
 
 RESOURCES += \
     res.qrc

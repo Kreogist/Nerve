@@ -7,6 +7,7 @@
 #include "../../knlocale.h"
 
 #include "knmusiclistviewheader.h"
+#include "knmusicratingdelegate.h"
 
 #include "knmusiclistview.h"
 
@@ -18,6 +19,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setSortingEnabled(true);
     setAlternatingRowColors(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setAllColumnsShowFocus(true);
 
     //Set palette.
     int minGrey=0x20;
@@ -63,6 +65,10 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
 void KNMusicListView::resetHeader()
 {
+    setItemDelegateForColumn(KNMusicGlobal::Rating,
+                             new KNMusicRatingDelegate);
+    setEditTriggers(QAbstractItemView::DoubleClicked
+                    | QAbstractItemView::SelectedClicked);
     /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
@@ -73,9 +79,7 @@ void KNMusicListView::resetHeader()
     setColumnHidden(KNMusicGlobal::Artist, false);
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);
-    setColumnHidden(KNMusicGlobal::Plays, false);*/
-    moveToFirst(KNMusicGlobal::Plays);
+    setColumnHidden(KNMusicGlobal::Rating, false);*/
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);

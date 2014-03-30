@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "../../knlocale.h"
+#include "knmusicstarrating.h"
 
 #include "knmusicmodel.h"
 
@@ -56,6 +57,10 @@ void KNMusicModel::appendMusic(const QStringList &info,
     dataItem->setData(datas.lastPlayed, Qt::UserRole);
     dataItem=musicItem.at(KNMusicGlobal::Size);
     dataItem->setData(datas.size, Qt::UserRole);
+    dataItem=musicItem.at(KNMusicGlobal::Rating);
+    dataItem->setData(QVariant::fromValue(KNMusicStarRating(datas.rating)),
+                      0);
+    dataItem->setEditable(true);
 
     dataItem=musicItem.at(KNMusicGlobal::Name);
     dataItem->setData(datas.filePath, Qt::UserRole);
