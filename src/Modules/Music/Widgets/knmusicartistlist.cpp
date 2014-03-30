@@ -1,6 +1,8 @@
 #include <QScrollBar>
 #include <QTimeLine>
 
+#include <QDebug>
+
 #include "knmusicartistlist.h"
 
 KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
@@ -17,6 +19,8 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
             this, SLOT(onVerticalScrollValueChange(int)));
+
+    verticalScrollBar()->setSingleStep(2);
 
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();

@@ -3,6 +3,7 @@
 #include <QStyleFactory>
 #include <QMouseEvent>
 #include <QTimeLine>
+#include <QScrollBar>
 
 #include "../../knlocale.h"
 
@@ -20,6 +21,9 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setAlternatingRowColors(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setAllColumnsShowFocus(true);
+
+    horizontalScrollBar()->setSingleStep(2);
+    verticalScrollBar()->setSingleStep(2);
 
     //Set palette.
     int minGrey=0x20;
