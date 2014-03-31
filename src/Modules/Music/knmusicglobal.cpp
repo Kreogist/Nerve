@@ -1,5 +1,7 @@
 #include <QDebug>
 
+#include <QVector>
+
 #include "knmusicglobal.h"
 
 KNMusicGlobal *KNMusicGlobal::m_instance=nullptr;
@@ -104,6 +106,7 @@ KNMusicGlobal::KNMusicGlobal() :
 {
     retranslate();
     qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
+    qRegisterMetaType<QVector<int>>("QVector<int>");
     m_genreList<<"Blues"
                <<"Classic Rock"
                <<"Country"

@@ -115,6 +115,7 @@ void KNMusicViewer::retranslateAndSet()
 void KNMusicViewer::resort()
 {
     m_artistView->resort();
+    m_albumModel->sort(0);
     m_genreView->resort();
 }
 

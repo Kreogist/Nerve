@@ -19,6 +19,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setUniformRowHeights(true);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
+    setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setAllColumnsShowFocus(true);
 
@@ -70,9 +71,8 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 void KNMusicListView::resetHeader()
 {
     setItemDelegateForColumn(KNMusicGlobal::Rating,
-                             new KNMusicRatingDelegate);
-    setEditTriggers(QAbstractItemView::DoubleClicked
-                    | QAbstractItemView::SelectedClicked);
+                             new KNMusicRatingDelegate(this));
+    setEditTriggers(QAbstractItemView::SelectedClicked);
     /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)

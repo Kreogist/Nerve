@@ -12,6 +12,7 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     setAutoFillBackground(true);
     setIconSize(QSize(40, 40));
     setLineWidth(0);
+    setLayoutMode(QListView::Batched);
     setMinimumWidth(200);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSpacing(2);

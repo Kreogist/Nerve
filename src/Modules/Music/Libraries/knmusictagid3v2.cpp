@@ -70,7 +70,7 @@ int KNMusicTagID3v2::hexTo5Rating(const quint8 &hex) const
     {
         return 4;
     }
-    if(hex>223 && hex<256)
+    if(hex>223)
     {
         return 5;
     }

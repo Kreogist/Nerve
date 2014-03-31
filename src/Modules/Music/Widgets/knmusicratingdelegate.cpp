@@ -17,82 +17,51 @@ void KNMusicRatingDelegate::paint(QPainter *painter,
                                   const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
-    if (index.data().canConvert<KNMusicStarRating>())
-    {
-        KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
+    KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
 
-        if (option.state & QStyle::State_Selected)
-        {
-            painter->fillRect(option.rect, option.palette.highlight());
-        }
-
-        starRating.paint(painter,
-                         option.rect,
-                         option.palette,
-                         KNMusicStarRating::ReadOnly);
-    }
-    else
+    if (option.state & QStyle::State_Selected)
     {
-        QStyledItemDelegate::paint(painter, option, index);
+        painter->fillRect(option.rect, option.palette.highlight());
     }
+
+    starRating.paint(painter,
+                     option.rect,
+                     option.palette,
+                     KNMusicStarRating::ReadOnly);
 }
 
 QSize KNMusicRatingDelegate::sizeHint(const QStyleOptionViewItem &option,
                                       const QModelIndex &index) const
 {
-    if (index.data().canConvert<KNMusicStarRating>())
-    {
-        KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
-        return starRating.sizeHint();
-    }
-    else
-    {
-        return QStyledItemDelegate::sizeHint(option, index);
-    }
+    KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
+    return starRating.sizeHint();
 }
 
 QWidget *KNMusicRatingDelegate::createEditor(QWidget *parent,
                                              const QStyleOptionViewItem &option,
                                              const QModelIndex &index) const
 {
-    if (index.data().canConvert<KNMusicStarRating>())
-    {
-        KNMusicRatingEditor *editor=new KNMusicRatingEditor(parent);
-        connect(editor, &KNMusicRatingEditor::editingFinished,
-                this, &KNMusicRatingDelegate::commitAndCloseEditor);
-        return editor;
-    }
-    else
-    {
-        return QStyledItemDelegate::createEditor(parent, option, index);
-    }
+    Q_UNUSED(index);
+    KNMusicRatingEditor *editor=new KNMusicRatingEditor(parent);
+    connect(editor, &KNMusicRatingEditor::editingFinished,
+            this, &KNMusicRatingDelegate::commitAndCloseEditor);
+    return editor;
 }
 
 void KNMusicRatingDelegate::setEditorData(QWidget *editor,
                                           const QModelIndex &index) const
 {
-    if (index.data().canConvert<KNMusicStarRating>())
-    {
-        KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
-        KNMusicRatingEditor *starEditor = qobject_cast<KNMusicRatingEditor *>(editor);
-        starEditor->setStarRating(starRating);
-    }
-    else
-    {
-        QStyledItemDelegate::setEditorData(editor, index);
-    }
+    KNMusicStarRating starRating = qvariant_cast<KNMusicStarRating>(index.data());
+    KNMusicRatingEditor *starEditor = qobject_cast<KNMusicRatingEditor *>(editor);
+    starEditor->setStarRating(starRating);
 }
 
 void KNMusicRatingDelegate::setModelData(QWidget *editor,
                                          QAbstractItemModel *model,
                                          const QModelIndex &index) const
 {
-    if (index.data().canConvert<KNMusicStarRating>()) {
-        KNMusicRatingEditor *starEditor = static_cast<KNMusicRatingEditor *>(editor);
-        model->setData(index, QVariant::fromValue(starEditor->starRating()));
-    } else {
-        QStyledItemDelegate::setModelData(editor, model, index);
-    }
+    KNMusicRatingEditor *starEditor = static_cast<KNMusicRatingEditor *>(editor);
+    model->setData(index, QVariant::fromValue(starEditor->starRating()));
 }
 
 void KNMusicRatingDelegate::commitAndCloseEditor()

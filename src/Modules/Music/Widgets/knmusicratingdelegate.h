@@ -28,9 +28,6 @@ public slots:
 
 private slots:
     void commitAndCloseEditor();
-
-private:
-
 };
 
 #endif // KNMUSICRATINGDELEGATE_H
