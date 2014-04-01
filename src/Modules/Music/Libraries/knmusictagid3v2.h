@@ -55,7 +55,7 @@ private:
     void processAPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;
     ID3v2Data m_tagData;
-    QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_windowsCodec;
+    QTextCodec *m_beCodec, *m_leCodec, *m_utf8Codec, *m_localeCodec;
 };
 
 #endif // KNMUSICTAGID3V2_H

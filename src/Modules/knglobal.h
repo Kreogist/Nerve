@@ -17,6 +17,7 @@ public:
     static void showInGraphicalShell(const QString &filePath);
     static void openLocalUrl(const QString &filePath);
     void copyFileToClipboard(const QStringList &files);
+    void copyTextToClipboard(const QString &text);
 
 signals:
 

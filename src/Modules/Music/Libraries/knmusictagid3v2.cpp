@@ -9,8 +9,8 @@
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     KNMusicTagBase(parent)
 {
-    m_isoCodec=QTextCodec::codecForName("ISO-8859-1");
-    m_windowsCodec=QTextCodec::codecForName("Windows-1250");
+    m_utf8Codec=QTextCodec::codecForName("UTF-8");
+    m_localeCodec=QTextCodec::codecForLocale();
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
 }
@@ -26,9 +26,9 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
     switch(encoding)
     {
     case 0:
-        //ISO
+        //ISO, here use UTF-8 instead, because UTF-8 can display ISO.
         content.remove(0,1);
-        return m_isoCodec->toUnicode(content).simplified();
+        return QString::fromLocal8Bit(content).simplified();
     case 1:
         //UTF-16 LE/BE
         content.remove(0,1);
@@ -44,11 +44,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         }
         return QString::fromUtf8(content).simplified();
     default:
-#ifdef Q_OS_WIN
-        return m_windowsCodec->toUnicode(content).simplified();
-#else
-        return QString(content).simplified();
-#endif
+        return m_localeCodec->toUnicode(content).simplified();
     }
 }
 

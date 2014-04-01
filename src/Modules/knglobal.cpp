@@ -92,3 +92,8 @@ void KNGlobal::copyFileToClipboard(const QStringList &files)
     fileData.setUrls(fileUrlList);
     QApplication::clipboard()->setMimeData(&fileData);
 }
+
+void KNGlobal::copyTextToClipboard(const QString &text)
+{
+    QApplication::clipboard()->setText(text);
+}
