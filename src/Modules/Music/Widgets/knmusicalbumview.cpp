@@ -58,6 +58,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     QBrush background = option.palette.base();
     QPen foreground(option.palette.color(QPalette::WindowText));
     QPainter painter(viewport());
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
     QRect rect=event->rect();
     painter.setRenderHint(QPainter::Antialiasing);
     if(autoFillBackground())
@@ -160,15 +161,28 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                                   const QRect &rect,
                                   const QModelIndex &index)
 {
-    //To draw the text.
-    painter->drawText(rect.x(),
-                      rect.y(),
-                      model()->data(index).toString());
     //To draw the album art.
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
     int sizeParam=qMin(rect.width(), rect.height());
-    painter->drawPixmap(QRect(rect.x(),rect.y(),sizeParam,sizeParam),
+    QRect albumArtRect=QRect(rect.x(),rect.y(),sizeParam,sizeParam);
+    painter->drawPixmap(albumArtRect,
                         currentIcon.pixmap(sizeParam, sizeParam));
+    painter->drawRect(albumArtRect);
+
+    //To draw the text.
+    painter->drawText(rect.x(),
+                      rect.y()+sizeParam,
+                      rect.width(),
+                      rect.height(),
+                      Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
+                      model()->data(index).toString());
+
+    painter->drawText(rect.x(),
+                      rect.y()+sizeParam+fontMetrics().height(),
+                      rect.width(),
+                      rect.height(),
+                      Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
+                      model()->data(index, Qt::UserRole).toString());
 }
 
 int KNMusicAlbumView::gridMinimumWidth() const

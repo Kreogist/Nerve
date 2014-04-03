@@ -24,7 +24,7 @@ signals:
 public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
-    void onMusicAdded(const QModelIndex &index);
+    virtual void onMusicAdded(const QModelIndex &index);
     void setSourceModel(QAbstractItemModel *sourceModel);
 
 protected:
