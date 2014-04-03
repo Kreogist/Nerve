@@ -2,6 +2,7 @@
 
 #include <QScrollBar>
 #include <QPen>
+#include <QIcon>
 #include <QPainter>
 #include <QPaintEvent>
 
@@ -10,8 +11,8 @@
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
-    horizontalScrollBar()->setRange(0 ,0);
     verticalScrollBar()->setRange(0, 0);
+    horizontalScrollBar()->setPageStep(4);
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -31,11 +32,23 @@ QRect KNMusicAlbumView::visualRect(const QModelIndex &index) const
     return rect;
 }
 
+void KNMusicAlbumView::setModel(QAbstractItemModel *model)
+{
+    QAbstractItemView::setModel(model);
+    updateGeometries();
+}
+
 void KNMusicAlbumView::dataChanged(const QModelIndex &topLeft,
                                    const QModelIndex &bottomRight)
 {
     QAbstractItemView::dataChanged(topLeft, bottomRight);
     viewport()->update();
+}
+
+void KNMusicAlbumView::updateGeometries()
+{
+    verticalScrollBar()->setRange(0, qMax(0,
+                                          m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height()));
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
@@ -53,15 +66,57 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     }
     painter.setPen(foreground);
 
-    int realWidth=rect.width()-m_spacing;
-    int realMinimumWidth=m_gridMinimumWidth+m_spacing;
-    int columns=realWidth/realMinimumWidth;
-    m_gridWidth=columns==0?realMinimumWidth:realWidth/columns;
-    int currentX=0, currentY=0;
-    for(int i=0; i<columns; i++)
+    int realWidth=rect.width()-m_spacing,
+        realMinimumWidth=m_gridMinimumWidth+m_spacing;
+    if(realWidth<realMinimumWidth)
     {
-        painter.drawRect(currentX, currentY, m_gridWidth, m_gridHeight);
-        currentX+=m_gridWidth;
+        m_maxColumnCount=1;
+        m_gridWidth=realWidth-m_spacing;
+    }
+    else
+    {
+        m_maxColumnCount=realWidth/realMinimumWidth;
+        m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
+    }
+    int albumIndex=0, albumCount=model()->rowCount(),
+            currentRow=0, currentColumn=0,
+            currentLeft=m_spacing, currentTop=m_spacing;
+    m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
+
+    painter.translate(0, -verticalScrollBar()->value());
+    int skipLineCount=verticalScrollBar()->value()/(m_gridHeight+m_spacing),
+        drawnHeight=0, maxDrawnHeight=height()+m_gridHeight+m_spacing;
+    currentRow+=skipLineCount;
+    currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
+    albumIndex=skipLineCount*m_maxColumnCount;
+    while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
+    {
+        QModelIndex index=model()->index(albumIndex, 0, rootIndex());
+        if(selections->isSelected(index))
+        {
+            qDebug()<<"Selected";
+        }
+        QRect currentRect=QRect(currentLeft,
+                                currentTop,
+                                m_gridWidth,
+                                m_gridHeight);
+        paintAlbum(&painter,
+                   currentRect,
+                   index);
+        currentColumn++;
+        if(currentColumn==m_maxColumnCount)
+        {
+            currentColumn=0;
+            currentRow++;
+            currentLeft=m_spacing;
+            currentTop+=m_spacing+m_gridHeight;
+            drawnHeight+=m_spacing+m_gridHeight;
+        }
+        else
+        {
+            currentLeft+=m_spacing+m_gridWidth;
+        }
+        albumIndex++;
     }
 }
 
@@ -98,6 +153,22 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
     QRegion region;
     return region;
 }
+
+void KNMusicAlbumView::paintAlbum(QPainter *painter,
+                                  const QRect &rect,
+                                  const QModelIndex &index)
+{
+    //To draw the text.
+    painter->drawText(rect.x(),
+                      rect.y(),
+                      model()->data(index).toString());
+    //To draw the album art.
+    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
+    int sizeParam=qMin(rect.width(), rect.height());
+    painter->drawPixmap(QRect(rect.x(),rect.y(),sizeParam,sizeParam),
+                        currentIcon.pixmap(sizeParam, sizeParam));
+}
+
 int KNMusicAlbumView::gridMinimumWidth() const
 {
     return m_gridMinimumWidth;
