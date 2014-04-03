@@ -12,7 +12,7 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
     verticalScrollBar()->setRange(0, 0);
-    horizontalScrollBar()->setPageStep(m_gridHeight);
+    horizontalScrollBar()->setPageStep((m_gridHeight+m_spacing)<<1);
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -170,19 +170,23 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     painter->drawRect(albumArtRect);
 
     //To draw the text.
+    int textTop=rect.y()+sizeParam+5;
     painter->drawText(rect.x(),
-                      rect.y()+sizeParam,
+                      textTop,
                       rect.width(),
                       rect.height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index).toString());
-
+    textTop+=fontMetrics().height();
+    QColor penBackup=painter->pen().color();
+    painter->setPen(QColor(128,128,128));
     painter->drawText(rect.x(),
-                      rect.y()+sizeParam+fontMetrics().height(),
+                      textTop,
                       rect.width(),
                       rect.height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index, Qt::UserRole).toString());
+    painter->setPen(penBackup);
 }
 
 int KNMusicAlbumView::gridMinimumWidth() const
