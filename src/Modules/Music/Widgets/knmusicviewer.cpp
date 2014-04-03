@@ -66,8 +66,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     connect(m_genreDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
             m_genreView, &KNMusicArtistView::onActionDetailSizeChange);
 
-    QWidget *empty4=new QWidget(this);
-
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
                 m_libraryView);
@@ -80,9 +78,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     addCategory(QPixmap(":/Category/Resources/Category/04_genres.png"),
                 m_categoryCaption[Genres],
                 m_genreView);
-    addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
-                m_categoryCaption[Playlists],
-                empty4);
 }
 
 void KNMusicViewer::setModel(QAbstractItemModel *model)
@@ -104,7 +99,6 @@ void KNMusicViewer::retranslate()
     m_categoryCaption[Artists]=tr("Artists");
     m_categoryCaption[Albums]=tr("Albums");
     m_categoryCaption[Genres]=tr("Genres");
-    m_categoryCaption[Playlists]=tr("Playlists");
 }
 
 void KNMusicViewer::retranslateAndSet()

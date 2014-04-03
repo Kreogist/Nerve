@@ -29,10 +29,15 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
 {   
-    resetMusicInfo();
-
-    KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     QFileInfo currentFile(filePath);
+    if(!currentFile.exists())
+    {
+        emit requireSkipCurrent();
+        return;
+    }
+
+    resetMusicInfo();
+    KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     currentFileInfo.filePath=currentFile.absoluteFilePath();
     m_musicInfos[KNMusicGlobal::Name]=currentFile.fileName();
     m_musicInfos[KNMusicGlobal::Size]=
@@ -47,6 +52,8 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     QDateTime musicAddDate=QDateTime::currentDateTime();
     m_musicInfos[KNMusicGlobal::DateAdded]=
             musicAddDate.toString("yyyy-MM-dd APhh:mm");
+    m_musicInfos[KNMusicGlobal::Kind]=
+            m_musicGlobal->getDescription(m_musicGlobal->getMusicType(currentFile.suffix()));
     currentFileInfo.dateAdded=musicAddDate;
 
     readID3v1Tag(filePath);
@@ -105,6 +112,7 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBPM"));
             setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TIT1"));
             setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCOM"));
+            setMediaData(KNMusicGlobal::Description,m_tagID3v2->id3v2String("TIT3"));
             setMediaData(KNMusicGlobal::Genre,
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCON")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
@@ -126,6 +134,7 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBP"));
             setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
             setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCM"));
+            setMediaData(KNMusicGlobal::Description,m_tagID3v2->id3v2String("TT3"));
             setMediaData(KNMusicGlobal::Genre,
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCO")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));

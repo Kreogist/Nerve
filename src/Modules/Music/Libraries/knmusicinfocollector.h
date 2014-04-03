@@ -22,6 +22,7 @@ public:
 signals:
     void requireAppendMusic(const QStringList &value,
                             const KNMusicGlobal::MusicDetailsInfo &info);
+    void requireSkipCurrent();
 
 public slots:
     void analysis(const QString &filePath);

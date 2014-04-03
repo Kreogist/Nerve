@@ -25,6 +25,7 @@ public slots:
     void addAnalysisList(const QString &filePath);
 
 private slots:
+    void currentSkip();
     void currentWorkDone(const QStringList &value,
                          const KNMusicGlobal::MusicDetailsInfo &datas);
 

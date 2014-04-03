@@ -7,6 +7,7 @@
 
 #include <QObject>
 
+class KNMusicGlobal;
 class KNMusicSearcher : public QObject
 {
     Q_OBJECT
@@ -21,7 +22,7 @@ public slots:
 
 private:
     void searchDir();
-    QStringList m_suffixs;
+    KNMusicGlobal *m_musicGlobal;
 };
 
 #endif // KNMUSICSEARCHER_H

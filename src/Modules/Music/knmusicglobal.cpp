@@ -63,6 +63,16 @@ QString KNMusicGlobal::getHeader(const int &index)
     return m_header[index];
 }
 
+int KNMusicGlobal::getMusicType(const QString &suffix) const
+{
+    return m_suffixs.indexOf(suffix);
+}
+
+QString KNMusicGlobal::getDescription(const int &type) const
+{
+    return m_suffixDescription.at(type);
+}
+
 void KNMusicGlobal::retranslate()
 {
     m_header[Name]=tr("Name");
@@ -94,6 +104,43 @@ void KNMusicGlobal::retranslate()
     m_header[Time]=tr("Time");
     m_header[TrackNumber]=tr("Track Number");
     m_header[Year]=tr("Year");
+
+    m_suffixDescription.clear();
+    m_suffixDescription<<tr("MPEG Audio Layer III (mp3)")
+                       <<tr("MPEG-4 Part 14 (m4a)")
+                       <<tr("Waveform Audio File Format (wav)")
+                       <<tr("Free Lossless Audio Codec (flac)")
+                       <<tr("Monkey's Audio (ape)")
+                       <<tr("Ogg Vorbis Audio (ogg)")
+                       <<tr("True Audio Codec (tta)")
+                       <<tr("Audio Interchange File Format (aiff)")
+                       <<tr("Audio Interchange File Format (aifc)")
+                       <<tr("Audio Interchange File Format (aif)")
+                       <<tr("MPEG-4 Part 14 (mp4)")
+                       <<tr("MPEG Audio Layer II (mpa)")
+                       <<tr("MPEG Audio Layer II (mp2)")
+                       <<tr("MPEG Audio Layer I (mp1)")
+                       <<tr("Musical Instrument Digital Interface (midi)")
+                       <<tr("Musical Instrument Digital Interface (mid)")
+                       <<tr("MPEG Audio Layer III with SBR (mp3pro)")
+                       <<tr("Musepack Lossy Audio Codec (mpc)")
+                       <<tr("Advanced Audio Coding (aac)")
+                       <<tr("Compact Disc Audio track (cda)")
+                       <<tr("Windows Media Audio (wma)")
+                       <<tr("Flash Audio (fla)")
+                       <<tr("Tom's lossless Audio Kompressor (tak)")
+                       <<tr("Musepack Lossy Audio Codec (mp+)")
+                       <<tr("Audible Audio File (aa)")
+                       <<tr("Real Audio (ra)")
+                       <<tr("Monkey's Audio (mac)")
+                       <<tr("Musical Instrument Digital Interface (rmi)")
+                       <<tr("DTS Audio Codec (dtswav)")
+                       <<tr("DTS Audio Codec (dts)")
+                       <<tr("SouND Audio (snd)")
+                       <<tr("Au File Format (au)")
+                       <<tr("Dolby Surround Audio Coding-3 (ac3)")
+                       <<tr("Fast Tracker Module (xm)")
+                       <<tr("Unreal Engine 1 Music Format (umx)");
 }
 
 void KNMusicGlobal::retranslateAndSet()
@@ -406,4 +453,40 @@ KNMusicGlobal::KNMusicGlobal() :
     m_genreImage["j-pop"]="genre-jpop.jpg";
     m_genreImage["jpop"]="genre-jpop.jpg";
     m_genreImage["synthpop"]="Synthpop";
+
+    m_suffixs<<"mp3"
+             <<"m4a"
+             <<"wav"
+             <<"flac"
+             <<"ape"
+             <<"ogg"
+             <<"tta"
+             <<"aiff"
+             <<"aifc"
+             <<"aif"
+             <<"mp4"
+             <<"mpa"
+             <<"mp2"
+             <<"mp1"
+             <<"midi"
+             <<"mid"
+             <<"mp3pro"
+             <<"mpc"
+             <<"aac"
+             <<"cda"
+             <<"wma"
+             <<"fla"
+             <<"tak"
+             <<"mp+"
+             <<"aa"
+             <<"ra"
+             <<"mac"
+             <<"rmi"
+             <<"dtswav"
+             <<"dts"
+             <<"snd"
+             <<"au"
+             <<"ac3"
+             <<"xm"
+             <<"umx";
 }

@@ -28,7 +28,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
     case 0:
         //ISO, here use UTF-8 instead, because UTF-8 can display ISO.
         content.remove(0,1);
-        return QString::fromLocal8Bit(content).simplified();
+        return m_utf8Codec->toUnicode(content).simplified();
     case 1:
         //UTF-16 LE/BE
         content.remove(0,1);

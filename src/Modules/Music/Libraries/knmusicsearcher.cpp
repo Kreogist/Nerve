@@ -1,61 +1,21 @@
 #include <QDebug>
 
 #include <QFileInfo>
+#include "../knmusicglobal.h"
 
 #include "knmusicsearcher.h"
 
 KNMusicSearcher::KNMusicSearcher(QObject *parent) :
     QObject(parent)
 {
-    m_suffixs<<"mp3"
-             <<"m4a"
-             <<"wav"
-             <<"flac"
-             <<"ape"
-             <<"ogg"
-             <<"tta"
-             <<"aiff"
-             <<"aifc"
-             <<"aif"
-             <<"mp4"
-             <<"mpa"
-             <<"mp2"
-             <<"mp1"
-             <<"midi"
-             <<"mid"
-             <<"mp3pro"
-             <<"mpc"
-             <<"aac"
-             <<"cda"
-             <<"wma"
-             <<"fla"
-             <<"tak"
-             <<"mp+"
-             <<"aa"
-             <<"ra"
-             <<"mac"
-             <<"rmi"
-             <<"dtswav"
-             <<"dts"
-             <<"cur"
-             <<"snd"
-             <<"au"
-             <<"ac3"
-             <<"as2"
-             <<"xm"
-             <<"umx"
-             <<"stm"
-             <<"s3m"
-             <<"mtm"
-             <<"mod"
-             <<"it"
-             <<"far";
+    m_musicGlobal=KNMusicGlobal::instance();
 }
 
 void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
 {
     QString currentPath;
     QFileInfo currentDetails;
+    int currentType;
     for(int i=0, fileCount=urls.count();
         i<fileCount;
         ++i)
@@ -73,7 +33,7 @@ void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
         }
         if(currentDetails.isFile())
         {
-            if(m_suffixs.indexOf(currentDetails.suffix())!=-1)
+            if(m_musicGlobal->getMusicType(currentDetails.suffix())!=-1)
             {
                 emit requireAnalysis(currentPath);
             }

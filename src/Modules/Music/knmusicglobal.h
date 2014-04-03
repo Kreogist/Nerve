@@ -62,6 +62,8 @@ public:
     QPixmap getGenreImage(const int &index) const;
     QPixmap getGenreImage(const QString &value) const;
     QString getHeader(const int &index);
+    int getMusicType(const QString &suffix) const;
+    QString getDescription(const int &type) const;
 
 signals:
 
@@ -73,6 +75,8 @@ private:
     static KNMusicGlobal *m_instance;
     KNMusicGlobal();
     QStringList m_genreList;
+    QStringList m_suffixs;
+    QStringList m_suffixDescription;
     QString m_header[MusicDataCount];
     QMap<QString, QString> m_genreImage;
 };

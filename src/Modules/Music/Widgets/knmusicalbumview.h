@@ -39,8 +39,8 @@ private:
     void paintAlbum(QPainter *painter,
                     const QRect &rect,
                     const QModelIndex &index);
-    int m_gridMinimumWidth=195;
-    int m_gridWidth=195;
+    int m_gridMinimumWidth=124;
+    int m_gridWidth=124;
     int m_gridHeight=190;
     int m_spacing=20;
     int m_maxColumnCount=0;

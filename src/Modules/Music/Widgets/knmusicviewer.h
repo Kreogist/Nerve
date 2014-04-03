@@ -54,7 +54,6 @@ private:
         Artists,
         Albums,
         Genres,
-        Playlists,
         MusicCategoriesCount
     };
     QString m_categoryCaption[MusicCategoriesCount];

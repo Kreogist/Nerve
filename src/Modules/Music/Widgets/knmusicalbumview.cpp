@@ -12,7 +12,7 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
     verticalScrollBar()->setRange(0, 0);
-    horizontalScrollBar()->setPageStep(4);
+    horizontalScrollBar()->setPageStep(m_gridHeight);
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -118,6 +118,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         }
         albumIndex++;
     }
+    updateGeometries();
 }
 
 int KNMusicAlbumView::horizontalOffset() const
@@ -143,7 +144,8 @@ QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorA
     return current;
 }
 
-void KNMusicAlbumView::setSelection(const QRect &, QItemSelectionModel::SelectionFlags command)
+void KNMusicAlbumView::setSelection(const QRect &,
+                                    QItemSelectionModel::SelectionFlags command)
 {
     ;
 }
