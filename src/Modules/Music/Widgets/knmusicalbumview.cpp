@@ -2,6 +2,7 @@
 
 #include <QScrollBar>
 #include <QPen>
+#include <QMouseEvent>
 #include <QIcon>
 #include <QPainter>
 #include <QPaintEvent>
@@ -17,13 +18,36 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
 {
-    return QModelIndex();
+    int pointLine=
+            (verticalScrollBar()->value()+point.y())/(m_gridHeight+m_spacing),
+        pointColumn=
+            point.x()/(m_spacing+m_gridWidth);
+    return model()->index(pointLine*m_maxColumnCount+pointColumn,
+                          0,
+                          rootIndex());
 }
 
 void KNMusicAlbumView::scrollTo(const QModelIndex &index,
                                 QAbstractItemView::ScrollHint hint)
 {
-    ;
+    if(!index.isValid())
+    {
+        return;
+    }
+    int atTopPosition=index.row()/m_maxColumnCount*(m_gridHeight+m_spacing);
+    switch(hint)
+    {
+    case QAbstractItemView::PositionAtTop:
+        break;
+    case QAbstractItemView::PositionAtCenter:
+        atTopPosition-=(height()-m_gridHeight-m_spacing)/2;
+        break;
+    case QAbstractItemView::PositionAtBottom:
+        atTopPosition-=height()+m_gridHeight+m_spacing;
+        break;
+    }
+    verticalScrollBar()->setValue(atTopPosition);
+    update();
 }
 
 QRect KNMusicAlbumView::visualRect(const QModelIndex &index) const
@@ -91,6 +115,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentRow+=skipLineCount;
     currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
+    m_firstVisibleIndex=albumIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         QModelIndex index=model()->index(albumIndex, 0, rootIndex());
@@ -156,6 +181,11 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 {
     QRegion region;
     return region;
+}
+
+void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
+{
+    QAbstractItemView::mousePressEvent(e);
 }
 
 void KNMusicAlbumView::paintAlbum(QPainter *painter,
