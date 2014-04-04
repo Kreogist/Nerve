@@ -45,6 +45,8 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
     case QAbstractItemView::PositionAtBottom:
         atTopPosition-=height()+m_gridHeight+m_spacing;
         break;
+    case QAbstractItemView::EnsureVisible:
+        break;
     }
     verticalScrollBar()->setValue(atTopPosition);
     update();
@@ -52,8 +54,17 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
 
 QRect KNMusicAlbumView::visualRect(const QModelIndex &index) const
 {
-    QRect rect;
-    return rect;
+    if(index.isValid())
+    {
+        int minimalIndex=verticalScrollBar()->value()/(m_gridHeight+m_spacing);
+        if(minimalIndex>index.row())
+        {
+            int;
+            QRect rect;
+            return rect;
+        }
+    }
+    return QRect();
 }
 
 void KNMusicAlbumView::setModel(QAbstractItemModel *model)
@@ -185,7 +196,18 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
+    m_pressedIndex=indexAt(e->pos());
     QAbstractItemView::mousePressEvent(e);
+}
+
+void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
+{
+     QAbstractItemView::mouseReleaseEvent(e);
+     if(m_pressedIndex==indexAt(e->pos()) &&
+        m_pressedIndex.isValid())
+     {
+         qDebug()<<visualRect(m_pressedIndex);
+     }
 }
 
 void KNMusicAlbumView::paintAlbum(QPainter *painter,

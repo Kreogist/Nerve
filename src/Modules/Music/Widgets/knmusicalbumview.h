@@ -36,6 +36,7 @@ protected:
     void setSelection(const QRect&, QItemSelectionModel::SelectionFlags command);
     QRegion visualRegionForSelection(const QItemSelection &selection) const;
     void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
 
 private:
     void paintAlbum(QPainter *painter,
@@ -48,6 +49,7 @@ private:
     int m_maxColumnCount=0;
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
+    QModelIndex m_pressedIndex;
 };
 
 #endif // KNMUSICALBUMVIEW_H
