@@ -49,6 +49,7 @@ void KNMusicAlbumView::updateGeometries()
 {
     verticalScrollBar()->setRange(0, qMax(0,
                                           m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height()));
+    verticalScrollBar()->setPageStep((m_gridHeight+m_spacing)<<1);
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)

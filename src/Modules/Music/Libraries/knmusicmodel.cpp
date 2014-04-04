@@ -1,5 +1,6 @@
 #include <QList>
 #include <QStandardItem>
+#include <QModelIndexList>
 
 #include <QDebug>
 
@@ -40,6 +41,14 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 void KNMusicModel::appendMusic(const QStringList &info,
                                const KNMusicGlobal::MusicDetailsInfo &datas)
 {
+    QModelIndexList fileCheck=match(index(0,0),
+                                    Qt::UserRole,
+                                    datas.filePath);
+    if(fileCheck.size()!=0)
+    {
+        //Find the same file in the model.
+        return;
+    }
     QList<QStandardItem *> musicItem;
     for(int i=0;
         i<info.count();
