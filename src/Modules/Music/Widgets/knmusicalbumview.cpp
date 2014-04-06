@@ -2,6 +2,7 @@
 
 #include <QScrollBar>
 #include <QPen>
+#include <QMouseEvent>
 #include <QIcon>
 #include <QPainter>
 #include <QPaintEvent>
@@ -12,18 +13,41 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
     verticalScrollBar()->setRange(0, 0);
-    verticalScrollBar()->setPageStep(m_gridHeight);
+    horizontalScrollBar()->setPageStep((m_gridHeight+m_spacing)<<1);
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
 {
-    return QModelIndex();
+    int pointLine=
+            (verticalScrollBar()->value()+point.y())/(m_gridHeight+m_spacing),
+        pointColumn=
+            point.x()/(m_spacing+m_gridWidth);
+    return model()->index(pointLine*m_maxColumnCount+pointColumn,
+                          0,
+                          rootIndex());
 }
 
 void KNMusicAlbumView::scrollTo(const QModelIndex &index,
                                 QAbstractItemView::ScrollHint hint)
 {
-    ;
+    if(!index.isValid())
+    {
+        return;
+    }
+    int atTopPosition=index.row()/m_maxColumnCount*(m_gridHeight+m_spacing);
+    switch(hint)
+    {
+    case QAbstractItemView::PositionAtTop:
+        break;
+    case QAbstractItemView::PositionAtCenter:
+        atTopPosition-=(height()-m_gridHeight-m_spacing)/2;
+        break;
+    case QAbstractItemView::PositionAtBottom:
+        atTopPosition-=height()+m_gridHeight+m_spacing;
+        break;
+    }
+    verticalScrollBar()->setValue(atTopPosition);
+    update();
 }
 
 QRect KNMusicAlbumView::visualRect(const QModelIndex &index) const
@@ -91,6 +115,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentRow+=skipLineCount;
     currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
+    m_firstVisibleIndex=albumIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         QModelIndex index=model()->index(albumIndex, 0, rootIndex());
@@ -158,6 +183,11 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
     return region;
 }
 
+void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
+{
+    QAbstractItemView::mousePressEvent(e);
+}
+
 void KNMusicAlbumView::paintAlbum(QPainter *painter,
                                   const QRect &rect,
                                   const QModelIndex &index)
@@ -171,19 +201,23 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     painter->drawRect(albumArtRect);
 
     //To draw the text.
+    int textTop=rect.y()+sizeParam+5;
     painter->drawText(rect.x(),
-                      rect.y()+sizeParam,
+                      textTop,
                       rect.width(),
                       rect.height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index).toString());
-
+    textTop+=fontMetrics().height();
+    QColor penBackup=painter->pen().color();
+    painter->setPen(QColor(128,128,128));
     painter->drawText(rect.x(),
-                      rect.y()+sizeParam+fontMetrics().height(),
+                      textTop,
                       rect.width(),
                       rect.height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index, Qt::UserRole).toString());
+    painter->setPen(penBackup);
 }
 
 int KNMusicAlbumView::gridMinimumWidth() const
