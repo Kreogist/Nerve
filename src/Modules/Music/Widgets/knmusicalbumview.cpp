@@ -4,16 +4,26 @@
 #include <QPen>
 #include <QMouseEvent>
 #include <QIcon>
+#include <QItemSelectionModel>
 #include <QPainter>
+#include <QTimeLine>
 #include <QPaintEvent>
+#include <QAbstractItemView>
 
 #include "knmusicalbumview.h"
 
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
+    setAutoFillBackground(true);
     verticalScrollBar()->setRange(0, 0);
-    horizontalScrollBar()->setPageStep((m_gridHeight+m_spacing)<<1);
+    verticalScrollBar()->setSingleStep(10);
+
+    m_scrollTimeLine=new QTimeLine(100, this);
+    m_scrollTimeLine->setUpdateInterval(5);
+    m_scrollTimeLine->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_scrollTimeLine, SIGNAL(frameChanged(int)),
+            verticalScrollBar(), SLOT(setValue(int)));
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -40,15 +50,29 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
     case QAbstractItemView::PositionAtTop:
         break;
     case QAbstractItemView::PositionAtCenter:
-        atTopPosition-=(height()-m_gridHeight-m_spacing)/2;
+        atTopPosition-=(height()-m_gridHeight-m_spacing)>>1;
         break;
     case QAbstractItemView::PositionAtBottom:
-        atTopPosition-=height()+m_gridHeight+m_spacing;
+        atTopPosition-=height()-m_gridHeight-m_spacing;
         break;
     case QAbstractItemView::EnsureVisible:
+        if(rect().contains(visualRect(index), true))
+        {
+            return;
+        }
+        int bottomValue=atTopPosition-height()+m_gridHeight+m_spacing,
+            toTop=qAbs(verticalScrollBar()->value()-atTopPosition),
+            toBottom=qAbs(verticalScrollBar()->value()-bottomValue);
+        if(toBottom<toTop)
+        {
+            atTopPosition=bottomValue;
+        }
         break;
     }
-    verticalScrollBar()->setValue(atTopPosition);
+    //verticalScrollBar()->setValue(atTopPosition);
+    m_scrollTimeLine->setFrameRange(verticalScrollBar()->value(),
+                                    atTopPosition);
+    m_scrollTimeLine->start();
     update();
 }
 
@@ -82,7 +106,6 @@ void KNMusicAlbumView::updateGeometries()
 {
     verticalScrollBar()->setRange(0, qMax(0,
                                           m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height()));
-    verticalScrollBar()->setPageStep((m_gridHeight+m_spacing)<<1);
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
@@ -101,7 +124,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     }
     painter.setPen(foreground);
 
-    int realWidth=rect.width()-m_spacing,
+    int realWidth=width()-m_spacing,
         realMinimumWidth=m_gridMinimumWidth+m_spacing;
     if(realWidth<realMinimumWidth)
     {
@@ -128,17 +151,16 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         QModelIndex index=model()->index(albumIndex, 0, rootIndex());
-        if(selections->isSelected(index))
-        {
-            qDebug()<<"Selected";
-        }
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
                                 m_gridHeight);
-        paintAlbum(&painter,
-                   currentRect,
-                   index);
+        if(!selections->isSelected(index))
+        {
+            paintAlbum(&painter,
+                       currentRect,
+                       index);
+        }
         currentColumn++;
         if(currentColumn==m_maxColumnCount)
         {
@@ -183,24 +205,37 @@ QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorA
 void KNMusicAlbumView::setSelection(const QRect &rect,
                                     QItemSelectionModel::SelectionFlags command)
 {
-    qDebug()<<rect;
+    QModelIndex posIndex=indexAt(QPoint(rect.x(),rect.y()));
+    selectionModel()->select(posIndex, command);
 }
 
 QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selection) const
 {
+    if(selection.size()==0)
+    {
+        return QRect();
+    }
+    QItemSelectionRange range = selection.at(0);
     QRegion region;
+    QRect tst=visualRect(indexAt(QPoint(range.top(), range.left())));
+    region+=tst;
     return region;
 }
 
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
+    QAbstractItemView::mousePressEvent(e);
+    //QPoint pos=e->pos();
     m_pressedIndex=indexAt(e->pos());
-    //QAbstractItemView::mousePressEvent(e);
+    /*QItemSelectionModel::SelectionFlags command=selectionCommand(m_pressedIndex,
+                                                                 e);
+    QRect rect(pos, pos);
+    setSelection(rect, command);*/
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
-     //QAbstractItemView::mouseReleaseEvent(e);
+     QAbstractItemView::mouseReleaseEvent(e);
      if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {
@@ -229,7 +264,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     //To draw the album art.
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
     int sizeParam=qMin(rect.width(), rect.height());
-    QRect albumArtRect=QRect(rect.x(),rect.y(),sizeParam,sizeParam);
+    QRect albumArtRect=QRect(rect.x()+1,rect.y()+1,sizeParam-2,sizeParam-2);
     painter->drawPixmap(albumArtRect,
                         currentIcon.pixmap(sizeParam, sizeParam));
     painter->drawRect(albumArtRect);

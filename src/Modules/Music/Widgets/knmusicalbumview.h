@@ -3,6 +3,7 @@
 
 #include <QAbstractItemView>
 
+class QTimeLine;
 class QMouseEvent;
 class QPaintEvent;
 class KNMusicAlbumView : public QAbstractItemView
@@ -52,6 +53,7 @@ private:
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
     QModelIndex m_pressedIndex;
+    QTimeLine *m_scrollTimeLine;
 };
 
 #endif // KNMUSICALBUMVIEW_H
