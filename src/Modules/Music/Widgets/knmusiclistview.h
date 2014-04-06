@@ -34,13 +34,9 @@ private slots:
     void onSectionVisibleChanged(const int &index,
                                  const bool &visible);
     void onItemActived(const QModelIndex &index);
-    void onItemEntered(const QModelIndex &index);
-    void updateTooltipAndShow();
 
 private:
     KNMusicListViewHeader *m_headerWidget;
-    KNMusicDetailTooltip *m_detailTooltip;
-    QTimer *m_detailTooltipShower;
     QTimeLine *m_mouseIn, *m_mouseOut;
     QColor m_backgroundColor;
     QPalette m_palette;

@@ -33,12 +33,14 @@ protected:
     bool isIndexHidden(const QModelIndex &index) const;
     QModelIndex moveCursor(QAbstractItemView::CursorAction cursorAction,
                                         Qt::KeyboardModifiers /*modifiers*/);
-    void setSelection(const QRect&, QItemSelectionModel::SelectionFlags command);
+    void setSelection(const QRect &rect,
+                      QItemSelectionModel::SelectionFlags command);
     QRegion visualRegionForSelection(const QItemSelection &selection) const;
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 
 private:
+    QRect itemRect(const QModelIndex &index) const;
     void paintAlbum(QPainter *painter,
                     const QRect &rect,
                     const QModelIndex &index);

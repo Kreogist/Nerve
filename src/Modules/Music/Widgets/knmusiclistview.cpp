@@ -4,7 +4,6 @@
 #include <QMouseEvent>
 #include <QTimeLine>
 #include <QScrollBar>
-#include <QTimer>
 
 #include "../../knlocale.h"
 
@@ -53,19 +52,10 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
             this, &KNMusicListView::onSectionVisibleChanged);
 
-    //Set music detail tooltip.
-    m_detailTooltip=new KNMusicDetailTooltip(this);
-    m_detailTooltipShower=new QTimer(this);
-    m_detailTooltipShower->setInterval(500);
-    connect(m_detailTooltipShower, SIGNAL(timeout()),
-            this, SLOT(updateTooltipAndShow()));
-
     connect(this, &KNMusicListView::doubleClicked,
             this, &KNMusicListView::onItemActived);
     connect(this, &KNMusicListView::activated,
             this, &KNMusicListView::onItemActived);
-    connect(this, &KNMusicListView::entered,
-            this, &KNMusicListView::onItemEntered);
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
@@ -172,21 +162,4 @@ void KNMusicListView::onItemActived(const QModelIndex &index)
     {
         emit requireOpenUrl(index);
     }
-}
-
-void KNMusicListView::onItemEntered(const QModelIndex &index)
-{
-    if(index.isValid())
-    {
-        m_detailIndex=index;
-        m_detailTooltipShower->stop();
-        m_detailTooltipShower->start();
-    }
-}
-
-void KNMusicListView::updateTooltipAndShow()
-{
-    m_detailTooltip->move(cursor().pos());
-    m_detailTooltipShower->stop();
-    m_detailTooltip->show();
 }

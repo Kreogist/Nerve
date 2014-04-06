@@ -54,17 +54,15 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
 
 QRect KNMusicAlbumView::visualRect(const QModelIndex &index) const
 {
-    if(index.isValid())
+    QRect rect=itemRect(index);
+    if(rect.isValid())
     {
-        int minimalIndex=verticalScrollBar()->value()/(m_gridHeight+m_spacing);
-        if(minimalIndex>index.row())
-        {
-            int;
-            QRect rect;
-            return rect;
-        }
+        return QRect(rect.left() - horizontalScrollBar()->value(),
+                     rect.top() - verticalScrollBar()->value(),
+                     rect.width(),
+                     rect.height());
     }
-    return QRect();
+    return rect;
 }
 
 void KNMusicAlbumView::setModel(QAbstractItemModel *model)
@@ -182,10 +180,10 @@ QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorA
     return current;
 }
 
-void KNMusicAlbumView::setSelection(const QRect &,
+void KNMusicAlbumView::setSelection(const QRect &rect,
                                     QItemSelectionModel::SelectionFlags command)
 {
-    ;
+    qDebug()<<rect;
 }
 
 QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selection) const
@@ -197,17 +195,31 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     m_pressedIndex=indexAt(e->pos());
-    QAbstractItemView::mousePressEvent(e);
+    //QAbstractItemView::mousePressEvent(e);
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
-     QAbstractItemView::mouseReleaseEvent(e);
+     //QAbstractItemView::mouseReleaseEvent(e);
      if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {
-         qDebug()<<visualRect(m_pressedIndex);
+         ;
      }
+}
+
+QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
+{
+    if(!index.isValid())
+    {
+        return QRect();
+    }
+    int itemLine=index.row()/m_maxColumnCount,
+        itemColumn=index.row()-itemLine*m_maxColumnCount;
+    return QRect(itemColumn*(m_spacing+m_gridWidth)+m_spacing,
+                 itemLine*(m_spacing+m_gridHeight)+m_spacing,
+                 m_gridWidth,
+                 m_gridHeight);
 }
 
 void KNMusicAlbumView::paintAlbum(QPainter *painter,
