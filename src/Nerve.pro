@@ -104,7 +104,8 @@ HEADERS += \
     Modules/Music/Libraries/knmusicstarrating.h \
     Modules/Music/Widgets/knmusicratingeditor.h \
     Modules/Music/Widgets/knmusicalbumview.h \
-    Modules/Music/Libraries/knmusicalbummodel.h
+    Modules/Music/Libraries/knmusicalbummodel.h \
+    Modules/Base/MediaInfo_Win32.h
 
 RESOURCES += \
     res.qrc
