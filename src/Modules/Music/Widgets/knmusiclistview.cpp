@@ -3,7 +3,9 @@
 #include <QStyleFactory>
 #include <QMouseEvent>
 #include <QTimeLine>
+#include <QToolTip>
 #include <QScrollBar>
+#include <QHelpEvent>
 
 #include "../../knlocale.h"
 
@@ -51,6 +53,8 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     setHeader(m_headerWidget);
     connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
             this, &KNMusicListView::onSectionVisibleChanged);
+
+    m_musicDetailTooltip=new KNMusicDetailTooltip(this);
 
     connect(this, &KNMusicListView::doubleClicked,
             this, &KNMusicListView::onItemActived);
@@ -140,6 +144,32 @@ void KNMusicListView::leaveEvent(QEvent *e)
     m_mouseOut->setStartFrame(m_backgroundColor.red());
     m_mouseOut->start();
     QTreeView::leaveEvent(e);
+}
+
+bool KNMusicListView::event(QEvent *event)
+{
+    if(event->type()==QEvent::ToolTip)
+    {
+        QHelpEvent *helpEvent=static_cast<QHelpEvent *>(event);
+        QModelIndex currentSong=indexAt(helpEvent->pos());
+        if(currentSong.isValid())
+        {
+            if(m_detailIndex!=currentSong)
+            {
+                m_detailIndex=currentSong;
+                //m_musicDetailTooltip->move(helpEvent->globalPos());
+                //m_musicDetailTooltip->show();
+            }
+        }
+        else
+        {
+            //QToolTip::hideText();
+            //m_musicDetailTooltip->hide();
+            event->ignore();
+        }
+        return true;
+    }
+    return QTreeView::event(event);
 }
 
 void KNMusicListView::changeBackground(int frameData)

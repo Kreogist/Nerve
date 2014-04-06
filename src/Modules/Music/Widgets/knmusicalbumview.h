@@ -6,6 +6,22 @@
 class QTimeLine;
 class QMouseEvent;
 class QPaintEvent;
+class QLabel;
+class QBoxLayout;
+class KNMusicAlbumDetail : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit KNMusicAlbumDetail(QWidget *parent = 0);
+    ~KNMusicAlbumDetail();
+    void setAlbumArt(const QPixmap &pixmap,
+                     const QSize &size);
+
+private:
+    QLabel *m_albumArt;
+    QBoxLayout *m_infoListLayout, *m_artInfoLayout;
+};
+
 class KNMusicAlbumView : public QAbstractItemView
 {
     Q_OBJECT
@@ -40,6 +56,9 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 
+private slots:
+    void onActionAlbumClicked(const QModelIndex &index);
+
 private:
     QRect itemRect(const QModelIndex &index) const;
     void paintAlbum(QPainter *painter,
@@ -52,8 +71,10 @@ private:
     int m_maxColumnCount=0;
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
+    int m_iconSizeParam;
     QModelIndex m_pressedIndex;
     QTimeLine *m_scrollTimeLine;
+    KNMusicAlbumDetail *m_albumDetail;
 };
 
 #endif // KNMUSICALBUMVIEW_H

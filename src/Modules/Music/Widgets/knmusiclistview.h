@@ -28,6 +28,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
+    bool event(QEvent *event);
 
 private slots:
     void changeBackground(int frameData);
@@ -41,6 +42,7 @@ private:
     QColor m_backgroundColor;
     QPalette m_palette;
     QModelIndex m_detailIndex;
+    KNMusicDetailTooltip *m_musicDetailTooltip;
 };
 
 #endif // KNMUSICLISTVIEW_H

@@ -6,11 +6,49 @@
 #include <QIcon>
 #include <QItemSelectionModel>
 #include <QPainter>
+#include <QLabel>
 #include <QTimeLine>
 #include <QPaintEvent>
+#include <QBoxLayout>
 #include <QAbstractItemView>
 
 #include "knmusicalbumview.h"
+
+KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
+    QWidget(parent)
+{
+    //Set properties.
+    setContentsMargins(0,0,0,0);
+
+    m_infoListLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
+    m_infoListLayout->setContentsMargins(0,0,0,0);
+    m_infoListLayout->setSpacing(0);
+    setLayout(m_infoListLayout);
+
+    m_artInfoLayout=new QBoxLayout(QBoxLayout::TopToBottom);
+    m_artInfoLayout->setContentsMargins(0,0,0,0);
+    m_artInfoLayout->setSpacing(0);
+
+    m_albumArt=new QLabel(this);
+    m_albumArt->setScaledContents(true);
+    m_artInfoLayout->addWidget(m_albumArt);
+    m_artInfoLayout->addStretch();
+
+    m_infoListLayout->addLayout(m_artInfoLayout);
+    m_infoListLayout->addStretch();
+}
+
+KNMusicAlbumDetail::~KNMusicAlbumDetail()
+{
+    m_artInfoLayout->deleteLater();
+}
+
+void KNMusicAlbumDetail::setAlbumArt(const QPixmap &pixmap,
+                                     const QSize &size)
+{
+    m_albumArt->setFixedSize(size);
+    m_albumArt->setPixmap(pixmap);
+}
 
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
@@ -18,6 +56,13 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     setAutoFillBackground(true);
     verticalScrollBar()->setRange(0, 0);
     verticalScrollBar()->setSingleStep(10);
+
+    QPalette pal=palette();
+    setPalette(pal);
+
+    m_albumDetail=new KNMusicAlbumDetail(this);
+    connect(this, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(onActionAlbumClicked(QModelIndex)));
 
     m_scrollTimeLine=new QTimeLine(100, this);
     m_scrollTimeLine->setUpdateInterval(5);
@@ -70,9 +115,9 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
         break;
     }
     //verticalScrollBar()->setValue(atTopPosition);
-    m_scrollTimeLine->setFrameRange(verticalScrollBar()->value(),
+    /*m_scrollTimeLine->setFrameRange(verticalScrollBar()->value(),
                                     atTopPosition);
-    m_scrollTimeLine->start();
+    m_scrollTimeLine->start();*/
     update();
 }
 
@@ -243,6 +288,18 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      }
 }
 
+void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
+{
+    QRect startPosition=visualRect(index);
+    m_albumDetail->setGeometry(startPosition.x()+2,
+                               startPosition.y()+2,
+                               startPosition.width(),
+                               startPosition.height());
+    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
+    m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-1,m_iconSizeParam-1),
+                               QSize(m_iconSizeParam-1,m_iconSizeParam-1));
+}
+
 QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
 {
     if(!index.isValid())
@@ -263,14 +320,17 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
 {
     //To draw the album art.
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
-    int sizeParam=qMin(rect.width(), rect.height());
-    QRect albumArtRect=QRect(rect.x()+1,rect.y()+1,sizeParam-2,sizeParam-2);
+    m_iconSizeParam=qMin(rect.width(), rect.height());
+    QRect albumArtRect=QRect(rect.x()+1,
+                             rect.y()+1,
+                             m_iconSizeParam-2,
+                             m_iconSizeParam-2);
     painter->drawPixmap(albumArtRect,
-                        currentIcon.pixmap(sizeParam, sizeParam));
+                        currentIcon.pixmap(m_iconSizeParam, m_iconSizeParam));
     painter->drawRect(albumArtRect);
 
     //To draw the text.
-    int textTop=rect.y()+sizeParam+5;
+    int textTop=rect.y()+m_iconSizeParam+5;
     painter->drawText(rect.x(),
                       textTop,
                       rect.width(),
@@ -298,4 +358,3 @@ void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 {
     m_gridMinimumWidth = gridMinimumWidth;
 }
-
