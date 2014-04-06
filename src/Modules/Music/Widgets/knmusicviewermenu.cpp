@@ -1,5 +1,8 @@
 #include <QAction>
 #include <QFileInfo>
+#include <QStandardItem>
+
+#include <QDebug>
 
 #include "../../knglobal.h"
 
@@ -22,6 +25,18 @@ void KNMusicViewerMenu::setFilePath(const QString &filePath)
     m_action[Play]->setText(m_actionTitle[Play].arg(shownFileName));
 }
 
+void KNMusicViewerMenu::setItem(const QStandardItem *item)
+{
+    m_itemText=item->text();
+    if(m_itemText.isEmpty())
+    {
+        m_action[CopyText]->setVisible(false);
+        return;
+    }
+    m_action[CopyText]->setVisible(true);
+    m_action[CopyText]->setText(m_actionTitle[CopyText].arg(m_itemText));
+}
+
 void KNMusicViewerMenu::retranslate()
 {
     m_actionTitle[Play]=tr("Play %1");
@@ -31,7 +46,8 @@ void KNMusicViewerMenu::retranslate()
 #ifdef Q_OS_MAC
     m_actionTitle[Browse]=tr("Show in Finder");
 #endif
-    m_actionTitle[Copy]=tr("Copy");
+    m_actionTitle[Copy]=tr("Copy File");
+    m_actionTitle[CopyText]=tr("Copy '%1'");
 }
 
 void KNMusicViewerMenu::retranslateAndSet()
@@ -47,6 +63,11 @@ void KNMusicViewerMenu::onActionCopy()
 void KNMusicViewerMenu::onActionPlay()
 {
     m_global->openLocalUrl(m_filePath);
+}
+
+void KNMusicViewerMenu::onActionCopyText()
+{
+    m_global->copyTextToClipboard(m_itemText);
 }
 
 void KNMusicViewerMenu::onActionBrowse()
@@ -67,4 +88,6 @@ void KNMusicViewerMenu::createActions()
             this, SLOT(onActionBrowse()));
     connect(m_action[Copy], SIGNAL(triggered()),
             this, SLOT(onActionCopy()));
+    connect(m_action[CopyText], SIGNAL(triggered()),
+            this, SLOT(onActionCopyText()));
 }

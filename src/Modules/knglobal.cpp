@@ -6,6 +6,7 @@
 #include <QList>
 #include <QProcess>
 #include <QStringList>
+#include <QFileInfo>
 #include <QUrl>
 
 #include <QDebug>
@@ -53,10 +54,16 @@ void KNGlobal::setMainWindow(QWidget *mainWindow)
 
 void KNGlobal::showInGraphicalShell(const QString &filePath)
 {
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN32
+    QStringList args;
+    QFileInfo pathInfo(filePath);
+    if(!pathInfo.isDir())
+    {
+        args<<"/select,";
+    }
+    args<<QDir::toNativeSeparators(filePath);
     QProcess::startDetached("explorer.exe",
-                            QStringList(QString(QLatin1String("/select,") +
-                                        QDir::toNativeSeparators(filePath))));
+                            args);
     return;
 #endif
 #ifdef Q_OS_MACX

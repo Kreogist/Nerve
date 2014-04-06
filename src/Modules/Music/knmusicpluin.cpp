@@ -71,6 +71,7 @@ void KNMusicPluin::showContextMenu(const QPoint &position,
 {
     m_libraryViewMenu->setFilePath(m_model->item(index.row(),
                                                  KNMusicGlobal::Name)->data(Qt::UserRole).toString());
+    m_libraryViewMenu->setItem(m_model->itemFromIndex(index));
     m_libraryViewMenu->exec(position);
 }
 
