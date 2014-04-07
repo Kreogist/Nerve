@@ -31,7 +31,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     verticalScrollBar()->setSingleStep(4);
 
     //Set palette.
-    int minGrey=0x20;
+    int minGrey=0x10;
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, m_backgroundColor);
@@ -63,7 +63,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
-    m_mouseIn->setEndFrame(0x40);
+    m_mouseIn->setEndFrame(0x30);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);
 
@@ -177,6 +177,10 @@ void KNMusicListView::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     m_palette.setColor(QPalette::AlternateBase, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
+    int textParam=(frameData<<1)+127;
+    m_palette.setColor(QPalette::Text, QColor(textParam,
+                                              textParam,
+                                              textParam));
     setPalette(m_palette);
 }
 

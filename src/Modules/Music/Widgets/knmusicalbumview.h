@@ -7,6 +7,7 @@ class QTimeLine;
 class QMouseEvent;
 class QPaintEvent;
 class QLabel;
+class QPropertyAnimation;
 class QBoxLayout;
 class KNMusicAlbumDetail : public QWidget
 {
@@ -17,9 +18,18 @@ public:
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
 
+    QModelIndex currentIndex() const;
+    void setCurrentIndex(const QModelIndex &currentIndex);
+
+public slots:
+    void expandDetail();
+
 private:
-    QLabel *m_albumArt;
-    QBoxLayout *m_infoListLayout, *m_artInfoLayout;
+    QLabel *m_albumArt, *m_albumName;
+    QWidget *m_detailPanel;
+    QBoxLayout *m_infoListLayout, *m_artInfoLayout, *m_albumDataLayout;
+    QPropertyAnimation *m_heightExpand, *m_widthExpand;
+    QModelIndex m_currentIndex;
 };
 
 class KNMusicAlbumView : public QAbstractItemView
@@ -45,6 +55,7 @@ protected slots:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
     int horizontalOffset() const;
     int verticalOffset() const;
     bool isIndexHidden(const QModelIndex &index) const;
@@ -58,6 +69,7 @@ protected:
 
 private slots:
     void onActionAlbumClicked(const QModelIndex &index);
+    void onActionHideAlbumDetail();
 
 private:
     QRect itemRect(const QModelIndex &index) const;
@@ -72,8 +84,13 @@ private:
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
     int m_iconSizeParam;
+    QPalette m_palette;
+    QColor m_backgroundColor;
+    int m_minGrey=0x30;
     QModelIndex m_pressedIndex;
     QTimeLine *m_scrollTimeLine;
+    QPropertyAnimation *m_albumShow,
+                       *m_albumHide;
     KNMusicAlbumDetail *m_albumDetail;
 };
 

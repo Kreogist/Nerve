@@ -10,7 +10,7 @@
 #include <QTimeLine>
 #include <QPaintEvent>
 #include <QBoxLayout>
-#include <QAbstractItemView>
+#include <QPropertyAnimation>
 
 #include "knmusicalbumview.h"
 
@@ -18,6 +18,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     QWidget(parent)
 {
     //Set properties.
+    setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
 
     m_infoListLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
@@ -32,10 +33,32 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_albumArt=new QLabel(this);
     m_albumArt->setScaledContents(true);
     m_artInfoLayout->addWidget(m_albumArt);
+
+    m_detailPanel=new QWidget(this);
+    m_albumDataLayout=new QBoxLayout(QBoxLayout::TopToBottom, m_detailPanel);
+    m_albumDataLayout->setContentsMargins(0,0,0,0);
+    m_albumDataLayout->setSpacing(0);
+    m_detailPanel->setLayout(m_albumDataLayout);
+    m_albumName=new QLabel(m_detailPanel);
+    m_albumDataLayout->addWidget(m_albumName);
+    m_artInfoLayout->addWidget(m_detailPanel);
     m_artInfoLayout->addStretch();
 
     m_infoListLayout->addLayout(m_artInfoLayout);
     m_infoListLayout->addStretch();
+
+    m_heightExpand=new QPropertyAnimation(this, "geometry", this);
+    m_heightExpand->setDuration(125);
+    //m_heightExpand->setEasingCurve(QEasingCurve::OutCubic);
+    m_widthExpand=new QPropertyAnimation(this, "geometry", this);
+    m_widthExpand->setDuration(125);
+    m_widthExpand->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_heightExpand, SIGNAL(finished()),
+            m_widthExpand, SLOT(start()));
+    connect(m_widthExpand, SIGNAL(finished()),
+            m_detailPanel, SLOT(show()));
+
+    m_detailPanel->hide();
 }
 
 KNMusicAlbumDetail::~KNMusicAlbumDetail()
@@ -50,21 +73,70 @@ void KNMusicAlbumDetail::setAlbumArt(const QPixmap &pixmap,
     m_albumArt->setPixmap(pixmap);
 }
 
+QModelIndex KNMusicAlbumDetail::currentIndex() const
+{
+    return m_currentIndex;
+}
+
+void KNMusicAlbumDetail::setCurrentIndex(const QModelIndex &currentIndex)
+{
+    m_currentIndex = currentIndex;
+}
+
+void KNMusicAlbumDetail::expandDetail()
+{
+    int heightEnd=qMax(height()+m_detailPanel->height(), 0),
+        parentHeight=parentWidget()->height(),
+        widthEnd=(parentWidget()->width()>>1),
+        finalTop=((parentHeight-heightEnd)>>1);
+    QRect heightExpandEnd=QRect(x(),
+                                finalTop,
+                                width(),
+                                heightEnd);
+    m_heightExpand->setStartValue(geometry());
+    m_heightExpand->setEndValue(heightExpandEnd);
+    m_widthExpand->setStartValue(heightExpandEnd);
+    m_widthExpand->setEndValue(QRect((widthEnd>>1),
+                                     finalTop,
+                                     widthEnd,
+                                     heightEnd));
+    m_heightExpand->start();
+}
+
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
-    setAutoFillBackground(true);
     verticalScrollBar()->setRange(0, 0);
     verticalScrollBar()->setSingleStep(10);
 
-    QPalette pal=palette();
-    setPalette(pal);
+    m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
+    m_palette=palette();
+    m_palette.setColor(QPalette::Base, m_backgroundColor);
+    m_palette.setColor(QPalette::Window, QColor(0x30, 0x30, 0x30));
+    m_palette.setColor(QPalette::Button, QColor(0x30, 0x30, 0x30));
+    m_palette.setColor(QPalette::ButtonText, QColor(0xff, 0xff, 0xff));
+    m_palette.setColor(QPalette::Text, QColor(0xff, 0xff, 0xff));
+    m_palette.setColor(QPalette::Highlight, QColor(0x60, 0x60, 0x60));
+    m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
+    setPalette(m_palette);
 
     m_albumDetail=new KNMusicAlbumDetail(this);
-    connect(this, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(onActionAlbumClicked(QModelIndex)));
+    m_albumDetail->hide();
 
-    m_scrollTimeLine=new QTimeLine(100, this);
+    m_albumShow=new QPropertyAnimation(m_albumDetail,
+                                       "geometry",
+                                       this);
+    m_albumShow->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_albumShow, SIGNAL(finished()),
+            m_albumDetail, SLOT(expandDetail()));
+    m_albumHide=new QPropertyAnimation(m_albumDetail,
+                                       "geometry",
+                                       this);
+    m_albumHide->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_albumHide, SIGNAL(finished()),
+            m_albumDetail, SLOT(hide()));
+
+    m_scrollTimeLine=new QTimeLine(200, this);
     m_scrollTimeLine->setUpdateInterval(5);
     m_scrollTimeLine->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_scrollTimeLine, SIGNAL(frameChanged(int)),
@@ -114,10 +186,9 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
         }
         break;
     }
-    //verticalScrollBar()->setValue(atTopPosition);
-    /*m_scrollTimeLine->setFrameRange(verticalScrollBar()->value(),
+    m_scrollTimeLine->setFrameRange(verticalScrollBar()->value(),
                                     atTopPosition);
-    m_scrollTimeLine->start();*/
+    m_scrollTimeLine->start();
     update();
 }
 
@@ -158,11 +229,9 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     QItemSelectionModel *selections = selectionModel();
     QStyleOptionViewItem option = viewOptions();
     QBrush background = option.palette.base();
-    QPen foreground(option.palette.color(QPalette::WindowText));
+    QPen foreground(option.palette.color(QPalette::Text));
     QPainter painter(viewport());
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    QRect rect=event->rect();
-    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing);
     if(autoFillBackground())
     {
         painter.fillRect(event->rect(), background);
@@ -182,8 +251,8 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
     }
     int albumIndex=0, albumCount=model()->rowCount(),
-            currentRow=0, currentColumn=0,
-            currentLeft=m_spacing, currentTop=m_spacing;
+        currentRow=0, currentColumn=0,
+        currentLeft=m_spacing, currentTop=m_spacing;
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
 
     painter.translate(0, -verticalScrollBar()->value());
@@ -222,6 +291,18 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         albumIndex++;
     }
     updateGeometries();
+}
+
+void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
+{
+    QAbstractItemView::resizeEvent(event);
+    if(m_albumDetail->isVisible())
+    {
+        m_albumDetail->setGeometry(QRect(((width()-m_albumDetail->width())>>1),
+                                         ((height()-m_albumDetail->height())>>1),
+                                         m_albumDetail->width(),
+                                         m_albumDetail->height()));
+    }
 }
 
 int KNMusicAlbumView::horizontalOffset() const
@@ -270,34 +351,58 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
-    //QPoint pos=e->pos();
     m_pressedIndex=indexAt(e->pos());
-    /*QItemSelectionModel::SelectionFlags command=selectionCommand(m_pressedIndex,
-                                                                 e);
-    QRect rect(pos, pos);
-    setSelection(rect, command);*/
+    if(m_pressedIndex.isValid())
+    {
+        onActionAlbumClicked(m_pressedIndex);
+    }
+    else
+    {
+        onActionHideAlbumDetail();
+        selectionModel()->clear();
+    }
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
      QAbstractItemView::mouseReleaseEvent(e);
-     if(m_pressedIndex==indexAt(e->pos()) &&
+     /*if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {
          ;
-     }
+     }*/
 }
 
 void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
 {
+    m_albumDetail->hide();
+    m_albumDetail->setCurrentIndex(index);
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
-                               startPosition.width(),
-                               startPosition.height());
+                               m_iconSizeParam-2,
+                               m_iconSizeParam-2);
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
-    m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-1,m_iconSizeParam-1),
-                               QSize(m_iconSizeParam-1,m_iconSizeParam-1));
+    m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
+                               QSize(m_iconSizeParam-2,m_iconSizeParam-2));
+    m_albumShow->setStartValue(m_albumDetail->geometry());
+    m_albumShow->setEndValue(QRect(((width()-m_albumDetail->width())>>1),
+                                        ((height()-m_albumDetail->height())>>1),
+                                        m_albumDetail->width(),
+                                        m_albumDetail->height()));
+    m_albumDetail->show();
+    m_albumShow->start();
+}
+
+void KNMusicAlbumView::onActionHideAlbumDetail()
+{
+    QRect endPosition=visualRect(m_albumDetail->currentIndex());
+    m_albumHide->setStartValue(m_albumDetail->geometry());
+    m_albumHide->setEndValue(QRect(endPosition.x()+2,
+                                   endPosition.y()+2,
+                                   endPosition.width()-2,
+                                   endPosition.height()-2));
+    m_albumHide->start();
 }
 
 QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
@@ -327,7 +432,6 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                              m_iconSizeParam-2);
     painter->drawPixmap(albumArtRect,
                         currentIcon.pixmap(m_iconSizeParam, m_iconSizeParam));
-    painter->drawRect(albumArtRect);
 
     //To draw the text.
     int textTop=rect.y()+m_iconSizeParam+5;
