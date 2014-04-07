@@ -9,6 +9,41 @@ class QPaintEvent;
 class QLabel;
 class QPropertyAnimation;
 class QBoxLayout;
+
+class KNMusicAlbumSongDetail : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit KNMusicAlbumSongDetail(QWidget *parent = 0);
+
+private:
+
+};
+
+class KNMusicAlbumInfoDetail : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
+    void setAlbumName(const QString &name);
+    enum AlbumInfoData
+    {
+        AlbumName,
+        AlbumInfoDataCount
+    };
+
+signals:
+    void changeInfoVisible(const bool &visible);
+
+public slots:
+    void hideDetailInfo();
+    void showDetailInfo();
+
+private:
+    QBoxLayout *m_albumDataLayout;
+    QLabel *m_albumInfo[AlbumInfoDataCount];
+};
+
 class KNMusicAlbumDetail : public QWidget
 {
     Q_OBJECT
@@ -17,18 +52,29 @@ public:
     ~KNMusicAlbumDetail();
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
-
+    void setAlbumName(const QString &name);
     QModelIndex currentIndex() const;
     void setCurrentIndex(const QModelIndex &currentIndex);
 
+signals:
+    void requireFlyBack();
+
 public slots:
+    void hideDetailWidget();
+    void showDetailWidget();
     void expandDetail();
+    void foldDetail();
+
+private slots:
+    void hideDetailContent();
+    void showDetailContent();
 
 private:
-    QLabel *m_albumArt, *m_albumName;
-    QWidget *m_detailPanel;
-    QBoxLayout *m_infoListLayout, *m_artInfoLayout, *m_albumDataLayout;
-    QPropertyAnimation *m_heightExpand, *m_widthExpand;
+    QLabel *m_albumArt;
+    KNMusicAlbumInfoDetail *m_infoPanel;
+    QWidget *m_songPanel;
+    QBoxLayout *m_infoListLayout, *m_artInfoLayout;
+    QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold;
     QModelIndex m_currentIndex;
 };
 

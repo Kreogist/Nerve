@@ -14,6 +14,54 @@
 
 #include "knmusicalbumview.h"
 
+KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
+    QWidget(parent)
+{
+    ;
+}
+
+KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
+    QWidget(parent)
+{
+    setAutoFillBackground(true);
+    setContentsMargins(0,0,0,0);
+
+    QPalette pal=palette();
+    pal.setColor(QPalette::Base, QColor(0xc0,0xc0,0xc0));
+    pal.setColor(QPalette::Window, QColor(0xc0,0xc0,0xc0));
+    pal.setColor(QPalette::Text, QColor(0,0,0));
+    setPalette(pal);
+
+    m_albumDataLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    m_albumDataLayout->setContentsMargins(0,0,0,0);
+    m_albumDataLayout->setSpacing(0);
+    setLayout(m_albumDataLayout);
+
+    for(int i=0; i<AlbumInfoDataCount; i++)
+    {
+        m_albumInfo[i]=new QLabel(this);
+        connect(this, &KNMusicAlbumInfoDetail::changeInfoVisible,
+                m_albumInfo[i], &QLabel::setVisible);
+        m_albumDataLayout->addWidget(m_albumInfo[i]);
+    }
+    m_albumDataLayout->addStretch();
+}
+
+void KNMusicAlbumInfoDetail::setAlbumName(const QString &name)
+{
+    m_albumInfo[AlbumName]->setText(name);
+}
+
+void KNMusicAlbumInfoDetail::hideDetailInfo()
+{
+    emit changeInfoVisible(false);
+}
+
+void KNMusicAlbumInfoDetail::showDetailInfo()
+{
+    emit changeInfoVisible(true);
+}
+
 KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     QWidget(parent)
 {
@@ -34,31 +82,36 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_albumArt->setScaledContents(true);
     m_artInfoLayout->addWidget(m_albumArt);
 
-    m_detailPanel=new QWidget(this);
-    m_albumDataLayout=new QBoxLayout(QBoxLayout::TopToBottom, m_detailPanel);
-    m_albumDataLayout->setContentsMargins(0,0,0,0);
-    m_albumDataLayout->setSpacing(0);
-    m_detailPanel->setLayout(m_albumDataLayout);
-    m_albumName=new QLabel(m_detailPanel);
-    m_albumDataLayout->addWidget(m_albumName);
-    m_artInfoLayout->addWidget(m_detailPanel);
-    m_artInfoLayout->addStretch();
+    m_infoPanel=new KNMusicAlbumInfoDetail(this);
+    m_artInfoLayout->addWidget(m_infoPanel, 1);
 
     m_infoListLayout->addLayout(m_artInfoLayout);
+
+    m_songPanel=new QWidget(this);
+    m_infoListLayout->addWidget(m_songPanel, 1);
     m_infoListLayout->addStretch();
 
     m_heightExpand=new QPropertyAnimation(this, "geometry", this);
     m_heightExpand->setDuration(125);
-    //m_heightExpand->setEasingCurve(QEasingCurve::OutCubic);
     m_widthExpand=new QPropertyAnimation(this, "geometry", this);
     m_widthExpand->setDuration(125);
     m_widthExpand->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_heightExpand, SIGNAL(finished()),
             m_widthExpand, SLOT(start()));
-    connect(m_widthExpand, SIGNAL(finished()),
-            m_detailPanel, SLOT(show()));
+    connect(m_widthExpand, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumDetail::showDetailContent);
 
-    m_detailPanel->hide();
+    m_widthFold=new QPropertyAnimation(this, "geometry", this);
+    m_widthFold->setDuration(125);
+    m_heightFold=new QPropertyAnimation(this, "geometry", this);
+    m_heightFold->setDuration(125);
+    m_heightFold->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_widthFold, SIGNAL(finished()),
+            m_heightFold, SLOT(start()));
+    connect(m_heightFold, SIGNAL(finished()),
+            this, SIGNAL(requireFlyBack()));
+    connect(m_heightFold, SIGNAL(finished()),
+            this, SLOT(hideDetailWidget()));
 }
 
 KNMusicAlbumDetail::~KNMusicAlbumDetail()
@@ -78,29 +131,79 @@ QModelIndex KNMusicAlbumDetail::currentIndex() const
     return m_currentIndex;
 }
 
+void KNMusicAlbumDetail::hideDetailWidget()
+{
+    m_infoPanel->hide();
+    m_songPanel->hide();
+}
+
+void KNMusicAlbumDetail::showDetailWidget()
+{
+    m_infoPanel->show();
+    m_songPanel->show();
+}
+
 void KNMusicAlbumDetail::setCurrentIndex(const QModelIndex &currentIndex)
 {
     m_currentIndex = currentIndex;
 }
 
+void KNMusicAlbumDetail::setAlbumName(const QString &name)
+{
+    m_infoPanel->setAlbumName(name);
+}
+
 void KNMusicAlbumDetail::expandDetail()
 {
-    int heightEnd=qMax(height()+m_detailPanel->height(), 0),
+    showDetailContent();
+    int heightEnd=qMax(height()+m_infoPanel->height(), 0),
         parentHeight=parentWidget()->height(),
         widthEnd=(parentWidget()->width()>>1),
-        finalTop=((parentHeight-heightEnd)>>1);
+        topEnd=((parentHeight-heightEnd)>>1);
     QRect heightExpandEnd=QRect(x(),
-                                finalTop,
+                                topEnd,
                                 width(),
                                 heightEnd);
     m_heightExpand->setStartValue(geometry());
     m_heightExpand->setEndValue(heightExpandEnd);
     m_widthExpand->setStartValue(heightExpandEnd);
     m_widthExpand->setEndValue(QRect((widthEnd>>1),
-                                     finalTop,
+                                     topEnd,
                                      widthEnd,
                                      heightEnd));
+    hideDetailContent();
+    showDetailWidget();
     m_heightExpand->start();
+}
+
+void KNMusicAlbumDetail::foldDetail()
+{
+    int sizeEnd=m_albumArt->width(),
+        topEnd=((parentWidget()->height()-sizeEnd)>>1),
+        leftEnd=((parentWidget()->width()-sizeEnd)>>1);
+    QRect widthFoldEnd=QRect(leftEnd,
+                             y(),
+                             sizeEnd,
+                             height());
+    m_widthFold->setStartValue(geometry());
+    m_widthFold->setEndValue(widthFoldEnd);
+    m_heightFold->setStartValue(widthFoldEnd);
+    m_heightFold->setEndValue(QRect(leftEnd,
+                                    topEnd,
+                                    sizeEnd,
+                                    sizeEnd));
+    hideDetailContent();
+    m_widthFold->start();
+}
+
+void KNMusicAlbumDetail::hideDetailContent()
+{
+    m_infoPanel->hideDetailInfo();
+}
+
+void KNMusicAlbumDetail::showDetailContent()
+{
+    m_infoPanel->showDetailInfo();
 }
 
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
@@ -135,6 +238,8 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     m_albumHide->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_albumHide, SIGNAL(finished()),
             m_albumDetail, SLOT(hide()));
+    connect(m_albumDetail, &KNMusicAlbumDetail::requireFlyBack,
+            this, &KNMusicAlbumView::onActionHideAlbumDetail);
 
     m_scrollTimeLine=new QTimeLine(200, this);
     m_scrollTimeLine->setUpdateInterval(5);
@@ -358,7 +463,7 @@ void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
     }
     else
     {
-        onActionHideAlbumDetail();
+        m_albumDetail->foldDetail();
         selectionModel()->clear();
     }
 }
@@ -376,20 +481,22 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
 {
     m_albumDetail->hide();
+    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
+    m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
+                               QSize(m_iconSizeParam-2,m_iconSizeParam-2));
     m_albumDetail->setCurrentIndex(index);
+    m_albumDetail->setAlbumName(model()->data(index).toString());
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
                                m_iconSizeParam-2,
                                m_iconSizeParam-2);
-    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
-    m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
-                               QSize(m_iconSizeParam-2,m_iconSizeParam-2));
     m_albumShow->setStartValue(m_albumDetail->geometry());
     m_albumShow->setEndValue(QRect(((width()-m_albumDetail->width())>>1),
                                         ((height()-m_albumDetail->height())>>1),
                                         m_albumDetail->width(),
                                         m_albumDetail->height()));
+    m_albumDetail->hideDetailWidget();
     m_albumDetail->show();
     m_albumShow->start();
 }
