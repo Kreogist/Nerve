@@ -16,7 +16,6 @@ protected:
 
 private slots:
     void changeBackground(int frameData);
-    void onVerticalScrollValueChange(int value);
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;

@@ -15,9 +15,15 @@ class KNMusicAlbumSongDetail : public QWidget
     Q_OBJECT
 public:
     explicit KNMusicAlbumSongDetail(QWidget *parent = 0);
+    void setAlbumName(const QString &name);
+
+public slots:
+    void hideDetailInfo();
+    void showDetailInfo();
 
 private:
-
+    QLabel *m_albumName;
+    QBoxLayout *m_mainLayout;
 };
 
 class KNMusicAlbumInfoDetail : public QWidget
@@ -25,7 +31,6 @@ class KNMusicAlbumInfoDetail : public QWidget
     Q_OBJECT
 public:
     explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
-    void setAlbumName(const QString &name);
     enum AlbumInfoData
     {
         AlbumName,
@@ -74,7 +79,7 @@ private slots:
 private:
     QLabel *m_albumArt;
     KNMusicAlbumInfoDetail *m_infoPanel;
-    QWidget *m_songPanel;
+    KNMusicAlbumSongDetail *m_songPanel;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
     QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold;
     QModelIndex m_currentIndex;
@@ -96,6 +101,7 @@ public:
 signals:
 
 public slots:
+    void selectAlbum(const QModelIndex &index);
 
 protected slots:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

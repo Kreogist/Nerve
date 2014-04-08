@@ -19,8 +19,6 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     setUniformItemSizes(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(onVerticalScrollValueChange(int)));
 
     verticalScrollBar()->setSingleStep(2);
 
@@ -29,7 +27,7 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Window, QColor(0x30, 0x30, 0x30));
     m_palette.setColor(QPalette::Button, QColor(0x30, 0x30, 0x30));
-    m_palette.setColor(QPalette::Text, QColor(0xff, 0xff, 0xff));
+    m_palette.setColor(QPalette::Text, QColor(0x8f, 0x8f, 0x8f));
     m_palette.setColor(QPalette::Highlight, QColor(0x60, 0x60, 0x60));
     m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(m_palette);
@@ -72,10 +70,9 @@ void KNMusicArtistList::changeBackground(int frameData)
     m_palette.setColor(QPalette::Base, QColor(baseGrey, baseGrey, baseGrey));
     m_palette.setColor(QPalette::Window, QColor(baseGrey, baseGrey, baseGrey));
     m_palette.setColor(QPalette::Button, m_backgroundColor);
+    int textParam=(frameData<<1)+95;
+    m_palette.setColor(QPalette::Text, QColor(textParam,
+                                              textParam,
+                                              textParam));
     setPalette(m_palette);
-}
-
-void KNMusicArtistList::onVerticalScrollValueChange(int value)
-{
-    verticalScrollBar()->show();
 }

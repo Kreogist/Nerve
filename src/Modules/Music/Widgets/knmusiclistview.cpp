@@ -38,7 +38,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     m_palette.setColor(QPalette::AlternateBase, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Window, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Button, QColor(0x20, 0x20, 0x20));
-    m_palette.setColor(QPalette::Text, QColor(0xff, 0xff, 0xff));
+    m_palette.setColor(QPalette::Text, QColor(0x9f, 0x9f, 0x9f));
     m_palette.setColor(QPalette::Highlight, QColor(0x60, 0x60, 0x60));
     m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(m_palette);
@@ -177,7 +177,7 @@ void KNMusicListView::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     m_palette.setColor(QPalette::AlternateBase, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
-    int textParam=(frameData<<1)+127;
+    int textParam=(frameData<<1)+159;
     m_palette.setColor(QPalette::Text, QColor(textParam,
                                               textParam,
                                               textParam));

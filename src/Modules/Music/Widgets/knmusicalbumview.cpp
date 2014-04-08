@@ -17,7 +17,37 @@
 KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     QWidget(parent)
 {
-    ;
+    setAutoFillBackground(true);
+    setContentsMargins(0,0,0,0);
+
+    QPalette pal=palette();
+    pal.setColor(QPalette::Base, QColor(0xc0,0xc0,0xc0));
+    pal.setColor(QPalette::Window, QColor(0xff,0xff,0xff, 200));
+    pal.setColor(QPalette::Text, QColor(0,0,0));
+    setPalette(pal);
+
+    m_mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    m_mainLayout->setContentsMargins(0,0,0,0);
+    m_mainLayout->setSpacing(0);
+    setLayout(m_mainLayout);
+
+    m_albumName=new QLabel(this);
+    m_mainLayout->addWidget(m_albumName);
+}
+
+void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
+{
+    m_albumName->setText(name);
+}
+
+void KNMusicAlbumSongDetail::hideDetailInfo()
+{
+    m_albumName->hide();
+}
+
+void KNMusicAlbumSongDetail::showDetailInfo()
+{
+    m_albumName->show();
 }
 
 KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
@@ -28,7 +58,7 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
 
     QPalette pal=palette();
     pal.setColor(QPalette::Base, QColor(0xc0,0xc0,0xc0));
-    pal.setColor(QPalette::Window, QColor(0xc0,0xc0,0xc0));
+    pal.setColor(QPalette::Window, QColor(0xc0,0xc0,0xc0, 200));
     pal.setColor(QPalette::Text, QColor(0,0,0));
     setPalette(pal);
 
@@ -46,11 +76,6 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
     }
     m_albumDataLayout->addStretch();
     m_minimalExpandedHeight=height();
-}
-
-void KNMusicAlbumInfoDetail::setAlbumName(const QString &name)
-{
-    m_albumInfo[AlbumName]->setText(name);
 }
 
 void KNMusicAlbumInfoDetail::hideDetailInfo()
@@ -72,7 +97,6 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     QWidget(parent)
 {
     //Set properties.
-    setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
 
     m_infoListLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
@@ -93,7 +117,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_infoListLayout->addLayout(m_artInfoLayout);
 
-    m_songPanel=new QWidget(this);
+    m_songPanel=new KNMusicAlbumSongDetail(this);
     m_infoListLayout->addWidget(m_songPanel, 1);
     m_infoListLayout->addStretch();
 
@@ -130,6 +154,7 @@ void KNMusicAlbumDetail::setAlbumArt(const QPixmap &pixmap,
 {
     m_albumArt->setFixedSize(size);
     m_albumArt->setPixmap(pixmap);
+    m_infoPanel->setFixedWidth(size.width());
 }
 
 QModelIndex KNMusicAlbumDetail::currentIndex() const
@@ -156,7 +181,7 @@ void KNMusicAlbumDetail::setCurrentIndex(const QModelIndex &currentIndex)
 
 void KNMusicAlbumDetail::setAlbumName(const QString &name)
 {
-    m_infoPanel->setAlbumName(name);
+    m_songPanel->setAlbumName(name);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -204,11 +229,13 @@ void KNMusicAlbumDetail::foldDetail()
 void KNMusicAlbumDetail::hideDetailContent()
 {
     m_infoPanel->hideDetailInfo();
+    m_songPanel->hideDetailInfo();
 }
 
 void KNMusicAlbumDetail::showDetailContent()
 {
     m_infoPanel->showDetailInfo();
+    m_songPanel->showDetailInfo();
 }
 
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
@@ -469,19 +496,7 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
-    m_pressedIndex=indexAt(e->pos());
-    if(m_pressedIndex.isValid())
-    {
-        if(m_pressedIndex!=m_albumDetail->currentIndex())
-        {
-            onActionAlbumClicked(m_pressedIndex);
-        }
-    }
-    else
-    {
-        m_albumDetail->foldDetail();
-        selectionModel()->clear();
-    }
+    selectAlbum(indexAt(e->pos()));
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
@@ -586,4 +601,21 @@ int KNMusicAlbumView::gridMinimumWidth() const
 void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 {
     m_gridMinimumWidth = gridMinimumWidth;
+}
+
+void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
+{
+    m_pressedIndex=index;
+    if(m_pressedIndex.isValid())
+    {
+        if(m_pressedIndex!=m_albumDetail->currentIndex())
+        {
+            onActionAlbumClicked(m_pressedIndex);
+        }
+    }
+    else
+    {
+        m_albumDetail->foldDetail();
+        selectionModel()->clear();
+    }
 }

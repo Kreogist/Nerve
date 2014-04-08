@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include <QTimeLine>
 
 #include "knmusiclistviewheadermenu.h"
@@ -25,7 +27,7 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Window, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
-    m_palette.setColor(QPalette::ButtonText, QColor(0xff, 0xff, 0xff));
+    m_palette.setColor(QPalette::ButtonText, QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
 
     m_mouseIn=new QTimeLine(200, this);
@@ -72,6 +74,10 @@ void KNMusicListViewHeader::changeBackground(int frameData)
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Window, m_backgroundColor);
     m_palette.setColor(QPalette::Button, m_backgroundColor);
+    int textParam=(frameData<<1)+127;
+    m_palette.setColor(QPalette::ButtonText, QColor(textParam,
+                                                    textParam,
+                                                    textParam));
     setPalette(m_palette);
 }
 
