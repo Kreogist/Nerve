@@ -126,8 +126,8 @@ private:
                     const QModelIndex &index);
     int m_gridMinimumWidth=124;
     int m_gridWidth=124;
-    int m_gridHeight=180;
-    int m_spacing=20;
+    int m_gridHeight;
+    int m_spacing=10;
     int m_maxColumnCount=0;
     int m_firstVisibleIndex=0;
     int m_lineCount=0;

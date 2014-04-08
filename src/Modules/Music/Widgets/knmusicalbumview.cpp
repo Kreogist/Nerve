@@ -255,10 +255,17 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
 {
-    int pointLine=
-            (verticalScrollBar()->value()+point.y())/(m_gridHeight+m_spacing),
+    int pointTop=verticalScrollBar()->value()+point.y(),
+        pointLine=
+            (pointTop)/(m_gridHeight+m_spacing),
         pointColumn=
             point.x()/(m_spacing+m_gridWidth);
+    if(pointTop-pointLine*(m_spacing+m_gridHeight)<m_spacing ||
+            point.x()-pointColumn*(m_spacing+m_gridWidth)<m_spacing)
+    {
+        //Clicked on space.
+        return QModelIndex();
+    }
     return model()->index(pointLine*m_maxColumnCount+pointColumn,
                           0,
                           rootIndex());
@@ -360,6 +367,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         m_maxColumnCount=realWidth/realMinimumWidth;
         m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
     }
+    m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
     int albumIndex=0, albumCount=model()->rowCount(),
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
@@ -464,7 +472,10 @@ void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
     m_pressedIndex=indexAt(e->pos());
     if(m_pressedIndex.isValid())
     {
-        onActionAlbumClicked(m_pressedIndex);
+        if(m_pressedIndex!=m_albumDetail->currentIndex())
+        {
+            onActionAlbumClicked(m_pressedIndex);
+        }
     }
     else
     {
@@ -514,6 +525,7 @@ void KNMusicAlbumView::onActionHideAlbumDetail()
                                    endPosition.y()+2,
                                    m_iconSizeParam-2,
                                    m_iconSizeParam-2));
+    m_albumDetail->setCurrentIndex(QModelIndex());
     m_albumHide->start();
 }
 
@@ -537,7 +549,8 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
 {
     //To draw the album art.
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
-    m_iconSizeParam=qMin(rect.width(), rect.height());
+    m_iconSizeParam=qMin(rect.width()-m_spacing,
+                         rect.height()-(fontMetrics().height()<<1)-m_spacing);
     QRect albumArtRect=QRect(rect.x()+1,
                              rect.y()+1,
                              m_iconSizeParam-2,
@@ -549,8 +562,8 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     int textTop=rect.y()+m_iconSizeParam+5;
     painter->drawText(rect.x(),
                       textTop,
-                      rect.width(),
-                      rect.height(),
+                      rect.width()-m_spacing,
+                      fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index).toString());
     textTop+=fontMetrics().height();
@@ -558,8 +571,8 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     painter->setPen(QColor(128,128,128));
     painter->drawText(rect.x(),
                       textTop,
-                      rect.width(),
-                      rect.height(),
+                      rect.width()-m_spacing,
+                      fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       model()->data(index, Qt::UserRole).toString());
     painter->setPen(penBackup);
