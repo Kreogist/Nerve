@@ -45,6 +45,7 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
         m_albumDataLayout->addWidget(m_albumInfo[i]);
     }
     m_albumDataLayout->addStretch();
+    m_minimalExpandedHeight=height();
 }
 
 void KNMusicAlbumInfoDetail::setAlbumName(const QString &name)
@@ -60,6 +61,11 @@ void KNMusicAlbumInfoDetail::hideDetailInfo()
 void KNMusicAlbumInfoDetail::showDetailInfo()
 {
     emit changeInfoVisible(true);
+}
+
+int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
+{
+    return m_minimalExpandedHeight;
 }
 
 KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
@@ -155,8 +161,7 @@ void KNMusicAlbumDetail::setAlbumName(const QString &name)
 
 void KNMusicAlbumDetail::expandDetail()
 {
-    showDetailContent();
-    int heightEnd=qMax(height()+m_infoPanel->height(), 0),
+    int heightEnd=qMax(height()+m_infoPanel->minimalExpandedHeight(), 0),
         parentHeight=parentWidget()->height(),
         widthEnd=(parentWidget()->width()>>1),
         topEnd=((parentHeight-heightEnd)>>1);
@@ -507,8 +512,8 @@ void KNMusicAlbumView::onActionHideAlbumDetail()
     m_albumHide->setStartValue(m_albumDetail->geometry());
     m_albumHide->setEndValue(QRect(endPosition.x()+2,
                                    endPosition.y()+2,
-                                   endPosition.width()-2,
-                                   endPosition.height()-2));
+                                   m_iconSizeParam-2,
+                                   m_iconSizeParam-2));
     m_albumHide->start();
 }
 

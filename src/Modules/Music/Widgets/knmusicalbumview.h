@@ -31,6 +31,7 @@ public:
         AlbumName,
         AlbumInfoDataCount
     };
+    int minimalExpandedHeight() const;
 
 signals:
     void changeInfoVisible(const bool &visible);
@@ -40,6 +41,7 @@ public slots:
     void showDetailInfo();
 
 private:
+    int m_minimalExpandedHeight;
     QBoxLayout *m_albumDataLayout;
     QLabel *m_albumInfo[AlbumInfoDataCount];
 };
