@@ -9,6 +9,7 @@ class QPaintEvent;
 class QLabel;
 class QPropertyAnimation;
 class QBoxLayout;
+class KNMusicAlbumSongListView;
 
 class KNMusicAlbumSongDetail : public QWidget
 {
@@ -23,6 +24,7 @@ public slots:
 
 private:
     QLabel *m_albumName;
+    KNMusicAlbumSongListView *m_albumSongs;
     QBoxLayout *m_mainLayout;
 };
 
@@ -33,15 +35,20 @@ public:
     explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
     enum AlbumInfoData
     {
-        AlbumName,
+        SongCount,
+        Year,
         AlbumInfoDataCount
     };
+    void setCaption(const int &index, const QString &data);
+    void refreshCaption(const int &index);
     int minimalExpandedHeight() const;
 
 signals:
     void changeInfoVisible(const bool &visible);
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
     void hideDetailInfo();
     void showDetailInfo();
 
@@ -49,6 +56,7 @@ private:
     int m_minimalExpandedHeight;
     QBoxLayout *m_albumDataLayout;
     QLabel *m_albumInfo[AlbumInfoDataCount];
+    QString m_albumInfoCaption[AlbumInfoDataCount];
 };
 
 class KNMusicAlbumDetail : public QWidget

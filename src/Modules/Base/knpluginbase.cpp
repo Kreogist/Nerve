@@ -9,3 +9,13 @@ void KNPluginBase::applyPlugin()
 {
     ;
 }
+
+void KNPluginBase::writeDatabase()
+{
+    ;
+}
+
+void KNPluginBase::readDatabase()
+{
+    ;
+}

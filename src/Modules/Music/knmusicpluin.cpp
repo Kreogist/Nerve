@@ -1,6 +1,8 @@
 #include "../knglobal.h"
 
 #include <QList>
+#include <QFile>
+#include <QDir>
 
 #include <QDebug>
 
@@ -19,6 +21,8 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
     m_global=KNGlobal::instance();
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
+
+    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music");
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
@@ -64,6 +68,30 @@ void KNMusicPluin::applyPlugin()
     emit requireAddCategory("Music",
                             QPixmap(),
                             m_musicViewer);
+}
+
+void KNMusicPluin::writeDatabase()
+{
+    QFile musicDatabase(m_musicDatabase);
+    if(musicDatabase.exists() &&
+            musicDatabase.open(QIODevice::WriteOnly))
+    {
+        QDataStream dataOut(&musicDatabase);
+        //dataOut<<*m_model<<flush;
+        musicDatabase.close();
+    }
+}
+
+void KNMusicPluin::readDatabase()
+{
+    QFile musicDatabase(m_musicDatabase);
+    if(musicDatabase.exists() &&
+            musicDatabase.open(QIODevice::ReadOnly))
+    {
+        QDataStream dataIn(&musicDatabase);
+        //dataOut>>*m_model;
+        musicDatabase.close();
+    }
 }
 
 void KNMusicPluin::showContextMenu(const QPoint &position,

@@ -2,6 +2,7 @@
 #define KNPLUGINBASE_H
 
 #include <QObject>
+#include <QDataStream>
 
 class QWidget;
 class KNPluginBase : public QObject
@@ -17,6 +18,8 @@ signals:
                             QWidget *widget);
 
 public slots:
+    virtual void writeDatabase();
+    virtual void readDatabase();
 
 };
 

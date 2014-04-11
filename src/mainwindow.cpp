@@ -1,3 +1,6 @@
+#include <QFile>
+#include <QDataStream>
+#include <QCloseEvent>
 
 #include "Modules/Base/knpluginbase.h"
 #include "Modules/Base/knstdlibcategoryswitcher.h"
@@ -21,11 +24,33 @@ MainWindow::MainWindow(QWidget *parent) :
 
     KNMusicPluin *musicPlugin=new KNMusicPluin(this);
     addPlugin(musicPlugin);
+
+    readDatabase();
 }
 
 void MainWindow::addPlugin(KNPluginBase *plugin)
 {
     connect(plugin, &KNPluginBase::requireAddCategory,
             m_mainWidget, &KNStdLibCategorySwitcher::addCategory);
+    connect(this, SIGNAL(requireReadData()),
+            plugin, SLOT(readDatabase()));
+    connect(this, SIGNAL(requireWriteData()),
+            plugin, SLOT(writeDatabase()));
     plugin->applyPlugin();
+}
+
+void MainWindow::readDatabase()
+{
+    emit requireReadData();
+}
+
+void MainWindow::writeDatabase()
+{
+    emit requireWriteData();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    writeDatabase();
+    event->accept();
 }

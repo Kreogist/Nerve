@@ -12,6 +12,8 @@
 #include <QBoxLayout>
 #include <QPropertyAnimation>
 
+#include "knmusicalbumsonglistview.h"
+
 #include "knmusicalbumview.h"
 
 KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
@@ -32,7 +34,15 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     setLayout(m_mainLayout);
 
     m_albumName=new QLabel(this);
+    m_albumName->setContentsMargins(10,0,0,0);
+    QFont artistFont=font();
+    artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
+    artistFont.setBold(true);
+    m_albumName->setFont(artistFont);
     m_mainLayout->addWidget(m_albumName);
+
+    m_albumSongs=new KNMusicAlbumSongListView(this);
+    m_mainLayout->addWidget(m_albumSongs, 1);
 }
 
 void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
@@ -43,16 +53,19 @@ void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
     m_albumName->hide();
+    m_albumSongs->hide();
 }
 
 void KNMusicAlbumSongDetail::showDetailInfo()
 {
     m_albumName->show();
+    m_albumSongs->show();
 }
 
 KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
     QWidget(parent)
 {
+    retranslate();
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
 
@@ -78,6 +91,26 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
     m_minimalExpandedHeight=height();
 }
 
+void KNMusicAlbumInfoDetail::setCaption(const int &index,
+                                        const QString &data)
+{
+    if(data.isEmpty())
+    {
+        m_albumInfo[index]->setStatusTip("N/A");
+    }
+    else
+    {
+        m_albumInfo[index]->setStatusTip(data);
+    }
+    refreshCaption(index);
+}
+
+void KNMusicAlbumInfoDetail::refreshCaption(const int &index)
+{
+    m_albumInfo[index]->setText(m_albumInfoCaption[index] +
+                                m_albumInfo[index]->statusTip());
+}
+
 void KNMusicAlbumInfoDetail::hideDetailInfo()
 {
     emit changeInfoVisible(false);
@@ -91,6 +124,17 @@ void KNMusicAlbumInfoDetail::showDetailInfo()
 int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
 {
     return m_minimalExpandedHeight;
+}
+
+void KNMusicAlbumInfoDetail::retranslate()
+{
+    m_albumInfoCaption[SongCount]=tr("Songs: ");
+    m_albumInfoCaption[Year]=tr("Year: ");
+}
+
+void KNMusicAlbumInfoDetail::retranslateAndSet()
+{
+    retranslate();
 }
 
 KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
@@ -445,7 +489,7 @@ void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
     {
         m_albumDetail->setGeometry(QRect(((width()-m_albumDetail->width())>>1),
                                          ((height()-m_albumDetail->height())>>1),
-                                         m_albumDetail->width(),
+                                         (width()>>1),
                                          m_albumDetail->height()));
     }
 }
@@ -468,7 +512,7 @@ bool KNMusicAlbumView::isIndexHidden(const QModelIndex &index) const
 QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorAction,
                                          Qt::KeyboardModifiers)
 {
-    QModelIndex current = currentIndex();
+    QModelIndex current=currentIndex();
     viewport()->update();
     return current;
 }

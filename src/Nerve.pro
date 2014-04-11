@@ -55,7 +55,9 @@ SOURCES += \
     Modules/Music/Widgets/knmusicratingeditor.cpp \
     Modules/Music/Widgets/knmusicalbumview.cpp \
     Modules/Music/Libraries/knmusicalbummodel.cpp \
-    Modules/Music/Widgets/knmusicdetailtooltip.cpp
+    Modules/Music/Widgets/knmusicdetailtooltip.cpp \
+    Modules/Music/Widgets/knmusicalbumsonglistview.cpp \
+    Modules/Music/Widgets/knmusiclistviewbase.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -106,7 +108,9 @@ HEADERS += \
     Modules/Music/Widgets/knmusicratingeditor.h \
     Modules/Music/Widgets/knmusicalbumview.h \
     Modules/Music/Libraries/knmusicalbummodel.h \
-    Modules/Music/Widgets/knmusicdetailtooltip.h
+    Modules/Music/Widgets/knmusicdetailtooltip.h \
+    Modules/Music/Widgets/knmusicalbumsonglistview.h \
+    Modules/Music/Widgets/knmusiclistviewbase.h
 
 RESOURCES += \
     res.qrc

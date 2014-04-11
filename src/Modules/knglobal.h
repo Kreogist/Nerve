@@ -18,6 +18,7 @@ public:
     static void openLocalUrl(const QString &filePath);
     void copyFileToClipboard(const QStringList &files);
     void copyTextToClipboard(const QString &text);
+    QString databaseFolder() const;
 
 signals:
 
@@ -30,7 +31,7 @@ private:
                                                                                       QString &file);
 #endif
     static KNGlobal *m_instance;
-    QString m_storageUnit[5];
+    QString m_storageUnit[5], m_libraryPath;
     QWidget *m_mainWindow;
 };
 

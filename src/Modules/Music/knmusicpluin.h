@@ -19,6 +19,8 @@ public:
     explicit KNMusicPluin(QObject *parent = 0);
     ~KNMusicPluin();
     void applyPlugin();
+    void writeDatabase();
+    void readDatabase();
 
 signals:
 
@@ -40,6 +42,7 @@ private:
 
     QThread m_collectThread,
             m_modelThread;
+    QString m_musicDatabase;
 };
 
 #endif // KNMUSICPLUIN_H

@@ -40,6 +40,7 @@ KNGlobal::KNGlobal() :
     m_storageUnit[2]="MB";
     m_storageUnit[3]="GB";
     m_storageUnit[4]="TB";
+    m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library/"));
 }
 
 #ifdef Q_OS_LINUX
@@ -142,4 +143,9 @@ void KNGlobal::copyFileToClipboard(const QStringList &files)
 void KNGlobal::copyTextToClipboard(const QString &text)
 {
     QApplication::clipboard()->setText(text);
+}
+
+QString KNGlobal::databaseFolder() const
+{
+    return m_libraryPath;
 }
