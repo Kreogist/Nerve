@@ -42,6 +42,38 @@ KNGlobal::KNGlobal() :
     m_storageUnit[4]="TB";
 }
 
+#ifdef Q_OS_LINUX
+QString KNGlobal::substituteFileBrowserParameters(QString &pre, QString &file)
+{
+    QString cmd;
+        for (int i = 0; i < pre.size(); ++i) {
+            QChar c = pre.at(i);
+            if (c == QLatin1Char('%') && i < pre.size()-1) {
+                c = pre.at(++i);
+                QString s;
+                if (c == QLatin1Char('d'))
+                    s = QLatin1Char('"') + QFileInfo(file).path() + QLatin1Char('"');
+                else if (c == QLatin1Char('f'))
+                    s = QLatin1Char('"') + file + QLatin1Char('"');
+                else if (c == QLatin1Char('n'))
+                    s = QLatin1Char('"') + QFileInfo(file).fileName() + QLatin1Char('"');
+                else if (c == QLatin1Char('%'))
+                    s = c;
+                else {
+                    s = QLatin1Char('%');
+                    s += c;
+                }
+                cmd += s;
+                continue;
+
+            }
+            cmd += c;
+        }
+
+        return cmd;
+}
+#endif
+
 QWidget *KNGlobal::mainWindow() const
 {
     return m_mainWindow;
@@ -77,6 +109,13 @@ void KNGlobal::showInGraphicalShell(const QString &filePath)
                << QLatin1String("tell application \"Finder\" to activate");
     QProcess::execute(QLatin1String("/usr/bin/osascript"), scriptArgs);
     return;
+#endif
+#ifdef Q_OS_LINUX
+    QFileInfo fileInfo(filePath);
+    QString folder = fileInfo.isDir() ? fileInfo.absoluteFilePath() : fileInfo.filePath();
+    QString app = QLatin1String("xdg-open %d");
+    QString browserArgs = substituteFileBrowserParameters(app, folder);
+    QProcess::startDetached(browserArgs);
 #endif
 }
 

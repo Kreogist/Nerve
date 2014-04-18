@@ -25,6 +25,10 @@ public slots:
 
 private:
     KNGlobal();
+#ifdef Q_OS_LINUX
+    static QString substituteFileBrowserParameters(QString &pre,
+                                                                                      QString &file);
+#endif
     static KNGlobal *m_instance;
     QString m_storageUnit[5];
     QWidget *m_mainWindow;

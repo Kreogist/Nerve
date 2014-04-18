@@ -46,6 +46,9 @@ void KNMusicViewerMenu::retranslate()
 #ifdef Q_OS_MAC
     m_actionTitle[Browse]=tr("Show in Finder");
 #endif
+#ifdef Q_OS_LINUX
+    m_actionTitle[Browse]=tr("Show the contains folder");
+#endif
     m_actionTitle[Copy]=tr("Copy File");
     m_actionTitle[CopyText]=tr("Copy '%1'");
 }
