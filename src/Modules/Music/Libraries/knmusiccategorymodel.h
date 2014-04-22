@@ -20,6 +20,8 @@ public:
     void setNoCategoryText(const QString &noCategoryText);
 
 signals:
+    void requireHideFirstItem();
+    void requireShowFirstItem();
 
 public slots:
     virtual void retranslate();
@@ -35,6 +37,7 @@ protected:
 private:
     QIcon m_noAlbumArtIcon;
     QString m_noCategoryText;
+    int m_noCategoryItemCount=0;
 };
 
 #endif // KNMUSICCATEGORYMODEL_H

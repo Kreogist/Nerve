@@ -1,0 +1,49 @@
+File Information Collection Policy
+==================================
+1.A QStringList will contains all the files waiting to be filtered.
+2.KNMediaSeacher will receive the QStringList, it will check the suffix of the file, if it is in the list of the suffix, KNMediaSeacher will send a signal to KNMediaPlugin, and the plugin will tell the main model to add this file.
+3.The model get a file path, and then add to the model, and will display the file name. The model will ask the KNMediaInfoCollectorManager to update the media file.
+4.KNMediaInfoCollectorManager will update the media info.
+
+KNMusicPlugin
+|-KNMusicSeacher(Knows KNMusicModel)
+|-KNMusicModel(Knows KNMusicInfoCollectorManager)
+|-KNMusicInfoCollectorManager
+Nerve Media Database File Format
+================================
+Overview:
+1.All the text will be stored as UTF-8.
+2.The image will be stored outside of the database, will use the row() of the item as the file name. E.g: the 5th row’s image will be store as: 5.png.
+
+NMDF - (4 bytes) Header
+FF FF FF FF - (8 bytes)Total size.
+FF - (2 bytes) Kinds of categories.
+
+————————
+Category datas
+FF FF FF FF - (8 bytes) Size
+FF FF FF FF - (8 bytes) Image Index
+——
+QString data
+FF FF FF FF Songs Count
+FF FF FF FF Song ID
+FF FF FF FF Song ID
+FF FF FF FF Song ID
+FF FF FF FF Song ID
+FF FF FF FF Song ID
+FF FF FF FF Song ID
+——
+
+————————
+Song datas
+FF FF FF FF - (8bytes) Total Size
+——
+QString Title
+FF FF FF FF Artist Index
+FF FF FF FF Album Index
+FF FF FF FF Genre Index
+QString other datas…
+200101012359 Date & Time Format
+FF Rating Format
+FF FF FF FF - (8 bytes) Image Index
+——

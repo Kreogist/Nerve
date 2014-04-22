@@ -73,11 +73,10 @@ void KNMusicPluin::applyPlugin()
 void KNMusicPluin::writeDatabase()
 {
     QFile musicDatabase(m_musicDatabase);
-    if(musicDatabase.exists() &&
-            musicDatabase.open(QIODevice::WriteOnly))
+    if(musicDatabase.open(QIODevice::WriteOnly))
     {
         QDataStream dataOut(&musicDatabase);
-        //dataOut<<*m_model<<flush;
+        m_model->writeToDataStream(dataOut);
         musicDatabase.close();
     }
 }
@@ -89,7 +88,7 @@ void KNMusicPluin::readDatabase()
             musicDatabase.open(QIODevice::ReadOnly))
     {
         QDataStream dataIn(&musicDatabase);
-        //dataOut>>*m_model;
+        m_model->readFromDataStream(dataIn);
         musicDatabase.close();
     }
 }

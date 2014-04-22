@@ -51,6 +51,8 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
     KNMusicArtistItem *currentItem;
     if(currentName.isEmpty())
     {
+        m_noCategoryItemCount++;
+        emit requireShowFirstItem();
         return;
     }
     QList<QStandardItem *> searchResult=findItems(currentName);

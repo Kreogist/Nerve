@@ -40,7 +40,12 @@ KNGlobal::KNGlobal() :
     m_storageUnit[2]="MB";
     m_storageUnit[3]="GB";
     m_storageUnit[4]="TB";
-    m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library/"));
+    m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library"));
+    QDir libraryCheck(m_libraryPath);
+    if(!libraryCheck.exists())
+    {
+        libraryCheck.mkpath(m_libraryPath);
+    }
 }
 
 #ifdef Q_OS_LINUX
@@ -123,6 +128,22 @@ void KNGlobal::showInGraphicalShell(const QString &filePath)
 void KNGlobal::openLocalUrl(const QString &filePath)
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}
+
+void KNGlobal::uint32ToChars(const quint32 &value, char *item)
+{
+    item[0]=(quint8)(value>>24);
+    item[1]=(quint8)(((value & 0b00000000111111110000000000000000)>>16));
+    item[2]=(quint8)(((value & 0b00000000000000001111111100000000)>>8));
+    item[3]=(quint8)((value & 0b00000000000000000000000011111111));
+}
+
+quint32 KNGlobal::charsToUint32(const char *value)
+{
+    return ((((quint32)value[0])<<24)&0b11111111000000000000000000000000)+
+           ((((quint32)value[1])<<16)&0b00000000111111110000000000000000)+
+           ((((quint32)value[2])<<8) &0b00000000000000001111111100000000)+
+           ( ((quint32)value[3])     &0b00000000000000000000000011111111);
 }
 
 void KNGlobal::copyFileToClipboard(const QStringList &files)

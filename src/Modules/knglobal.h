@@ -16,6 +16,8 @@ public:
     void setMainWindow(QWidget *mainWindow);
     static void showInGraphicalShell(const QString &filePath);
     static void openLocalUrl(const QString &filePath);
+    static void uint32ToChars(const quint32 &value, char *item);
+    static quint32 charsToUint32(const char *value);
     void copyFileToClipboard(const QStringList &files);
     void copyTextToClipboard(const QString &text);
     QString databaseFolder() const;

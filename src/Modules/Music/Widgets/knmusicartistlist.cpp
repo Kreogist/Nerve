@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include "../Libraries/knmusiccategorymodel.h"
+
 #include "knmusicartistlist.h"
 
 KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
@@ -45,6 +47,17 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
             this, &KNMusicArtistList::changeBackground);
 }
 
+void KNMusicArtistList::setModel(QAbstractItemModel *model)
+{
+    QListView::setModel(model);
+    KNMusicCategoryModel *categoryModel=qobject_cast<KNMusicCategoryModel *>(model);
+    connect(categoryModel, &KNMusicCategoryModel::requireShowFirstItem,
+            this, &KNMusicArtistList::showFirstItem);
+    connect(categoryModel, &KNMusicCategoryModel::requireHideFirstItem,
+            this, &KNMusicArtistList::hideFirstItem);
+    hideFirstItem();
+}
+
 void KNMusicArtistList::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
@@ -75,4 +88,14 @@ void KNMusicArtistList::changeBackground(int frameData)
                                               textParam,
                                               textParam));
     setPalette(m_palette);
+}
+
+void KNMusicArtistList::showFirstItem()
+{
+    setRowHidden(0, false);
+}
+
+void KNMusicArtistList::hideFirstItem()
+{
+    setRowHidden(0, true);
 }

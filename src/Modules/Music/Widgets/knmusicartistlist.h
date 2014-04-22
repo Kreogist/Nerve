@@ -4,11 +4,13 @@
 #include <QListView>
 
 class QTimeLine;
+class KNMusicCategoryModel;
 class KNMusicArtistList : public QListView
 {
     Q_OBJECT
 public:
     explicit KNMusicArtistList(QWidget *parent = 0);
+    void setModel(QAbstractItemModel *model);
 
 protected:
     void enterEvent(QEvent *e);
@@ -16,6 +18,8 @@ protected:
 
 private slots:
     void changeBackground(int frameData);
+    void showFirstItem();
+    void hideFirstItem();
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;

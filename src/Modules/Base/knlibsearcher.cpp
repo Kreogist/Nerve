@@ -1,21 +1,17 @@
-#include <QDebug>
-
 #include <QFileInfo>
-#include "../knmusicglobal.h"
 
-#include "knmusicsearcher.h"
+#include "knmodel.h"
+#include "knlibsearcher.h"
 
-KNMusicSearcher::KNMusicSearcher(QObject *parent) :
+KNLibSearcher::KNLibSearcher(QObject *parent) :
     QObject(parent)
 {
-    m_musicGlobal=KNMusicGlobal::instance();
 }
 
-void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
+void KNLibSearcher::analysisList(const QList<QUrl> &urls)
 {
     QString currentPath;
     QFileInfo currentDetails;
-    int currentType;
     for(int i=0, fileCount=urls.count();
         i<fileCount;
         ++i)
@@ -33,10 +29,27 @@ void KNMusicSearcher::analysisList(const QList<QUrl> &urls)
         }
         if(currentDetails.isFile())
         {
-            if(m_musicGlobal->getMusicType(currentDetails.suffix())!=-1)
+            if(getType(currentDetails.suffix())!=-1)
             {
                 emit requireAnalysis(currentPath);
             }
         }
     }
 }
+
+int KNLibSearcher::getType(const QString &suffix)
+{
+    Q_UNUSED(suffix);
+    return -1;
+}
+
+KNModel *KNLibSearcher::model() const
+{
+    return m_model;
+}
+
+void KNLibSearcher::setModel(KNModel *model)
+{
+    m_model = model;
+}
+

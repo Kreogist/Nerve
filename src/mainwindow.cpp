@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     setContentsMargins(0,0,0,0);
+    setMinimumSize(600, 400);
 
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);
@@ -32,10 +33,10 @@ void MainWindow::addPlugin(KNPluginBase *plugin)
 {
     connect(plugin, &KNPluginBase::requireAddCategory,
             m_mainWidget, &KNStdLibCategorySwitcher::addCategory);
-    connect(this, SIGNAL(requireReadData()),
-            plugin, SLOT(readDatabase()));
-    connect(this, SIGNAL(requireWriteData()),
-            plugin, SLOT(writeDatabase()));
+    connect(this, &MainWindow::requireReadData,
+            plugin, &KNPluginBase::readDatabase);
+    connect(this, &MainWindow::requireWriteData,
+            plugin, &KNPluginBase::writeDatabase);
     plugin->applyPlugin();
 }
 

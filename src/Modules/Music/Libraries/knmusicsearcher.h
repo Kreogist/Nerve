@@ -1,27 +1,23 @@
 #ifndef KNMUSICSEARCHER_H
 #define KNMUSICSEARCHER_H
 
-#include <QList>
-#include <QUrl>
-#include <QStringList>
-
-#include <QObject>
+#include "../../../Modules/Base/knlibsearcher.h"
 
 class KNMusicGlobal;
-class KNMusicSearcher : public QObject
+class KNMusicSearcher : public KNLibSearcher
 {
     Q_OBJECT
 public:
     explicit KNMusicSearcher(QObject *parent = 0);
 
 signals:
-    void requireAnalysis(const QString &filePath);
 
 public slots:
-    void analysisList(const QList<QUrl> &urls);
+
+protected:
+    int getType(const QString &suffix);
 
 private:
-    void searchDir();
     KNMusicGlobal *m_musicGlobal;
 };
 

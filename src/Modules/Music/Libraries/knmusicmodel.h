@@ -5,18 +5,18 @@
 
 #include "../knmusicglobal.h"
 
-#include <QStandardItemModel>
+#include "../../Base/knmodel.h"
 
-class KNMusicModel : public QStandardItemModel
+class KNMusicModel : public KNModel
 {
     Q_OBJECT
 public:
     explicit KNMusicModel(QObject *parent = 0);
-    void resetHeader();
+    bool readFromDataStream(QDataStream &stream);
+    bool writeToDataStream(QDataStream &stream);
     QString filePathFromIndex(const QModelIndex &index);
 
 signals:
-    void requireResetHeader();
     void musicAppend(const QModelIndex &index);
 
 public slots:
@@ -26,7 +26,7 @@ public slots:
     void retranslateAndSet();
 
 private:
-    KNMusicGlobal *instance;
+    KNMusicGlobal *musicGlobal;
 };
 
 #endif // KNMUSICMODEL_H
