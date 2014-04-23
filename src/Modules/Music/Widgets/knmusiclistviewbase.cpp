@@ -37,9 +37,6 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
             this, &KNMusicListViewBase::onSectionVisibleChanged);
 
     m_musicDetailTooltip=new KNMusicDetailTooltip(this);
-
-    connect(this, &KNMusicListViewBase::doubleClicked,
-            this, &KNMusicListViewBase::onItemActived);
     connect(this, &KNMusicListViewBase::activated,
             this, &KNMusicListViewBase::onItemActived);
 }

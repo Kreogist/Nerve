@@ -68,8 +68,6 @@ public:
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
     void setAlbumName(const QString &name);
-    QModelIndex currentIndex() const;
-    void setCurrentIndex(const QModelIndex &currentIndex);
 
 signals:
     void requireFlyBack();
@@ -90,7 +88,6 @@ private:
     KNMusicAlbumSongDetail *m_songPanel;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
     QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold;
-    QModelIndex m_currentIndex;
 };
 
 class KNMusicAlbumView : public QAbstractItemView
@@ -132,6 +129,7 @@ protected:
 private slots:
     void onActionAlbumClicked(const QModelIndex &index);
     void onActionHideAlbumDetail();
+    void onActionHideAlbumDetailFinished();
 
 private:
     QRect itemRect(const QModelIndex &index) const;
@@ -154,6 +152,7 @@ private:
     QPropertyAnimation *m_albumShow,
                        *m_albumHide;
     KNMusicAlbumDetail *m_albumDetail;
+    QModelIndex m_detailIndex;
 };
 
 #endif // KNMUSICALBUMVIEW_H

@@ -201,11 +201,6 @@ void KNMusicAlbumDetail::setAlbumArt(const QPixmap &pixmap,
     m_infoPanel->setFixedWidth(size.width());
 }
 
-QModelIndex KNMusicAlbumDetail::currentIndex() const
-{
-    return m_currentIndex;
-}
-
 void KNMusicAlbumDetail::hideDetailWidget()
 {
     m_infoPanel->hide();
@@ -216,11 +211,6 @@ void KNMusicAlbumDetail::showDetailWidget()
 {
     m_infoPanel->show();
     m_songPanel->show();
-}
-
-void KNMusicAlbumDetail::setCurrentIndex(const QModelIndex &currentIndex)
-{
-    m_currentIndex = currentIndex;
 }
 
 void KNMusicAlbumDetail::setAlbumName(const QString &name)
@@ -312,8 +302,8 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
                                        "geometry",
                                        this);
     m_albumHide->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_albumHide, SIGNAL(finished()),
-            m_albumDetail, SLOT(hide()));
+    connect(m_albumHide, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumView::onActionHideAlbumDetailFinished);
     connect(m_albumDetail, &KNMusicAlbumDetail::requireFlyBack,
             this, &KNMusicAlbumView::onActionHideAlbumDetail);
 
@@ -414,7 +404,6 @@ void KNMusicAlbumView::updateGeometries()
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
 {
-    QItemSelectionModel *selections = selectionModel();
     QStyleOptionViewItem option = viewOptions();
     QBrush background = option.palette.base();
     QPen foreground(option.palette.color(QPalette::Text));
@@ -458,7 +447,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
                                 currentTop,
                                 m_gridWidth,
                                 m_gridHeight);
-        if(!selections->isSelected(index))
+        if(index!=m_detailIndex)
         {
             paintAlbum(&painter,
                        currentRect,
@@ -559,7 +548,7 @@ void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
-    m_albumDetail->setCurrentIndex(index);
+    m_detailIndex=index;
     m_albumDetail->setAlbumName(model()->data(index).toString());
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
@@ -578,14 +567,20 @@ void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
 
 void KNMusicAlbumView::onActionHideAlbumDetail()
 {
-    QRect endPosition=visualRect(m_albumDetail->currentIndex());
+    QRect endPosition=visualRect(m_detailIndex);
     m_albumHide->setStartValue(m_albumDetail->geometry());
     m_albumHide->setEndValue(QRect(endPosition.x()+2,
                                    endPosition.y()+2,
                                    m_iconSizeParam-2,
                                    m_iconSizeParam-2));
-    m_albumDetail->setCurrentIndex(QModelIndex());
     m_albumHide->start();
+}
+
+void KNMusicAlbumView::onActionHideAlbumDetailFinished()
+{
+    m_albumDetail->hide();
+    m_detailIndex=QModelIndex();
+    viewport()->update();
 }
 
 QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
@@ -652,7 +647,7 @@ void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
     m_pressedIndex=index;
     if(m_pressedIndex.isValid())
     {
-        if(m_pressedIndex!=m_albumDetail->currentIndex())
+        if(m_pressedIndex!=m_detailIndex)
         {
             onActionAlbumClicked(m_pressedIndex);
         }
