@@ -32,6 +32,7 @@ public:
     void setArtistName(const QString &artistName);
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicCategoryDetailModel *model);
+    void setCurrentIndex(const QModelIndex &index);
     void resetHeader();
 
 signals:
@@ -53,7 +54,8 @@ public:
     void resetHeader();
     void setModel(KNMusicCategoryModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);
-    void selectSingleItem(const QModelIndex &index);
+    void selectCategoryItem(const QString &value);
+    void selectItem(const QModelIndex &index);
 
 signals:
     void requireDisplayDetails(const QModelIndex &current);

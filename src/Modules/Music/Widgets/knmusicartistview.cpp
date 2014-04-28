@@ -113,6 +113,12 @@ void KNMusicCategoryDetailsDisplay::setDetailModel(KNMusicCategoryDetailModel *m
     m_songViewer->resetHeader();
 }
 
+void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
+{
+    m_songViewer->selectionModel()->setCurrentIndex(index,
+                                                    QItemSelectionModel::SelectCurrent);
+}
+
 void KNMusicCategoryDetailsDisplay::resetHeader()
 {
     m_songViewer->resetHeader();
@@ -169,10 +175,24 @@ void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
     m_artistDetailModel=model;
 }
 
-void KNMusicArtistView::selectSingleItem(const QModelIndex &index)
+void KNMusicArtistView::selectCategoryItem(const QString &value)
 {
-    ;
-    //m_artistList->selectionModel()->select();
+    QList<QStandardItem *> artistSearch=m_artistModel->findItems(value);
+    if(artistSearch.size()==0)
+    {
+        return;
+    }
+    m_artistList->selectionModel()->setCurrentIndex(artistSearch.at(0)->index(),
+                                                    QItemSelectionModel::SelectCurrent);
+}
+
+void KNMusicArtistView::selectItem(const QModelIndex &index)
+{
+    QModelIndex testIndex=m_artistDetailModel->mapFromSource(index);
+    if(testIndex.isValid())
+    {
+        m_artistDetails->setCurrentIndex(index);
+    }
 }
 
 void KNMusicArtistView::resort()

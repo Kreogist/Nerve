@@ -1,3 +1,4 @@
+#include <QAbstractItemModel>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
@@ -126,6 +127,9 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
         m_libraryView->setCurrentIndex(m_listViewModel->mapFromSource(index));
         break;
     case KNMusicGlobal::ArtistView:
+        m_artistView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+                                                                                  KNMusicGlobal::Artist)).toString());
+        m_artistView->selectItem(index);
         break;
     case KNMusicGlobal::AlbumView:
         break;
