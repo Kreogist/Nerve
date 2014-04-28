@@ -2,6 +2,7 @@
 #define KNMUSICTAGM4A_H
 
 #include <QMap>
+#include <QPixmap>
 #include <QByteArray>
 
 #include "knmusictagbase.h"
@@ -15,6 +16,7 @@ public:
     QByteArray metaData(const QString &name) const;
     QByteArray metaData(const int &index) const;
     bool readTag(const QString &filePath);
+    QPixmap albumArt() const;
     void clearCache();
     enum M4AMetaData
     {
@@ -81,6 +83,7 @@ private:
     char m_idCache[5];
     QMap<QString, tagData> m_tagData;
     QMap<QString, QByteArray> m_ilstData;
+    QPixmap m_albumArt;
 };
 
 #endif // KNMUSICTAGM4A_H

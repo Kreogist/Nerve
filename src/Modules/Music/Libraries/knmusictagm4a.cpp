@@ -152,7 +152,17 @@ bool KNMusicTagM4A::readTag(const QString &filePath)
         }
     }
     delete[] rawTagData;
+    QByteArray coverImageData=metaData("covr");
+    if(!coverImageData.isNull())
+    {
+        m_albumArt.loadFromData(coverImageData);
+    }
     return true;
+}
+
+QPixmap KNMusicTagM4A::albumArt() const
+{
+    return m_albumArt;
 }
 
 void KNMusicTagM4A::parseMeta(const char *rawTagData,
@@ -179,9 +189,9 @@ void KNMusicTagM4A::parseMeta(const char *rawTagData,
         }
         memcpy(m_idCache, rawTagData+position+4, 4);
         realSize=((((quint32)rawTagData[position+8])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[position+9])<<16)&0b00000000111111110000000000000000)+
-                ((((quint32)rawTagData[position+10])<<8)&0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[position+11])     &0b00000000000000000000000011111111);
+                 ((((quint32)rawTagData[position+9])<<16)&0b00000000111111110000000000000000)+
+                 ((((quint32)rawTagData[position+10])<<8)&0b00000000000000001111111100000000)+
+                 (((quint32)rawTagData[position+11])     &0b00000000000000000000000011111111);
         QByteArray frameData;
         if(realSize==tagSize-8)
         {
@@ -209,6 +219,7 @@ void KNMusicTagM4A::clearCache()
 {
     m_tagData.clear();
     m_ilstData.clear();
+    m_albumArt=QPixmap();
     m_idCache[4]='\0';
 }
 

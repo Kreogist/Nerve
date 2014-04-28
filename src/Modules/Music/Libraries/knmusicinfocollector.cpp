@@ -202,6 +202,7 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
         setMediaData(KNMusicGlobal::Year, m_tagM4A->metaData(KNMusicTagM4A::Year));
         setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
         setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
+        m_musicCover=m_tagM4A->albumArt();
     }
 }
 
