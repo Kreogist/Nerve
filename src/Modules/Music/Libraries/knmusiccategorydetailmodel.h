@@ -20,6 +20,9 @@ signals:
 public slots:
     void setCategoryIndex(const QModelIndex &index);
 
+protected:
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+
 private:
     KNMusicCategoryModel *m_artistModel;
     QRegExp m_nameFilter;
