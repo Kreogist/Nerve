@@ -35,6 +35,7 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
             this, &KNMusicPluin::showContextMenu);
 
     m_searcher=new KNMusicSearcher(this);
+    m_searcher->setModel(m_model);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             m_searcher, &KNMusicSearcher::analysisList);
 

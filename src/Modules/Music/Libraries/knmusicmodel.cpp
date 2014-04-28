@@ -187,3 +187,8 @@ void KNMusicModel::retranslateAndSet()
 {
     KNModel::retranslate();
 }
+
+void KNMusicModel::updateMusicInfo(const QModelIndex &index)
+{
+    ;
+}

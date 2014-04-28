@@ -529,7 +529,8 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
-    selectAlbum(indexAt(e->pos()));
+    QModelIndex currentIndex=indexAt(e->pos());
+    selectAlbum(currentIndex);
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
@@ -639,7 +640,7 @@ int KNMusicAlbumView::gridMinimumWidth() const
 
 void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 {
-    m_gridMinimumWidth = gridMinimumWidth;
+    m_gridMinimumWidth=gridMinimumWidth;
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

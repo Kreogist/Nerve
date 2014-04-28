@@ -1,3 +1,5 @@
+#include "knlibinfocollectormanager.h"
+
 #include "../knlocale.h"
 
 #include "knmodel.h"
@@ -35,3 +37,9 @@ void KNModel::retranslateAndSet()
 {
     retranslate();
 }
+
+void KNModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
+{
+    m_infoCollectorManager = infoCollectorManager;
+}
+
