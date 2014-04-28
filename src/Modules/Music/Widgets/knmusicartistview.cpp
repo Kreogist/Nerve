@@ -115,8 +115,7 @@ void KNMusicCategoryDetailsDisplay::setDetailModel(KNMusicCategoryDetailModel *m
 
 void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
 {
-    m_songViewer->selectionModel()->setCurrentIndex(index,
-                                                    QItemSelectionModel::SelectCurrent);
+    m_songViewer->setCurrentIndex(index);
 }
 
 void KNMusicCategoryDetailsDisplay::resetHeader()
@@ -191,7 +190,7 @@ void KNMusicArtistView::selectItem(const QModelIndex &index)
     QModelIndex testIndex=m_artistDetailModel->mapFromSource(index);
     if(testIndex.isValid())
     {
-        m_artistDetails->setCurrentIndex(index);
+        m_artistDetails->setCurrentIndex(testIndex);
     }
 }
 

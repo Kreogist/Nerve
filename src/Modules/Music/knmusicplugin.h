@@ -3,6 +3,8 @@
 
 #include <QThread>
 
+#include "knmusicglobal.h"
+
 #include "../Base/knpluginbase.h"
 
 class KNGlobal;
@@ -28,7 +30,8 @@ public slots:
 
 private slots:
     void showContextMenu(const QPoint &position,
-                         const QModelIndex &index);
+                         const QModelIndex &index,
+                         KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
 
 private:

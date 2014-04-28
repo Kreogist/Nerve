@@ -18,6 +18,7 @@ public:
     void setFilePath(const QString &filePath);
     void setItemIndex(const QModelIndex &index);
     void setModel(QStandardItemModel *model);
+    void setMode(KNMusicGlobal::MusicCategory category);
 
 signals:
     void requireShowIn(KNMusicGlobal::MusicCategory category,

@@ -138,3 +138,14 @@ void KNMusicViewerMenu::setModel(QStandardItemModel *model)
     m_model=model;
 }
 
+void KNMusicViewerMenu::setMode(KNMusicGlobal::MusicCategory category)
+{
+    for(int i=ShowInSongs;
+        i<=ShowInGenre;
+        i++)
+    {
+        m_action[i]->setVisible(true);
+    }
+    m_action[ShowInSongs+category]->setVisible(false);
+}
+
