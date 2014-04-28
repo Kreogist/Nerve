@@ -2,7 +2,10 @@
 
 #include <QScrollBar>
 #include <QMouseEvent>
+#include <QToolTip>
 #include <QHelpEvent>
+
+#include <QDebug>
 
 #include "../../knlocale.h"
 
@@ -95,30 +98,10 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-bool KNMusicListViewBase::event(QEvent *event)
+void KNMusicListViewBase::leaveEvent(QEvent *event)
 {
-    if(event->type()==QEvent::ToolTip)
-    {
-        QHelpEvent *helpEvent=static_cast<QHelpEvent *>(event);
-        QModelIndex currentSong=indexAt(helpEvent->pos());
-        if(currentSong.isValid())
-        {
-            if(m_detailIndex!=currentSong)
-            {
-                m_detailIndex=currentSong;
-                //m_musicDetailTooltip->move(helpEvent->globalPos());
-                //m_musicDetailTooltip->show();
-            }
-        }
-        else
-        {
-            //QToolTip::hideText();
-            //m_musicDetailTooltip->hide();
-            event->ignore();
-        }
-        return true;
-    }
-    return QTreeView::event(event);
+    //m_musicDetailTooltip->hide();
+    QTreeView::leaveEvent(event);
 }
 
 void KNMusicListViewBase::onSectionVisibleChanged(const int &index,

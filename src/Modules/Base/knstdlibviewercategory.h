@@ -18,6 +18,7 @@ public:
     explicit KNStdLibViewerCategory(QWidget *parent = 0);
     void addCategory(const QPixmap &icon, const QString &category);
     void setText(const int &index, const QString &text);
+    void setCurrentIndex(const int &index);
 
 signals:
 

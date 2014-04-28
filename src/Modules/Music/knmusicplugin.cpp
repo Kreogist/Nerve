@@ -13,9 +13,9 @@
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
 
-#include "knmusicpluin.h"
+#include "knmusicplugin.h"
 
-KNMusicPluin::KNMusicPluin(QObject *parent) :
+KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     KNPluginBase(parent)
 {
     m_global=KNGlobal::instance();
@@ -30,9 +30,11 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
             this, SLOT(onActionOpenUrl(QModelIndex)));
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
-
+    m_libraryViewMenu->setModel(m_model);
+    connect(m_libraryViewMenu, SIGNAL(requireShowIn(KNMusicGlobal::MusicCategory,QModelIndex)),
+            m_musicViewer, SLOT(showIn(KNMusicGlobal::MusicCategory,QModelIndex)));
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
-            this, &KNMusicPluin::showContextMenu);
+            this, &KNMusicPlugin::showContextMenu);
 
     m_searcher=new KNMusicSearcher(this);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
@@ -51,7 +53,7 @@ KNMusicPluin::KNMusicPluin(QObject *parent) :
     m_collectThread.start();
 }
 
-KNMusicPluin::~KNMusicPluin()
+KNMusicPlugin::~KNMusicPlugin()
 {
     m_collectThread.quit();
     m_collectThread.wait();
@@ -63,14 +65,14 @@ KNMusicPluin::~KNMusicPluin()
     m_infoCollectManager->deleteLater();
 }
 
-void KNMusicPluin::applyPlugin()
+void KNMusicPlugin::applyPlugin()
 {
     emit requireAddCategory("Music",
                             QPixmap(),
                             m_musicViewer);
 }
 
-void KNMusicPluin::writeDatabase()
+void KNMusicPlugin::writeDatabase()
 {
     QFile musicDatabase(m_musicDatabase);
     if(musicDatabase.open(QIODevice::WriteOnly))
@@ -81,7 +83,7 @@ void KNMusicPluin::writeDatabase()
     }
 }
 
-void KNMusicPluin::readDatabase()
+void KNMusicPlugin::readDatabase()
 {
     QFile musicDatabase(m_musicDatabase);
     if(musicDatabase.exists() &&
@@ -93,16 +95,14 @@ void KNMusicPluin::readDatabase()
     }
 }
 
-void KNMusicPluin::showContextMenu(const QPoint &position,
-                                   const QModelIndex &index)
+void KNMusicPlugin::showContextMenu(const QPoint &position,
+                                    const QModelIndex &index)
 {
-    m_libraryViewMenu->setFilePath(m_model->item(index.row(),
-                                                 KNMusicGlobal::Name)->data(Qt::UserRole).toString());
-    m_libraryViewMenu->setItem(m_model->itemFromIndex(index));
+    m_libraryViewMenu->setItemIndex(index);
     m_libraryViewMenu->exec(position);
 }
 
-void KNMusicPluin::onActionOpenUrl(const QModelIndex &index)
+void KNMusicPlugin::onActionOpenUrl(const QModelIndex &index)
 {
     m_global->openLocalUrl(m_model->filePathFromIndex(index));
 }

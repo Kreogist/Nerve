@@ -85,6 +85,8 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     m_songViewer=new KNMusicArtistSongs(this);
     connect(m_songViewer, &KNMusicArtistSongs::requireOpenUrl,
             this, &KNMusicCategoryDetailsDisplay::requireOpenUrl);
+    connect(m_songViewer, &KNMusicArtistSongs::requireShowContextMenu,
+            this, &KNMusicCategoryDetailsDisplay::requireShowContextMenu);
     m_layout->addWidget(m_songViewer, 1);
 }
 
@@ -137,8 +139,10 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicCategoryDetailsDisplay(this);
-    connect(m_artistDetails, SIGNAL(requireOpenUrl(QModelIndex)),
-            this, SIGNAL(requireOpenUrl(QModelIndex)));
+    connect(m_artistDetails, &KNMusicCategoryDetailsDisplay::requireOpenUrl,
+            this, &KNMusicArtistView::requireOpenUrl);
+    connect(m_artistDetails, &KNMusicCategoryDetailsDisplay::requireShowContextMenu,
+            this, &KNMusicArtistView::requireShowContextMenu);
     addWidget(m_artistDetails);
     setCollapsible(1, false);
     setStretchFactor(1, 1);
@@ -162,6 +166,13 @@ void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
     m_artistDetails->setDetailModel(model);
     connect(this, &KNMusicArtistView::requireDisplayDetails,
             model, &KNMusicCategoryDetailModel::setCategoryIndex);
+    m_artistDetailModel=model;
+}
+
+void KNMusicArtistView::selectSingleItem(const QModelIndex &index)
+{
+    ;
+    //m_artistList->selectionModel()->select();
 }
 
 void KNMusicArtistView::resort()

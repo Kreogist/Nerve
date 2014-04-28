@@ -296,8 +296,8 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
                                        "geometry",
                                        this);
     m_albumShow->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_albumShow, SIGNAL(finished()),
-            m_albumDetail, SLOT(expandDetail()));
+    connect(m_albumShow, &QPropertyAnimation::finished,
+            m_albumDetail, &KNMusicAlbumDetail::expandDetail);
     m_albumHide=new QPropertyAnimation(m_albumDetail,
                                        "geometry",
                                        this);
@@ -440,18 +440,19 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
     m_firstVisibleIndex=albumIndex;
+    QModelIndex currentPaintIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
-        QModelIndex index=model()->index(albumIndex, 0, rootIndex());
+        currentPaintIndex=model()->index(albumIndex, 0, rootIndex());
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
                                 m_gridHeight);
-        if(index!=m_detailIndex)
+        if(currentPaintIndex!=m_detailIndex)
         {
             paintAlbum(&painter,
                        currentRect,
-                       index);
+                       currentPaintIndex);
         }
         currentColumn++;
         if(currentColumn==m_maxColumnCount)
@@ -529,12 +530,14 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
-    selectAlbum(indexAt(e->pos()));
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
      QAbstractItemView::mouseReleaseEvent(e);
+     selectAlbum(indexAt(e->pos()));
+     viewport()->update();
+     update();
      /*if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {

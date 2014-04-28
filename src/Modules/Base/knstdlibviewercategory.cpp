@@ -74,6 +74,22 @@ void KNStdLibViewerCategory::setText(const int &index,
     }
 }
 
+void KNStdLibViewerCategory::setCurrentIndex(const int &index)
+{
+    if(m_currentCategory!=-1 && m_currentCategory<m_categories.count())
+    {
+        KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
+        button->setChecked(false);
+    }
+    if(index!=-1 && index<m_categories.count())
+    {
+        m_currentCategory=index;
+        KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
+        button->setChecked(true);
+        emit categoryChanged(m_currentCategory);
+    };
+}
+
 void KNStdLibViewerCategory::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
@@ -94,18 +110,7 @@ void KNStdLibViewerCategory::leaveEvent(QEvent *e)
 
 void KNStdLibViewerCategory::categoryClicked(int index)
 {
-    if(m_currentCategory!=-1 && m_currentCategory<m_categories.count())
-    {
-        KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
-        button->setChecked(false);
-    }
-    if(index!=-1 && index<m_categories.count())
-    {
-        m_currentCategory=index;
-        KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
-        button->setChecked(true);
-        emit categoryChanged(m_currentCategory);
-    }
+    setCurrentIndex(index);
 }
 
 void KNStdLibViewerCategory::changeBackground(int frameData)

@@ -25,7 +25,7 @@ SOURCES += \
     Modules/knlocale.cpp \
     Modules/Music/Libraries/knmusicmodel.cpp \
     Modules/Base/knpluginbase.cpp \
-    Modules/Music/knmusicpluin.cpp \
+    Modules/Music/knmusicplugin.cpp \
     Modules/Base/knlibcategoryswitcher.cpp \
     Modules/Base/knstdlibcategoryswitcher.cpp \
     Modules/Base/knlibcategorylist.cpp \
@@ -80,7 +80,7 @@ HEADERS += \
     Modules/knlocale.h \
     Modules/Music/Libraries/knmusicmodel.h \
     Modules/Base/knpluginbase.h \
-    Modules/Music/knmusicpluin.h \
+    Modules/Music/knmusicplugin.h \
     Modules/Base/knlibcategoryswitcher.h \
     Modules/Base/knstdlibcategoryswitcher.h \
     Modules/Base/knlibcategorylist.h \

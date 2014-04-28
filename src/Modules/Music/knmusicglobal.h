@@ -57,6 +57,15 @@ public:
         Year,
         MusicDataCount
     };
+
+    enum MusicCategory
+    {
+        SongsView,
+        ArtistView,
+        AlbumView,
+        GenreView
+    };
+
     QString getGenre(const int &index) const;
     QString getGenre(const QString &value) const;
     QPixmap getGenreImage(const int &index) const;

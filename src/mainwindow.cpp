@@ -7,7 +7,7 @@
 
 #include "Modules/knglobal.h"
 
-#include "Modules/Music/knmusicpluin.h"
+#include "Modules/Music/knmusicplugin.h"
 
 #include "mainwindow.h"
 
@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mainWidget=new KNStdLibCategorySwitcher(this);
     setCentralWidget(m_mainWidget);
 
-    KNMusicPluin *musicPlugin=new KNMusicPluin(this);
+    KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
     addPlugin(musicPlugin);
 
     readDatabase();

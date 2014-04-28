@@ -90,4 +90,3 @@ void KNMusicCategoryModel::setNoCategoryText(const QString &noCategoryText)
 {
     m_noCategoryText = noCategoryText;
 }
-

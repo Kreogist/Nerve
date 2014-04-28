@@ -12,12 +12,12 @@ class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
 class KNMusicSearcher;
 class KNMusicViewerMenu;
-class KNMusicPluin : public KNPluginBase
+class KNMusicPlugin : public KNPluginBase
 {
     Q_OBJECT
 public:
-    explicit KNMusicPluin(QObject *parent = 0);
-    ~KNMusicPluin();
+    explicit KNMusicPlugin(QObject *parent = 0);
+    ~KNMusicPlugin();
     void applyPlugin();
     void writeDatabase();
     void readDatabase();

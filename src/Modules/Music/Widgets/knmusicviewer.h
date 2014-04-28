@@ -5,6 +5,8 @@
 #include <QUrl>
 #include <QModelIndex>
 
+#include "../knmusicglobal.h"
+
 #include "../../Base/knstdlibviewer.h"
 
 class QDragEnterEvent;
@@ -35,6 +37,8 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void resort();
+    void showIn(KNMusicGlobal::MusicCategory category,
+                const QModelIndex &index);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -43,6 +47,10 @@ protected:
 private slots:
     void onActionLibraryViewShowContextMenu(const QPoint &position,
                                             const QModelIndex &index);
+    void onActionArtistShowContextMenu(const QPoint &position,
+                                       const QModelIndex &index);
+    void onActionGenreShowContextMenu(const QPoint &position,
+                                      const QModelIndex &index);
     void onActionListviewOpenUrl(const QModelIndex &index);
     void onActionArtistOpenUrl(const QModelIndex &index);
     void onActionGenreOpenUrl(const QModelIndex &index);
@@ -67,6 +75,7 @@ private:
     KNMusicGenreModel *m_genreModel;
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
+    QAbstractItemModel *m_sourceModel;
 };
 
 #endif // KNMUSICVIEWER_H

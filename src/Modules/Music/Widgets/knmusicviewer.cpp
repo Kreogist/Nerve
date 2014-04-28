@@ -16,7 +16,6 @@
 #include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusicgenremodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
-#include "../knmusicglobal.h"
 
 #include "knmusicviewer.h"
 
@@ -34,14 +33,16 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
-    connect(m_libraryView, SIGNAL(requireOpenUrl(QModelIndex)),
-            this, SLOT(onActionListviewOpenUrl(QModelIndex)));
+    connect(m_libraryView, &KNMusicListView::requireOpenUrl,
+            this, &KNMusicViewer::onActionListviewOpenUrl);
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
     m_artistView=new KNMusicArtistView(this);
     connect(m_artistView, &KNMusicArtistView::requireOpenUrl,
             this, &KNMusicViewer::onActionArtistOpenUrl);
+    connect(m_artistView, &KNMusicArtistView::requireShowContextMenu,
+            this, &KNMusicViewer::onActionArtistShowContextMenu);
     m_artistView->setModel(m_artistModel);
 
     m_albumView=new KNMusicAlbumView(this);
@@ -50,6 +51,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_genreView=new KNMusicArtistView(this);
     connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
             this, &KNMusicViewer::onActionGenreOpenUrl);
+    connect(m_genreView, &KNMusicArtistView::requireShowContextMenu,
+            this, &KNMusicViewer::onActionGenreShowContextMenu);
     m_genreView->setModel(m_genreModel);
 
     m_artistDetails=new KNMusicCategoryDetailModel(this);
@@ -91,6 +94,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
     m_genreView->resetHeader();
+    m_sourceModel=model;
 }
 
 void KNMusicViewer::retranslate()
@@ -113,6 +117,24 @@ void KNMusicViewer::resort()
     m_genreView->resort();
 }
 
+void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
+                           const QModelIndex &index)
+{
+    switch(category)
+    {
+    case KNMusicGlobal::SongsView:
+        m_libraryView->setCurrentIndex(m_listViewModel->mapFromSource(index));
+        break;
+    case KNMusicGlobal::ArtistView:
+        break;
+    case KNMusicGlobal::AlbumView:
+        break;
+    case KNMusicGlobal::GenreView:
+        break;
+    }
+    setCategoryIndex(category);
+}
+
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls())
@@ -129,8 +151,22 @@ void KNMusicViewer::dropEvent(QDropEvent *event)
 void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
                                                        const QModelIndex &index)
 {
-    QModelIndex sourceIndex=m_listViewModel->mapToSource(index);
-    emit requireShowContextMenu(position, sourceIndex);
+    emit requireShowContextMenu(position,
+                                m_listViewModel->mapToSource(index));
+}
+
+void KNMusicViewer::onActionArtistShowContextMenu(const QPoint &position,
+                                                  const QModelIndex &index)
+{
+    emit requireShowContextMenu(position,
+                                m_artistDetails->mapToSource(index));
+}
+
+void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
+                                                 const QModelIndex &index)
+{
+    emit requireShowContextMenu(position,
+                                m_genreDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)

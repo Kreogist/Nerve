@@ -23,8 +23,8 @@ KNStdLibViewer::KNStdLibViewer(QWidget *parent) :
     m_listview=new KNWidgetSwitcher(this);
     m_layout->addWidget(m_listview);
 
-    connect(m_category, SIGNAL(categoryChanged(int)),
-            m_listview, SLOT(setCurrentIndex(int)));
+    connect(m_category, &KNStdLibViewerCategory::categoryChanged,
+            m_listview, &KNWidgetSwitcher::setCurrentIndex);
 }
 
 void KNStdLibViewer::addCategory(const QPixmap &icon,
@@ -33,4 +33,9 @@ void KNStdLibViewer::addCategory(const QPixmap &icon,
 {
     m_category->addCategory(icon, category);
     m_listview->addWidget(widget);
+}
+
+void KNStdLibViewer::setCategoryIndex(const int &index)
+{
+    m_category->setCurrentIndex(index);
 }

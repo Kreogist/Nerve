@@ -36,6 +36,8 @@ public:
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 private:
     QLabel *m_artistName, *m_artistInfo;
@@ -51,10 +53,13 @@ public:
     void resetHeader();
     void setModel(KNMusicCategoryModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);
+    void selectSingleItem(const QModelIndex &index);
 
 signals:
     void requireDisplayDetails(const QModelIndex &current);
     void requireOpenUrl(const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 public slots:
     void resort();
@@ -68,6 +73,7 @@ private:
     KNMusicArtistList *m_artistList;
     KNMusicCategoryDetailsDisplay *m_artistDetails;
     KNMusicCategoryModel *m_artistModel;
+    KNMusicCategoryDetailModel *m_artistDetailModel;
 };
 
 #endif // KNMUSICARTISTVIEW_H

@@ -29,7 +29,7 @@ private slots:
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
-    bool event(QEvent *event);
+    void leaveEvent(QEvent *event);
 
 private:
     KNMusicListViewHeader *m_headerWidget;

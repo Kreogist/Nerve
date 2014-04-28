@@ -14,6 +14,7 @@ public:
     void addCategory(const QPixmap &icon,
                      const QString &category,
                      QWidget *widget);
+    void setCategoryIndex(const int &index);
 
 signals:
 
