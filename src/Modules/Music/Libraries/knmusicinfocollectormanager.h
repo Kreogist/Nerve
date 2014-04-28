@@ -6,10 +6,10 @@
 
 #include "../knmusicglobal.h"
 
-#include <QObject>
+#include "../../Base/knlibinfocollectormanager.h"
 
 class KNMusicInfoCollector;
-class KNMusicInfoCollectorManager : public QObject
+class KNMusicInfoCollectorManager : public KNLibInfoCollectorManager
 {
     Q_OBJECT
 public:

@@ -26,6 +26,7 @@ public slots:
     void retranslateAndSet();
 
 private:
+    void updateMusicInfo(const QModelIndex &index);
     KNMusicGlobal *musicGlobal;
 };
 

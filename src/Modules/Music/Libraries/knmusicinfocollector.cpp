@@ -16,7 +16,7 @@
 #include "knmusicinfocollector.h"
 
 KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
-    QObject(parent)
+    KNLibInfoCollector(parent)
 {
     m_global=KNGlobal::instance();
     m_musicGlobal=KNMusicGlobal::instance();

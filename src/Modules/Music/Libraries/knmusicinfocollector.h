@@ -1,10 +1,11 @@
 #ifndef KNMUSICINFOCOLLECTOR_H
 #define KNMUSICINFOCOLLECTOR_H
 
-#include <QObject>
 #include <QStringList>
 
 #include "../knmusicglobal.h"
+
+#include "../../Base/knlibinfocollector.h"
 
 class KNGlobal;
 class KNMusicGlobal;
@@ -13,7 +14,7 @@ class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
 class KNMusicTagWma;
 class KNMusicTagM4A;
-class KNMusicInfoCollector : public QObject
+class KNMusicInfoCollector : public KNLibInfoCollector
 {
     Q_OBJECT
 public:

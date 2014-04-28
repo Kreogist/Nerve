@@ -537,7 +537,6 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      QAbstractItemView::mouseReleaseEvent(e);
      selectAlbum(indexAt(e->pos()));
      viewport()->update();
-     update();
      /*if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {
@@ -642,7 +641,7 @@ int KNMusicAlbumView::gridMinimumWidth() const
 
 void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 {
-    m_gridMinimumWidth = gridMinimumWidth;
+    m_gridMinimumWidth=gridMinimumWidth;
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

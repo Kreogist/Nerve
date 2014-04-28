@@ -5,7 +5,7 @@
 #include "knmusicinfocollectormanager.h"
 
 KNMusicInfoCollectorManager::KNMusicInfoCollectorManager(QObject *parent) :
-    QObject(parent)
+    KNLibInfoCollectorManager(parent)
 {
     m_collector=new KNMusicInfoCollector;
     m_collector->moveToThread(&m_collectThread);
