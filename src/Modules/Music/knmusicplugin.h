@@ -29,9 +29,9 @@ signals:
 public slots:
 
 private slots:
-    void showContextMenu(KNMusicGlobal::MusicCategory category,
-                         const QPoint &position,
-                         const QModelIndex &index);
+    void showContextMenu(const QPoint &position,
+                         const QModelIndex &index,
+                         KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
 
 private:

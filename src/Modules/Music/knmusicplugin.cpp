@@ -96,11 +96,11 @@ void KNMusicPlugin::readDatabase()
     }
 }
 
-void KNMusicPlugin::showContextMenu(KNMusicGlobal::MusicCategory category,
-                                    const QPoint &position,
-                                    const QModelIndex &index)
+void KNMusicPlugin::showContextMenu(const QPoint &position,
+                                    const QModelIndex &index,
+                                    KNMusicGlobal::MusicCategory currentMode)
 {
-    m_libraryViewMenu->setMode(category);
+    m_libraryViewMenu->setMode(currentMode);
     m_libraryViewMenu->setItemIndex(index);
     m_libraryViewMenu->exec(position);
 }

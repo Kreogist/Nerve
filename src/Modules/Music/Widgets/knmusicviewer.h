@@ -29,9 +29,9 @@ public:
 
 signals:
     void requireAnalysisUrls(QList<QUrl> urls);
-    void requireShowContextMenu(KNMusicGlobal::MusicCategory category,
-                                const QPoint &position,
-                                const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index,
+                                KNMusicGlobal::MusicCategory currentMode);
     void requireOpenUrl(const QModelIndex &index);
 
 public slots:

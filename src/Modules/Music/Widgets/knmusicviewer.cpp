@@ -134,6 +134,9 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
     case KNMusicGlobal::AlbumView:
         break;
     case KNMusicGlobal::GenreView:
+        m_genreView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+                                                                                 KNMusicGlobal::Genre)).toString());
+        m_genreView->selectItem(index);
         break;
     }
     setCategoryIndex(category);
@@ -155,25 +158,25 @@ void KNMusicViewer::dropEvent(QDropEvent *event)
 void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
                                                        const QModelIndex &index)
 {
-    emit requireShowContextMenu(KNMusicGlobal::SongsView,
-                                position,
-                                m_listViewModel->mapToSource(index));
+    emit requireShowContextMenu(position,
+                                m_listViewModel->mapToSource(index),
+                                KNMusicGlobal::SongsView);
 }
 
 void KNMusicViewer::onActionArtistShowContextMenu(const QPoint &position,
                                                   const QModelIndex &index)
 {
-    emit requireShowContextMenu(KNMusicGlobal::ArtistView,
-                                position,
-                                m_artistDetails->mapToSource(index));
+    emit requireShowContextMenu(position,
+                                m_artistDetails->mapToSource(index),
+                                KNMusicGlobal::ArtistView);
 }
 
 void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
                                                  const QModelIndex &index)
 {
-    emit requireShowContextMenu(KNMusicGlobal::GenreView,
-                                position,
-                                m_genreDetails->mapToSource(index));
+    emit requireShowContextMenu(position,
+                                m_genreDetails->mapToSource(index),
+                                KNMusicGlobal::GenreView);
 }
 
 void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
