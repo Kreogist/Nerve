@@ -155,21 +155,24 @@ void KNMusicViewer::dropEvent(QDropEvent *event)
 void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
                                                        const QModelIndex &index)
 {
-    emit requireShowContextMenu(position,
+    emit requireShowContextMenu(KNMusicGlobal::SongsView,
+                                position,
                                 m_listViewModel->mapToSource(index));
 }
 
 void KNMusicViewer::onActionArtistShowContextMenu(const QPoint &position,
                                                   const QModelIndex &index)
 {
-    emit requireShowContextMenu(position,
+    emit requireShowContextMenu(KNMusicGlobal::ArtistView,
+                                position,
                                 m_artistDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
                                                  const QModelIndex &index)
 {
-    emit requireShowContextMenu(position,
+    emit requireShowContextMenu(KNMusicGlobal::GenreView,
+                                position,
                                 m_genreDetails->mapToSource(index));
 }
 

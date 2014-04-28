@@ -29,7 +29,8 @@ public:
 
 signals:
     void requireAnalysisUrls(QList<QUrl> urls);
-    void requireShowContextMenu(const QPoint &position,
+    void requireShowContextMenu(KNMusicGlobal::MusicCategory category,
+                                const QPoint &position,
                                 const QModelIndex &index);
     void requireOpenUrl(const QModelIndex &index);
 

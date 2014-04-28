@@ -16,6 +16,7 @@ class KNMusicViewerMenu : public KNMenu
 public:
     explicit KNMusicViewerMenu(QWidget *parent = 0);
     void setFilePath(const QString &filePath);
+    void setMode(KNMusicGlobal::MusicCategory category);
     void setItemIndex(const QModelIndex &index);
     void setModel(QStandardItemModel *model);
 
