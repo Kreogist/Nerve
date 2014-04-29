@@ -34,14 +34,16 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     setLayout(m_mainLayout);
 
     m_albumName=new QLabel(this);
-    m_albumName->setContentsMargins(10,0,0,0);
+    m_albumName->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
     artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
     artistFont.setBold(true);
     m_albumName->setFont(artistFont);
+    m_mainLayout->addSpacing(25);
     m_mainLayout->addWidget(m_albumName);
 
     m_albumSongs=new KNMusicAlbumSongListView(this);
+    m_mainLayout->addSpacing(14);
     m_mainLayout->addWidget(m_albumSongs, 1);
 }
 
