@@ -181,8 +181,7 @@ void KNMusicArtistView::selectCategoryItem(const QString &value)
     {
         return;
     }
-    m_artistList->selectionModel()->setCurrentIndex(artistSearch.at(0)->index(),
-                                                    QItemSelectionModel::SelectCurrent);
+    m_artistList->setCurrentIndex(artistSearch.at(0)->index());
 }
 
 void KNMusicArtistView::selectItem(const QModelIndex &index)

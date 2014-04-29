@@ -222,8 +222,9 @@ void KNMusicAlbumDetail::setAlbumName(const QString &name)
 
 void KNMusicAlbumDetail::expandDetail()
 {
-    int heightEnd=qMax(height()+m_infoPanel->minimalExpandedHeight(), 0),
-        parentHeight=parentWidget()->height(),
+    int parentHeight=parentWidget()->height(),
+        heightEnd=qMax(height()+m_infoPanel->minimalExpandedHeight(),
+                       (parentHeight>>1)),
         widthEnd=(parentWidget()->width()>>1),
         topEnd=((parentHeight-heightEnd)>>1);
     QRect heightExpandEnd=QRect(x(),
@@ -479,10 +480,8 @@ void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
     QAbstractItemView::resizeEvent(event);
     if(m_albumDetail->isVisible())
     {
-        m_albumDetail->setGeometry(QRect(((width()-m_albumDetail->width())>>1),
-                                         ((height()-m_albumDetail->height())>>1),
-                                         (width()>>1),
-                                         m_albumDetail->height()));
+        m_albumDetail->foldDetail();
+        selectionModel()->clear();
     }
 }
 
