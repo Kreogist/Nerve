@@ -331,12 +331,14 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
 {
     int pointTop=verticalScrollBar()->value()+point.y(),
-        pointLine=
-            (pointTop)/(m_gridHeight+m_spacing),
-        pointColumn=
-            point.x()/(m_spacing+m_gridWidth);
-    if(pointTop-pointLine*(m_spacing+m_gridHeight)<m_spacing ||
-            point.x()-pointColumn*(m_spacing+m_gridWidth)<m_spacing)
+        spacingHeight=m_gridHeight+m_spacing,
+        spacingWidth=m_spacing+m_gridWidth,
+        pointLine=pointTop/spacingHeight,
+        pointColumn=point.x()/spacingWidth,
+        horizontalPosition=point.x()-pointColumn*spacingWidth;
+    if(pointTop-pointLine*spacingHeight<m_spacing ||
+       horizontalPosition<m_spacing ||
+       horizontalPosition>m_spacing+m_iconSizeParam)
     {
         //Clicked on space.
         return QModelIndex();
@@ -422,9 +424,13 @@ void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 
 void KNMusicAlbumView::selectCategoryItem(const QString &value)
 {
-    //;
-    //QModelIndex albumTest;
-    //selectAlbum();
+    QList<QStandardItem *> albumSearch=m_model->findItems(value);
+    if(albumSearch.size()==0)
+    {
+        return;
+    }
+    scrollTo(albumSearch.at(0)->index());
+    selectAlbum(albumSearch.at(0)->index());
 }
 
 void KNMusicAlbumView::updateGeometries()
@@ -513,8 +519,10 @@ void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
     QAbstractItemView::resizeEvent(event);
     if(m_albumDetail->isVisible())
     {
-        m_albumDetail->foldDetail();
-        selectionModel()->clear();
+        m_albumDetail->setGeometry((width()>>2),
+                                   (height()>>2),
+                                   (width()>>1),
+                                   (height()>>1));
     }
 }
 

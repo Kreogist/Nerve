@@ -135,7 +135,8 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
         m_artistView->selectItem(index);
         break;
     case KNMusicGlobal::AlbumView:
-        //m_albumView->selectAlbum();
+        m_albumView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+                                                                                 KNMusicGlobal::Album)).toString());
         break;
     case KNMusicGlobal::GenreView:
         m_genreView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),

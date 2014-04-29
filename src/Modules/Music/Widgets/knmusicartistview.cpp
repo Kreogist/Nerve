@@ -176,12 +176,7 @@ void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
 
 void KNMusicArtistView::selectCategoryItem(const QString &value)
 {
-    QList<QStandardItem *> artistSearch=m_artistModel->findItems(value);
-    if(artistSearch.size()==0)
-    {
-        return;
-    }
-    m_artistList->setCurrentIndex(artistSearch.at(0)->index());
+    ;
 }
 
 void KNMusicArtistView::selectItem(const QModelIndex &index)
