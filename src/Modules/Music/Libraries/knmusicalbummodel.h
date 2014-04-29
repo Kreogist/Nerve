@@ -8,6 +8,7 @@ class KNMusicAlbumModel : public KNMusicCategoryModel
     Q_OBJECT
 public:
     explicit KNMusicAlbumModel(QObject *parent = 0);
+    bool isNoAlbumHidden() const;
 
 signals:
 

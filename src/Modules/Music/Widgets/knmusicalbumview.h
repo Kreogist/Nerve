@@ -135,6 +135,8 @@ private slots:
     void onActionAlbumClicked(const QModelIndex &index);
     void onActionHideAlbumDetail();
     void onActionHideAlbumDetailFinished();
+    void showFirstItem();
+    void hideFirstItem();
 
 private:
     QRect itemRect(const QModelIndex &index) const;

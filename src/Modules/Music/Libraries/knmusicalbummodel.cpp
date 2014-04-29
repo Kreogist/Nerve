@@ -10,6 +10,11 @@ KNMusicAlbumModel::KNMusicAlbumModel(QObject *parent) :
     retranslateAndSet();
 }
 
+bool KNMusicAlbumModel::isNoAlbumHidden() const
+{
+    return (m_noCategoryItemCount==0);
+}
+
 void KNMusicAlbumModel::retranslate()
 {
     setNoCategoryText(tr("No Album"));

@@ -341,7 +341,8 @@ QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
         //Clicked on space.
         return QModelIndex();
     }
-    return model()->index(pointLine*m_maxColumnCount+pointColumn,
+    int originalRow=pointLine*m_maxColumnCount+pointColumn;
+    return m_model->index(m_model->isNoAlbumHidden()?originalRow+1:originalRow,
                           0,
                           rootIndex());
 }
@@ -406,6 +407,10 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
 void KNMusicAlbumView::setCategoryModel(KNMusicAlbumModel *model)
 {
     setModel(model);
+    connect(model, &KNMusicAlbumModel::requireShowFirstItem,
+            this, &KNMusicAlbumView::showFirstItem);
+    connect(model, &KNMusicAlbumModel::requireHideFirstItem,
+            this, &KNMusicAlbumView::hideFirstItem);
     m_model=model;
 }
 
@@ -454,7 +459,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
     }
     m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
-    int albumIndex=0, albumCount=model()->rowCount(),
+    int albumIndex=0, albumCount=m_model->rowCount(),
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
@@ -469,7 +474,12 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     QModelIndex currentPaintIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
-        currentPaintIndex=model()->index(albumIndex, 0, rootIndex());
+        currentPaintIndex=m_model->index(albumIndex, 0, rootIndex());
+        while(isIndexHidden(currentPaintIndex))
+        {
+            albumIndex++;
+            currentPaintIndex=m_model->index(albumIndex, 0, rootIndex());
+        }
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
@@ -520,6 +530,10 @@ int KNMusicAlbumView::verticalOffset() const
 
 bool KNMusicAlbumView::isIndexHidden(const QModelIndex &index) const
 {
+    if(index.row()==0 && m_model->isNoAlbumHidden())
+    {
+        return true;
+    }
     return false;
 }
 
@@ -572,11 +586,11 @@ void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
 {
     m_albumDetail->hide();
     m_detailIndex=index;
-    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
+    QIcon currentIcon=m_model->data(index, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
     m_detailModel->setCategoryIndex(index);
-    m_albumDetail->setAlbumName(model()->data(index).toString());
+    m_albumDetail->setAlbumName(m_model->data(index).toString());
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
@@ -610,14 +624,25 @@ void KNMusicAlbumView::onActionHideAlbumDetailFinished()
     viewport()->update();
 }
 
+void KNMusicAlbumView::showFirstItem()
+{
+    ;
+}
+
+void KNMusicAlbumView::hideFirstItem()
+{
+    ;
+}
+
 QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
 {
     if(!index.isValid())
     {
         return QRect();
     }
-    int itemLine=index.row()/m_maxColumnCount,
-        itemColumn=index.row()-itemLine*m_maxColumnCount;
+    int itemIndex=m_model->isNoAlbumHidden()?index.row()-1:index.row(),
+        itemLine=itemIndex/m_maxColumnCount,
+        itemColumn=itemIndex-itemLine*m_maxColumnCount;
     return QRect(itemColumn*(m_spacing+m_gridWidth)+m_spacing,
                  itemLine*(m_spacing+m_gridHeight)+m_spacing,
                  m_gridWidth,
@@ -629,7 +654,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                                   const QModelIndex &index)
 {
     //To draw the album art.
-    QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
+    QIcon currentIcon=m_model->data(index, Qt::DecorationRole).value<QIcon>();
     m_iconSizeParam=qMin(rect.width()-m_spacing,
                          rect.height()-(fontMetrics().height()<<1)-m_spacing);
     QRect albumArtRect=QRect(rect.x()+1,
@@ -646,7 +671,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       rect.width()-m_spacing,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      model()->data(index).toString());
+                      m_model->data(index).toString());
     textTop+=fontMetrics().height();
     QColor penBackup=painter->pen().color();
     painter->setPen(QColor(128,128,128));
@@ -655,7 +680,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       rect.width()-m_spacing,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      model()->data(index, Qt::UserRole).toString());
+                      m_model->data(index, Qt::UserRole).toString());
     painter->setPen(penBackup);
 }
 
