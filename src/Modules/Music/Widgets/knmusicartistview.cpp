@@ -169,8 +169,6 @@ void KNMusicArtistView::setModel(KNMusicCategoryModel *model)
 void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
 {
     m_artistDetails->setDetailModel(model);
-    connect(this, &KNMusicArtistView::requireDisplayDetails,
-            model, &KNMusicCategoryDetailModel::setCategoryIndex);
     m_artistDetailModel=model;
 }
 
@@ -208,5 +206,5 @@ void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
 {
     Q_UNUSED(previous);
     m_artistDetails->setArtistName(m_artistModel->data(current,Qt::DisplayRole).toString());
-    emit requireDisplayDetails(current);
+    m_artistDetailModel->setCategoryIndex(current);
 }

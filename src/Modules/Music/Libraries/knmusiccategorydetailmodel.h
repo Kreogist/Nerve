@@ -21,10 +21,11 @@ public slots:
     void setCategoryIndex(const QModelIndex &index);
 
 protected:
+    virtual QString getFilterText(const QModelIndex &index) const;
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    KNMusicCategoryModel *m_artistModel;
 
 private:
-    KNMusicCategoryModel *m_artistModel;
     QRegExp m_nameFilter;
 };
 

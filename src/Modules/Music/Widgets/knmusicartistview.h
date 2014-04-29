@@ -58,7 +58,6 @@ public:
     void selectItem(const QModelIndex &index);
 
 signals:
-    void requireDisplayDetails(const QModelIndex &current);
     void requireOpenUrl(const QModelIndex &index);
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);

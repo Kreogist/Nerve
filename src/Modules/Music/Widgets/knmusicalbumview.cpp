@@ -405,6 +405,7 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
 void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 {
     m_albumDetail->setDetailModel(model);
+    m_detailModel=model;
 }
 
 void KNMusicAlbumView::updateGeometries()
@@ -556,10 +557,11 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
 {
     m_albumDetail->hide();
+    m_detailIndex=index;
     QIcon currentIcon=model()->data(index, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
-    m_detailIndex=index;
+    m_detailModel->setCategoryIndex(index);
     m_albumDetail->setAlbumName(model()->data(index).toString());
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,

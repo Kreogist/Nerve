@@ -15,9 +15,9 @@ KNMusicCategoryDetailModel::KNMusicCategoryDetailModel(QObject *parent) :
     setFilterRegExp(m_nameFilter);
 }
 
-void KNMusicCategoryDetailModel::setCategoryModel(KNMusicCategoryModel *artistModel)
+void KNMusicCategoryDetailModel::setCategoryModel(KNMusicCategoryModel *categoryModel)
 {
-    m_artistModel=artistModel;
+    m_artistModel=categoryModel;
 }
 
 void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
@@ -29,11 +29,16 @@ void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
     }
     else
     {
-        m_nameFilter.setPattern(m_artistModel->artistItem(index)->data(Qt::UserRole).toString());
+        m_nameFilter.setPattern(getFilterText(index));
         m_nameFilter.setPatternSyntax(QRegExp::FixedString);
     }
     setFilterRegExp(m_nameFilter);
     emit requireSongCountChange(rowCount());
+}
+
+QString KNMusicCategoryDetailModel::getFilterText(const QModelIndex &index) const
+{
+    return m_artistModel->artistItem(index)->data(Qt::UserRole).toString();
 }
 
 bool KNMusicCategoryDetailModel::lessThan(const QModelIndex &left,

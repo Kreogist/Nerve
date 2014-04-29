@@ -33,11 +33,11 @@ protected:
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
     KNMusicModel *m_sourceModel;
+    int m_noCategoryItemCount=0;
 
 private:
     QIcon m_noAlbumArtIcon;
     QString m_noCategoryText;
-    int m_noCategoryItemCount=0;
 };
 
 #endif // KNMUSICCATEGORYMODEL_H

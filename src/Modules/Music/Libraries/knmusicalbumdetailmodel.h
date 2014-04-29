@@ -13,6 +13,9 @@ signals:
 
 public slots:
 
+protected:
+    QString getFilterText(const QModelIndex &index) const;
+
 };
 
 #endif // KNMUSICALBUMDETAILMODEL_H

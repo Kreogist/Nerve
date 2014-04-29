@@ -157,6 +157,7 @@ private:
                        *m_albumHide;
     KNMusicAlbumDetail *m_albumDetail;
     QModelIndex m_detailIndex;
+    KNMusicAlbumDetailModel *m_detailModel;
 };
 
 #endif // KNMUSICALBUMVIEW_H
