@@ -24,7 +24,7 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
 
     QPalette pal=palette();
     pal.setColor(QPalette::Base, QColor(0xc0,0xc0,0xc0));
-    pal.setColor(QPalette::Window, QColor(0xff,0xff,0xff, 200));
+    pal.setColor(QPalette::Window, QColor(0xff,0xff,0xff, 240));
     pal.setColor(QPalette::Text, QColor(0,0,0));
     setPalette(pal);
 
@@ -73,7 +73,7 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
 
     QPalette pal=palette();
     pal.setColor(QPalette::Base, QColor(0xc0,0xc0,0xc0));
-    pal.setColor(QPalette::Window, QColor(0xc0,0xc0,0xc0, 200));
+    pal.setColor(QPalette::Window, QColor(0xc0,0xc0,0xc0, 240));
     pal.setColor(QPalette::Text, QColor(0,0,0));
     setPalette(pal);
 
