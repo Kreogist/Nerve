@@ -15,7 +15,7 @@ public:
     void reset();
 
 signals:
-    void requireDetailSizeChange(const int &value);
+    void requireSongCountChange(const int &value);
 
 public slots:
     void setCategoryIndex(const QModelIndex &index);

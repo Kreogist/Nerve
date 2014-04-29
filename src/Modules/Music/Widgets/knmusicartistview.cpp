@@ -198,7 +198,7 @@ void KNMusicArtistView::resort()
     m_artistList->model()->sort(0);
 }
 
-void KNMusicArtistView::onActionDetailSizeChange(const int &value)
+void KNMusicArtistView::onActionSongCountChange(const int &value)
 {
     m_artistDetails->setSongNumber(value);
 }

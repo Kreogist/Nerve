@@ -60,7 +60,8 @@ SOURCES += \
     Modules/Base/knmodel.cpp \
     Modules/Base/knlibsearcher.cpp \
     Modules/Base/knlibinfocollector.cpp \
-    Modules/Base/knlibinfocollectormanager.cpp
+    Modules/Base/knlibinfocollectormanager.cpp \
+    Modules/Music/Libraries/knmusicalbumdetailmodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -116,7 +117,8 @@ HEADERS += \
     Modules/Base/knmodel.h \
     Modules/Base/knlibsearcher.h \
     Modules/Base/knlibinfocollector.h \
-    Modules/Base/knlibinfocollectormanager.h
+    Modules/Base/knlibinfocollectormanager.h \
+    Modules/Music/Libraries/knmusicalbumdetailmodel.h
 
 RESOURCES += \
     res.qrc

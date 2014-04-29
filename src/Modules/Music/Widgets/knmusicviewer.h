@@ -19,6 +19,7 @@ class KNMusicArtistModel;
 class KNMusicAlbumModel;
 class KNMusicGenreModel;
 class KNMusicCategoryDetailModel;
+class KNMusicAlbumDetailModel;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -76,6 +77,7 @@ private:
     KNMusicGenreModel *m_genreModel;
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
+    KNMusicAlbumDetailModel *m_albumDetails;
     QAbstractItemModel *m_sourceModel;
 };
 

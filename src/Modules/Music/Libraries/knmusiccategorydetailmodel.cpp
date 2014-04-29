@@ -33,7 +33,7 @@ void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
         m_nameFilter.setPatternSyntax(QRegExp::FixedString);
     }
     setFilterRegExp(m_nameFilter);
-    emit requireDetailSizeChange(rowCount());
+    emit requireSongCountChange(rowCount());
 }
 
 bool KNMusicCategoryDetailModel::lessThan(const QModelIndex &left,

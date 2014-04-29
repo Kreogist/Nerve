@@ -65,11 +65,11 @@ signals:
 
 public slots:
     void resort();
-    void onActionDetailSizeChange(const int &value);
+    void onActionSongCountChange(const int &value);
 
 private slots:
-    void onActionItemActivate(const QModelIndex & current,
-                              const QModelIndex & previous);
+    void onActionItemActivate(const QModelIndex &current,
+                              const QModelIndex &previous);
 
 private:
     KNMusicArtistList *m_artistList;

@@ -13,6 +13,7 @@
 #include <QPropertyAnimation>
 
 #include "knmusicalbumsonglistview.h"
+#include "../Libraries/knmusicalbumdetailmodel.h"
 
 #include "knmusicalbumview.h"
 
@@ -50,6 +51,11 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
 void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
 {
     m_albumName->setText(name);
+}
+
+void KNMusicAlbumSongDetail::setDetailModel(KNMusicAlbumDetailModel *model)
+{
+    m_albumSongs->setModel(model);
 }
 
 void KNMusicAlbumSongDetail::hideDetailInfo()
@@ -109,8 +115,7 @@ void KNMusicAlbumInfoDetail::setCaption(const int &index,
 
 void KNMusicAlbumInfoDetail::refreshCaption(const int &index)
 {
-    m_albumInfo[index]->setText(m_albumInfoCaption[index] +
-                                m_albumInfo[index]->statusTip());
+    ;
 }
 
 void KNMusicAlbumInfoDetail::hideDetailInfo()
@@ -130,8 +135,8 @@ int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
 
 void KNMusicAlbumInfoDetail::retranslate()
 {
-    m_albumInfoCaption[SongCount]=tr("Songs: ");
-    m_albumInfoCaption[Year]=tr("Year: ");
+    m_songCount=tr("1 song");
+    m_songsCount=tr("%1 songs");
 }
 
 void KNMusicAlbumInfoDetail::retranslateAndSet()
@@ -218,6 +223,11 @@ void KNMusicAlbumDetail::showDetailWidget()
 void KNMusicAlbumDetail::setAlbumName(const QString &name)
 {
     m_songPanel->setAlbumName(name);
+}
+
+void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
+{
+    m_songPanel->setDetailModel(model);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -392,11 +402,9 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
     updateGeometries();
 }
 
-void KNMusicAlbumView::dataChanged(const QModelIndex &topLeft,
-                                   const QModelIndex &bottomRight)
+void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 {
-    QAbstractItemView::dataChanged(topLeft, bottomRight);
-    viewport()->update();
+    m_albumDetail->setDetailModel(model);
 }
 
 void KNMusicAlbumView::updateGeometries()

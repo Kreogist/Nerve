@@ -10,6 +10,7 @@ class QLabel;
 class QPropertyAnimation;
 class QBoxLayout;
 class KNMusicAlbumSongListView;
+class KNMusicAlbumDetailModel;
 
 class KNMusicAlbumSongDetail : public QWidget
 {
@@ -17,6 +18,7 @@ class KNMusicAlbumSongDetail : public QWidget
 public:
     explicit KNMusicAlbumSongDetail(QWidget *parent = 0);
     void setAlbumName(const QString &name);
+    void setDetailModel(KNMusicAlbumDetailModel *model);
 
 public slots:
     void hideDetailInfo();
@@ -35,8 +37,9 @@ public:
     explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
     enum AlbumInfoData
     {
-        SongCount,
+        Artist,
         Year,
+        SongCount,
         AlbumInfoDataCount
     };
     void setCaption(const int &index, const QString &data);
@@ -56,7 +59,7 @@ private:
     int m_minimalExpandedHeight;
     QBoxLayout *m_albumDataLayout;
     QLabel *m_albumInfo[AlbumInfoDataCount];
-    QString m_albumInfoCaption[AlbumInfoDataCount];
+    QString m_songCount, m_songsCount;
 };
 
 class KNMusicAlbumDetail : public QWidget
@@ -68,6 +71,7 @@ public:
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
     void setAlbumName(const QString &name);
+    void setDetailModel(KNMusicAlbumDetailModel *model);
 
 signals:
     void requireFlyBack();
@@ -99,6 +103,7 @@ public:
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     QRect visualRect(const QModelIndex &index) const;
     void setModel(QAbstractItemModel *model);
+    void setDetailModel(KNMusicAlbumDetailModel *model);
 
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
@@ -109,7 +114,6 @@ public slots:
     void selectAlbum(const QModelIndex &index);
 
 protected slots:
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void updateGeometries();
 
 protected:

@@ -17,6 +17,7 @@
 #include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusicgenremodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
+#include "../Libraries/knmusicalbumdetailmodel.h"
 
 #include "knmusicviewer.h"
 
@@ -60,15 +61,20 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
-    connect(m_artistDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
-            m_artistView, &KNMusicArtistView::onActionDetailSizeChange);
+    connect(m_artistDetails, &KNMusicCategoryDetailModel::requireSongCountChange,
+            m_artistView, &KNMusicArtistView::onActionSongCountChange);
+
+    m_albumDetails=new KNMusicAlbumDetailModel(this);
+    m_albumDetails->setFilterKeyColumn(KNMusicGlobal::Album);
+    m_albumDetails->setCategoryModel(m_albumModel);
+    m_albumView->setDetailModel(m_albumDetails);
 
     m_genreDetails=new KNMusicCategoryDetailModel(this);
     m_genreDetails->setFilterKeyColumn(KNMusicGlobal::Genre);
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
-    connect(m_genreDetails, &KNMusicCategoryDetailModel::requireDetailSizeChange,
-            m_genreView, &KNMusicArtistView::onActionDetailSizeChange);
+    connect(m_genreDetails, &KNMusicCategoryDetailModel::requireSongCountChange,
+            m_genreView, &KNMusicArtistView::onActionSongCountChange);
 
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
@@ -90,6 +96,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_artistModel->setSourceModel(model);
     m_artistDetails->setSourceModel(model);
     m_albumModel->setSourceModel(model);
+    m_albumDetails->setSourceModel(model);
     m_genreModel->setSourceModel(model);
     m_genreDetails->setSourceModel(model);
     m_libraryView->resetHeader();
