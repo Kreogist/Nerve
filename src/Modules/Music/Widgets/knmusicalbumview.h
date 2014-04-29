@@ -11,7 +11,7 @@ class QPropertyAnimation;
 class QBoxLayout;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
-
+class KNMusicAlbumModel;
 class KNMusicAlbumSongDetail : public QWidget
 {
     Q_OBJECT
@@ -103,8 +103,9 @@ public:
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     QRect visualRect(const QModelIndex &index) const;
     void setModel(QAbstractItemModel *model);
+    void setCategoryModel(KNMusicAlbumModel *model);
     void setDetailModel(KNMusicAlbumDetailModel *model);
-
+    void selectCategoryItem(const QString &value);
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
 
@@ -158,6 +159,7 @@ private:
     KNMusicAlbumDetail *m_albumDetail;
     QModelIndex m_detailIndex;
     KNMusicAlbumDetailModel *m_detailModel;
+    KNMusicAlbumModel *m_model;
 };
 
 #endif // KNMUSICALBUMVIEW_H

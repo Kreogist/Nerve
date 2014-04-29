@@ -169,6 +169,8 @@ void KNMusicArtistView::setModel(KNMusicCategoryModel *model)
 void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
 {
     m_artistDetails->setDetailModel(model);
+    connect(model, &KNMusicCategoryDetailModel::requireSongCountChange,
+            this, &KNMusicArtistView::onActionSongCountChange);
     m_artistDetailModel=model;
 }
 

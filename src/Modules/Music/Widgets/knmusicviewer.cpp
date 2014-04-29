@@ -48,7 +48,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView->setModel(m_artistModel);
 
     m_albumView=new KNMusicAlbumView(this);
-    m_albumView->setModel(m_albumModel);
+    m_albumView->setCategoryModel(m_albumModel);
 
     m_genreView=new KNMusicArtistView(this);
     connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
@@ -61,8 +61,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
-    connect(m_artistDetails, &KNMusicCategoryDetailModel::requireSongCountChange,
-            m_artistView, &KNMusicArtistView::onActionSongCountChange);
 
     m_albumDetails=new KNMusicAlbumDetailModel(this);
     m_albumDetails->setFilterKeyColumn(KNMusicGlobal::Album);
@@ -73,8 +71,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_genreDetails->setFilterKeyColumn(KNMusicGlobal::Genre);
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
-    connect(m_genreDetails, &KNMusicCategoryDetailModel::requireSongCountChange,
-            m_genreView, &KNMusicArtistView::onActionSongCountChange);
 
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
@@ -139,6 +135,7 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
         m_artistView->selectItem(index);
         break;
     case KNMusicGlobal::AlbumView:
+        //m_albumView->selectAlbum();
         break;
     case KNMusicGlobal::GenreView:
         m_genreView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),

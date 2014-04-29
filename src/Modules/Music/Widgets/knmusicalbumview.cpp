@@ -13,6 +13,7 @@
 #include <QPropertyAnimation>
 
 #include "knmusicalbumsonglistview.h"
+#include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
 
 #include "knmusicalbumview.h"
@@ -402,10 +403,23 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
     updateGeometries();
 }
 
+void KNMusicAlbumView::setCategoryModel(KNMusicAlbumModel *model)
+{
+    setModel(model);
+    m_model=model;
+}
+
 void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 {
     m_albumDetail->setDetailModel(model);
     m_detailModel=model;
+}
+
+void KNMusicAlbumView::selectCategoryItem(const QString &value)
+{
+    //;
+    //QModelIndex albumTest;
+    //selectAlbum();
 }
 
 void KNMusicAlbumView::updateGeometries()
