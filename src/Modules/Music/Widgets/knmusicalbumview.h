@@ -22,6 +22,7 @@ public:
     void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
+    void resetHeader();
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -85,6 +86,7 @@ public:
     void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
+    void resetHeader();
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -125,6 +127,7 @@ public:
     void selectItem(const QModelIndex &index);
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
+    void resetHeader();
 
 signals:
     void requireOpenUrl(const QModelIndex &index);

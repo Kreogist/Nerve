@@ -86,6 +86,11 @@ void KNMusicAlbumSongDetail::selectItem(const QModelIndex &index)
     m_albumSongs->setCurrentIndex(index);
 }
 
+void KNMusicAlbumSongDetail::resetHeader()
+{
+    m_albumSongs->resetHeader();
+}
+
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
     m_albumName->hide();
@@ -274,6 +279,11 @@ void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
 void KNMusicAlbumDetail::selectItem(const QModelIndex &index)
 {
     m_songPanel->selectItem(index);
+}
+
+void KNMusicAlbumDetail::resetHeader()
+{
+    m_songPanel->resetHeader();
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -767,6 +777,11 @@ int KNMusicAlbumView::gridMinimumWidth() const
 void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 {
     m_gridMinimumWidth=gridMinimumWidth;
+}
+
+void KNMusicAlbumView::resetHeader()
+{
+    m_albumDetail->resetHeader();
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

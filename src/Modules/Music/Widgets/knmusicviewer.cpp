@@ -101,6 +101,7 @@ void KNMusicViewer::setModel(QAbstractItemModel *model)
     m_genreDetails->setSourceModel(model);
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
+    m_albumView->resetHeader();
     m_genreView->resetHeader();
     m_sourceModel=model;
 }
