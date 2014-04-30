@@ -51,10 +51,13 @@ private slots:
                                             const QModelIndex &index);
     void onActionArtistShowContextMenu(const QPoint &position,
                                        const QModelIndex &index);
+    void onActionAlbumShowContextMenu(const QPoint &position,
+                                      const QModelIndex &index);
     void onActionGenreShowContextMenu(const QPoint &position,
                                       const QModelIndex &index);
     void onActionListviewOpenUrl(const QModelIndex &index);
     void onActionArtistOpenUrl(const QModelIndex &index);
+    void onActionAlbumOpenUrl(const QModelIndex &index);
     void onActionGenreOpenUrl(const QModelIndex &index);
 
 private:

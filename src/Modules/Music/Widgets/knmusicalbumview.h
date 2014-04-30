@@ -21,6 +21,12 @@ public:
     void setAlbumName(const QString &name);
     void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
+    void selectItem(const QModelIndex &index);
+
+signals:
+    void requireOpenUrl(const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 public slots:
     void hideDetailInfo();
@@ -78,8 +84,12 @@ public:
     void setAlbumName(const QString &name);
     void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
+    void selectItem(const QModelIndex &index);
 
 signals:
+    void requireOpenUrl(const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
     void requireFlyBack();
 
 public slots:
@@ -112,10 +122,14 @@ public:
     void setCategoryModel(KNMusicAlbumModel *model);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectCategoryItem(const QString &value);
+    void selectItem(const QModelIndex &index);
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
 
 signals:
+    void requireOpenUrl(const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position,
+                                const QModelIndex &index);
 
 public slots:
     void selectAlbum(const QModelIndex &index);

@@ -48,6 +48,10 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView->setModel(m_artistModel);
 
     m_albumView=new KNMusicAlbumView(this);
+    connect(m_albumView, &KNMusicAlbumView::requireOpenUrl,
+            this, &KNMusicViewer::onActionAlbumOpenUrl);
+    connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
+            this, &KNMusicViewer::onActionAlbumShowContextMenu);
     m_albumView->setCategoryModel(m_albumModel);
 
     m_genreView=new KNMusicArtistView(this);
@@ -137,6 +141,7 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
     case KNMusicGlobal::AlbumView:
         m_albumView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
                                                                                  KNMusicGlobal::Album)).toString());
+        m_albumView->selectItem(index);
         break;
     case KNMusicGlobal::GenreView:
         m_genreView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
@@ -176,6 +181,14 @@ void KNMusicViewer::onActionArtistShowContextMenu(const QPoint &position,
                                 KNMusicGlobal::ArtistView);
 }
 
+void KNMusicViewer::onActionAlbumShowContextMenu(const QPoint &position,
+                                                 const QModelIndex &index)
+{
+    emit requireShowContextMenu(position,
+                                m_albumDetails->mapToSource(index),
+                                KNMusicGlobal::AlbumView);
+}
+
 void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
                                                  const QModelIndex &index)
 {
@@ -192,6 +205,11 @@ void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
 void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
 {
     emit requireOpenUrl(m_artistDetails->mapToSource(index));
+}
+
+void KNMusicViewer::onActionAlbumOpenUrl(const QModelIndex &index)
+{
+    emit requireOpenUrl(m_albumDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionGenreOpenUrl(const QModelIndex &index)

@@ -55,6 +55,10 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_albumSongs=new KNMusicAlbumSongListView(this);
     m_mainLayout->addSpacing(14);
     m_mainLayout->addWidget(m_albumSongs, 1);
+    connect(m_albumSongs, &KNMusicAlbumSongListView::requireOpenUrl,
+            this, &KNMusicAlbumSongDetail::requireOpenUrl);
+    connect(m_albumSongs, &KNMusicAlbumSongListView::requireShowContextMenu,
+            this, &KNMusicAlbumSongDetail::requireShowContextMenu);
 }
 
 KNMusicAlbumSongDetail::~KNMusicAlbumSongDetail()
@@ -75,6 +79,11 @@ void KNMusicAlbumSongDetail::setArtistName(const QString &name)
 void KNMusicAlbumSongDetail::setDetailModel(KNMusicAlbumDetailModel *model)
 {
     m_albumSongs->setModel(model);
+}
+
+void KNMusicAlbumSongDetail::selectItem(const QModelIndex &index)
+{
+    m_albumSongs->setCurrentIndex(index);
 }
 
 void KNMusicAlbumSongDetail::hideDetailInfo()
@@ -192,6 +201,10 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_songPanel=new KNMusicAlbumSongDetail(this);
     m_infoListLayout->addWidget(m_songPanel, 1);
     m_infoListLayout->addStretch();
+    connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
+            this, &KNMusicAlbumDetail::requireOpenUrl);
+    connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
+            this, &KNMusicAlbumDetail::requireShowContextMenu);
 
     m_heightExpand=new QPropertyAnimation(this, "geometry", this);
     m_heightExpand->setDuration(125);
@@ -256,6 +269,11 @@ void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
     m_songPanel->setDetailModel(model);
     connect(model, &KNMusicAlbumDetailModel::requireSongCountChange,
             m_infoPanel, &KNMusicAlbumInfoDetail::onActionSongCountChange);
+}
+
+void KNMusicAlbumDetail::selectItem(const QModelIndex &index)
+{
+    m_songPanel->selectItem(index);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -332,6 +350,10 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 
     m_albumDetail=new KNMusicAlbumDetail(this);
     m_albumDetail->hide();
+    connect(m_albumDetail, &KNMusicAlbumDetail::requireOpenUrl,
+            this, &KNMusicAlbumView::requireOpenUrl);
+    connect(m_albumDetail, &KNMusicAlbumDetail::requireShowContextMenu,
+            this, &KNMusicAlbumView::requireShowContextMenu);
 
     m_albumShow=new QPropertyAnimation(m_albumDetail,
                                        "geometry",
@@ -460,6 +482,15 @@ void KNMusicAlbumView::selectCategoryItem(const QString &value)
     }
     scrollTo(albumSearch.at(0)->index());
     selectAlbum(albumSearch.at(0)->index());
+}
+
+void KNMusicAlbumView::selectItem(const QModelIndex &index)
+{
+    QModelIndex testIndex=m_detailModel->mapFromSource(index);
+    if(testIndex.isValid())
+    {
+        m_albumDetail->selectItem(testIndex);
+    }
 }
 
 void KNMusicAlbumView::updateGeometries()
