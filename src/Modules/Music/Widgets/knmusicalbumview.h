@@ -146,6 +146,7 @@ private slots:
 
 private:
     QRect itemRect(const QModelIndex &index) const;
+    void updateParameters();
     void paintAlbum(QPainter *painter,
                     const QRect &rect,
                     const QModelIndex &index);

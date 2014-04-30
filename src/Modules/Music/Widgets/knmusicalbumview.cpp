@@ -45,6 +45,7 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_mainLayout->addWidget(m_albumName);
 
     m_detailLayout=new QBoxLayout(QBoxLayout::LeftToRight);
+    m_detailLayout->setContentsMargins(20,0,0,0);
 
     m_artistName=new QLabel(this);
     m_detailLayout->addWidget(m_artistName);
@@ -353,7 +354,7 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     connect(m_scrollTimeLine, SIGNAL(frameChanged(int)),
             verticalScrollBar(), SLOT(setValue(int)));
 
-    update();
+    updateParameters();
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -480,21 +481,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     }
     painter.setPen(foreground);
 
-    int realWidth=width()-m_spacing,
-        realMinimumWidth=m_gridMinimumWidth+m_spacing;
-    if(realWidth<realMinimumWidth)
-    {
-        m_maxColumnCount=1;
-        m_gridWidth=realWidth-m_spacing;
-    }
-    else
-    {
-        m_maxColumnCount=realWidth/realMinimumWidth;
-        m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
-    }
-    m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
-    m_iconSizeParam=qMin(m_gridWidth-m_spacing,
-                         m_gridHeight-(fontMetrics().height()<<1)-m_spacing);
+    updateParameters();
 
     int albumIndex=0, albumCount=m_model->rowCount(),
         currentRow=0, currentColumn=0,
@@ -687,6 +674,25 @@ QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
                  itemLine*(m_spacing+m_gridHeight)+m_spacing,
                  m_gridWidth,
                  m_gridHeight);
+}
+
+void KNMusicAlbumView::updateParameters()
+{
+    int realWidth=width()-m_spacing,
+        realMinimumWidth=m_gridMinimumWidth+m_spacing;
+    if(realWidth<realMinimumWidth)
+    {
+        m_maxColumnCount=1;
+        m_gridWidth=realWidth-m_spacing;
+    }
+    else
+    {
+        m_maxColumnCount=realWidth/realMinimumWidth;
+        m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
+    }
+    m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
+    m_iconSizeParam=qMin(m_gridWidth-m_spacing,
+                         m_gridHeight-(fontMetrics().height()<<1)-m_spacing);
 }
 
 void KNMusicAlbumView::paintAlbum(QPainter *painter,
