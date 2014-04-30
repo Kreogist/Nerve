@@ -17,7 +17,9 @@ class KNMusicAlbumSongDetail : public QWidget
     Q_OBJECT
 public:
     explicit KNMusicAlbumSongDetail(QWidget *parent = 0);
+    ~KNMusicAlbumSongDetail();
     void setAlbumName(const QString &name);
+    void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
 
 public slots:
@@ -26,8 +28,10 @@ public slots:
 
 private:
     QLabel *m_albumName;
+    QLabel *m_artistName;
     KNMusicAlbumSongListView *m_albumSongs;
     QBoxLayout *m_mainLayout;
+    QBoxLayout *m_detailLayout;
 };
 
 class KNMusicAlbumInfoDetail : public QWidget
@@ -37,14 +41,12 @@ public:
     explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
     enum AlbumInfoData
     {
-        Artist,
         Year,
         SongCount,
         AlbumInfoDataCount
     };
-    void setCaption(const int &index, const QString &data);
-    void refreshCaption(const int &index);
     int minimalExpandedHeight() const;
+    void setArtistName(const QString &value);
 
 signals:
     void changeInfoVisible(const bool &visible);
@@ -54,12 +56,15 @@ public slots:
     void retranslateAndSet();
     void hideDetailInfo();
     void showDetailInfo();
+    void onActionSongCountChange(const int &value);
 
 private:
+    void updateSongCount();
     int m_minimalExpandedHeight;
     QBoxLayout *m_albumDataLayout;
     QLabel *m_albumInfo[AlbumInfoDataCount];
-    QString m_songCount, m_songsCount;
+    QString m_songCountText, m_songsCountText;
+    int m_songCount;
 };
 
 class KNMusicAlbumDetail : public QWidget
@@ -71,6 +76,7 @@ public:
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
     void setAlbumName(const QString &name);
+    void setArtistName(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
 
 signals:
@@ -145,16 +151,15 @@ private:
                     const QModelIndex &index);
     int m_gridMinimumWidth=124;
     int m_gridWidth=124;
-    int m_gridHeight;
+    int m_gridHeight=144;
     int m_spacing=10;
-    int m_maxColumnCount=0;
+    int m_maxColumnCount=1;
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
-    int m_iconSizeParam;
+    int m_iconSizeParam=124;
     QPalette m_palette;
     QColor m_backgroundColor;
     int m_minGrey=0x30;
-    QModelIndex m_pressedIndex;
     QTimeLine *m_scrollTimeLine;
     QPropertyAnimation *m_albumShow,
                        *m_albumHide;

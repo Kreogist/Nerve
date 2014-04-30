@@ -44,14 +44,31 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_mainLayout->addSpacing(25);
     m_mainLayout->addWidget(m_albumName);
 
+    m_detailLayout=new QBoxLayout(QBoxLayout::LeftToRight);
+
+    m_artistName=new QLabel(this);
+    m_detailLayout->addWidget(m_artistName);
+
+    m_mainLayout->addLayout(m_detailLayout);
+
     m_albumSongs=new KNMusicAlbumSongListView(this);
     m_mainLayout->addSpacing(14);
     m_mainLayout->addWidget(m_albumSongs, 1);
 }
 
+KNMusicAlbumSongDetail::~KNMusicAlbumSongDetail()
+{
+    m_detailLayout->deleteLater();
+}
+
 void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
 {
     m_albumName->setText(name);
+}
+
+void KNMusicAlbumSongDetail::setArtistName(const QString &name)
+{
+    m_artistName->setText(name);
 }
 
 void KNMusicAlbumSongDetail::setDetailModel(KNMusicAlbumDetailModel *model)
@@ -62,12 +79,14 @@ void KNMusicAlbumSongDetail::setDetailModel(KNMusicAlbumDetailModel *model)
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
     m_albumName->hide();
+    m_artistName->hide();
     m_albumSongs->hide();
 }
 
 void KNMusicAlbumSongDetail::showDetailInfo()
 {
     m_albumName->show();
+    m_artistName->show();
     m_albumSongs->show();
 }
 
@@ -100,25 +119,6 @@ KNMusicAlbumInfoDetail::KNMusicAlbumInfoDetail(QWidget *parent) :
     m_minimalExpandedHeight=height();
 }
 
-void KNMusicAlbumInfoDetail::setCaption(const int &index,
-                                        const QString &data)
-{
-    if(data.isEmpty())
-    {
-        m_albumInfo[index]->setStatusTip("N/A");
-    }
-    else
-    {
-        m_albumInfo[index]->setStatusTip(data);
-    }
-    refreshCaption(index);
-}
-
-void KNMusicAlbumInfoDetail::refreshCaption(const int &index)
-{
-    ;
-}
-
 void KNMusicAlbumInfoDetail::hideDetailInfo()
 {
     emit changeInfoVisible(false);
@@ -129,6 +129,24 @@ void KNMusicAlbumInfoDetail::showDetailInfo()
     emit changeInfoVisible(true);
 }
 
+void KNMusicAlbumInfoDetail::onActionSongCountChange(const int &value)
+{
+    m_songCount=value;
+    updateSongCount();
+}
+
+void KNMusicAlbumInfoDetail::updateSongCount()
+{
+    if(m_songCount==1)
+    {
+        m_albumInfo[SongCount]->setText(m_songCountText);
+    }
+    else
+    {
+        m_albumInfo[SongCount]->setText(m_songsCountText.arg(m_songCount));
+    }
+}
+
 int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
 {
     return m_minimalExpandedHeight;
@@ -136,13 +154,14 @@ int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
 
 void KNMusicAlbumInfoDetail::retranslate()
 {
-    m_songCount=tr("1 song");
-    m_songsCount=tr("%1 songs");
+    m_songCountText=tr("1 song");
+    m_songsCountText=tr("%1 songs");
 }
 
 void KNMusicAlbumInfoDetail::retranslateAndSet()
 {
     retranslate();
+    updateSongCount();
 }
 
 KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
@@ -226,9 +245,16 @@ void KNMusicAlbumDetail::setAlbumName(const QString &name)
     m_songPanel->setAlbumName(name);
 }
 
+void KNMusicAlbumDetail::setArtistName(const QString &name)
+{
+    m_songPanel->setArtistName(name);
+}
+
 void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
 {
     m_songPanel->setDetailModel(model);
+    connect(model, &KNMusicAlbumDetailModel::requireSongCountChange,
+            m_infoPanel, &KNMusicAlbumInfoDetail::onActionSongCountChange);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -326,6 +352,8 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     m_scrollTimeLine->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_scrollTimeLine, SIGNAL(frameChanged(int)),
             verticalScrollBar(), SLOT(setValue(int)));
+
+    update();
 }
 
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
@@ -465,6 +493,9 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         m_gridWidth=realWidth/m_maxColumnCount-m_spacing;
     }
     m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
+    m_iconSizeParam=qMin(m_gridWidth-m_spacing,
+                         m_gridHeight-(fontMetrics().height()<<1)-m_spacing);
+
     int albumIndex=0, albumCount=m_model->rowCount(),
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
@@ -599,6 +630,7 @@ void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
     m_detailModel->setCategoryIndex(index);
     m_albumDetail->setAlbumName(m_model->data(index).toString());
+    m_albumDetail->setArtistName(m_model->data(index, Qt::UserRole).toString());
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
@@ -663,8 +695,6 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
 {
     //To draw the album art.
     QIcon currentIcon=m_model->data(index, Qt::DecorationRole).value<QIcon>();
-    m_iconSizeParam=qMin(rect.width()-m_spacing,
-                         rect.height()-(fontMetrics().height()<<1)-m_spacing);
     QRect albumArtRect=QRect(rect.x()+1,
                              rect.y()+1,
                              m_iconSizeParam-2,
@@ -704,12 +734,11 @@ void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
 {
-    m_pressedIndex=index;
-    if(m_pressedIndex.isValid())
+    if(index.isValid())
     {
-        if(m_pressedIndex!=m_detailIndex)
+        if(index!=m_detailIndex)
         {
-            onActionAlbumClicked(m_pressedIndex);
+            onActionAlbumClicked(index);
         }
     }
     else
