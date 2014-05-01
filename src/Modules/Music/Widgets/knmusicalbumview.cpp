@@ -45,10 +45,12 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_mainLayout->addWidget(m_albumName);
 
     m_detailLayout=new QBoxLayout(QBoxLayout::LeftToRight);
-    m_detailLayout->setContentsMargins(20,0,0,0);
 
     m_artistName=new QLabel(this);
+    //This hack is going to show the left margins instead of the layout.
+    m_artistName->setContentsMargins(20,0,0,0);
     m_detailLayout->addWidget(m_artistName);
+    m_detailLayout->addStretch();
 
     m_mainLayout->addLayout(m_detailLayout);
 
