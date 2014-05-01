@@ -22,6 +22,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     }
     setHorizontalHeaderLabels(header);
 
+    setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, 2, Qt::UserRole);
     setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 1, Qt::UserRole);
     setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, 2, Qt::UserRole);
 }
@@ -160,7 +161,8 @@ void KNMusicModel::appendMusic(const QStringList &info,
         songItemList.append(songItem);
     }
     songItem=songItemList.at(KNMusicGlobal::Time);
-    songItem->setData(datas.coverImage, Qt::UserRole);
+    songItem->setData(datas.duration, Qt::UserRole);
+    songItem->setData(datas.coverImage, Qt::UserRole+1);
     songItem=songItemList.at(KNMusicGlobal::DateModified);
     songItem->setData(datas.dateModified, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::LastPlayed);

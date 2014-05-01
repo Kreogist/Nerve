@@ -26,7 +26,8 @@ void KNMusicArtistModel::retranslateAndSet()
 
 QIcon KNMusicArtistModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=m_sourceModel->item(index, KNMusicGlobal::Time)->data(Qt::UserRole).value<QPixmap>();
+    QPixmap albumArt=m_sourceModel->item(index,
+                                         KNMusicGlobal::Time)->data(Qt::UserRole+1).value<QPixmap>();
     if(albumArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);

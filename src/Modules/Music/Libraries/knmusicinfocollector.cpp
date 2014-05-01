@@ -3,8 +3,10 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QUrl>
+#include <QMap>
 
 #include "../knmusicglobal.h"
+#include "../../Public/knlibmediainfo.h"
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"
@@ -20,6 +22,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 {
     m_global=KNGlobal::instance();
     m_musicGlobal=KNMusicGlobal::instance();
+    m_mediaInfo=new KNLibMediaInfo(this);
     m_tagID3v1=new KNMusicTagID3v1(this);
     m_tagID3v2=new KNMusicTagID3v2(this);
     m_tagAPEv2=new KNMusicTagAPEv2(this);
@@ -61,8 +64,11 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readID3v2Tag(filePath);
     readWMATag(filePath);
     readM4ATag(filePath);
+    parseByMediaInfo(filePath);
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
+    currentFileInfo.duration=m_duration;
+
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -82,6 +88,55 @@ void KNMusicInfoCollector::resetMusicInfo()
     }
     m_musicRating=0;
     m_musicCover=QPixmap();
+}
+
+void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
+{
+    m_mediaInfo->analysisFile(value);
+    QString mediaInfoData=m_mediaInfo->originalData();
+    if(mediaInfoData.isEmpty())
+    {
+        return;
+    }
+    QStringList itemLines=mediaInfoData.split("\n"),
+                basicInfo;
+    QMap<QString, QString> basicInfoData;
+    QString currentItem, itemCaption;
+    int colonPosition, basicInfoIndex;
+    bool audioBlock=false;
+    basicInfo<<"Duration"
+             <<"Bit rate";
+    for(int i=0; i<itemLines.size(); i++)
+    {
+        currentItem=itemLines.at(i).simplified();
+        colonPosition=currentItem.indexOf(':');
+        if(colonPosition==-1)
+        {
+            audioBlock=(currentItem=="Audio");
+            continue;
+        }
+        if(audioBlock)
+        {
+            itemCaption=currentItem.left(colonPosition).simplified();
+            basicInfoIndex=basicInfo.indexOf(itemCaption);
+            if(basicInfoIndex!=-1)
+            {
+                basicInfoData[basicInfo.takeAt(basicInfoIndex)]=
+                        currentItem.mid(colonPosition+1).simplified();
+            }
+        }
+    }
+
+    QString rawInfoData;
+
+    //Parse the datas.
+    rawInfoData=basicInfoData["Duration"];
+    int minutePos=rawInfoData.indexOf("mn"),
+        secondPos=rawInfoData.indexOf("s");
+    QString minuteString=rawInfoData.left(minutePos),
+            secondString=rawInfoData.mid(minutePos+3, secondPos-minutePos-3);
+    setMediaData(KNMusicGlobal::Time, minuteString+":"+secondString);
+    m_duration=minuteString.toInt()*60+secondString.toInt();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)

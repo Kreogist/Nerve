@@ -17,6 +17,7 @@ public:
     {
         quint64 size;
         int rating;
+        int duration;
         QString filePath;
         QDateTime dateModified;
         QDateTime lastPlayed;

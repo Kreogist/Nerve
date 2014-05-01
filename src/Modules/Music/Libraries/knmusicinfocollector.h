@@ -9,6 +9,7 @@
 
 class KNGlobal;
 class KNMusicGlobal;
+class KNLibMediaInfo;
 class KNMusicTagID3v1;
 class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
@@ -30,6 +31,7 @@ public slots:
 
 private:
     void resetMusicInfo();
+    void parseByMediaInfo(const QString &value);
     void readID3v1Tag(const QString &value);
     void readID3v2Tag(const QString &value);
     void readAPEv2Tag(const QString &value);
@@ -37,6 +39,7 @@ private:
     void readM4ATag(const QString &value);
     void setMediaData(const int &index,
                       const QString &value);
+    KNLibMediaInfo *m_mediaInfo;
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;
     KNMusicTagAPEv2 *m_tagAPEv2;
@@ -45,7 +48,7 @@ private:
 
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
     QPixmap m_musicCover;
-    int m_musicRating;
+    int m_musicRating, m_duration;
     KNGlobal *m_global;
     KNMusicGlobal *m_musicGlobal;
 };
