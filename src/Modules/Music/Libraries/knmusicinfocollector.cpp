@@ -105,7 +105,8 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     int colonPosition, basicInfoIndex;
     bool audioBlock=false;
     basicInfo<<"Duration"
-             <<"Bit rate";
+             <<"Bit rate"
+             <<"Sampling rate";
     for(int i=0; i<itemLines.size(); i++)
     {
         currentItem=itemLines.at(i).simplified();
@@ -137,6 +138,22 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
             secondString=rawInfoData.mid(minutePos+3, secondPos-minutePos-3);
     setMediaData(KNMusicGlobal::Time, minuteString+":"+secondString);
     m_duration=minuteString.toInt()*60+secondString.toInt();
+
+    //Parse the bit rate.
+    rawInfoData=basicInfoData["Bit rate"];
+    secondPos=rawInfoData.lastIndexOf(" ");
+    secondString=rawInfoData.left(secondPos);
+    secondString.remove(' ');
+    setMediaData(KNMusicGlobal::BitRate, secondString+" "+rawInfoData.mid(secondPos+1));
+    m_bitRate=secondString.toFloat();
+
+    //Parse the sampling rate.
+    rawInfoData=basicInfoData["Sampling rate"];
+    secondPos=rawInfoData.lastIndexOf(" ");
+    secondString=rawInfoData.left(secondPos);
+    secondString.remove(' ');
+    setMediaData(KNMusicGlobal::SampleRate, secondString+" "+rawInfoData.mid(secondPos+1));
+    m_samplingRate=secondString.toInt();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)

@@ -163,6 +163,10 @@ void KNMusicModel::appendMusic(const QStringList &info,
     songItem=songItemList.at(KNMusicGlobal::Time);
     songItem->setData(datas.duration, Qt::UserRole);
     songItem->setData(datas.coverImage, Qt::UserRole+1);
+    songItem=songItemList.at(KNMusicGlobal::BitRate);
+    songItem->setData(datas.bitRate, Qt::UserRole);
+    songItem=songItemList.at(KNMusicGlobal::SampleRate);
+    songItem->setData(datas.samplingRate, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::DateModified);
     songItem->setData(datas.dateModified, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::LastPlayed);

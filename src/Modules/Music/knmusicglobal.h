@@ -16,8 +16,10 @@ public:
     struct MusicDetailsInfo
     {
         quint64 size;
-        int rating;
-        int duration;
+        int rating=0;
+        int duration=0;
+        float bitRate=0.0;
+        float samplingRate=0.0;
         QString filePath;
         QDateTime dateModified;
         QDateTime lastPlayed;

@@ -29,6 +29,8 @@ bool KNMusicSortModel::lessThan(const QModelIndex &left,
         return leftData.toInt()<rightData.toInt();
     case 2:
         return leftUserData.toInt()<rightUserData.toInt();
+    case 3:
+        return leftUserData.toFloat()<rightUserData.toFloat();
     }
     return QString::compare(leftData.toString(),
                             rightData.toString())<0;
