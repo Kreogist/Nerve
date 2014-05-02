@@ -161,6 +161,7 @@ void KNMusicModel::appendMusic(const QStringList &info,
         songItemList.append(songItem);
     }
     songItem=songItemList.at(KNMusicGlobal::Time);
+    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem->setData(datas.duration, Qt::UserRole);
     songItem->setData(datas.coverImage, Qt::UserRole+1);
     songItem=songItemList.at(KNMusicGlobal::BitRate);

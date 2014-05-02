@@ -65,7 +65,7 @@ QString KNMusicGlobal::getHeader(const int &index)
 
 int KNMusicGlobal::getMusicType(const QString &suffix) const
 {
-    return m_suffixs.indexOf(suffix);
+    return m_suffixs.indexOf(suffix.toLower());
 }
 
 QString KNMusicGlobal::getDescription(const int &type) const

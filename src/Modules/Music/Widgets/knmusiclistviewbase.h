@@ -12,6 +12,8 @@ public:
     explicit KNMusicListViewBase(QWidget *parent = 0);
     virtual void resetHeader();
     void moveToFirst(const int &logicalHeaderIndex);
+    void setHeaderAlignment(const int &logicalHeaderIndex,
+                            Qt::Alignment alignment);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
