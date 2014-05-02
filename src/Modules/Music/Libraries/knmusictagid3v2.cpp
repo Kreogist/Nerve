@@ -152,7 +152,6 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                     (((quint32)header[7]<<14)&0b00000000000111111100000000000000)+
                     (((quint32)header[8]<<7) &0b00000000000000000011111110000000)+
                     ((quint32)header[9]      &0b00000000000000000000000001111111);
-    qDebug()<<"tagSize: "<<tagSize;
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
@@ -284,9 +283,11 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
         descriptionEnd=content.indexOf('\0', zeroCharEnd);
         currentImage.description=
             QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
-        content.remove(0, zeroCharEnd+1);
+        content.remove(0, descriptionEnd+1);
         break;
     default:
+        descriptionEnd=content.indexOf('\0', zeroCharEnd);
+        content.remove(0, descriptionEnd+1);
         break;
     }
     currentImage.image.loadFromData(content, imageType.toStdString().data());
