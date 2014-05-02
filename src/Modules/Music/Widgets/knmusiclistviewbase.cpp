@@ -17,6 +17,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     QTreeView(parent)
 {
     //Set properties.
+    setIndentation(0);
     setMouseTracking(true);
     setUniformRowHeights(true);
     setSortingEnabled(true);

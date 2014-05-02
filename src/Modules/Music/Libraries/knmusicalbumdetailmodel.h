@@ -12,6 +12,7 @@ public:
 signals:
 
 public slots:
+    void setCategoryIndex(const QModelIndex &index);
 
 protected:
     QString getFilterText(const QModelIndex &index) const;

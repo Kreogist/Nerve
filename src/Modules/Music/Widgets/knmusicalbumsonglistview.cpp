@@ -1,3 +1,5 @@
+#include <QHeaderView>
+
 #include "../knmusicglobal.h"
 
 #include "knmusicalbumsonglistview.h"
@@ -23,8 +25,10 @@ void KNMusicAlbumSongListView::resetHeader()
     setColumnHidden(KNMusicGlobal::TrackNumber, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
-    moveToFirst(KNMusicGlobal::Album);
+    moveToFirst(KNMusicGlobal::Artist);
     moveToFirst(KNMusicGlobal::Time);
     moveToFirst(KNMusicGlobal::Name);
     moveToFirst(KNMusicGlobal::TrackNumber);
+    header()->setSectionResizeMode(KNMusicGlobal::Name,
+                                   QHeaderView::ResizeToContents);
 }

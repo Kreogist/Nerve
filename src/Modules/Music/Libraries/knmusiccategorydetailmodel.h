@@ -18,7 +18,7 @@ signals:
     void requireSongCountChange(const int &value);
 
 public slots:
-    void setCategoryIndex(const QModelIndex &index);
+    virtual void setCategoryIndex(const QModelIndex &index);
 
 protected:
     virtual QString getFilterText(const QModelIndex &index) const;

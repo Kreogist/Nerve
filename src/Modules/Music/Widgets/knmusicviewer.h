@@ -76,15 +76,19 @@ private:
     KNMusicArtistView *m_artistView,
                       *m_genreView;
     KNMusicAlbumView *m_albumView;
+
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
     KNMusicAlbumModel *m_albumModel;
     KNMusicGenreModel *m_genreModel;
+
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
     KNMusicAlbumDetailModel *m_albumDetails;
+
     KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;
+
     QAbstractItemModel *m_sourceModel;
 };
 

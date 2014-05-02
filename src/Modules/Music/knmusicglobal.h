@@ -17,7 +17,6 @@ public:
     {
         quint64 size;
         int rating=0;
-        int trackNumber=0;
         int duration=0;
         float bitRate=0.0;
         float samplingRate=0.0;
@@ -43,6 +42,7 @@ public:
         DateAdded,
         DateModified,
         Description,
+        DiscCount,
         DiscNumber,
         EpisodeID,
         EpisodeNumber,
@@ -57,6 +57,7 @@ public:
         Show,
         Size,
         Time,
+        TrackCount,
         TrackNumber,
         Year,
         MusicDataCount

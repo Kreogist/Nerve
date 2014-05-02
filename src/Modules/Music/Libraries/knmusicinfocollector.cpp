@@ -68,7 +68,6 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
     currentFileInfo.duration=m_duration;
-    currentFileInfo.trackNumber=m_trackNumber;
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -168,7 +167,6 @@ void KNMusicInfoCollector::readID3v1Tag(const QString &value)
         setMediaData(KNMusicGlobal::Year,id3v1Info.year);
         setMediaData(KNMusicGlobal::Comments,id3v1Info.comment);
         setMediaData(KNMusicGlobal::TrackNumber,QString::number(id3v1Info.track));
-        m_trackNumber=id3v1Info.track;
     }
 }
 
@@ -190,15 +188,15 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCON")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
             QString trackInfo=m_tagID3v2->id3v2String("TRCK");
-            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
             int diagonalPos=trackInfo.indexOf("/");
             if(diagonalPos!=-1)
             {
-                m_trackNumber=trackInfo.left(diagonalPos).toInt();
+                setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
+                setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
             }
             else
             {
-                m_trackNumber=trackInfo.toInt();
+                setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
             }
             m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
         }
@@ -216,15 +214,15 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
                          m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCO")));
             setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
             QString trackInfo=m_tagID3v2->id3v2String("TRK");
-            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
             int diagonalPos=trackInfo.indexOf("/");
             if(diagonalPos!=-1)
             {
-                m_trackNumber=trackInfo.left(diagonalPos).toInt();
+                setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
+                setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
             }
             else
             {
-                m_trackNumber=trackInfo.toInt();
+                setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
             }
             m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
         }
@@ -248,7 +246,6 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
         setMediaData(KNMusicGlobal::Year,m_tagAPEv2->tagStringData("Year"));
         QString trackInfo=m_tagAPEv2->tagStringData("Track");
         setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
-        m_trackNumber=trackInfo.toInt();
     }
 }
 
@@ -268,7 +265,6 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
         setMediaData(KNMusicGlobal::Year, m_tagWMA->tagStringData("WM/Year"));
         QString track=m_tagWMA->tagStringData("WM/TrackNumber");
         setMediaData(KNMusicGlobal::TrackNumber,track);
-        m_trackNumber=track.toInt();
     }
 }
 
@@ -286,10 +282,8 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
         setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
         setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
         QByteArray trackData=m_tagM4A->metaData(KNMusicTagM4A::Tracknumber);
-        setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3))+
-                                                 "/"+
-                                                 QString::number(trackData.at(5)));
-        m_trackNumber=trackData.at(3);
+        setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
+        setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
         m_musicCover=m_tagM4A->albumArt();
     }
 }

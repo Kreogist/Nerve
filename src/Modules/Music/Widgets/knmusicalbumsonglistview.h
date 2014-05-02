@@ -9,6 +9,7 @@ class KNMusicAlbumSongListView : public KNMusicListViewBase
 public:
     explicit KNMusicAlbumSongListView(QWidget *parent = 0);
     void resetHeader();
+    void resizeHeader();
 
 signals:
 
