@@ -230,9 +230,9 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                 //If no tags, means behind of these datas are all '\0'.
                 break;
             }
-            quint32 frameSize=((((quint32)rawTagData[rawPosition+3])<<16)&0b00000000111111110000000000000000)+
-                              (((((quint32)rawTagData[rawPosition+4]))<<8)&0b00000000000000001111111100000000)+
-                              (((quint32)rawTagData[rawPosition+5])&0b00000000000000000000000011111111);
+            quint32 frameSize=(((quint32)rawTagData[rawPosition+3]<<16)&0b00000000111111110000000000000000)+
+                              (((quint32)rawTagData[rawPosition+4]<<8) &0b00000000000000001111111100000000)+
+                              ( (quint32)rawTagData[rawPosition+5]     &0b00000000000000000000000011111111);
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.
@@ -263,9 +263,9 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     QByteArray content=value;
     quint8 encoding=(quint8)(value.at(0));
     int zeroCharEnd=content.indexOf('\0', 1);
-    QString mimeType(content.mid(1, zeroCharEnd-1)),
+    QString mimeType(content.mid(1, zeroCharEnd-1).toLower()),
             imageType;
-    if(mimeType.left(6).toLower()=="image/")
+    if(mimeType.left(6)=="image/")
     {
         imageType=mimeType.mid(6);
     }
@@ -284,6 +284,28 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
         currentImage.description=
             QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
         content.remove(0, descriptionEnd+1);
+        break;
+    case 1:
+        //UTF-16
+        descriptionEnd=zeroCharEnd;
+        while(content.at(descriptionEnd)!=0 &&
+              content.at(descriptionEnd+1)!=0)
+        {
+            descriptionEnd+=2;
+        }
+        if((quint8)content.at(zeroCharEnd)==0xFE && (quint8)content.at(zeroCharEnd+1)==0xFF)
+        {
+            content.remove(0,2);
+            currentImage.description=m_beCodec->toUnicode(content.mid(zeroCharEnd,
+                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+        }
+        if((quint8)content.at(zeroCharEnd)==0xFF && (quint8)content.at(zeroCharEnd+1)==0xFE)
+        {
+            content.remove(0,2);
+            currentImage.description=m_leCodec->toUnicode(content.mid(zeroCharEnd,
+                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+        }
+        content.remove(0, descriptionEnd+2);
         break;
     default:
         descriptionEnd=content.indexOf('\0', zeroCharEnd);
