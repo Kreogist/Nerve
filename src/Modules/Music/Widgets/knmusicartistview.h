@@ -2,27 +2,15 @@
 #define KNMUSICARTISTVIEW_H
 
 #include <QTreeView>
-#include <QListView>
 #include <QSplitter>
 #include <QThread>
-#include <QScopedPointer>
-
-#include "knmusiclistview.h"
 
 class QLabel;
 class QStandardItemModel;
 class KNMusicArtistList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
-class KNMusicArtistSongs : public KNMusicListView
-{
-    Q_OBJECT
-public:
-    explicit KNMusicArtistSongs(QWidget *parent = 0);
-    void resetHeader();
-
-private:
-};
+class KNMusicArtistSongs;
 
 class KNMusicCategoryDetailsDisplay : public QWidget
 {

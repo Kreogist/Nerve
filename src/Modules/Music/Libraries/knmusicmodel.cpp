@@ -23,7 +23,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHorizontalHeaderLabels(header);
 
     setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, 2, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 1, Qt::UserRole);
+    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 2, Qt::UserRole);
     setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, 2, Qt::UserRole);
 }
 
@@ -164,6 +164,8 @@ void KNMusicModel::appendMusic(const QStringList &info,
     songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem->setData(datas.duration, Qt::UserRole);
     songItem->setData(datas.coverImage, Qt::UserRole+1);
+    songItem=songItemList.at(KNMusicGlobal::TrackNumber);
+    songItem->setData(datas.trackNumber, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::BitRate);
     songItem->setData(datas.bitRate, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::SampleRate);
@@ -174,6 +176,7 @@ void KNMusicModel::appendMusic(const QStringList &info,
     songItem->setData(datas.lastPlayed, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::Size);
     songItem->setData(datas.size, Qt::UserRole);
+    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem=songItemList.at(KNMusicGlobal::Rating);
     songItem->setData(QVariant::fromValue(KNMusicStarRating(datas.rating)),
                       0);

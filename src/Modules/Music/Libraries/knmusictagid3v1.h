@@ -17,7 +17,7 @@ public:
         QString album;
         QString year;
         QString comment;
-        qint64 track;
+        quint8 track;
         QString genre;
     };
     explicit KNMusicTagID3v1(QObject *parent = 0);

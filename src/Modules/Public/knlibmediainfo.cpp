@@ -18,8 +18,9 @@ using namespace MediaInfoNameSpace;
 #endif
 
 #ifdef Q_OS_MACX
-//#include "MediaInfo/Mac/MediaInfo.h"
-//using namespace MediaInfoLib;
+//#include "MediaInfoDLL.h"
+//#define MediaInfoNameSpace MediaInfoDLL;
+//using namespace MediaInfoNameSpace;
 #endif
 
 KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :

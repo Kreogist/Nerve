@@ -50,6 +50,7 @@ void KNMusicListViewBase::resetHeader()
                              new KNMusicRatingDelegate(this));
     setEditTriggers(QAbstractItemView::SelectedClicked);
     setHeaderAlignment(KNMusicGlobal::Time, Qt::AlignRight);
+    setHeaderAlignment(KNMusicGlobal::Size, Qt::AlignRight);
     /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)

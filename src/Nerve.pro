@@ -62,7 +62,8 @@ SOURCES += \
     Modules/Base/knlibinfocollector.cpp \
     Modules/Base/knlibinfocollectormanager.cpp \
     Modules/Music/Libraries/knmusicalbumdetailmodel.cpp \
-    Modules/Public/knlibmediainfo.cpp
+    Modules/Public/knlibmediainfo.cpp \
+    Modules/Music/Widgets/knmusicartistsongs.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -121,7 +122,10 @@ HEADERS += \
     Modules/Base/knlibinfocollectormanager.h \
     Modules/Music/Libraries/knmusicalbumdetailmodel.h \
     Modules/Public/knlibmediainfo.h \
-    Modules/Public/MediaInfoDLL.h
+    Modules/Public/MediaInfoDLL.h \
+    Modules/Music/Widgets/knmusicartistsongs.h
 
 RESOURCES += \
     res.qrc
+
+LIBS += /usr/lib/libmediainfo.dylib
