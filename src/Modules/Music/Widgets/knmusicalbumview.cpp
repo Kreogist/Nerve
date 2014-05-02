@@ -537,16 +537,15 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentRow+=skipLineCount;
     currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
+    if(m_model->isNoAlbumHidden())
+    {
+        albumIndex++;
+    }
     m_firstVisibleIndex=albumIndex;
     QModelIndex currentPaintIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         currentPaintIndex=m_model->index(albumIndex, 0, rootIndex());
-        while(isIndexHidden(currentPaintIndex))
-        {
-            albumIndex++;
-            currentPaintIndex=m_model->index(albumIndex, 0, rootIndex());
-        }
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
