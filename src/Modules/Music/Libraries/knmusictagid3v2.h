@@ -53,6 +53,7 @@ private:
     QString id3v2DataToString(const QByteArray &value) const;
     int hexTo5Rating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);
+    void processPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;
     ID3v2Data m_tagData;
     QTextCodec *m_beCodec, *m_leCodec, *m_utf8Codec, *m_localeCodec;

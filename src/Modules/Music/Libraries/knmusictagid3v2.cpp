@@ -246,7 +246,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
             m_tagData.frameData.append(frameData);
             if(QString(rawFrameID)=="PIC")
             {
-                processAPIC(frameData);
+                processPIC(frameData);
             }
             rawPosition+=(frameSize+6);
             delete[] rawFrameData;
@@ -276,6 +276,55 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     quint8 pictureType=(quint8)(value.at(zeroCharEnd+1));
     zeroCharEnd+=2;
     int descriptionEnd;
+    switch(encoding)
+    {
+    case 0:
+        //ISO
+        descriptionEnd=content.indexOf('\0', zeroCharEnd);
+        currentImage.description=
+            QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
+        content.remove(0, descriptionEnd+1);
+        break;
+    case 1:
+        //UTF-16
+        descriptionEnd=zeroCharEnd;
+        while(content.at(descriptionEnd)!=0 &&
+              content.at(descriptionEnd+1)!=0)
+        {
+            descriptionEnd+=2;
+        }
+        if((quint8)content.at(zeroCharEnd)==0xFE && (quint8)content.at(zeroCharEnd+1)==0xFF)
+        {
+            content.remove(0,2);
+            currentImage.description=m_beCodec->toUnicode(content.mid(zeroCharEnd,
+                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+        }
+        if((quint8)content.at(zeroCharEnd)==0xFF && (quint8)content.at(zeroCharEnd+1)==0xFE)
+        {
+            content.remove(0,2);
+            currentImage.description=m_leCodec->toUnicode(content.mid(zeroCharEnd,
+                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+        }
+        content.remove(0, descriptionEnd+2);
+        break;
+    default:
+        descriptionEnd=content.indexOf('\0', zeroCharEnd);
+        content.remove(0, descriptionEnd+1);
+        break;
+    }
+    //JFIF Test
+    currentImage.image.loadFromData(content, imageType.toStdString().data());
+    m_tagImages[pictureType]=currentImage;
+}
+
+void KNMusicTagID3v2::processPIC(const QByteArray &value)
+{
+    ID3v2Image currentImage;
+    QByteArray content=value;
+    quint8 encoding=(quint8)(value.at(0)),
+           pictureType=(quint8)(value.at(4));
+    QString imageType(content.mid(1, 3).toLower());
+    int zeroCharEnd=5, descriptionEnd;
     switch(encoding)
     {
     case 0:
