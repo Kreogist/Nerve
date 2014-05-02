@@ -26,9 +26,6 @@ public:
     void resetHeader();
 
 signals:
-    void requireOpenUrl(const QModelIndex &index);
-    void requireShowContextMenu(const QPoint &position,
-                                const QModelIndex &index);
 
 private:
     QLabel *m_artistName, *m_artistInfo;
@@ -50,9 +47,6 @@ public:
     void setSongListView(KNMusicListView *listview);
 
 signals:
-    void requireOpenUrl(const QModelIndex &index);
-    void requireShowContextMenu(const QPoint &position,
-                                const QModelIndex &index);
 
 public slots:
     void resort();

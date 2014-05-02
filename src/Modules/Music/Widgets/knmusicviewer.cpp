@@ -43,27 +43,29 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
     m_artistView=new KNMusicArtistView(this);
-    m_artistView->setSongListView(new KNMusicArtistSongs(m_artistView));
-    connect(m_artistView, &KNMusicArtistView::requireOpenUrl,
-            this, &KNMusicViewer::onActionArtistOpenUrl);
-    connect(m_artistView, &KNMusicArtistView::requireShowContextMenu,
-            this, &KNMusicViewer::onActionArtistShowContextMenu);
+    m_artistSongView=new KNMusicArtistSongs(m_artistView);
+    m_artistView->setSongListView(m_artistSongView);
     m_artistView->setModel(m_artistModel);
+    connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
+            this, &KNMusicViewer::onActionArtistOpenUrl);
+    connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
+            this, &KNMusicViewer::onActionArtistShowContextMenu);
 
     m_albumView=new KNMusicAlbumView(this);
+    m_albumView->setCategoryModel(m_albumModel);
     connect(m_albumView, &KNMusicAlbumView::requireOpenUrl,
             this, &KNMusicViewer::onActionAlbumOpenUrl);
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
             this, &KNMusicViewer::onActionAlbumShowContextMenu);
-    m_albumView->setCategoryModel(m_albumModel);
 
     m_genreView=new KNMusicArtistView(this);
-    m_genreView->setSongListView(new KNMusicGenreSongs(m_genreView));
-    connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
-            this, &KNMusicViewer::onActionGenreOpenUrl);
-    connect(m_genreView, &KNMusicArtistView::requireShowContextMenu,
-            this, &KNMusicViewer::onActionGenreShowContextMenu);
+    m_genreSongView=new KNMusicGenreSongs(m_genreView);
+    m_genreView->setSongListView(m_genreSongView);
     m_genreView->setModel(m_genreModel);
+    connect(m_genreSongView, &KNMusicGenreSongs::requireOpenUrl,
+            this, &KNMusicViewer::onActionGenreOpenUrl);
+    connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
+            this, &KNMusicViewer::onActionGenreShowContextMenu);
 
     m_artistDetails=new KNMusicCategoryDetailModel(this);
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);

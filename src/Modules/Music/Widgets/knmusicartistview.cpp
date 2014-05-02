@@ -89,12 +89,8 @@ void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
 
 void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListView *listview)
 {
-    connect(listview, &KNMusicListView::requireOpenUrl,
-            this, &KNMusicCategoryDetailsDisplay::requireOpenUrl);
-    connect(listview, &KNMusicListView::requireShowContextMenu,
-            this, &KNMusicCategoryDetailsDisplay::requireShowContextMenu);
-    m_layout->addWidget(listview, 1);
     m_songViewer=listview;
+    m_layout->addWidget(m_songViewer, 1);
 }
 
 void KNMusicCategoryDetailsDisplay::resetHeader()
@@ -123,10 +119,6 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicCategoryDetailsDisplay(this);
-    connect(m_artistDetails, &KNMusicCategoryDetailsDisplay::requireOpenUrl,
-            this, &KNMusicArtistView::requireOpenUrl);
-    connect(m_artistDetails, &KNMusicCategoryDetailsDisplay::requireShowContextMenu,
-            this, &KNMusicArtistView::requireShowContextMenu);
     addWidget(m_artistDetails);
     setCollapsible(1, false);
     setStretchFactor(1, 1);
