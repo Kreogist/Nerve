@@ -152,6 +152,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                     (((quint32)header[7]<<14)&0b00000000000111111100000000000000)+
                     (((quint32)header[8]<<7) &0b00000000000000000011111110000000)+
                     ((quint32)header[9]      &0b00000000000000000000000001111111);
+    qDebug()<<"tagSize: "<<tagSize;
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
@@ -175,6 +176,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     if(id3v23)
     {
         rawFrameID[4]='\0';
+        quint32 frameSize;
         while(rawPosition<tagSize)
         {
             strncpy(rawFrameID, rawTagData+rawPosition, 4);
@@ -183,10 +185,21 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                 //If no tags, means behind of these datas are all '\0'.
                 break;
             }
-            quint32 frameSize=((((quint32)rawTagData[rawPosition+4])<<24)&0b11111111000000000000000000000000)+
-                              ((((quint32)rawTagData[rawPosition+5])<<16)&0b00000000111111110000000000000000)+
-                              ((((quint32)rawTagData[rawPosition+6])<<8) &0b00000000000000001111111100000000)+
-                              (((quint32)rawTagData[rawPosition+7])      &0b00000000000000000000000011111111);
+            if(m_tagData.version==3)
+            {
+                frameSize=(((quint32)rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
+                          (((quint32)rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
+                          (((quint32)rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
+                          ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000011111111);
+
+            }
+            else
+            {
+                frameSize=(((quint32)rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
+                          (((quint32)rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
+                          (((quint32)rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
+                          ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
+            }
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.

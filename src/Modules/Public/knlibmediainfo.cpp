@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QStringList>
 
+#ifdef Q_OS_WIN32
 #include "MediaInfoDLL.h"
 #define MediaInfoNameSpace MediaInfoDLL;
 using namespace MediaInfoNameSpace;
@@ -14,6 +15,12 @@ using namespace MediaInfoNameSpace;
         #define _itot itoa
     #endif //_UNICODE
 #endif //__MINGW32
+#endif
+
+#ifdef Q_OS_MACX
+//#include "MediaInfo/Mac/MediaInfo.h"
+//using namespace MediaInfoLib;
+#endif
 
 KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :
     QObject(parent)
@@ -23,19 +30,16 @@ KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :
 
 void KNLibMediaInfo::analysisFile(const QString &filePath)
 {
-    //Information about MediaInfo
+#ifdef Q_OS_WIN32
     MediaInfo MI;
     String To_Display;
-
-    //An example of how to use the library
     MI.Open(filePath.toStdWString());
 
     MI.Option(__T("Complete"));
     To_Display += MI.Inform().c_str();
-
-    MI.Close();
-
     m_originalData=QString::fromWCharArray(To_Display.c_str());
+    MI.Close();
+#endif
 }
 
 QString KNLibMediaInfo::originalData() const
