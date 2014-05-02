@@ -47,7 +47,6 @@ SOURCES += \
     Modules/Music/Libraries/knmusicartistitem.cpp \
     Modules/Music/Libraries/knmusiccategorymodel.cpp \
     Modules/Music/Libraries/knmusicgenremodel.cpp \
-    Modules/Music/Widgets/knmusicartistlist.cpp \
     Modules/Music/Libraries/knmusiccategorydetailmodel.cpp \
     Modules/Music/Widgets/knmusicratingdelegate.cpp \
     Modules/Music/Libraries/knmusicstarrating.cpp \
@@ -63,7 +62,9 @@ SOURCES += \
     Modules/Base/knlibinfocollectormanager.cpp \
     Modules/Music/Libraries/knmusicalbumdetailmodel.cpp \
     Modules/Public/knlibmediainfo.cpp \
-    Modules/Music/Widgets/knmusicartistsongs.cpp
+    Modules/Music/Widgets/knmusicartistsongs.cpp \
+    Modules/Music/Widgets/knmusiccategorylist.cpp \
+    Modules/Music/Widgets/knmusicgenresongs.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -106,7 +107,6 @@ HEADERS += \
     Modules/Music/Libraries/knmusicartistitem.h \
     Modules/Music/Libraries/knmusiccategorymodel.h \
     Modules/Music/Libraries/knmusicgenremodel.h \
-    Modules/Music/Widgets/knmusicartistlist.h \
     Modules/Music/Libraries/knmusiccategorydetailmodel.h \
     Modules/Music/Widgets/knmusicratingdelegate.h \
     Modules/Music/Libraries/knmusicstarrating.h \
@@ -123,7 +123,9 @@ HEADERS += \
     Modules/Music/Libraries/knmusicalbumdetailmodel.h \
     Modules/Public/knlibmediainfo.h \
     Modules/Public/MediaInfoDLL.h \
-    Modules/Music/Widgets/knmusicartistsongs.h
+    Modules/Music/Widgets/knmusicartistsongs.h \
+    Modules/Music/Widgets/knmusiccategorylist.h \
+    Modules/Music/Widgets/knmusicgenresongs.h
 
 RESOURCES += \
     res.qrc

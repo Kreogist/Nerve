@@ -30,8 +30,8 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
 
     //Set locale.
     retranslate();
-    connect(KNLocale::instance(), SIGNAL(languageChanged()),
-            this, SLOT(retranslateAndSet()));
+    connect(KNLocale::instance(), &KNLocale::languageChanged,
+            this, &KNMusicListViewBase::retranslateAndSet);
 
     //Set music header.
     m_headerWidget=new KNMusicListViewHeader(this);

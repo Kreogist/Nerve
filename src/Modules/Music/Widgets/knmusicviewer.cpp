@@ -11,6 +11,8 @@
 #include "knmusiclistview.h"
 #include "knmusicartistview.h"
 #include "knmusicalbumview.h"
+#include "knmusicartistsongs.h"
+#include "knmusicgenresongs.h"
 
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
@@ -41,6 +43,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
     m_artistView=new KNMusicArtistView(this);
+    m_artistView->setSongListView(new KNMusicArtistSongs(m_artistView));
     connect(m_artistView, &KNMusicArtistView::requireOpenUrl,
             this, &KNMusicViewer::onActionArtistOpenUrl);
     connect(m_artistView, &KNMusicArtistView::requireShowContextMenu,
@@ -55,6 +58,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_albumView->setCategoryModel(m_albumModel);
 
     m_genreView=new KNMusicArtistView(this);
+    m_genreView->setSongListView(new KNMusicGenreSongs(m_genreView));
     connect(m_genreView, &KNMusicArtistView::requireOpenUrl,
             this, &KNMusicViewer::onActionGenreOpenUrl);
     connect(m_genreView, &KNMusicArtistView::requireShowContextMenu,

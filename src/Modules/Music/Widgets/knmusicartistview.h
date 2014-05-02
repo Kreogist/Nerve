@@ -5,12 +5,13 @@
 #include <QSplitter>
 #include <QThread>
 
+class QBoxLayout;
 class QLabel;
 class QStandardItemModel;
-class KNMusicArtistList;
+class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
-class KNMusicArtistSongs;
+class KNMusicListView;
 
 class KNMusicCategoryDetailsDisplay : public QWidget
 {
@@ -21,6 +22,7 @@ public:
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void setCurrentIndex(const QModelIndex &index);
+    void setSongListView(KNMusicListView *listview);
     void resetHeader();
 
 signals:
@@ -31,7 +33,8 @@ signals:
 private:
     QLabel *m_artistName, *m_artistInfo;
     QString m_song, m_songs;
-    KNMusicArtistSongs *m_songViewer;
+    KNMusicListView *m_songViewer;
+    QBoxLayout *m_layout;
 };
 
 class KNMusicArtistView : public QSplitter
@@ -44,6 +47,7 @@ public:
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
+    void setSongListView(KNMusicListView *listview);
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -59,7 +63,7 @@ private slots:
                               const QModelIndex &previous);
 
 private:
-    KNMusicArtistList *m_artistList;
+    KNMusicCategoryList *m_artistList;
     KNMusicCategoryDetailsDisplay *m_artistDetails;
     KNMusicCategoryModel *m_artistModel;
     KNMusicCategoryDetailModel *m_artistDetailModel;

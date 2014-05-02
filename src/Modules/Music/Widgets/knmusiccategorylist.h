@@ -5,11 +5,11 @@
 
 class QTimeLine;
 class KNMusicCategoryModel;
-class KNMusicArtistList : public QListView
+class KNMusicCategoryList : public QListView
 {
     Q_OBJECT
 public:
-    explicit KNMusicArtistList(QWidget *parent = 0);
+    explicit KNMusicCategoryList(QWidget *parent = 0);
     void setModel(QAbstractItemModel *model);
 
 protected:

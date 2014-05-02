@@ -5,9 +5,9 @@
 
 #include "../Libraries/knmusiccategorymodel.h"
 
-#include "knmusicartistlist.h"
+#include "knmusiccategorylist.h"
 
-KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
+KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     QListView(parent)
 {
     viewport()->setContentsMargins(0,0,0,0);
@@ -38,27 +38,27 @@ KNMusicArtistList::KNMusicArtistList(QWidget *parent) :
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x50);
     connect(m_mouseIn, &QTimeLine::frameChanged,
-            this, &KNMusicArtistList::changeBackground);
+            this, &KNMusicCategoryList::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEndFrame(m_minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
-            this, &KNMusicArtistList::changeBackground);
+            this, &KNMusicCategoryList::changeBackground);
 }
 
-void KNMusicArtistList::setModel(QAbstractItemModel *model)
+void KNMusicCategoryList::setModel(QAbstractItemModel *model)
 {
     QListView::setModel(model);
     KNMusicCategoryModel *categoryModel=qobject_cast<KNMusicCategoryModel *>(model);
     connect(categoryModel, &KNMusicCategoryModel::requireShowFirstItem,
-            this, &KNMusicArtistList::showFirstItem);
+            this, &KNMusicCategoryList::showFirstItem);
     connect(categoryModel, &KNMusicCategoryModel::requireHideFirstItem,
-            this, &KNMusicArtistList::hideFirstItem);
+            this, &KNMusicCategoryList::hideFirstItem);
     hideFirstItem();
 }
 
-void KNMusicArtistList::enterEvent(QEvent *e)
+void KNMusicCategoryList::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
     m_mouseIn->stop();
@@ -67,7 +67,7 @@ void KNMusicArtistList::enterEvent(QEvent *e)
     QListView::enterEvent(e);
 }
 
-void KNMusicArtistList::leaveEvent(QEvent *e)
+void KNMusicCategoryList::leaveEvent(QEvent *e)
 {
     m_mouseIn->stop();
     m_mouseOut->stop();
@@ -76,7 +76,7 @@ void KNMusicArtistList::leaveEvent(QEvent *e)
     QListView::leaveEvent(e);
 }
 
-void KNMusicArtistList::changeBackground(int frameData)
+void KNMusicCategoryList::changeBackground(int frameData)
 {
     m_backgroundColor=QColor(frameData, frameData, frameData);
     int baseGrey=((frameData-m_minGrey)>>1)+m_minGrey;
@@ -90,12 +90,12 @@ void KNMusicArtistList::changeBackground(int frameData)
     setPalette(m_palette);
 }
 
-void KNMusicArtistList::showFirstItem()
+void KNMusicCategoryList::showFirstItem()
 {
     setRowHidden(0, false);
 }
 
-void KNMusicArtistList::hideFirstItem()
+void KNMusicCategoryList::hideFirstItem()
 {
     setRowHidden(0, true);
 }

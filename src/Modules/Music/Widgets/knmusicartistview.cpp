@@ -12,8 +12,8 @@
 
 #include "../knmusicglobal.h"
 
-#include "knmusicartistlist.h"
-#include "knmusicartistsongs.h"
+#include "knmusiccategorylist.h"
+#include "knmusiclistview.h"
 
 #include "knmusicartistview.h"
 
@@ -22,7 +22,7 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
 {
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
-    QBoxLayout *m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
     m_layout->setSpacing(0);
     setLayout(m_layout);
@@ -57,13 +57,6 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     m_layout->addWidget(m_artistInfo);
 
     m_layout->addSpacing(20);
-
-    m_songViewer=new KNMusicArtistSongs(this);
-    connect(m_songViewer, &KNMusicArtistSongs::requireOpenUrl,
-            this, &KNMusicCategoryDetailsDisplay::requireOpenUrl);
-    connect(m_songViewer, &KNMusicArtistSongs::requireShowContextMenu,
-            this, &KNMusicCategoryDetailsDisplay::requireShowContextMenu);
-    m_layout->addWidget(m_songViewer, 1);
 }
 
 void KNMusicCategoryDetailsDisplay::setArtistName(const QString &artistName)
@@ -94,6 +87,16 @@ void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
     m_songViewer->setCurrentIndex(index);
 }
 
+void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListView *listview)
+{
+    connect(listview, &KNMusicListView::requireOpenUrl,
+            this, &KNMusicCategoryDetailsDisplay::requireOpenUrl);
+    connect(listview, &KNMusicListView::requireShowContextMenu,
+            this, &KNMusicCategoryDetailsDisplay::requireShowContextMenu);
+    m_layout->addWidget(listview, 1);
+    m_songViewer=listview;
+}
+
 void KNMusicCategoryDetailsDisplay::resetHeader()
 {
     m_songViewer->resetHeader();
@@ -116,7 +119,7 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     pal.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(pal);
 
-    m_artistList=new KNMusicArtistList(this);
+    m_artistList=new KNMusicCategoryList(this);
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicCategoryDetailsDisplay(this);
@@ -168,6 +171,11 @@ void KNMusicArtistView::selectItem(const QModelIndex &index)
     {
         m_artistDetails->setCurrentIndex(testIndex);
     }
+}
+
+void KNMusicArtistView::setSongListView(KNMusicListView *listview)
+{
+    m_artistDetails->setSongListView(listview);
 }
 
 void KNMusicArtistView::resort()
