@@ -1,6 +1,7 @@
 #include "knlibmediainfo.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QStringList>
 
 #ifdef Q_OS_WIN32
@@ -43,11 +44,9 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
 #endif
 #ifdef Q_OS_MACX
     MediaInfo MI;
-    MI.Open(__T("/Users/Saki/Music/Won(*3*)Chu KissMe!.m4a"));
+    MI.Open(filePath.toStdString().c_str());
     MI.Option(__T("Complete"));
-    String To_Display=MI.Inform().c_str();
-    //m_originalData=QString(To_Display.c_str());
-    qDebug()<<To_Display.c_str();
+    m_originalData=MI.Inform().c_str();
     MI.Close();
 #endif
 }
