@@ -28,6 +28,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 1, Qt::UserRole);
     setHeaderData(KNMusicGlobal::TrackCount, Qt::Horizontal, 1, Qt::UserRole);
     setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, 2, Qt::UserRole);
+    setHeaderData(KNMusicGlobal::BitRate, Qt::Horizontal, 3, Qt::UserRole);
 }
 
 bool KNMusicModel::readFromDataStream(QDataStream &stream)
@@ -168,7 +169,7 @@ void KNMusicModel::appendMusic(const QStringList &info,
     songItem->setData(datas.duration, Qt::UserRole);
     songItem->setData(datas.coverImage, Qt::UserRole+1);
     songItem=songItemList.at(KNMusicGlobal::BitRate);
-    songItem->setData(datas.bitRate, Qt::UserRole);
+    songItem->setData(QVariant(datas.bitRate), Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::SampleRate);
     songItem->setData(datas.samplingRate, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::DateModified);

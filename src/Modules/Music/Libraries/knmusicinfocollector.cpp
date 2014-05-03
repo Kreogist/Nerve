@@ -68,6 +68,8 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
     currentFileInfo.duration=m_duration;
+    currentFileInfo.bitRate=m_bitRate;
+    currentFileInfo.samplingRate=m_samplingRate;
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
