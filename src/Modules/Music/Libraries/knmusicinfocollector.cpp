@@ -223,6 +223,17 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             {
                 setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
             }
+            trackInfo=m_tagID3v2->id3v2String("TPOS");
+            diagonalPos=trackInfo.indexOf("/");
+            if(diagonalPos!=-1)
+            {
+                setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
+                setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
+            }
+            else
+            {
+                setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
+            }
             m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
         }
         else
@@ -248,6 +259,17 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             else
             {
                 setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
+            }
+            trackInfo=m_tagID3v2->id3v2String("TPA");
+            diagonalPos=trackInfo.indexOf("/");
+            if(diagonalPos!=-1)
+            {
+                setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
+                setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
+            }
+            else
+            {
+                setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
             }
             m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
         }

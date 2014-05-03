@@ -44,8 +44,6 @@ public:
         Description,
         DiscCount,
         DiscNumber,
-        EpisodeID,
-        EpisodeNumber,
         Equalizer,
         Genre,
         Grouping,

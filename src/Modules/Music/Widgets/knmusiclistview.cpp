@@ -1,6 +1,8 @@
-#include <QDebug>
-
 #include <QTimeLine>
+
+#include "../knmusicglobal.h"
+
+#include <QDebug>
 
 #include "knmusiclistview.h"
 
@@ -31,6 +33,15 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     m_mouseOut->setEndFrame(minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);
+}
+
+void KNMusicListView::resetHeader()
+{
+    KNMusicListViewBase::resetHeader();
+    setColumnWidth(KNMusicGlobal::Name, 430);
+    setColumnWidth(KNMusicGlobal::Time, 60);
+    setColumnWidth(KNMusicGlobal::Artist, 125);
+    setColumnWidth(KNMusicGlobal::Album, 200);
 }
 
 void KNMusicListView::enterEvent(QEvent *e)

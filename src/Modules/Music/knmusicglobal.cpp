@@ -90,8 +90,6 @@ void KNMusicGlobal::retranslate()
     m_header[Description]=tr("Description");
     m_header[DiscCount]=tr("Disc Count");
     m_header[DiscNumber]=tr("Disc Number");
-    m_header[EpisodeID]=tr("Episode ID");
-    m_header[EpisodeNumber]=tr("Episode Number");
     m_header[Equalizer]=tr("Equalizer");
     m_header[Genre]=tr("Genre");
     m_header[Grouping]=tr("Grouping");
