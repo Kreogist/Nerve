@@ -5,6 +5,10 @@ QT += core\
 
 CONFIG += c++11
 
+macx{
+    QMAKE_LFLAGS += -framework CoreFoundation
+}
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
@@ -129,5 +133,3 @@ HEADERS += \
 
 RESOURCES += \
     res.qrc
-
-LIBS += /usr/lib/libmediainfo.dylib

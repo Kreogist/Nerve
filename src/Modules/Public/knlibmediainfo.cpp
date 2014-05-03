@@ -18,9 +18,9 @@ using namespace MediaInfoNameSpace;
 #endif
 
 #ifdef Q_OS_MACX
-//#include "MediaInfoDLL.h"
-//#define MediaInfoNameSpace MediaInfoDLL;
-//using namespace MediaInfoNameSpace;
+#include "MediaInfoDLL.h"
+#define MediaInfoNameSpace MediaInfoDLL;
+using namespace MediaInfoNameSpace;
 #endif
 
 KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :
@@ -39,6 +39,15 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
     MI.Option(__T("Complete"));
     To_Display += MI.Inform().c_str();
     m_originalData=QString::fromWCharArray(To_Display.c_str());
+    MI.Close();
+#endif
+#ifdef Q_OS_MACX
+    MediaInfo MI;
+    MI.Open(__T("/Users/Saki/Music/Won(*3*)Chu KissMe!.m4a"));
+    MI.Option(__T("Complete"));
+    String To_Display=MI.Inform().c_str();
+    //m_originalData=QString(To_Display.c_str());
+    qDebug()<<To_Display.c_str();
     MI.Close();
 #endif
 }
