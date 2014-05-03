@@ -4,6 +4,7 @@
 #include <QList>
 #include <QUrl>
 #include <QObject>
+#include <QFileInfo>
 
 class KNModel;
 class KNLibSearcher : public QObject
@@ -24,6 +25,10 @@ protected:
     virtual int getType(const QString &suffix);
 
 private:
+    void analysisFolder(const QString &folderPath);
+    void analysisFile(const QString &suffix,
+                      const QString &filePath);
+    QFileInfo m_currentDetails;
     KNModel *m_model;
 };
 

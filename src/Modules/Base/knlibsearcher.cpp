@@ -1,4 +1,7 @@
-#include <QFileInfo>
+#include <QDir>
+#include <QFileInfoList>
+
+#include <QDebug>
 
 #include "knmodel.h"
 #include "knlibsearcher.h"
@@ -10,29 +13,27 @@ KNLibSearcher::KNLibSearcher(QObject *parent) :
 
 void KNLibSearcher::analysisList(const QList<QUrl> &urls)
 {
+    QFileInfo currentParser;
     QString currentPath;
-    QFileInfo currentDetails;
     for(int i=0, fileCount=urls.count();
         i<fileCount;
         ++i)
     {
         currentPath=urls.at(i).path();
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN32
         //Remove the very beginning '/' char.
         currentPath.remove(0, 1);
 #endif
-        currentDetails.setFile(currentPath);
-        if(currentDetails.isDir())
+        currentParser.setFile(currentPath);
+        if(currentParser.isDir())
         {
             //Search in the dir
-            ;
+            analysisFolder(currentParser.absoluteFilePath());
         }
-        if(currentDetails.isFile())
+        if(currentParser.isFile())
         {
-            if(getType(currentDetails.suffix())!=-1)
-            {
-                emit requireAnalysis(currentPath);
-            }
+            analysisFile(currentParser.suffix(),
+                         currentPath);
         }
     }
 }
@@ -41,6 +42,39 @@ int KNLibSearcher::getType(const QString &suffix)
 {
     Q_UNUSED(suffix);
     return -1;
+}
+
+void KNLibSearcher::analysisFolder(const QString &folderPath)
+{
+    QDir folderInfo(folderPath);
+    QFileInfoList filesData=folderInfo.entryInfoList();
+    for(int i=0; i<filesData.size(); i++)
+    {
+        QFileInfo currentParser=filesData.at(i);
+        QString currentName=currentParser.fileName();
+        if(currentName=="." || currentName=="..")
+        {
+            continue;
+        }
+        if(currentParser.isFile())
+        {
+            analysisFile(currentParser.suffix(),
+                         currentParser.absoluteFilePath());
+        }
+        if(currentParser.isDir())
+        {
+            analysisFolder(currentParser.absoluteFilePath());
+        }
+    }
+}
+
+void KNLibSearcher::analysisFile(const QString &suffix,
+                                 const QString &filePath)
+{
+    if(getType(suffix)!=-1)
+    {
+        emit requireAnalysis(filePath);
+    }
 }
 
 KNModel *KNLibSearcher::model() const

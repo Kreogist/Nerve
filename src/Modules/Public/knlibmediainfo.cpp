@@ -27,9 +27,7 @@ using namespace MediaInfoNameSpace;
 #ifdef Q_OS_LINUX
 #include <string>
 #include "ZenLib/Ztring.h"
-//#include "MediaInfo/MediaInfo.h"
 #include "MediaInfoDLL/MediaInfoDLL.h"
-//using namespace MediaInfoLib;
 #define MediaInfoNameSpace MediaInfoDLL
 using namespace MediaInfoNameSpace;
 using namespace ZenLib;
@@ -53,17 +51,10 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
     m_originalData=QString::fromWCharArray(To_Display.c_str());
     MI.Close();
 #endif
-#ifdef Q_OS_MACX
+#ifdef Q_OS_UNIX
     MediaInfo MI;
     MI.Open(filePath.toStdString().c_str());
-    MI.Option(__T("Complete"));
-    m_originalData=MI.Inform().c_str();
-    MI.Close();
-#endif
-#ifdef Q_OS_LINUX
-    MediaInfo MI;
-    MI.Open(filePath.toStdString().c_str());
-    MI.Option(__T("Complete"));
+    MI.Option("Complete");
     m_originalData=MI.Inform().c_str();
     MI.Close();
 #endif

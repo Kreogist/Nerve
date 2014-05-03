@@ -145,39 +145,59 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
 
     //Parse the datas.
     rawInfoData=basicInfoData["Duration"];
-    int minutePos=rawInfoData.indexOf("mn"),
-        secondPos=rawInfoData.indexOf("s");
-    QString minuteString, secondString;
-    if(minutePos==-1)
+    int hourPos=rawInfoData.indexOf("h"),
+        minutePos=rawInfoData.indexOf("mn"),
+        secondPos=rawInfoData.indexOf("s"),
+        hour, minute, second;
+    if(hourPos==-1)
     {
-        //Too short.
-        secondString=rawInfoData.left(secondPos);
-        setMediaData(KNMusicGlobal::Time, "0:"+secondString);
-        m_duration=secondString.toInt();
+        if(minutePos==-1)
+        {
+            //Too short.
+            m_duration=rawInfoData.left(secondPos).toInt();
+            setMediaData(KNMusicGlobal::Time, "0:"+QString::number(m_duration));
+        }
+        else
+        {
+            minute=rawInfoData.left(minutePos).toInt();
+            second=rawInfoData.mid(minutePos+3, secondPos-minutePos-3).toInt();
+            m_duration=minute*60+second;
+            setMediaData(KNMusicGlobal::Time, QString::number(minute)+
+                                              ":"+
+                                              QString::number(second));
+        }
     }
     else
     {
-        minuteString=rawInfoData.left(minutePos);
-        secondString=rawInfoData.mid(minutePos+3, secondPos-minutePos-3);
-        setMediaData(KNMusicGlobal::Time, minuteString+":"+secondString);
-        m_duration=minuteString.toInt()*60+secondString.toInt();
+        //So long.
+        hour=rawInfoData.left(hourPos).toInt();
+        minute=rawInfoData.mid(hourPos+2, minutePos-hourPos-2).toInt();
+        second=rawInfoData.mid(minutePos+3, secondPos-minutePos-3).toInt();
+        //Calculate minuate
+        m_duration=hour*60+minute;
+        setMediaData(KNMusicGlobal::Time, QString::number(m_duration)+
+                                          ":"+
+                                          QString::number(second));
+        //Calculate second
+        m_duration=m_duration*60+second;
     }
 
+    QString numberData;
     //Parse the bit rate.
     rawInfoData=basicInfoData["Bit rate"];
     secondPos=rawInfoData.lastIndexOf(" ");
-    secondString=rawInfoData.left(secondPos);
-    secondString.remove(' ');
-    setMediaData(KNMusicGlobal::BitRate, secondString+" "+rawInfoData.mid(secondPos+1));
-    m_bitRate=secondString.toFloat();
+    numberData=rawInfoData.left(secondPos);
+    numberData.remove(' ');
+    setMediaData(KNMusicGlobal::BitRate, numberData+" "+rawInfoData.mid(secondPos+1));
+    m_bitRate=numberData.toFloat();
 
     //Parse the sampling rate.
     rawInfoData=basicInfoData["Sampling rate"];
     secondPos=rawInfoData.lastIndexOf(" ");
-    secondString=rawInfoData.left(secondPos);
-    secondString.remove(' ');
-    setMediaData(KNMusicGlobal::SampleRate, secondString+" "+rawInfoData.mid(secondPos+1));
-    m_samplingRate=secondString.toInt();
+    numberData=rawInfoData.left(secondPos);
+    numberData.remove(' ');
+    setMediaData(KNMusicGlobal::SampleRate, numberData+" "+rawInfoData.mid(secondPos+1));
+    m_samplingRate=numberData.toInt();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)
