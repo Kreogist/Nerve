@@ -133,10 +133,21 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     rawInfoData=basicInfoData["Duration"];
     int minutePos=rawInfoData.indexOf("mn"),
         secondPos=rawInfoData.indexOf("s");
-    QString minuteString=rawInfoData.left(minutePos),
-            secondString=rawInfoData.mid(minutePos+3, secondPos-minutePos-3);
-    setMediaData(KNMusicGlobal::Time, minuteString+":"+secondString);
-    m_duration=minuteString.toInt()*60+secondString.toInt();
+    QString minuteString, secondString;
+    if(minutePos==-1)
+    {
+        //Too short.
+        secondString=rawInfoData.left(secondPos);
+        setMediaData(KNMusicGlobal::Time, "0:"+secondString);
+        m_duration=secondString.toInt();
+    }
+    else
+    {
+        minuteString=rawInfoData.left(minutePos);
+        secondString=rawInfoData.mid(minutePos+3, secondPos-minutePos-3);
+        setMediaData(KNMusicGlobal::Time, minuteString+":"+secondString);
+        m_duration=minuteString.toInt()*60+secondString.toInt();
+    }
 
     //Parse the bit rate.
     rawInfoData=basicInfoData["Bit rate"];

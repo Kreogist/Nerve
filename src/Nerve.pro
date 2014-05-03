@@ -130,4 +130,6 @@ HEADERS += \
 RESOURCES += \
     res.qrc
 
-LIBS += /usr/lib/libmediainfo.dylib
+unix {
+    LIBS += /usr/lib/libmediainfo.dylib
+}

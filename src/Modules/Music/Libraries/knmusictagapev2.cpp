@@ -81,14 +81,14 @@ bool KNMusicTagAPEv2::checkAPEHeaderAt(int position,
     bool headerExsist=(strcmp(m_preambleCheck, m_apePreamble)==0);
     if(headerExsist)
     {
-        m_versionNumber=((((quint32)m_apeHeader[11])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)m_apeHeader[10])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)m_apeHeader[9]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)m_apeHeader[8])&0b00000000000000000000000011111111);
-        m_tagSize=((((quint32)m_apeHeader[15])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)m_apeHeader[14])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)m_apeHeader[13]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)m_apeHeader[12])&0b00000000000000000000000011111111);
+        m_versionNumber=(((quint32)m_apeHeader[11]<<24)&0b11111111000000000000000000000000)+
+                        (((quint32)m_apeHeader[10]<<16)&0b00000000111111110000000000000000)+
+                        (((quint32)m_apeHeader[9] <<8) &0b00000000000000001111111100000000)+
+                        ( (quint32)m_apeHeader[8]      &0b00000000000000000000000011111111);
+        m_tagSize=(((quint32)m_apeHeader[15]<<24)&0b11111111000000000000000000000000)+
+                  (((quint32)m_apeHeader[14]<<16)&0b00000000111111110000000000000000)+
+                  (((quint32)m_apeHeader[13]<<8) &0b00000000000000001111111100000000)+
+                  ( (quint32)m_apeHeader[12]     &0b00000000000000000000000011111111);
         m_itemCount=((((quint32)m_apeHeader[19])<<24)&0b11111111000000000000000000000000)+
                 ((((quint32)m_apeHeader[18])<<16)&0b00000000111111110000000000000000)+
                 (((((quint32)m_apeHeader[17]))<<8)&0b00000000000000001111111100000000)+
@@ -114,14 +114,18 @@ bool KNMusicTagAPEv2::readTagAt(int position, QDataStream &mediaData)
     int labelStart, labelEnd, labelLength;
     for(quint32 i=0; i<m_itemCount; i++)
     {
-        currentFrameSize=((((quint32)rawTagData[currentPosition+3])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[currentPosition+2])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)rawTagData[currentPosition+1]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[currentPosition])&0b00000000000000000000000011111111);
-        currentFlag=((((quint32)rawTagData[currentPosition+7])<<24)&0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[currentPosition+6])<<16)&0b00000000111111110000000000000000)+
-                (((((quint32)rawTagData[currentPosition+5]))<<8)&0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[currentPosition+4])&0b00000000000000000000000011111111);
+        currentFrameSize=(((quint32)rawTagData[currentPosition+3]<<24)&0b11111111000000000000000000000000)+
+                         (((quint32)rawTagData[currentPosition+2]<<16)&0b00000000111111110000000000000000)+
+                         (((quint32)rawTagData[currentPosition+1]<<8) &0b00000000000000001111111100000000)+
+                         ( (quint32)rawTagData[currentPosition]       &0b00000000000000000000000011111111);
+        if(currentFrameSize>m_tagSize)
+        {
+            break;
+        }
+        currentFlag=(((quint32)rawTagData[currentPosition+7]<<24)&0b11111111000000000000000000000000)+
+                    (((quint32)rawTagData[currentPosition+6]<<16)&0b00000000111111110000000000000000)+
+                    (((quint32)rawTagData[currentPosition+5] <<8)&0b00000000000000001111111100000000)+
+                    ( (quint32)rawTagData[currentPosition+4]     &0b00000000000000000000000011111111);
         labelStart=currentPosition+8;
         labelEnd=labelStart;
         while(rawTagData[labelEnd]!=0)
