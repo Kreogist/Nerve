@@ -49,7 +49,6 @@ public:
 signals:
 
 public slots:
-    void resort();
     void onActionSongCountChange(const int &value);
 
 private slots:

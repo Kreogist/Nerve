@@ -1,6 +1,8 @@
-#include "knmusicsortmodel.h"
+#include <QDateTime>
 
 #include <QDebug>
+
+#include "knmusicsortmodel.h"
 
 KNMusicSortModel::KNMusicSortModel(QObject *parent) :
     QSortFilterProxyModel(parent)
@@ -31,6 +33,8 @@ bool KNMusicSortModel::lessThan(const QModelIndex &left,
         return leftUserData.toInt()<rightUserData.toInt();
     case 3:
         return leftUserData.toFloat()<rightUserData.toFloat();
+    case 4:
+        return leftUserData.toDateTime()<rightUserData.toDateTime();
     }
     return QString::compare(leftData.toString(),
                             rightData.toString())<0;

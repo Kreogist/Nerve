@@ -127,9 +127,9 @@ void KNMusicViewer::retranslateAndSet()
 
 void KNMusicViewer::resort()
 {
-    m_artistView->resort();
+    m_artistModel->sort(0);
     m_albumModel->sort(0);
-    m_genreView->resort();
+    m_genreModel->sort(0);
 }
 
 void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
