@@ -106,6 +106,9 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
 #ifdef Q_OS_MACX
     itemLines=mediaInfoData.split("\r");
 #endif
+#ifdef Q_OS_LINUX
+    itemLines=mediaInfoData.split("\n");
+#endif
     QMap<QString, QString> basicInfoData;
     QString currentItem, itemCaption;
     int colonPosition, basicInfoIndex;

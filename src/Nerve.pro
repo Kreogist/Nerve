@@ -9,6 +9,10 @@ macx{
     QMAKE_LFLAGS += -framework CoreFoundation
 }
 
+unix{
+    LIBS += -ldl
+}
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
