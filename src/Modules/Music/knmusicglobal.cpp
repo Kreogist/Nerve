@@ -88,6 +88,7 @@ void KNMusicGlobal::retranslate()
     m_header[DateAdded]=tr("Date Added");
     m_header[DateModified]=tr("Date Modified");
     m_header[Description]=tr("Description");
+    m_header[DiscCount]=tr("Disc Count");
     m_header[DiscNumber]=tr("Disc Number");
     m_header[EpisodeID]=tr("Episode ID");
     m_header[EpisodeNumber]=tr("Episode Number");
@@ -102,6 +103,7 @@ void KNMusicGlobal::retranslate()
     m_header[Show]=tr("Show");
     m_header[Size]=tr("Size");
     m_header[Time]=tr("Time");
+    m_header[TrackCount]=tr("Track Count");
     m_header[TrackNumber]=tr("Track Number");
     m_header[Year]=tr("Year");
 

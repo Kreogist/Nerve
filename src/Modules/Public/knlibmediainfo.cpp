@@ -1,6 +1,7 @@
 #include "knlibmediainfo.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QStringList>
 
 #ifdef Q_OS_WIN32
@@ -18,9 +19,9 @@ using namespace MediaInfoNameSpace;
 #endif
 
 #ifdef Q_OS_MACX
-//#include "MediaInfoDLL.h"
-//#define MediaInfoNameSpace MediaInfoDLL;
-//using namespace MediaInfoNameSpace;
+#include "MediaInfoDLL.h"
+#define MediaInfoNameSpace MediaInfoDLL;
+using namespace MediaInfoNameSpace;
 #endif
 
 KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :
@@ -39,6 +40,13 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
     MI.Option(__T("Complete"));
     To_Display += MI.Inform().c_str();
     m_originalData=QString::fromWCharArray(To_Display.c_str());
+    MI.Close();
+#endif
+#ifdef Q_OS_MACX
+    MediaInfo MI;
+    MI.Open(filePath.toStdString().c_str());
+    MI.Option(__T("Complete"));
+    m_originalData=MI.Inform().c_str();
     MI.Close();
 #endif
 }

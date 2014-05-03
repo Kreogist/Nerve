@@ -97,8 +97,13 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     {
         return;
     }
-    QStringList itemLines=mediaInfoData.split("\n"),
-                basicInfo;
+    QStringList itemLines, basicInfo;
+#ifdef Q_OS_WIN32
+    itemLines=mediaInfoData.split("\n");
+#endif
+#ifdef Q_OS_MACX
+    itemLines=mediaInfoData.split("\r");
+#endif
     QMap<QString, QString> basicInfoData;
     QString currentItem, itemCaption;
     int colonPosition, basicInfoIndex;
@@ -109,6 +114,10 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     for(int i=0; i<itemLines.size(); i++)
     {
         currentItem=itemLines.at(i).simplified();
+        if(currentItem.isEmpty())
+        {
+            continue;
+        }
         colonPosition=currentItem.indexOf(':');
         if(colonPosition==-1)
         {
