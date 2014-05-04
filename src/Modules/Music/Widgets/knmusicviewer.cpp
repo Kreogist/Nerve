@@ -129,6 +129,7 @@ void KNMusicViewer::retranslateAndSet()
 
 void KNMusicViewer::resort()
 {
+    m_listViewModel->sort(0, Qt::AscendingOrder);
     m_artistModel->sort(0);
     m_albumModel->sort(0);
     m_genreModel->sort(0);

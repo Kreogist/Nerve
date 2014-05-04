@@ -105,7 +105,9 @@ void KNMusicPlugin::showContextMenu(const QPoint &position,
 
 void KNMusicPlugin::onActionOpenUrl(const QModelIndex &index)
 {
-    m_global->openLocalUrl(m_model->filePathFromIndex(index));
+    QString filePath=m_model->filePathFromIndex(index);
+    m_model->updateIndexInfo(index, filePath);
+    m_global->openLocalUrl(filePath);
 }
 
 void KNMusicPlugin::onActionGetInfo(const QModelIndex &index)

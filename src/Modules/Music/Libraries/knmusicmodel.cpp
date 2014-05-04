@@ -158,7 +158,7 @@ void KNMusicModel::addRawFileItem(const QString &filePath)
     if(fileCheck.size()!=0)
     {
         //Find the same file in the model, update it's information.
-        //!TODO: add information update code here.
+        updateIndexInfo(fileCheck.at(0), filePath);
         return;
     }
     QList<QStandardItem *> songItemList;

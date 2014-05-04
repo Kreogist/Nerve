@@ -17,6 +17,8 @@ public:
     bool writeToDataStream(QDataStream &stream);
     QString filePathFromIndex(const QModelIndex &index);
     void addRawFileItem(const QString &filePath);
+    void updateIndexInfo(const QModelIndex &index,
+                         const QString &filePath);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
@@ -31,8 +33,6 @@ protected slots:
     void onActionUpdateRowInfo(const QModelIndex &index);
 
 private:
-    void updateIndexInfo(const QModelIndex &index,
-                         const QString &filePath);
     KNMusicGlobal *m_musicGlobal;
     KNMusicInfoCollectorManager *m_infoCollectorManager;
 };
