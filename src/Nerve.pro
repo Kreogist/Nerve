@@ -72,7 +72,8 @@ SOURCES += \
     Modules/Public/knlibmediainfo.cpp \
     Modules/Music/Widgets/knmusicartistsongs.cpp \
     Modules/Music/Widgets/knmusiccategorylist.cpp \
-    Modules/Music/Widgets/knmusicgenresongs.cpp
+    Modules/Music/Widgets/knmusicgenresongs.cpp \
+    Modules/Music/Widgets/knmusicdetailinfo.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -133,7 +134,8 @@ HEADERS += \
     Modules/Public/MediaInfoDLL.h \
     Modules/Music/Widgets/knmusicartistsongs.h \
     Modules/Music/Widgets/knmusiccategorylist.h \
-    Modules/Music/Widgets/knmusicgenresongs.h
+    Modules/Music/Widgets/knmusicgenresongs.h \
+    Modules/Music/Widgets/knmusicdetailinfo.h
 
 RESOURCES += \
     res.qrc

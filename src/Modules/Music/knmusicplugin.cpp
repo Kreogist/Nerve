@@ -3,6 +3,7 @@
 #include <QList>
 #include <QFile>
 #include <QDir>
+#include <QScopedPointer>
 
 #include <QDebug>
 
@@ -12,6 +13,7 @@
 #include "Libraries/knmusicsearcher.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
+#include "Widgets/knmusicdetailinfo.h"
 
 #include "knmusicplugin.h"
 
@@ -104,4 +106,9 @@ void KNMusicPlugin::showContextMenu(const QPoint &position,
 void KNMusicPlugin::onActionOpenUrl(const QModelIndex &index)
 {
     m_global->openLocalUrl(m_model->filePathFromIndex(index));
+}
+
+void KNMusicPlugin::onActionGetInfo(const QModelIndex &index)
+{
+    QScopedPointer<KNMusicDetailInfo> details(new KNMusicDetailInfo);
 }

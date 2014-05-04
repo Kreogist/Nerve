@@ -33,6 +33,7 @@ private slots:
                          const QModelIndex &index,
                          KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
+    void onActionGetInfo(const QModelIndex &index);
 
 private:
     KNMusicViewer *m_musicViewer;

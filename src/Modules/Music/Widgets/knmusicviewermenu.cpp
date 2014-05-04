@@ -12,6 +12,13 @@
 KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     KNMenu(parent)
 {
+    QPalette pal=palette();
+    pal.setColor(QPalette::Base, QColor(0x10, 0x10, 0x10));
+    pal.setColor(QPalette::Text, QColor(0xff, 0xff, 0xff));
+    pal.setColor(QPalette::Highlight, QColor(0x60, 0x60, 0x60));
+    pal.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
+    setPalette(pal);
+
     m_global=KNGlobal::instance();
     retranslate();
     createActions();
@@ -142,6 +149,8 @@ void KNMusicViewerMenu::createActions()
             this, SLOT(onActionCopy()));
     connect(m_action[CopyText], SIGNAL(triggered()),
             this, SLOT(onActionCopyText()));
+    insertSeparator(m_action[ShowInSongs]);
+    insertSeparator(m_action[Browse]);
 }
 
 void KNMusicViewerMenu::setModel(QStandardItemModel *model)
