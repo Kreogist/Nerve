@@ -16,7 +16,6 @@ public:
     void setModel(KNModel *model);
 
 signals:
-    void requireAnalysis(const QString &filePath);
 
 public slots:
     void analysisList(const QList<QUrl> &urls);

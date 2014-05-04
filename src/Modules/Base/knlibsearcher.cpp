@@ -73,7 +73,6 @@ void KNLibSearcher::analysisFile(const QString &suffix,
 {
     if(getType(suffix)!=-1)
     {
-        //emit requireAnalysis(filePath);
         m_model->addRawFileItem(filePath);
     }
 }
