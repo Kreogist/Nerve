@@ -353,8 +353,11 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
         setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
         setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
         QByteArray trackData=m_tagM4A->metaData(KNMusicTagM4A::Tracknumber);
-        setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
-        setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
+        if(trackData.size()>6)
+        {
+            setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
+            setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
+        }
         m_musicCover=m_tagM4A->albumArt();
     }
 }
