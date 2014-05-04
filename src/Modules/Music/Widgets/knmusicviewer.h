@@ -31,9 +31,6 @@ public:
     void setDefaultHeader();
     void setModel(QAbstractItemModel *model);
 
-    KNLibSearcher *searcher() const;
-    void setSearcher(KNLibSearcher *searcher);
-
 signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index,
@@ -91,8 +88,6 @@ private:
 
     KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;
-
-    KNLibSearcher *m_searcher;
 
     QAbstractItemModel *m_sourceModel;
 };

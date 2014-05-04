@@ -13,6 +13,8 @@ KNMusicInfoCollectorManager::KNMusicInfoCollectorManager(QObject *parent) :
             this, &KNMusicInfoCollectorManager::currentWorkDone);
     connect(m_collector, &KNMusicInfoCollector::requireSkipCurrent,
             this, &KNMusicInfoCollectorManager::currentSkip);
+    connect(this, &KNMusicInfoCollectorManager::requireAnalysis,
+            m_collector, &KNMusicInfoCollector::analysis);
     m_collectThread.start();
 }
 
@@ -23,31 +25,47 @@ KNMusicInfoCollectorManager::~KNMusicInfoCollectorManager()
     m_collector->deleteLater();
 }
 
-void KNMusicInfoCollectorManager::addAnalysisList(const QString &filePath)
+void KNMusicInfoCollectorManager::addAnalysisList(const QModelIndex &index,
+                                                  const QString &filePath)
 {
+    m_indexList.append(index);
     m_fileList.append(filePath);
     if(!m_working)
     {
         m_working=true;
-        m_collector->analysis(m_fileList.at(0));
+        emit requireAnalysis(m_fileList.at(0));
     }
 }
 
 void KNMusicInfoCollectorManager::currentSkip()
 {
+    m_indexList.removeFirst();
     m_fileList.removeFirst();
-    if(m_fileList.count()==0)
+    if(m_fileList.size()==0)
     {
         m_working=false;
         emit requireSortData();
         return;
     }
-    m_collector->analysis(m_fileList.at(0));
+    emit requireAnalysis(m_fileList.at(0));
 }
 
 void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
                                                   const KNMusicGlobal::MusicDetailsInfo &datas)
 {
-    emit requireAppendMusic(value, datas);
+    //emit requireAppendMusic(value, datas);
+    m_currentFileData=value;
+    m_currentFileAppendData=datas;
+    emit requireUpdateRowInfo(m_indexList.at(0));
     currentSkip();
+}
+
+KNMusicGlobal::MusicDetailsInfo KNMusicInfoCollectorManager::currentFileAppendData() const
+{
+    return m_currentFileAppendData;
+}
+
+QStringList KNMusicInfoCollectorManager::currentFileData() const
+{
+    return m_currentFileData;
 }

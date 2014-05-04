@@ -23,14 +23,14 @@ public:
 
 signals:
     void requireAppendMusic(const QStringList &value,
-                            const KNMusicGlobal::MusicDetailsInfo &info);
+                            const KNMusicGlobal::MusicDetailsInfo &datas);
     void requireSkipCurrent();
 
 public slots:
     void analysis(const QString &filePath);
 
 private:
-    void resetMusicInfo();
+    void resetInfoCache();
     void parseByMediaInfo(const QString &value);
     void readID3v1Tag(const QString &value);
     void readID3v2Tag(const QString &value);

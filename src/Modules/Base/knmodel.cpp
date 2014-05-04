@@ -38,8 +38,25 @@ void KNModel::retranslateAndSet()
     retranslate();
 }
 
+void KNModel::onActionUpdateRowInfo(const QModelIndex &index)
+{
+    Q_UNUSED(index);
+}
+KNLibInfoCollectorManager *KNModel::infoCollectorManager() const
+{
+    return m_infoCollectorManager;
+}
+
 void KNModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
 {
-    m_infoCollectorManager = infoCollectorManager;
+    m_infoCollectorManager=infoCollectorManager;
+    connect(m_infoCollectorManager, &KNLibInfoCollectorManager::requireUpdateRowInfo,
+            this, &KNModel::onActionUpdateRowInfo);
+}
+
+
+void KNModel::addRawFileItem(const QString &filePath)
+{
+    Q_UNUSED(filePath);
 }
 

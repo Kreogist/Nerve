@@ -2,23 +2,27 @@
 #include <QStandardItem>
 #include <QModelIndexList>
 #include <QDataStream>
+#include <QFileInfo>
 #include <QBuffer>
+#include <QStringList>
 
 #include <QDebug>
 
 #include "../../knglobal.h"
 #include "knmusicstarrating.h"
 
+#include "knmusicinfocollectormanager.h"
+
 #include "knmusicmodel.h"
 
 KNMusicModel::KNMusicModel(QObject *parent) :
     KNModel(parent)
 {
-    musicGlobal=KNMusicGlobal::instance();
+    m_musicGlobal=KNMusicGlobal::instance();
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
-        header<<(musicGlobal->getHeader(i));
+        header<<(m_musicGlobal->getHeader(i));
     }
     setHorizontalHeaderLabels(header);
 
@@ -146,51 +150,38 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
     return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
 }
 
-void KNMusicModel::appendMusic(const QStringList &info,
-                               const KNMusicGlobal::MusicDetailsInfo &datas)
+void KNMusicModel::addRawFileItem(const QString &filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),
                                     Qt::UserRole,
-                                    datas.filePath);
+                                    filePath);
     if(fileCheck.size()!=0)
     {
-        //Find the same file in the model.
+        //Find the same file in the model, update it's information.
+        //!TODO: add information update code here.
         return;
     }
     QList<QStandardItem *> songItemList;
     QStandardItem *songItem;
-    for(int i=0;
-        i<info.count();
-        i++)
+    for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
     {
-        songItem=new QStandardItem(info.at(i));
+        songItem=new QStandardItem();
         songItem->setEditable(false);
         songItemList.append(songItem);
     }
-    songItem=songItemList.at(KNMusicGlobal::Time);
-    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
-    songItem->setData(datas.duration, Qt::UserRole);
-    songItem->setData(datas.coverImage, Qt::UserRole+1);
-    songItem=songItemList.at(KNMusicGlobal::BitRate);
-    songItem->setData(QVariant(datas.bitRate), Qt::UserRole);
-    songItem=songItemList.at(KNMusicGlobal::SampleRate);
-    songItem->setData(datas.samplingRate, Qt::UserRole);
-    songItem=songItemList.at(KNMusicGlobal::DateModified);
-    songItem->setData(datas.dateModified, Qt::UserRole);
-    songItem=songItemList.at(KNMusicGlobal::LastPlayed);
-    songItem->setData(datas.lastPlayed, Qt::UserRole);
-    songItem=songItemList.at(KNMusicGlobal::Size);
-    songItem->setData(datas.size, Qt::UserRole);
-    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
-    songItem=songItemList.at(KNMusicGlobal::Rating);
-    songItem->setData(QVariant::fromValue(KNMusicStarRating(datas.rating)),
-                      0);
-    songItem->setEditable(true);
-
+    QFileInfo rawFileInfo(filePath);
     songItem=songItemList.at(KNMusicGlobal::Name);
-    songItem->setData(datas.filePath, Qt::UserRole);
+    songItem->setText(rawFileInfo.fileName());
+    songItem->setData(filePath, Qt::UserRole);
+    songItem->setData(1);
     appendRow(songItemList);
-    emit musicAppend(indexFromItem(songItem));
+    updateIndexInfo(songItem->index(), filePath);
+}
+
+void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
+{
+    KNModel::setInfoCollectorManager(infoCollectorManager);
+    m_infoCollectorManager=qobject_cast<KNMusicInfoCollectorManager *>(infoCollectorManager);
 }
 
 void KNMusicModel::retranslate()
@@ -203,7 +194,55 @@ void KNMusicModel::retranslateAndSet()
     KNModel::retranslate();
 }
 
-void KNMusicModel::updateMusicInfo(const QModelIndex &index)
+void KNMusicModel::onActionUpdateRowInfo(const QModelIndex &index)
 {
-    ;
+    QStringList currentText=m_infoCollectorManager->currentFileData();
+    KNMusicGlobal::MusicDetailsInfo currentDetails=
+            m_infoCollectorManager->currentFileAppendData();
+    int currentRow=index.row();
+    QStandardItem *songItem;
+    for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
+    {
+        songItem=item(currentRow, i);
+        songItem->setText(currentText.at(i));
+    }
+    songItem=item(currentRow,KNMusicGlobal::Time);
+    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
+    songItem->setData(currentDetails.duration, Qt::UserRole);
+    songItem->setData(currentDetails.coverImage, Qt::UserRole+1);
+    songItem=item(currentRow,KNMusicGlobal::BitRate);
+    songItem->setData(QVariant(currentDetails.bitRate), Qt::UserRole);
+    songItem=item(currentRow,KNMusicGlobal::SampleRate);
+    songItem->setData(currentDetails.samplingRate, Qt::UserRole);
+    songItem=item(currentRow,KNMusicGlobal::DateModified);
+    songItem->setData(currentDetails.dateModified, Qt::UserRole);
+    songItem=item(currentRow,KNMusicGlobal::LastPlayed);
+    songItem->setData(currentDetails.lastPlayed, Qt::UserRole);
+    songItem=item(currentRow,KNMusicGlobal::Size);
+    songItem->setData(currentDetails.size, Qt::UserRole);
+    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
+    songItem=item(currentRow,KNMusicGlobal::Rating);
+    songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
+                      0);
+    songItem->setEditable(true);
+
+    songItem=item(currentRow,KNMusicGlobal::Name);
+    songItem->setData(currentDetails.filePath, Qt::UserRole);
+    if(songItem->data().toInt()==1)
+    {
+        //This is a new file, never add to list.
+        songItem->setData(0);
+        emit musicAppend(indexFromItem(songItem));
+    }
+    else
+    {
+        emit musicDataUpdate(indexFromItem(songItem));
+    }
+}
+
+void KNMusicModel::updateIndexInfo(const QModelIndex &index,
+                                   const QString &filePath)
+{
+    infoCollectorManager()->addAnalysisList(index,
+                                            filePath);
 }

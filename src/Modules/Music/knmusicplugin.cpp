@@ -42,10 +42,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
-    connect(m_searcher, &KNMusicSearcher::requireAnalysis,
-            m_infoCollectManager, &KNMusicInfoCollectorManager::addAnalysisList);
-    connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireAppendMusic,
-            m_model, &KNMusicModel::appendMusic);
+    m_model->setInfoCollectorManager(m_infoCollectManager);
     connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireSortData,
             m_musicViewer, &KNMusicViewer::resort);
 

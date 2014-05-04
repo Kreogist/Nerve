@@ -14,11 +14,12 @@
 #include "knmusicartistsongs.h"
 #include "knmusicgenresongs.h"
 
+#include "../../Base/knlibsearcher.h"
+
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
 #include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusicgenremodel.h"
-#include "../../../Modules/Base/knlibsearcher.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
 
@@ -223,9 +224,4 @@ void KNMusicViewer::onActionAlbumOpenUrl(const QModelIndex &index)
 void KNMusicViewer::onActionGenreOpenUrl(const QModelIndex &index)
 {
     emit requireOpenUrl(m_genreDetails->mapToSource(index));
-}
-
-void KNMusicViewer::setSearcher(KNLibSearcher *searcher)
-{
-    m_searcher=searcher;
 }

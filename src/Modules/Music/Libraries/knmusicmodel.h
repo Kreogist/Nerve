@@ -7,6 +7,7 @@
 
 #include "../../Base/knmodel.h"
 
+class KNMusicInfoCollectorManager;
 class KNMusicModel : public KNModel
 {
     Q_OBJECT
@@ -15,19 +16,25 @@ public:
     bool readFromDataStream(QDataStream &stream);
     bool writeToDataStream(QDataStream &stream);
     QString filePathFromIndex(const QModelIndex &index);
+    void addRawFileItem(const QString &filePath);
+    void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
     void musicAppend(const QModelIndex &index);
+    void musicDataUpdate(const QModelIndex &index);
 
 public slots:
-    void appendMusic(const QStringList &info,
-                     const KNMusicGlobal::MusicDetailsInfo &datas);
     void retranslate();
     void retranslateAndSet();
 
+protected slots:
+    void onActionUpdateRowInfo(const QModelIndex &index);
+
 private:
-    void updateMusicInfo(const QModelIndex &index);
-    KNMusicGlobal *musicGlobal;
+    void updateIndexInfo(const QModelIndex &index,
+                         const QString &filePath);
+    KNMusicGlobal *m_musicGlobal;
+    KNMusicInfoCollectorManager *m_infoCollectorManager;
 };
 
 #endif // KNMUSICMODEL_H

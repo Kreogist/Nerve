@@ -3,6 +3,8 @@
 
 #include <QThread>
 #include <QStringList>
+#include <QList>
+#include <QModelIndex>
 
 #include "../knmusicglobal.h"
 
@@ -16,13 +18,15 @@ public:
     explicit KNMusicInfoCollectorManager(QObject *parent = 0);
     ~KNMusicInfoCollectorManager();
 
+    QStringList currentFileData() const;
+    KNMusicGlobal::MusicDetailsInfo currentFileAppendData() const;
+
 signals:
-    void requireAppendMusic(const QStringList &value,
-                            const KNMusicGlobal::MusicDetailsInfo &datas);
-    void requireSortData();
+    void requireAnalysis(const QString &filePath);
 
 public slots:
-    void addAnalysisList(const QString &filePath);
+    void addAnalysisList(const QModelIndex &index,
+                         const QString &filePath);
 
 private slots:
     void currentSkip();
@@ -30,9 +34,18 @@ private slots:
                          const KNMusicGlobal::MusicDetailsInfo &datas);
 
 private:
+    struct AnalysisQueueItem
+    {
+        QString filePath;
+        QModelIndex index;
+    };
+
     KNMusicInfoCollector *m_collector;
     QThread m_collectThread;
-    QStringList m_fileList;
+    QList<AnalysisQueueItem> m_analysisQueue;
+    QList<QModelIndex> m_indexList;
+    QStringList m_fileList, m_currentFileData;
+    KNMusicGlobal::MusicDetailsInfo m_currentFileAppendData;
     bool m_working=false;
 };
 

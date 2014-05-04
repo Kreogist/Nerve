@@ -32,14 +32,15 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
 {   
-    QFileInfo currentFile(filePath);
+    QString filePathBackup=filePath; //I don't know why, but this can solve the problem.
+    QFileInfo currentFile(filePathBackup);
     if(!currentFile.exists())
     {
         emit requireSkipCurrent();
         return;
     }
 
-    resetMusicInfo();
+    resetInfoCache();
     KNMusicGlobal::MusicDetailsInfo currentFileInfo;
     currentFileInfo.filePath=currentFile.absoluteFilePath();
     m_musicInfos[KNMusicGlobal::Name]=currentFile.fileName();
@@ -59,12 +60,12 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
             m_musicGlobal->getDescription(m_musicGlobal->getMusicType(currentFile.suffix()));
     currentFileInfo.dateAdded=musicAddDate;
 
-    readID3v1Tag(filePath);
-    readAPEv2Tag(filePath);
-    readID3v2Tag(filePath);
-    readWMATag(filePath);
-    readM4ATag(filePath);
-    parseByMediaInfo(filePath);
+    readID3v1Tag(filePathBackup);
+    readAPEv2Tag(filePathBackup);
+    readID3v2Tag(filePathBackup);
+    readWMATag(filePathBackup);
+    readM4ATag(filePathBackup);
+    parseByMediaInfo(filePathBackup);
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
     currentFileInfo.duration=m_duration;
@@ -81,13 +82,16 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
                             currentFileInfo);
 }
 
-void KNMusicInfoCollector::resetMusicInfo()
+void KNMusicInfoCollector::resetInfoCache()
 {
     for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
     {
         m_musicInfos[i].clear();
     }
     m_musicRating=0;
+    m_duration=0;
+    m_bitRate=0;
+    m_samplingRate=0;
     m_musicCover=QPixmap();
 }
 

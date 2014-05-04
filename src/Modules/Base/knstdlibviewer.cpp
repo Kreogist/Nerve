@@ -2,6 +2,7 @@
 
 #include "knstdlibviewercategory.h"
 #include "knwidgetswitcher.h"
+#include "knlibsearcher.h"
 
 #include <QLabel>
 
@@ -38,4 +39,9 @@ void KNStdLibViewer::addCategory(const QPixmap &icon,
 void KNStdLibViewer::setCategoryIndex(const int &index)
 {
     m_category->setCurrentIndex(index);
+}
+
+void KNStdLibViewer::setSearcher(KNLibSearcher *searcher)
+{
+    m_searcher=searcher;
 }

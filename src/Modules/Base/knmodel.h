@@ -12,7 +12,9 @@ public:
     void resetHeaderOrder();
     virtual bool readFromDataStream(QDataStream &stream);
     virtual bool writeToDataStream(QDataStream &stream);
-    void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
+    virtual void addRawFileItem(const QString &filePath);
+    KNLibInfoCollectorManager *infoCollectorManager() const;
+    virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
     void requireResetHeaderOrder();
@@ -20,6 +22,9 @@ signals:
 public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
+
+protected slots:
+    virtual void onActionUpdateRowInfo(const QModelIndex &index);
 
 private:
     KNLibInfoCollectorManager *m_infoCollectorManager;
