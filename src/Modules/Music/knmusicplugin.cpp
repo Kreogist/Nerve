@@ -31,15 +31,14 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
-    connect(m_libraryViewMenu, SIGNAL(requireShowIn(KNMusicGlobal::MusicCategory,QModelIndex)),
-            m_musicViewer, SLOT(showIn(KNMusicGlobal::MusicCategory,QModelIndex)));
+    connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
+            m_musicViewer, &KNMusicViewer::showIn);
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::showContextMenu);
 
     m_searcher=new KNMusicSearcher(this);
     m_searcher->setModel(m_model);
-    connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
-            m_searcher, &KNMusicSearcher::analysisList);
+    m_musicViewer->setSearcher(m_searcher);
 
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
