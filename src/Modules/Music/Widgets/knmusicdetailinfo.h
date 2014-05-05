@@ -7,6 +7,7 @@
 
 #include <QDialog>
 
+class QPlainTextEdit;
 class QTreeView;
 class KNMusicDetailInfo : public QDialog
 {
@@ -21,6 +22,7 @@ public slots:
 
 private:
     QScopedPointer<QStandardItemModel> m_detailModel;
+    QPlainTextEdit *m_detailText;
     QTreeView *m_detailViewer;
 };
 

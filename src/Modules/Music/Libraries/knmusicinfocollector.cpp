@@ -32,7 +32,8 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
 {   
-    QString filePathBackup=filePath; //I don't know why, but this can solve the problem.
+    //I don't know why, but use a new QString can avoid a crash bug.
+    QString filePathBackup=filePath;
     QFileInfo currentFile(filePathBackup);
     if(!currentFile.exists())
     {

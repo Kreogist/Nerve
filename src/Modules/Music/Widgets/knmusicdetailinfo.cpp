@@ -2,6 +2,9 @@
 #include <QTreeView>
 #include <QStandardItem>
 #include <QBoxLayout>
+#include <QHeaderView>
+#include <QPlainTextEdit>
+#include <QTabWidget>
 
 #include <QDebug>
 
@@ -15,20 +18,28 @@ KNMusicDetailInfo::KNMusicDetailInfo(QWidget *parent) :
     QBoxLayout *tt=new QBoxLayout(QBoxLayout::TopToBottom, this);
     setLayout(tt);
 
+    QTabWidget *tw=new QTabWidget(this);
+    tt->addWidget(tw);
+
     m_detailViewer=new QTreeView(this);
-    tt->addWidget(m_detailViewer);
+    tw->addTab(m_detailViewer,"TreeView");
+
+    m_detailText=new QPlainTextEdit(this);
+    m_detailText->setWordWrapMode(QTextOption::NoWrap);
+    tw->addTab(m_detailText, "TextView");
 }
 
 void KNMusicDetailInfo::setFilePath(const QString &filePath)
 {
     QScopedPointer<KNLibMediaInfo> mediaInfo(new KNLibMediaInfo);
-    mediaInfo->deepAnalysisFile(filePath);
+    mediaInfo->analysisFile(filePath);
     QString rawInfoData=mediaInfo->originalData(),
-            currentData, currentIndex;
+            currentRowData, currentIndex, currentData;
     if(rawInfoData.isEmpty())
     {
         return;
     }
+    m_detailText->setPlainText(rawInfoData);
     m_detailModel.reset(new QStandardItemModel);
     QMap<QString,QString> itemData;
     QStringList rawInfoItem;
@@ -40,27 +51,35 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     QStandardItem *currentItem, *currentParent;
     for(int i=0; i<itemCount; i++)
     {
-        currentData=rawInfoItem.at(i);
-        colonPosition=currentData.indexOf(":");
+        currentRowData=rawInfoItem.at(i);
+        if(currentRowData.isEmpty())
+        {
+            continue;
+        }
+        colonPosition=currentRowData.indexOf(":");
         if(colonPosition==-1)
         {
             //Means this is a header.
-            currentParent=new QStandardItem(currentData.simplified());
-            m_detailModel->appendRow(currentParent);
-            continue;
-        }
-        currentIndex=currentData.left(colonPosition).simplified();
-        if(currentIndex!="Cover_Data")
-        {
             QList<QStandardItem *> currentRow;
-            currentItem=new QStandardItem(currentIndex);
-            currentRow.append(currentItem);
-            currentItem=new QStandardItem(currentData.mid(colonPosition+1).simplified());
+            currentParent=new QStandardItem(currentRowData.simplified());
+            currentRow.append(currentParent);
+            currentItem=new QStandardItem();
             currentRow.append(currentItem);
             m_detailModel->appendRow(currentRow);
-            currentParent->setChild(i,
-                                    m_detailModel->item(i));
+            continue;
         }
+        QList<QStandardItem *> currentRow;
+        currentIndex=currentRowData.left(colonPosition).simplified();
+        currentItem=new QStandardItem(currentIndex);
+        currentRow.append(currentItem);
+        currentData=currentRowData.mid(colonPosition+1).simplified();
+        currentItem=new QStandardItem(currentData);
+        currentRow.append(currentItem);
+        currentParent->appendRow(currentRow);
+        itemData[currentIndex]=currentData;
     }
     m_detailViewer->setModel(m_detailModel.data());
+    m_detailViewer->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    m_detailViewer->header()->setVisible(false);
+    m_detailViewer->expandAll();
 }

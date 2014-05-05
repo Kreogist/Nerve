@@ -53,7 +53,6 @@ void KNMusicInfoCollectorManager::currentSkip()
 void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
                                                   const KNMusicGlobal::MusicDetailsInfo &datas)
 {
-    //emit requireAppendMusic(value, datas);
     m_currentFileData=value;
     m_currentFileAppendData=datas;
     emit requireUpdateRowInfo(m_indexList.at(0));
