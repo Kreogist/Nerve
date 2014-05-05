@@ -23,6 +23,7 @@ public:
 signals:
     void requireShowIn(KNMusicGlobal::MusicCategory category,
                        const QModelIndex &index);
+    void requireGetInfo(const QString &filePath);
 
 public slots:
     void retranslate();
@@ -37,6 +38,7 @@ private slots:
     void onActionShowInArtist();
     void onActionShowInAlbum();
     void onActionShowInGenre();
+    void onActionGetInfo();
 
 private:
     enum MusicActions
@@ -46,6 +48,7 @@ private:
         ShowInArtist,
         ShowInAlbum,
         ShowInGenre,
+        GetInfo,
         Browse,
         Copy,
         CopyText,

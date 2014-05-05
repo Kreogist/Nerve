@@ -43,18 +43,33 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
 {
 #ifdef Q_OS_WIN32
     MediaInfo MI;
-    String To_Display;
     MI.Open(filePath.toStdWString());
-
     MI.Option(__T("Complete"));
-    To_Display += MI.Inform().c_str();
-    m_originalData=QString::fromWCharArray(To_Display.c_str());
+    m_originalData=QString::fromWCharArray(MI.Inform().c_str());
     MI.Close();
 #endif
 #ifdef Q_OS_UNIX
     MediaInfo MI;
     MI.Open(filePath.toStdString().c_str());
     MI.Option("Complete");
+    m_originalData=MI.Inform().c_str();
+    MI.Close();
+#endif
+}
+
+void KNLibMediaInfo::deepAnalysisFile(const QString &filePath)
+{
+#ifdef Q_OS_WIN32
+    MediaInfo MI;
+    MI.Open(filePath.toStdWString());
+    MI.Option(__T("Complete"));
+    m_originalData=QString::fromWCharArray(MI.Inform().c_str());
+    MI.Close();
+#endif
+#ifdef Q_OS_UNIX
+    MediaInfo MI;
+    MI.Open(filePath.toStdString().c_str());
+    MI.Option("Complete", "1");
     m_originalData=MI.Inform().c_str();
     MI.Close();
 #endif

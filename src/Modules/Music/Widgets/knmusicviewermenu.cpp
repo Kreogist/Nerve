@@ -64,6 +64,7 @@ void KNMusicViewerMenu::retranslate()
     m_actionTitle[ShowInArtist]=tr("Go to Artist");
     m_actionTitle[ShowInAlbum]=tr("Go to Album");
     m_actionTitle[ShowInGenre]=tr("Go to Genre");
+    m_actionTitle[GetInfo]=tr("Get Info");
 #ifdef Q_OS_WIN
     m_actionTitle[Browse]=tr("Show in Explorer");
 #endif
@@ -126,6 +127,11 @@ void KNMusicViewerMenu::onActionShowInGenre()
                        m_currentIndex);
 }
 
+void KNMusicViewerMenu::onActionGetInfo()
+{
+    emit requireGetInfo(m_filePath);
+}
+
 void KNMusicViewerMenu::createActions()
 {
     for(int i=0; i<MusicActionCount; i++)
@@ -143,6 +149,8 @@ void KNMusicViewerMenu::createActions()
             this, SLOT(onActionShowInAlbum()));
     connect(m_action[ShowInGenre], SIGNAL(triggered()),
             this, SLOT(onActionShowInGenre()));
+    connect(m_action[GetInfo], SIGNAL(triggered()),
+            this, SLOT(onActionGetInfo()));
     connect(m_action[Browse], SIGNAL(triggered()),
             this, SLOT(onActionBrowse()));
     connect(m_action[Copy], SIGNAL(triggered()),
@@ -150,6 +158,7 @@ void KNMusicViewerMenu::createActions()
     connect(m_action[CopyText], SIGNAL(triggered()),
             this, SLOT(onActionCopyText()));
     insertSeparator(m_action[ShowInSongs]);
+    insertSeparator(m_action[GetInfo]);
     insertSeparator(m_action[Browse]);
 }
 

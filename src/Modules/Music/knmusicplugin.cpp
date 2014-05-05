@@ -3,7 +3,6 @@
 #include <QList>
 #include <QFile>
 #include <QDir>
-#include <QScopedPointer>
 
 #include <QDebug>
 
@@ -11,9 +10,9 @@
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
+#include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
-#include "Widgets/knmusicdetailinfo.h"
 
 #include "knmusicplugin.h"
 
@@ -35,8 +34,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_libraryViewMenu->setModel(m_model);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
             m_musicViewer, &KNMusicViewer::showIn);
+    connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,
+            this, &KNMusicPlugin::onActionGetInfo);
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
-            this, &KNMusicPlugin::showContextMenu);
+            this, &KNMusicPlugin::onActionShowContextMenu);
 
     m_searcher=new KNMusicSearcher(this);
     m_searcher->setModel(m_model);
@@ -50,6 +51,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_modelThread.start();
     m_collectThread.start();
+
+    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
 }
 
 KNMusicPlugin::~KNMusicPlugin()
@@ -94,7 +97,7 @@ void KNMusicPlugin::readDatabase()
     }
 }
 
-void KNMusicPlugin::showContextMenu(const QPoint &position,
+void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
                                     const QModelIndex &index,
                                     KNMusicGlobal::MusicCategory currentMode)
 {
@@ -110,7 +113,8 @@ void KNMusicPlugin::onActionOpenUrl(const QModelIndex &index)
     m_global->openLocalUrl(filePath);
 }
 
-void KNMusicPlugin::onActionGetInfo(const QModelIndex &index)
+void KNMusicPlugin::onActionGetInfo(const QString &filePath)
 {
-    QScopedPointer<KNMusicDetailInfo> details(new KNMusicDetailInfo);
+    m_detailsDialog->setFilePath(filePath);
+    m_detailsDialog->show();
 }

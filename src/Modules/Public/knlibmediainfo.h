@@ -9,6 +9,7 @@ class KNLibMediaInfo : public QObject
 public:
     explicit KNLibMediaInfo(QObject *parent = 0);
     void analysisFile(const QString &filePath);
+    void deepAnalysisFile(const QString &filePath);
     QString originalData() const;
 
 signals:

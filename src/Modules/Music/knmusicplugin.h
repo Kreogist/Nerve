@@ -14,6 +14,7 @@ class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
 class KNMusicSearcher;
 class KNMusicViewerMenu;
+class KNMusicDetailInfo;
 class KNMusicPlugin : public KNPluginBase
 {
     Q_OBJECT
@@ -29,11 +30,11 @@ signals:
 public slots:
 
 private slots:
-    void showContextMenu(const QPoint &position,
+    void onActionShowContextMenu(const QPoint &position,
                          const QModelIndex &index,
                          KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
-    void onActionGetInfo(const QModelIndex &index);
+    void onActionGetInfo(const QString &filePath);
 
 private:
     KNMusicViewer *m_musicViewer;
@@ -43,6 +44,7 @@ private:
     KNMusicInfoCollectorManager *m_infoCollectManager;
     KNMusicSearcher *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
+    KNMusicDetailInfo *m_detailsDialog;
 
     QThread m_collectThread,
             m_modelThread;
