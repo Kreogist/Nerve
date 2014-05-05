@@ -12,7 +12,6 @@ public:
 
 signals:
     void requireUpdateRowInfo(const QModelIndex &index);
-    void requireSortData();
 
 public slots:
     virtual void addAnalysisList(const QModelIndex &index,

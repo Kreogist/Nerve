@@ -35,6 +35,7 @@ protected slots:
 private:
     KNMusicGlobal *m_musicGlobal;
     KNMusicInfoCollectorManager *m_infoCollectorManager;
+    int m_rawFileCount=0;
 };
 
 #endif // KNMUSICMODEL_H

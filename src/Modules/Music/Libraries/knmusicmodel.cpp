@@ -175,6 +175,7 @@ void KNMusicModel::addRawFileItem(const QString &filePath)
     songItem->setData(filePath, Qt::UserRole);
     songItem->setData(1);
     appendRow(songItemList);
+    m_rawFileCount++;
     updateIndexInfo(songItem->index(), filePath);
 }
 
@@ -233,6 +234,11 @@ void KNMusicModel::onActionUpdateRowInfo(const QModelIndex &index)
         //This is a new file, never add to list.
         songItem->setData(0);
         emit musicAppend(indexFromItem(songItem));
+        m_rawFileCount--;
+        if(m_rawFileCount==0)
+        {
+            emit requireResort();
+        }
     }
     else
     {

@@ -44,7 +44,6 @@ void KNMusicInfoCollectorManager::currentSkip()
     if(m_fileList.size()==0)
     {
         m_working=false;
-        emit requireSortData();
         return;
     }
     emit requireAnalysis(m_fileList.at(0));

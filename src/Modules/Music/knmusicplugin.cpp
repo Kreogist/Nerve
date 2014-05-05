@@ -42,12 +42,12 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_searcher=new KNMusicSearcher(this);
     m_searcher->setModel(m_model);
     m_musicViewer->setSearcher(m_searcher);
+    connect(m_model, &KNMusicModel::requireResort,
+            m_musicViewer, &KNMusicViewer::resort);
 
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
     m_model->setInfoCollectorManager(m_infoCollectManager);
-    connect(m_infoCollectManager, &KNMusicInfoCollectorManager::requireSortData,
-            m_musicViewer, &KNMusicViewer::resort);
 
     m_modelThread.start();
     m_collectThread.start();

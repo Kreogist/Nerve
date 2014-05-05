@@ -18,6 +18,7 @@ public:
 
 signals:
     void requireResetHeaderOrder();
+    void requireResort();
 
 public slots:
     virtual void retranslate();
