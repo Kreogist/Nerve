@@ -12,6 +12,7 @@
 #include "knmusictagapev2.h"
 #include "knmusictagwma.h"
 #include "knmusictagm4a.h"
+#include "knmusictagflac.h"
 
 #include "../../knglobal.h"
 
@@ -28,6 +29,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     m_tagAPEv2=new KNMusicTagAPEv2(this);
     m_tagWMA=new KNMusicTagWma(this);
     m_tagM4A=new KNMusicTagM4A(this);
+    m_tagFLAC=new KNMusicTagFLAC(this);
 }
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
@@ -66,6 +68,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readID3v2Tag(filePathBackup);
     readWMATag(filePathBackup);
     readM4ATag(filePathBackup);
+    readFLACTag(filePathBackup);
     parseByMediaInfo(filePathBackup);
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.coverImage=m_musicCover;
@@ -360,6 +363,20 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
             setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
         }
         m_musicCover=m_tagM4A->albumArt();
+    }
+}
+
+void KNMusicInfoCollector::readFLACTag(const QString &value)
+{
+    if(m_tagFLAC->readTag(value))
+    {
+        setMediaData(KNMusicGlobal::Name, m_tagFLAC->metaData("Title"));
+        setMediaData(KNMusicGlobal::Artist, m_tagFLAC->metaData("Artist"));
+        setMediaData(KNMusicGlobal::Album, m_tagFLAC->metaData("Album"));
+        setMediaData(KNMusicGlobal::Genre, m_tagFLAC->metaData("Genre"));
+        setMediaData(KNMusicGlobal::Description, m_tagFLAC->metaData("Description"));
+        setMediaData(KNMusicGlobal::Year, m_tagFLAC->metaData("Date"));
+        setMediaData(KNMusicGlobal::TrackNumber, m_tagFLAC->metaData("TRACKNUMBER"));
     }
 }
 

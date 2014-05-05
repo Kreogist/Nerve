@@ -73,7 +73,8 @@ SOURCES += \
     Modules/Music/Widgets/knmusicartistsongs.cpp \
     Modules/Music/Widgets/knmusiccategorylist.cpp \
     Modules/Music/Widgets/knmusicgenresongs.cpp \
-    Modules/Music/Widgets/knmusicdetailinfo.cpp
+    Modules/Music/Widgets/knmusicdetailinfo.cpp \
+    Modules/Music/Libraries/knmusictagflac.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -135,7 +136,8 @@ HEADERS += \
     Modules/Music/Widgets/knmusicartistsongs.h \
     Modules/Music/Widgets/knmusiccategorylist.h \
     Modules/Music/Widgets/knmusicgenresongs.h \
-    Modules/Music/Widgets/knmusicdetailinfo.h
+    Modules/Music/Widgets/knmusicdetailinfo.h \
+    Modules/Music/Libraries/knmusictagflac.h
 
 RESOURCES += \
     res.qrc

@@ -9,3 +9,9 @@ void KNMusicTagBase::clearCache()
 {
     ;
 }
+
+bool KNMusicTagBase::readTag(const QString &filePath)
+{
+    Q_UNUSED(filePath);
+    return false;
+}
