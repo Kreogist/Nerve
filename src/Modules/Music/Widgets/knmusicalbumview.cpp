@@ -487,6 +487,12 @@ void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 
 void KNMusicAlbumView::selectCategoryItem(const QString &value)
 {
+    if(value.isEmpty())
+    {
+        scrollTo(model()->index(0,0));
+        selectAlbum(model()->index(0,0));
+        return;
+    }
     QList<QStandardItem *> albumSearch=m_model->findItems(value);
     if(albumSearch.size()==0)
     {
