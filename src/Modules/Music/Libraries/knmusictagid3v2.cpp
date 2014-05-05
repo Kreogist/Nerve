@@ -372,7 +372,7 @@ QPixmap KNMusicTagID3v2::tagImage(const int &index) const
 
 QPixmap KNMusicTagID3v2::firstAvaliableImage() const
 {
-    if(m_tagImages.count()!=0)
+    if(m_tagImages.size()!=0)
     {
         return m_tagImages.first().image;
     }

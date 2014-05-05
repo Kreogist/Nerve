@@ -41,6 +41,7 @@ private:
     void readFLACTag(const QString &value);
     void setMediaData(const int &index,
                       const QString &value);
+    void setMusicCover(const QPixmap &pixmap);
     KNLibMediaInfo *m_mediaInfo;
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;

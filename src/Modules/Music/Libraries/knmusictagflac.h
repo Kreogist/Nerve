@@ -2,6 +2,7 @@
 #define KNMUSICTAGFLAC_H
 
 #include <QMap>
+#include <QPixmap>
 #include "knmusictagbase.h"
 
 class KNMusicTagFLAC : public KNMusicTagBase
@@ -12,6 +13,9 @@ public:
     bool readTag(const QString &filePath);
     void clearCache();
     QString metaData(const QString &index);
+    QString rawMetaData(const QString &index);
+    QPixmap tagImage(const int &index) const;
+    QPixmap firstAvaliableImage() const;
 
 signals:
 
@@ -19,7 +23,9 @@ public slots:
 
 private:
     void parseVorbisComment(char *rawTagData, int length);
-    quint32 flacCharToInt32(char *rawTagData);
+    void parsePicture(char *rawTagData);
+    quint32 inverseCharToInt32(char *rawTagData);
+    quint32 charToInt32(char *rawTagData);
     struct MetadataHeader
     {
         bool isLast=false;
@@ -28,6 +34,7 @@ private:
     };
     MetadataHeader analysisHeader(char *rawHeader);
     QMap<QString, QString> m_metadata;
+    QMap<int, QPixmap> m_picture;
 };
 
 #endif // KNMUSICTAGFLAC_H

@@ -14,7 +14,7 @@ KNMusicGlobal *KNMusicGlobal::instance()
 QString KNMusicGlobal::getGenre(const int &index) const
 {
     quint8 genreIndex=(quint8)index;
-    if(genreIndex<m_genreList.count())
+    if(genreIndex<m_genreList.size())
     {
         return m_genreList.at(genreIndex);
     }
@@ -23,7 +23,7 @@ QString KNMusicGlobal::getGenre(const int &index) const
 
 QString KNMusicGlobal::getGenre(const QString &value) const
 {
-    if(value.count()<2)
+    if(value.size()<2)
     {
         //Ignore the bug.
         return value;
@@ -31,12 +31,12 @@ QString KNMusicGlobal::getGenre(const QString &value) const
     QString resultValue=value;
     if(resultValue.at(0)=='(')
     {
-        if(resultValue.at(resultValue.count()-1)==')')
+        if(resultValue.at(resultValue.size()-1)==')')
         {
             //Means it might be sth like: (24)
             resultValue=resultValue.mid(1, resultValue.length()-2);
             quint8 valueTest=(quint8)resultValue.toInt();
-            if(valueTest<m_genreList.count())
+            if(valueTest<m_genreList.size())
             {
                 return m_genreList.at(valueTest);
             }

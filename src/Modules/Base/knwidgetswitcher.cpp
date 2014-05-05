@@ -31,7 +31,7 @@ KNWidgetSwitcher::KNWidgetSwitcher(QWidget *parent) :
 void KNWidgetSwitcher::addWidget(QWidget *widget)
 {
     widget->setParent(this);
-    if(m_widgets.count()==0)
+    if(m_widgets.size()==0)
     {
         m_currentIndex=0;
         widget->setVisible(true);
@@ -50,14 +50,14 @@ int KNWidgetSwitcher::currentIndex() const
     return m_currentIndex;
 }
 
-int KNWidgetSwitcher::count() const
+int KNWidgetSwitcher::size() const
 {
-    return m_widgets.count();
+    return m_widgets.size();
 }
 
 void KNWidgetSwitcher::setCurrentIndex(int currentIndex)
 {
-    if(currentIndex<m_widgets.count())
+    if(currentIndex<m_widgets.size())
     {
         m_switchAnime->stop();
         m_flyOutAnime->setTargetObject(m_widgets.at(m_currentIndex));
@@ -112,7 +112,7 @@ void KNWidgetSwitcher::hideMovedOut()
 void KNWidgetSwitcher::setWidgetVisible(const int &index,
                                         const bool &visible)
 {
-    if(index < m_widgets.count())
+    if(index < m_widgets.size())
     {
         QWidget *indexWidget=m_widgets.at(index);
         indexWidget->setEnabled(visible);

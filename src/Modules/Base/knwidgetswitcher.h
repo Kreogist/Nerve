@@ -14,7 +14,7 @@ public:
     explicit KNWidgetSwitcher(QWidget *parent = 0);
     void addWidget(QWidget *widget);
     int currentIndex() const;
-    int count() const;
+    int size() const;
 
 signals:
 

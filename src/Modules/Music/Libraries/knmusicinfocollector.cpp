@@ -301,10 +301,10 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
             }
             m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
         }
-        m_musicCover=m_tagID3v2->tagImage(3); //3 is the Cover front.
+        setMusicCover(m_tagID3v2->tagImage(3)); //3 is the Cover front.
         if(m_musicCover.isNull())
         {
-            m_musicCover=m_tagID3v2->firstAvaliableImage();
+            setMusicCover(m_tagID3v2->firstAvaliableImage());
         }
     }
 }
@@ -362,7 +362,7 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
             setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
             setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
         }
-        m_musicCover=m_tagM4A->albumArt();
+        setMusicCover(m_tagM4A->albumArt());
     }
 }
 
@@ -370,13 +370,21 @@ void KNMusicInfoCollector::readFLACTag(const QString &value)
 {
     if(m_tagFLAC->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name, m_tagFLAC->metaData("Title"));
-        setMediaData(KNMusicGlobal::Artist, m_tagFLAC->metaData("Artist"));
-        setMediaData(KNMusicGlobal::Album, m_tagFLAC->metaData("Album"));
-        setMediaData(KNMusicGlobal::Genre, m_tagFLAC->metaData("Genre"));
-        setMediaData(KNMusicGlobal::Description, m_tagFLAC->metaData("Description"));
-        setMediaData(KNMusicGlobal::Year, m_tagFLAC->metaData("Date"));
-        setMediaData(KNMusicGlobal::TrackNumber, m_tagFLAC->metaData("TRACKNUMBER"));
+        setMediaData(KNMusicGlobal::Name, m_tagFLAC->metaData("title"));
+        setMediaData(KNMusicGlobal::Artist, m_tagFLAC->metaData("artist"));
+        setMediaData(KNMusicGlobal::Album, m_tagFLAC->metaData("album"));
+        setMediaData(KNMusicGlobal::Genre, m_tagFLAC->metaData("genre"));
+        setMediaData(KNMusicGlobal::Description, m_tagFLAC->metaData("description"));
+        setMediaData(KNMusicGlobal::Comments, m_tagFLAC->metaData("comment"));
+        setMediaData(KNMusicGlobal::AlbumArtist, m_tagFLAC->metaData("album artist"));
+        setMediaData(KNMusicGlobal::TrackCount, m_tagFLAC->metaData("tracktotal"));
+        setMediaData(KNMusicGlobal::Year, m_tagFLAC->metaData("date").left(4));
+        setMediaData(KNMusicGlobal::TrackNumber, m_tagFLAC->metaData("tracknumber"));
+        setMusicCover(m_tagFLAC->tagImage(3));
+        if(m_musicCover.isNull())
+        {
+            m_tagFLAC->firstAvaliableImage();
+        }
     }
 }
 
@@ -386,5 +394,13 @@ void KNMusicInfoCollector::setMediaData(const int &index,
     if(!value.isEmpty())
     {
         m_musicInfos[index]=value;
+    }
+}
+
+void KNMusicInfoCollector::setMusicCover(const QPixmap &pixmap)
+{
+    if(!pixmap.isNull())
+    {
+        m_musicCover=pixmap;
     }
 }

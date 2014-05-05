@@ -15,7 +15,7 @@ void KNLibSearcher::analysisList(const QList<QUrl> &urls)
 {
     QFileInfo currentParser;
     QString currentPath;
-    for(int i=0, fileCount=urls.count();
+    for(int i=0, fileCount=urls.size();
         i<fileCount;
         ++i)
     {

@@ -54,7 +54,7 @@ void KNStdLibViewerCategory::addCategory(const QPixmap &icon,
     button->setText(category);
     connect(button, SIGNAL(clicked()),
             m_categoryClicked, SLOT(map()));
-    m_categoryClicked->setMapping(button, m_categories.count());
+    m_categoryClicked->setMapping(button, m_categories.size());
     if(m_currentCategory==-1)
     {
         m_currentCategory=0;
@@ -67,7 +67,7 @@ void KNStdLibViewerCategory::addCategory(const QPixmap &icon,
 void KNStdLibViewerCategory::setText(const int &index,
                                      const QString &text)
 {
-    if(index<m_categories.count())
+    if(index<m_categories.size())
     {
         KNStdLibViewerCategoryButton *button=m_categories.at(index);
         button->setText(text);
@@ -76,12 +76,12 @@ void KNStdLibViewerCategory::setText(const int &index,
 
 void KNStdLibViewerCategory::setCurrentIndex(const int &index)
 {
-    if(m_currentCategory!=-1 && m_currentCategory<m_categories.count())
+    if(m_currentCategory!=-1 && m_currentCategory<m_categories.size())
     {
         KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
         button->setChecked(false);
     }
-    if(index!=-1 && index<m_categories.count())
+    if(index!=-1 && index<m_categories.size())
     {
         m_currentCategory=index;
         KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);

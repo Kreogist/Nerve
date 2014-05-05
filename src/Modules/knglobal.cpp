@@ -150,7 +150,7 @@ void KNGlobal::copyFileToClipboard(const QStringList &files)
 {
     QMimeData fileData;
     QList<QUrl> fileUrlList;
-    for(int i=0, fileCount=files.count();
+    for(int i=0, fileCount=files.size();
         i<fileCount;
         i++)
     {
