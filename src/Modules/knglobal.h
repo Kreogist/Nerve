@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QTextCodec>
 
 class KNGlobal : public QObject
 {
@@ -21,6 +22,7 @@ public:
     void copyFileToClipboard(const QStringList &files);
     void copyTextToClipboard(const QString &text);
     QString databaseFolder() const;
+    QTextCodec *codecForCurrentLocale() const;
 
 signals:
 

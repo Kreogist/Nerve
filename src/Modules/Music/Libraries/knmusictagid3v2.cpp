@@ -1,16 +1,18 @@
 #include <QDataStream>
 #include <QTextCodec>
 #include <QFile>
+#include <QLocale>
 
 #include <QDebug>
+
+#include "../../knglobal.h"
 
 #include "knmusictagid3v2.h"
 
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     KNMusicTagBase(parent)
 {
-    m_utf8Codec=QTextCodec::codecForName("UTF-8");
-    m_localeCodec=QTextCodec::codecForLocale();
+    m_localeCodec=KNGlobal::instance()->codecForCurrentLocale();
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
 }
@@ -28,7 +30,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
     case 0:
         //ISO, here use UTF-8 instead, because UTF-8 can display ISO.
         content.remove(0,1);
-        return m_utf8Codec->toUnicode(content).simplified();
+        return m_localeCodec->toUnicode(content).simplified();
     case 1:
         //UTF-16 LE/BE
         content.remove(0,1);
@@ -151,7 +153,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     quint32 tagSize=(((quint32)header[6]<<21)&0b00001111111000000000000000000000)+
                     (((quint32)header[7]<<14)&0b00000000000111111100000000000000)+
                     (((quint32)header[8]<<7) &0b00000000000000000011111110000000)+
-                    ((quint32)header[9]      &0b00000000000000000000000001111111);
+                    ( (quint32)header[9]     &0b00000000000000000000000001111111);
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.

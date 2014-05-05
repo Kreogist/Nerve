@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QUrl>
+#include <QLocale>
 
 #include <QDebug>
 
@@ -169,4 +170,20 @@ void KNGlobal::copyTextToClipboard(const QString &text)
 QString KNGlobal::databaseFolder() const
 {
     return m_libraryPath;
+}
+
+QTextCodec *KNGlobal::codecForCurrentLocale() const
+{
+    switch(QLocale::system().country())
+    {
+    case QLocale::China:
+        return QTextCodec::codecForName("GB18030");
+    case QLocale::HongKong:
+    case QLocale::Macau:
+        return QTextCodec::codecForName("Big5-HKSCS");
+    case QLocale::Taiwan:
+        return QTextCodec::codecForName("Big5");
+    default:
+        return QTextCodec::codecForName("UTF-8");
+    }
 }
