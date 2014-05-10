@@ -347,7 +347,6 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
     verticalScrollBar()->setRange(0, 0);
-    verticalScrollBar()->setSingleStep(10);
 
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();
@@ -513,8 +512,11 @@ void KNMusicAlbumView::selectItem(const QModelIndex &index)
 
 void KNMusicAlbumView::updateGeometries()
 {
-    verticalScrollBar()->setRange(0, qMax(0,
-                                          m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height()));
+    int verticalMax=qMax(0,
+                         m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height());
+    verticalScrollBar()->setRange(0, verticalMax);
+    verticalScrollBar()->setSingleStep(m_lineCount==0?10:
+                                                      verticalMax/m_lineCount*(height()/(m_spacing+m_gridHeight)));
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)

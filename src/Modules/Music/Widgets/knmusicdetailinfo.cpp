@@ -43,6 +43,9 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     m_detailModel.reset(new QStandardItemModel);
     QMap<QString,QString> itemData;
     QStringList rawInfoItem;
+#ifdef Q_OS_WIN32
+    rawInfoItem=rawInfoData.split('\n');
+#endif
 #ifdef Q_OS_MACX
     rawInfoItem=rawInfoData.split('\r');
 #endif

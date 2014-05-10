@@ -135,12 +135,14 @@ void KNMusicTagFLAC::parsePicture(char *rawTagData)
     quint32 describeLength=charToInt32(rawTagData+pointer);
     pointer+=(describeLength+20);
     quint32 pictureDataLength=charToInt32(rawTagData+pointer);
-    char pictureRawData[pictureDataLength];
+    char *pictureRawData=new char[pictureDataLength];
     pointer+=4;
     memcpy(pictureRawData, rawTagData+pointer, pictureDataLength);
+    QByteArray pictureData;
+    pictureData.append(pictureRawData, pictureDataLength);
+    delete[] pictureRawData;
     QPixmap currentImage;
-    currentImage.loadFromData(pictureRawData,
-                              imageFormat.toStdString().data());
+    currentImage.loadFromData(pictureData);
     m_picture[imageType]=currentImage;
 }
 

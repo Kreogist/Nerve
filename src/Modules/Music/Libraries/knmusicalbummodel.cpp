@@ -54,7 +54,7 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     {
         currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.at(0));
         if(currentAlbum->data(Qt::UserRole+1).toInt() == 0 &&
-           currentAlbum->data(Qt::UserRole).toString() != m_variousArtist)
+           currentAlbum->data(Qt::UserRole).toString() != currentArtist)
         {
             currentAlbum->setData(m_variousArtist, Qt::UserRole);
             currentAlbum->setData(1, Qt::UserRole+1);
