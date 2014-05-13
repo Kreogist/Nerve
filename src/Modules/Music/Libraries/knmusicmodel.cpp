@@ -189,6 +189,15 @@ void KNMusicModel::addRawFileItem(QString filePath)
     updateIndexInfo(songItem->index(), filePath);
 }
 
+void KNMusicModel::addRawFileItems(QStringList fileList)
+{
+    int listFileCount=fileList.size();
+    while(listFileCount--)
+    {
+        addRawFileItem(fileList.takeFirst());
+    }
+}
+
 void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
 {
     KNModel::setInfoCollectorManager(infoCollectorManager);

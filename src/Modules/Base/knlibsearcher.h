@@ -3,8 +3,10 @@
 
 #include <QList>
 #include <QUrl>
-#include <QObject>
 #include <QFileInfo>
+#include <QStringList>
+
+#include <QObject>
 
 class KNModel;
 class KNLibSearcher : public QObject
@@ -28,6 +30,7 @@ private:
     void analysisFile(const QString &suffix,
                       const QString &filePath);
     QFileInfo m_currentDetails;
+    QStringList m_rawFileList;
     KNModel *m_model;
 };
 

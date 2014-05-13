@@ -1,6 +1,8 @@
 #ifndef KNMODEL_H
 #define KNMODEL_H
 
+#include <QStringList>
+
 #include <QStandardItemModel>
 
 class KNLibInfoCollectorManager;
@@ -10,9 +12,10 @@ class KNModel : public QStandardItemModel
 public:
     explicit KNModel(QObject *parent = 0);
     void resetHeaderOrder();
+    virtual void addRawFileItem(QString filePath);
+    virtual void addRawFileItems(QStringList fileList);
     virtual bool readFromDataStream(QDataStream &stream);
     virtual bool writeToDataStream(QDataStream &stream);
-    virtual void addRawFileItem(QString filePath);
     KNLibInfoCollectorManager *infoCollectorManager() const;
     virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 

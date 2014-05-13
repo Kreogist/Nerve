@@ -13,6 +13,7 @@ KNLibSearcher::KNLibSearcher(QObject *parent) :
 
 void KNLibSearcher::analysisList(const QList<QUrl> &urls)
 {
+    m_rawFileList.clear();
     QFileInfo currentParser;
     QString currentPath;
     for(int i=0, fileCount=urls.size();
@@ -36,6 +37,7 @@ void KNLibSearcher::analysisList(const QList<QUrl> &urls)
                          currentPath);
         }
     }
+    m_model->addRawFileItems(m_rawFileList);
 }
 
 int KNLibSearcher::getType(const QString &suffix)
@@ -73,7 +75,7 @@ void KNLibSearcher::analysisFile(const QString &suffix,
 {
     if(getType(suffix)!=-1)
     {
-        m_model->addRawFileItem(filePath);
+        m_rawFileList.append(filePath);
     }
 }
 

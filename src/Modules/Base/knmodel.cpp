@@ -63,3 +63,8 @@ void KNModel::addRawFileItem(QString filePath)
     Q_UNUSED(filePath);
 }
 
+void KNModel::addRawFileItems(QStringList fileList)
+{
+    Q_UNUSED(fileList);
+}
+
