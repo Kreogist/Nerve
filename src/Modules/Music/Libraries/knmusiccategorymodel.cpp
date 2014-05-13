@@ -60,9 +60,46 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
     {
         currentItem=new KNMusicArtistItem(currentName);
         currentItem->setData(currentName, Qt::UserRole);
+        currentItem->setData(1, Qt::UserRole+1);
         currentItem->setIcon(itemIcon(index.row()));
         searchResult.append(currentItem);
         appendRow(currentItem);
+    }
+    else
+    {
+        currentItem=static_cast<KNMusicArtistItem *>(searchResult.first());
+        currentItem->setData(currentItem->data(Qt::UserRole+1).toInt()+1,
+                             Qt::UserRole+1);
+    }
+}
+
+void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
+{
+    QString currentName=categoryName(index.row());
+    KNMusicArtistItem *currentItem;
+    if(currentName.isEmpty())
+    {
+        m_noCategoryItemCount--;
+        if(m_noCategoryItemCount==0)
+        {
+            emit requireHideFirstItem();
+        }
+        return;
+    }
+    QList<QStandardItem *> searchResult=findItems(currentName);
+    if(searchResult.size()==0)
+    {
+        return;
+    }
+    currentItem=static_cast<KNMusicArtistItem *>(searchResult.first());
+    int currentItemSize=currentItem->data(Qt::UserRole+1).toInt();
+    if(currentItemSize==1)
+    {
+        removeColumn(currentItem->row());
+    }
+    else
+    {
+        currentItem->setData(currentItemSize-1, Qt::UserRole+1);
     }
 }
 

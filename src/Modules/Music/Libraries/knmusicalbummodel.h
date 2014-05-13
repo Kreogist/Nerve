@@ -16,6 +16,7 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void onMusicAdded(const QModelIndex &index);
+    void onMusicRemoved(const QModelIndex &index);
 
 protected:
     QIcon itemIcon(const int &index) const;
