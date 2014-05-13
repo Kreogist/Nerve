@@ -54,13 +54,13 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     else
     {
         currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.first());
+        currentAlbum->setData(currentAlbum->data(Qt::UserRole+2).toInt()+1,
+                              Qt::UserRole+2);
         if(currentAlbum->data(Qt::UserRole+1).toInt() == 0 &&
            currentAlbum->data(Qt::UserRole).toString() != currentArtist)
         {
             currentAlbum->setData(m_variousArtist, Qt::UserRole);
             currentAlbum->setData(1, Qt::UserRole+1);
-            currentAlbum->setData(currentAlbum->data(Qt::UserRole+2).toInt()+1,
-                                  Qt::UserRole+2);
         }
     }
 }
@@ -71,7 +71,10 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     if(currentName.isEmpty())
     {
         m_noCategoryItemCount--;
-        emit requireHideFirstItem();
+        if(m_noCategoryItemCount==0)
+        {
+            emit requireHideFirstItem();
+        }
         return;
     }
     KNMusicArtistItem *currentAlbum;
@@ -84,7 +87,7 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     int currentAlbumSong=currentAlbum->data(Qt::UserRole+2).toInt();
     if(currentAlbumSong==1)
     {
-        removeColumn(currentAlbum->row());
+        removeRow(currentAlbum->row());
     }
     else
     {
@@ -94,8 +97,7 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=m_sourceModel->item(index,
-                                         KNMusicGlobal::Time)->data(Qt::UserRole+1).value<QPixmap>();
+    QPixmap albumArt=m_sourceModel->itemArtwork(index);
     if(albumArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);
@@ -105,12 +107,10 @@ QIcon KNMusicAlbumModel::itemIcon(const int &index) const
 
 QString KNMusicAlbumModel::artistName(const int &index) const
 {
-    return m_sourceModel->item(index,
-                               KNMusicGlobal::Artist)->data(Qt::DisplayRole).toString();
+    return m_sourceModel->itemText(index, KNMusicGlobal::Artist);
 }
 
 QString KNMusicAlbumModel::categoryName(const int &index) const
 {
-    return m_sourceModel->item(index,
-                               KNMusicGlobal::Album)->data(Qt::DisplayRole).toString();
+    return m_sourceModel->itemText(index, KNMusicGlobal::Album);
 }

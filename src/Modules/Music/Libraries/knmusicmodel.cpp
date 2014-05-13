@@ -150,6 +150,16 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
     return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
 }
 
+QString KNMusicModel::itemText(const int &row, const int &column) const
+{
+    return data(index(row, column), Qt::DisplayRole).toString();
+}
+
+QPixmap KNMusicModel::itemArtwork(const int &row) const
+{
+    return data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).value<QPixmap>();
+}
+
 void KNMusicModel::addRawFileItem(const QString &filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),

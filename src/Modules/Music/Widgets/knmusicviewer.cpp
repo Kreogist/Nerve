@@ -16,6 +16,7 @@
 
 #include "../../Base/knlibsearcher.h"
 
+#include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
 #include "../Libraries/knmusicalbummodel.h"
@@ -98,7 +99,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
                 m_genreView);
 }
 
-void KNMusicViewer::setModel(QAbstractItemModel *model)
+void KNMusicViewer::setModel(KNMusicModel *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
@@ -160,6 +161,14 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
         break;
     }
     setCategoryIndex(category);
+}
+
+void KNMusicViewer::deleteMusic(const QModelIndex &index)
+{
+    m_artistModel->onMusicRemoved(index);
+    m_albumModel->onMusicRemoved(index);
+    m_genreModel->onMusicRemoved(index);
+    m_listViewModel->removeOriginalItem(index);
 }
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)

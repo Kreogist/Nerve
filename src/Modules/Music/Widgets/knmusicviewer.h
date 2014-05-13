@@ -12,6 +12,7 @@
 class QDragEnterEvent;
 class QDropEvent;
 class KNLibSearcher;
+class KNMusicModel;
 class KNMusicListView;
 class KNMusicArtistView;
 class KNMusicAlbumView;
@@ -29,13 +30,14 @@ class KNMusicViewer : public KNStdLibViewer
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
     void setDefaultHeader();
-    void setModel(QAbstractItemModel *model);
+    void setModel(KNMusicModel *model);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index,
                                 KNMusicGlobal::MusicCategory currentMode);
     void requireOpenUrl(const QModelIndex &index);
+    void requireDelete(const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -43,6 +45,7 @@ public slots:
     void resort();
     void showIn(KNMusicGlobal::MusicCategory category,
                 const QModelIndex &index);
+    void deleteMusic(const QModelIndex &index);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -89,7 +92,7 @@ private:
     KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;
 
-    QAbstractItemModel *m_sourceModel;
+    KNMusicModel *m_sourceModel;
 };
 
 #endif // KNMUSICVIEWER_H

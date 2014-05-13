@@ -27,8 +27,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
-    connect(m_musicViewer, SIGNAL(requireOpenUrl(QModelIndex)),
-            this, SLOT(onActionOpenUrl(QModelIndex)));
+    connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
+            this, &KNMusicPlugin::onActionOpenUrl);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
@@ -36,6 +36,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             m_musicViewer, &KNMusicViewer::showIn);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,
             this, &KNMusicPlugin::onActionGetInfo);
+    connect(m_libraryViewMenu, &KNMusicViewerMenu::requireDelete,
+            m_musicViewer, &KNMusicViewer::deleteMusic);
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::onActionShowContextMenu);
 

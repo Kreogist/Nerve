@@ -8,6 +8,7 @@ class KNMusicSortModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit KNMusicSortModel(QObject *parent = 0);
+    void removeOriginalItem(const QModelIndex &index);
 
 signals:
 

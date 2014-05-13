@@ -24,6 +24,7 @@ signals:
     void requireShowIn(KNMusicGlobal::MusicCategory category,
                        const QModelIndex &index);
     void requireGetInfo(const QString &filePath);
+    void requireDelete(const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -39,6 +40,7 @@ private slots:
     void onActionShowInAlbum();
     void onActionShowInGenre();
     void onActionGetInfo();
+    void onActionDelete();
 
 private:
     enum MusicActions
@@ -52,6 +54,7 @@ private:
         Browse,
         Copy,
         CopyText,
+        Delete,
         MusicActionCount
     };
     QString m_actionTitle[MusicActionCount];

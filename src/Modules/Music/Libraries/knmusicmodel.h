@@ -16,6 +16,8 @@ public:
     bool readFromDataStream(QDataStream &stream);
     bool writeToDataStream(QDataStream &stream);
     QString filePathFromIndex(const QModelIndex &index);
+    QString itemText(const int &row, const int &column) const;
+    QPixmap itemArtwork(const int &row) const;
     void addRawFileItem(const QString &filePath);
     void updateIndexInfo(const QModelIndex &index,
                          const QString &filePath);

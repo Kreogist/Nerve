@@ -95,7 +95,7 @@ void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
     int currentItemSize=currentItem->data(Qt::UserRole+1).toInt();
     if(currentItemSize==1)
     {
-        removeColumn(currentItem->row());
+        removeRow(currentItem->row());
     }
     else
     {

@@ -7,6 +7,12 @@
 KNMusicSortModel::KNMusicSortModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
+    ;
+}
+
+void KNMusicSortModel::removeOriginalItem(const QModelIndex &index)
+{
+    sourceModel()->removeRow(index.row());
 }
 
 bool KNMusicSortModel::lessThan(const QModelIndex &left,

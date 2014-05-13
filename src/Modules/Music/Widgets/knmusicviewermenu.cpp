@@ -76,6 +76,7 @@ void KNMusicViewerMenu::retranslate()
 #endif
     m_actionTitle[Copy]=tr("Copy File");
     m_actionTitle[CopyText]=tr("Copy '%1'");
+    m_actionTitle[Delete]=tr("Delete");
 }
 
 void KNMusicViewerMenu::retranslateAndSet()
@@ -132,6 +133,11 @@ void KNMusicViewerMenu::onActionGetInfo()
     emit requireGetInfo(m_filePath);
 }
 
+void KNMusicViewerMenu::onActionDelete()
+{
+    emit requireDelete(m_currentIndex);
+}
+
 void KNMusicViewerMenu::createActions()
 {
     for(int i=0; i<MusicActionCount; i++)
@@ -157,6 +163,8 @@ void KNMusicViewerMenu::createActions()
             this, SLOT(onActionCopy()));
     connect(m_action[CopyText], SIGNAL(triggered()),
             this, SLOT(onActionCopyText()));
+    connect(m_action[Delete], SIGNAL(triggered()),
+            this, SLOT(onActionDelete()));
     insertSeparator(m_action[ShowInSongs]);
     insertSeparator(m_action[GetInfo]);
     insertSeparator(m_action[Browse]);
