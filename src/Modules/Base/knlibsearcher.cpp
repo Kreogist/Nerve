@@ -38,6 +38,7 @@ void KNLibSearcher::analysisList(const QList<QUrl> &urls)
         }
     }
     m_model->addRawFileItems(m_rawFileList);
+    m_rawFileList.clear();
 }
 
 int KNLibSearcher::getType(const QString &suffix)
