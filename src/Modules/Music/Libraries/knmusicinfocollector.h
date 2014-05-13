@@ -23,8 +23,8 @@ public:
     explicit KNMusicInfoCollector(QObject *parent = 0);
 
 signals:
-    void requireAppendMusic(const QStringList &value,
-                            const KNMusicGlobal::MusicDetailsInfo &datas);
+    void requireAppendMusic(QStringList value,
+                            KNMusicGlobal::MusicDetailsInfo datas);
     void requireSkipCurrent();
 
 public slots:

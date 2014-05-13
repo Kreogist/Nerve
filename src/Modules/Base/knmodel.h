@@ -12,20 +12,21 @@ public:
     void resetHeaderOrder();
     virtual bool readFromDataStream(QDataStream &stream);
     virtual bool writeToDataStream(QDataStream &stream);
-    virtual void addRawFileItem(const QString &filePath);
+    virtual void addRawFileItem(QString filePath);
     KNLibInfoCollectorManager *infoCollectorManager() const;
     virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
     void requireResetHeaderOrder();
     void requireResort();
+    void requireUpdateNextRow();
 
 public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
 
 protected slots:
-    virtual void onActionUpdateRowInfo(const QModelIndex &index);
+    virtual void onActionUpdateRowInfo();
 
 private:
     KNLibInfoCollectorManager *m_infoCollectorManager;

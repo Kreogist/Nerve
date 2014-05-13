@@ -160,7 +160,7 @@ QPixmap KNMusicModel::itemArtwork(const int &row) const
     return data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).value<QPixmap>();
 }
 
-void KNMusicModel::addRawFileItem(const QString &filePath)
+void KNMusicModel::addRawFileItem(QString filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),
                                     Qt::UserRole,
@@ -205,12 +205,12 @@ void KNMusicModel::retranslateAndSet()
     KNModel::retranslate();
 }
 
-void KNMusicModel::onActionUpdateRowInfo(const QModelIndex &index)
+void KNMusicModel::onActionUpdateRowInfo()
 {
     QStringList currentText=m_infoCollectorManager->currentFileData();
     KNMusicGlobal::MusicDetailsInfo currentDetails=
             m_infoCollectorManager->currentFileAppendData();
-    int currentRow=index.row();
+    int currentRow=m_infoCollectorManager->currentIndex();
     QStandardItem *songItem;
     for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
     {
@@ -244,21 +244,25 @@ void KNMusicModel::onActionUpdateRowInfo(const QModelIndex &index)
         //This is a new file, never add to list.
         songItem->setData(0);
         emit musicAppend(indexFromItem(songItem));
-        m_rawFileCount--;
-        if(m_rawFileCount==0)
-        {
-            emit requireResort();
-        }
     }
     else
     {
         emit musicDataUpdate(indexFromItem(songItem));
+    }
+    m_infoCollectorManager->removeFirstUpdateResult();
+    if(m_infoCollectorManager->isUpdateQueueEmpty())
+    {
+        emit requireResort();
+    }
+    else
+    {
+        emit requireUpdateNextRow();
     }
 }
 
 void KNMusicModel::updateIndexInfo(const QModelIndex &index,
                                    const QString &filePath)
 {
-    infoCollectorManager()->addAnalysisList(index,
+    infoCollectorManager()->addAnalysisList(index.row(),
                                             filePath);
 }

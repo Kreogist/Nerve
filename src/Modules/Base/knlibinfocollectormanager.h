@@ -11,11 +11,11 @@ public:
     explicit KNLibInfoCollectorManager(QObject *parent = 0);
 
 signals:
-    void requireUpdateRowInfo(const QModelIndex &index);
+    void requireUpdateRowInfo();
 
 public slots:
-    virtual void addAnalysisList(const QModelIndex &index,
-                                 const QString &filePath);
+    virtual void addAnalysisList(int index,
+                                 QString filePath);
 
 };
 

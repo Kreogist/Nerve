@@ -25,45 +25,74 @@ KNMusicInfoCollectorManager::~KNMusicInfoCollectorManager()
     m_collector->deleteLater();
 }
 
-void KNMusicInfoCollectorManager::addAnalysisList(const QModelIndex &index,
-                                                  const QString &filePath)
+void KNMusicInfoCollectorManager::addAnalysisList(int index,
+                                                  QString filePath)
 {
-    m_indexList.append(index);
-    m_fileList.append(filePath);
+    AnalysisQueueItem analysisItem;
+    analysisItem.index=index;
+    analysisItem.filePath=filePath;
+    m_analysisQueue.append(analysisItem);
     if(!m_working)
     {
         m_working=true;
-        emit requireAnalysis(m_fileList.at(0));
+        emit requireAnalysis(m_analysisQueue.first().filePath);
     }
 }
 
 void KNMusicInfoCollectorManager::currentSkip()
 {
-    m_indexList.removeFirst();
-    m_fileList.removeFirst();
-    if(m_fileList.size()==0)
+    m_analysisQueue.removeFirst();
+    if(m_analysisQueue.size()==0)
     {
         m_working=false;
         return;
     }
-    emit requireAnalysis(m_fileList.at(0));
+    emit requireAnalysis(m_analysisQueue.first().filePath);
 }
 
-void KNMusicInfoCollectorManager::currentWorkDone(const QStringList &value,
-                                                  const KNMusicGlobal::MusicDetailsInfo &datas)
+void KNMusicInfoCollectorManager::currentWorkDone(QStringList value,
+                                                  KNMusicGlobal::MusicDetailsInfo datas)
 {
-    m_currentFileData=value;
-    m_currentFileAppendData=datas;
-    emit requireUpdateRowInfo(m_indexList.at(0));
+    ResultQueueItem resultItem;
+    resultItem.index=m_analysisQueue.first().index;
+    resultItem.text=value;
+    resultItem.details=datas;
+    m_resultQueue.append(resultItem);
+    if(m_noUpdating)
+    {
+        emit requireUpdateRowInfo();
+        m_noUpdating=false;
+    }
     currentSkip();
 }
 
 KNMusicGlobal::MusicDetailsInfo KNMusicInfoCollectorManager::currentFileAppendData() const
 {
-    return m_currentFileAppendData;
+    return m_resultQueue.first().details;
+}
+
+int KNMusicInfoCollectorManager::currentIndex() const
+{
+    return m_resultQueue.first().index;
+}
+
+void KNMusicInfoCollectorManager::removeFirstUpdateResult()
+{
+    m_resultQueue.removeFirst();
+    if(m_resultQueue.isEmpty())
+    {
+        m_noUpdating=true;
+    }
+}
+
+bool KNMusicInfoCollectorManager::isUpdateQueueEmpty()
+{
+    return m_resultQueue.isEmpty();
 }
 
 QStringList KNMusicInfoCollectorManager::currentFileData() const
 {
-    return m_currentFileData;
+    return m_resultQueue.first().text;
 }
+
+

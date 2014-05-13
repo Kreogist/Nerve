@@ -5,8 +5,8 @@ KNLibInfoCollectorManager::KNLibInfoCollectorManager(QObject *parent) :
 {
 }
 
-void KNLibInfoCollectorManager::addAnalysisList(const QModelIndex &index,
-                                                const QString &filePath)
+void KNLibInfoCollectorManager::addAnalysisList(int index,
+                                                QString filePath)
 {
     Q_UNUSED(index);
     Q_UNUSED(filePath);

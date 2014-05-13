@@ -18,7 +18,7 @@ public:
     QString filePathFromIndex(const QModelIndex &index);
     QString itemText(const int &row, const int &column) const;
     QPixmap itemArtwork(const int &row) const;
-    void addRawFileItem(const QString &filePath);
+    void addRawFileItem(QString filePath);
     void updateIndexInfo(const QModelIndex &index,
                          const QString &filePath);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
@@ -32,7 +32,7 @@ public slots:
     void retranslateAndSet();
 
 protected slots:
-    void onActionUpdateRowInfo(const QModelIndex &index);
+    void onActionUpdateRowInfo();
 
 private:
     KNMusicGlobal *m_musicGlobal;

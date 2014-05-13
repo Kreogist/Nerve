@@ -20,33 +20,43 @@ public:
 
     QStringList currentFileData() const;
     KNMusicGlobal::MusicDetailsInfo currentFileAppendData() const;
+    int currentIndex() const;
+    void removeFirstUpdateResult();
+    bool isUpdateQueueEmpty();
 
 signals:
     void requireAnalysis(const QString &filePath);
 
 public slots:
-    void addAnalysisList(const QModelIndex &index,
-                         const QString &filePath);
+    void addAnalysisList(int index,
+                         QString filePath);
 
 private slots:
     void currentSkip();
-    void currentWorkDone(const QStringList &value,
-                         const KNMusicGlobal::MusicDetailsInfo &datas);
+    void currentWorkDone(QStringList value,
+                         KNMusicGlobal::MusicDetailsInfo datas);
 
 private:
     struct AnalysisQueueItem
     {
+        int index;
         QString filePath;
-        QModelIndex index;
+    };
+    struct ResultQueueItem
+    {
+        int index;
+        QStringList text;
+        KNMusicGlobal::MusicDetailsInfo details;
     };
 
     KNMusicInfoCollector *m_collector;
     QThread m_collectThread;
     QList<AnalysisQueueItem> m_analysisQueue;
     QList<QModelIndex> m_indexList;
+    QList<ResultQueueItem> m_resultQueue;
     QStringList m_fileList, m_currentFileData;
     KNMusicGlobal::MusicDetailsInfo m_currentFileAppendData;
-    bool m_working=false;
+    bool m_working=false, m_noUpdating=true;
 };
 
 #endif // KNMUSICINFOCOLLECTORMANAGER_H

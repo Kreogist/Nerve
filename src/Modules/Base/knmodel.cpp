@@ -11,6 +11,8 @@ KNModel::KNModel(QObject *parent) :
 
     connect(KNLocale::instance(), SIGNAL(languageChanged()),
             this, SLOT(retranslateAndSet()));
+    connect(this, &KNModel::requireUpdateNextRow,
+            this, &KNModel::onActionUpdateRowInfo);
 }
 
 void KNModel::resetHeaderOrder()
@@ -38,10 +40,11 @@ void KNModel::retranslateAndSet()
     retranslate();
 }
 
-void KNModel::onActionUpdateRowInfo(const QModelIndex &index)
+void KNModel::onActionUpdateRowInfo()
 {
-    Q_UNUSED(index);
+    ;
 }
+
 KNLibInfoCollectorManager *KNModel::infoCollectorManager() const
 {
     return m_infoCollectorManager;
@@ -55,7 +58,7 @@ void KNModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorMa
 }
 
 
-void KNModel::addRawFileItem(const QString &filePath)
+void KNModel::addRawFileItem(QString filePath)
 {
     Q_UNUSED(filePath);
 }
