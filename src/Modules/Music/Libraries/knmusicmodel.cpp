@@ -6,6 +6,8 @@
 #include <QBuffer>
 #include <QStringList>
 
+#include <QTime>
+
 #include <QDebug>
 
 #include "../../knglobal.h"
@@ -192,6 +194,8 @@ void KNMusicModel::addRawFileItem(QString filePath)
 void KNMusicModel::addRawFileItems(QStringList fileList)
 {
     int listFileCount=fileList.size();
+    qDebug()<<listFileCount;
+    m_startTime=QTime::currentTime().msecsSinceStartOfDay();
     while(listFileCount--)
     {
         addRawFileItem(fileList.takeFirst());
@@ -252,7 +256,12 @@ void KNMusicModel::onActionUpdateRowInfo()
     {
         //This is a new file, never add to list.
         songItem->setData(0);
+        m_rawFileCount--;
         emit musicAppend(indexFromItem(songItem));
+        if(m_rawFileCount==0)
+        {
+            qDebug()<<m_startTime-QTime::currentTime().msecsSinceStartOfDay();
+        }
     }
     else
     {

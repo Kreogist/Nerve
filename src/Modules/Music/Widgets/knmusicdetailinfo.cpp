@@ -49,6 +49,9 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
 #ifdef Q_OS_MACX
     rawInfoItem=rawInfoData.split('\r');
 #endif
+#ifdef Q_OS_LINUX
+    rawInfoItem=rawInfoData.split('\n');
+#endif
     int itemCount=rawInfoItem.size(),
         colonPosition;
     QStandardItem *currentItem, *currentParent;

@@ -37,6 +37,9 @@ private:
     KNMusicGlobal *m_musicGlobal;
     KNMusicInfoCollectorManager *m_infoCollectorManager;
     int m_rawFileCount=0;
+
+    //Debug
+    int m_startTime;
 };
 
 #endif // KNMUSICMODEL_H

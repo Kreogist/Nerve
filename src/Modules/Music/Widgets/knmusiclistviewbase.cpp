@@ -27,7 +27,9 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setAllColumnsShowFocus(true);
 
     horizontalScrollBar()->setSingleStep(5);
+    horizontalScrollBar()->setPageStep(5);
     verticalScrollBar()->setSingleStep(4);
+    verticalScrollBar()->setPageStep(4);
 
     //Set locale.
     retranslate();

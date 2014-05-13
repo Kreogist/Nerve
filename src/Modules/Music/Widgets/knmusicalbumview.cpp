@@ -515,8 +515,8 @@ void KNMusicAlbumView::updateGeometries()
     int verticalMax=qMax(0,
                          m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height());
     verticalScrollBar()->setRange(0, verticalMax);
-    verticalScrollBar()->setSingleStep(m_lineCount==0?10:
-                                                      verticalMax/m_lineCount*(height()/(m_spacing+m_gridHeight)));
+    verticalScrollBar()->setPageStep(m_gridHeight);
+    verticalScrollBar()->setSingleStep(m_gridHeight);
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
