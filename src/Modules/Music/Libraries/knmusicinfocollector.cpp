@@ -71,10 +71,11 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readFLACTag(filePathBackup);
     parseByMediaInfo(filePathBackup);
     currentFileInfo.rating=m_musicRating;
-    currentFileInfo.coverImage=m_musicCover;
     currentFileInfo.duration=m_duration;
     currentFileInfo.bitRate=m_bitRate;
     currentFileInfo.samplingRate=m_samplingRate;
+
+    currentFileInfo.coverImage=m_musicCover;
 
     QStringList musicInfo;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -375,6 +376,9 @@ void KNMusicInfoCollector::readFLACTag(const QString &value)
         setMediaData(KNMusicGlobal::Album, m_tagFLAC->metaData("album"));
         setMediaData(KNMusicGlobal::Genre, m_tagFLAC->metaData("genre"));
         setMediaData(KNMusicGlobal::Description, m_tagFLAC->metaData("description"));
+        setMediaData(KNMusicGlobal::Composer, m_tagFLAC->metaData("composer"));
+        setMediaData(KNMusicGlobal::DiscCount, m_tagFLAC->metaData("totaldiscs"));
+        setMediaData(KNMusicGlobal::DiscNumber, m_tagFLAC->metaData("discnumber"));
         setMediaData(KNMusicGlobal::Comments, m_tagFLAC->metaData("comment"));
         setMediaData(KNMusicGlobal::AlbumArtist, m_tagFLAC->metaData("album artist"));
         setMediaData(KNMusicGlobal::TrackCount, m_tagFLAC->metaData("tracktotal"));

@@ -648,7 +648,7 @@ bool KNMusicAlbumView::isIndexHidden(const QModelIndex &index) const
 }
 
 QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorAction,
-                                         Qt::KeyboardModifiers)
+                                         Qt::KeyboardModifiers modifiers)
 {
     QModelIndex current=currentIndex();
     viewport()->update();

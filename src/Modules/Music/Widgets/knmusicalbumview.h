@@ -151,7 +151,7 @@ protected:
     int verticalOffset() const;
     bool isIndexHidden(const QModelIndex &index) const;
     QModelIndex moveCursor(QAbstractItemView::CursorAction cursorAction,
-                                        Qt::KeyboardModifiers /*modifiers*/);
+                                        Qt::KeyboardModifiers modifiers);
     void setSelection(const QRect &rect,
                       QItemSelectionModel::SelectionFlags command);
     QRegion visualRegionForSelection(const QItemSelection &selection) const;

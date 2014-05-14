@@ -10,6 +10,7 @@
 
 #include <QDebug>
 
+#include "../../Base/knlibdatabase.h"
 #include "../../knglobal.h"
 #include "knmusicstarrating.h"
 
@@ -21,6 +22,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     KNModel(parent)
 {
     m_musicGlobal=KNMusicGlobal::instance();
+
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
