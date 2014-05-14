@@ -22,8 +22,8 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    verticalScrollBar()->setSingleStep(2);
-    verticalScrollBar()->setPageStep(2);
+    verticalScrollBar()->setSingleStep(8);
+    verticalScrollBar()->setPageStep(8);
 
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();

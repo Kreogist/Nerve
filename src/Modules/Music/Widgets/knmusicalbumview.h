@@ -3,12 +3,13 @@
 
 #include <QAbstractItemView>
 
-class QTimeLine;
+class QBoxLayout;
+class QLabel;
 class QMouseEvent;
 class QPaintEvent;
-class QLabel;
 class QPropertyAnimation;
-class QBoxLayout;
+class QParallelAnimationGroup;
+class QTimeLine;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
@@ -93,12 +94,14 @@ signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
     void requireFlyBack();
+    void requireFlyOut();
 
 public slots:
     void hideDetailWidget();
     void showDetailWidget();
     void expandDetail();
     void foldDetail();
+    void flyAway();
 
 private slots:
     void hideDetailContent();
@@ -109,7 +112,8 @@ private:
     KNMusicAlbumInfoDetail *m_infoPanel;
     KNMusicAlbumSongDetail *m_songPanel;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
-    QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold;
+    QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold,
+                       *m_flyOut;
 };
 
 class KNMusicAlbumView : public QAbstractItemView
@@ -158,6 +162,9 @@ private slots:
     void onActionAlbumClicked(const QModelIndex &index);
     void onActionHideAlbumDetail();
     void onActionHideAlbumDetailFinished();
+    void onActionAlbumRemoved(const QModelIndex &index);
+    void onActionFlyAwayAlbumDetail();
+    void onActionFlyAwayAlbumDetailFinished();
     void showFirstItem();
     void hideFirstItem();
 
@@ -175,12 +182,14 @@ private:
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
     int m_iconSizeParam=124;
+    int m_spacingHeight=154, m_spacingWidth=134;
     QPalette m_palette;
     QColor m_backgroundColor;
     int m_minGrey=0x30;
     QTimeLine *m_scrollTimeLine;
-    QPropertyAnimation *m_albumShow,
-                       *m_albumHide;
+    QPropertyAnimation *m_albumShow, *m_albumHide,
+                       *m_albumThrow;
+    QParallelAnimationGroup *m_flyawayGroup;
     KNMusicAlbumDetail *m_albumDetail;
     QModelIndex m_detailIndex;
     KNMusicAlbumDetailModel *m_detailModel;

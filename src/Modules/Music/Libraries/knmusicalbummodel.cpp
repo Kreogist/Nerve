@@ -87,6 +87,7 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     int currentAlbumSong=currentAlbum->data(Qt::UserRole+2).toInt();
     if(currentAlbumSong==1)
     {
+        emit albumRemoved(currentAlbum->index());
         removeRow(currentAlbum->row());
     }
     else

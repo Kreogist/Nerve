@@ -11,6 +11,7 @@ public:
     bool isNoAlbumHidden() const;
 
 signals:
+    void albumRemoved(const QModelIndex &index);
 
 public slots:
     void retranslate();

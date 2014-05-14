@@ -1,16 +1,17 @@
-#include <QDebug>
-
-#include <QScrollBar>
-#include <QPen>
-#include <QMouseEvent>
+#include <QBoxLayout>
 #include <QIcon>
 #include <QItemSelectionModel>
-#include <QPainter>
 #include <QLabel>
-#include <QTimeLine>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QPaintEvent>
-#include <QBoxLayout>
+#include <QPen>
 #include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
+#include <QScrollBar>
+#include <QTimeLine>
+
+#include <QDebug>
 
 #include "knmusicalbumsonglistview.h"
 #include "../Libraries/knmusicalbummodel.h"
@@ -230,10 +231,18 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_heightFold->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_widthFold, SIGNAL(finished()),
             m_heightFold, SLOT(start()));
-    connect(m_heightFold, SIGNAL(finished()),
-            this, SIGNAL(requireFlyBack()));
-    connect(m_heightFold, SIGNAL(finished()),
-            this, SLOT(hideDetailWidget()));
+    connect(m_heightFold, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumDetail::hideDetailWidget);
+    connect(m_heightFold, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumDetail::requireFlyBack);
+
+    m_flyOut=new QPropertyAnimation(this, "geometry", this);
+    m_flyOut->setDuration(125);
+    m_flyOut->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_flyOut, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumDetail::hideDetailWidget);
+    connect(m_flyOut, &QPropertyAnimation::finished,
+            this, &KNMusicAlbumDetail::requireFlyOut);
 }
 
 KNMusicAlbumDetail::~KNMusicAlbumDetail()
@@ -331,6 +340,20 @@ void KNMusicAlbumDetail::foldDetail()
     m_widthFold->start();
 }
 
+void KNMusicAlbumDetail::flyAway()
+{
+    int sizeEnd=m_albumArt->width(),
+        topEnd=((parentWidget()->height()-sizeEnd)>>1),
+        leftEnd=((parentWidget()->width()-sizeEnd)>>1);
+    m_flyOut->setStartValue(geometry());
+    m_flyOut->setEndValue(QRect(leftEnd,
+                                topEnd,
+                                sizeEnd,
+                                sizeEnd));
+    hideDetailContent();
+    m_flyOut->start();
+}
+
 void KNMusicAlbumDetail::hideDetailContent()
 {
     m_infoPanel->hideDetailInfo();
@@ -381,6 +404,17 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     connect(m_albumDetail, &KNMusicAlbumDetail::requireFlyBack,
             this, &KNMusicAlbumView::onActionHideAlbumDetail);
 
+    m_flyawayGroup=new QParallelAnimationGroup(this);
+    m_albumThrow=new QPropertyAnimation(m_albumDetail,
+                                        "geometry",
+                                        this);
+    m_albumThrow->setEasingCurve(QEasingCurve::InCubic);
+    m_flyawayGroup->addAnimation(m_albumThrow);
+    connect(m_albumDetail, &KNMusicAlbumDetail::requireFlyOut,
+            this, &KNMusicAlbumView::onActionFlyAwayAlbumDetail);
+    connect(m_flyawayGroup, &QParallelAnimationGroup::finished,
+            this, &KNMusicAlbumView::onActionFlyAwayAlbumDetailFinished);
+
     m_scrollTimeLine=new QTimeLine(200, this);
     m_scrollTimeLine->setUpdateInterval(5);
     m_scrollTimeLine->setEasingCurve(QEasingCurve::OutCubic);
@@ -393,12 +427,10 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
 {
     int pointTop=verticalScrollBar()->value()+point.y(),
-        spacingHeight=m_gridHeight+m_spacing,
-        spacingWidth=m_spacing+m_gridWidth,
-        pointLine=pointTop/spacingHeight,
-        pointColumn=point.x()/spacingWidth,
-        horizontalPosition=point.x()-pointColumn*spacingWidth;
-    if(pointTop-pointLine*spacingHeight<m_spacing ||
+        pointLine=pointTop/m_spacingHeight,
+        pointColumn=point.x()/m_spacingWidth,
+        horizontalPosition=point.x()-pointColumn*m_spacingWidth;
+    if(pointTop-pointLine*m_spacingHeight<m_spacing ||
        horizontalPosition<m_spacing ||
        horizontalPosition>m_spacing+m_iconSizeParam)
     {
@@ -418,7 +450,7 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
     {
         return;
     }
-    int atTopPosition=index.row()/m_maxColumnCount*(m_gridHeight+m_spacing);
+    int atTopPosition=index.row()/m_maxColumnCount*m_spacingHeight;
     switch(hint)
     {
     case QAbstractItemView::PositionAtTop:
@@ -434,7 +466,7 @@ void KNMusicAlbumView::scrollTo(const QModelIndex &index,
         {
             return;
         }
-        int bottomValue=atTopPosition-height()+m_gridHeight+m_spacing,
+        int bottomValue=atTopPosition-height()+m_spacingHeight,
             toTop=qAbs(verticalScrollBar()->value()-atTopPosition),
             toBottom=qAbs(verticalScrollBar()->value()-bottomValue);
         if(toBottom<toTop)
@@ -471,11 +503,13 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
 void KNMusicAlbumView::setCategoryModel(KNMusicAlbumModel *model)
 {
     setModel(model);
-    connect(model, &KNMusicAlbumModel::requireShowFirstItem,
-            this, &KNMusicAlbumView::showFirstItem);
-    connect(model, &KNMusicAlbumModel::requireHideFirstItem,
-            this, &KNMusicAlbumView::hideFirstItem);
     m_model=model;
+    connect(m_model, &KNMusicAlbumModel::requireShowFirstItem,
+            this, &KNMusicAlbumView::showFirstItem);
+    connect(m_model, &KNMusicAlbumModel::requireHideFirstItem,
+            this, &KNMusicAlbumView::hideFirstItem);
+    connect(m_model, &KNMusicAlbumModel::albumRemoved,
+            this, &KNMusicAlbumView::onActionAlbumRemoved);
 }
 
 void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
@@ -513,10 +547,10 @@ void KNMusicAlbumView::selectItem(const QModelIndex &index)
 void KNMusicAlbumView::updateGeometries()
 {
     int verticalMax=qMax(0,
-                         m_lineCount*(m_gridHeight+m_spacing)+m_spacing-height());
+                         m_lineCount*m_spacingHeight+m_spacing-height());
     verticalScrollBar()->setRange(0, verticalMax);
-    verticalScrollBar()->setPageStep(m_gridHeight);
-    verticalScrollBar()->setSingleStep(m_gridHeight);
+    verticalScrollBar()->setPageStep((m_iconSizeParam>>1)-m_spacing);
+    verticalScrollBar()->setSingleStep((m_iconSizeParam>>1)-m_spacing);
 }
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
@@ -540,10 +574,10 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
 
     painter.translate(0, -verticalScrollBar()->value());
-    int skipLineCount=verticalScrollBar()->value()/(m_gridHeight+m_spacing),
-        drawnHeight=0, maxDrawnHeight=height()+m_gridHeight+m_spacing;
+    int skipLineCount=verticalScrollBar()->value()/(m_spacingHeight),
+        drawnHeight=0, maxDrawnHeight=height()+m_spacingHeight;
     currentRow+=skipLineCount;
-    currentTop+=(m_spacing+m_gridHeight)*skipLineCount;
+    currentTop+=m_spacingHeight*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
     if(m_model->isNoAlbumHidden())
     {
@@ -570,12 +604,12 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
             currentColumn=0;
             currentRow++;
             currentLeft=m_spacing;
-            currentTop+=m_spacing+m_gridHeight;
-            drawnHeight+=m_spacing+m_gridHeight;
+            currentTop+=m_spacingHeight;
+            drawnHeight+=m_spacingHeight;
         }
         else
         {
-            currentLeft+=m_spacing+m_gridWidth;
+            currentLeft+=m_spacingWidth;
         }
         albumIndex++;
     }
@@ -701,6 +735,35 @@ void KNMusicAlbumView::onActionHideAlbumDetailFinished()
     viewport()->update();
 }
 
+void KNMusicAlbumView::onActionAlbumRemoved(const QModelIndex &index)
+{
+    if(index==m_detailIndex)
+    {
+        selectionModel()->clear();
+        m_detailIndex=QModelIndex();
+        m_albumDetail->flyAway();
+        viewport()->update();
+    }
+}
+
+void KNMusicAlbumView::onActionFlyAwayAlbumDetail()
+{
+    int param=m_iconSizeParam-2;
+    QRect startPosition=m_albumDetail->geometry();
+    m_albumThrow->setStartValue(startPosition);
+    m_albumThrow->setEndValue(QRect(startPosition.x(),
+                                    -param,
+                                    param,
+                                    param));
+    m_flyawayGroup->start();
+}
+
+void KNMusicAlbumView::onActionFlyAwayAlbumDetailFinished()
+{
+    m_albumDetail->hide();
+    viewport()->update();
+}
+
 void KNMusicAlbumView::showFirstItem()
 {
     ;
@@ -720,8 +783,8 @@ QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
     int itemIndex=m_model->isNoAlbumHidden()?index.row()-1:index.row(),
         itemLine=itemIndex/m_maxColumnCount,
         itemColumn=itemIndex-itemLine*m_maxColumnCount;
-    return QRect(itemColumn*(m_spacing+m_gridWidth)+m_spacing,
-                 itemLine*(m_spacing+m_gridHeight)+m_spacing,
+    return QRect(itemColumn*m_spacingWidth+m_spacing,
+                 itemLine*m_spacingHeight+m_spacing,
                  m_gridWidth,
                  m_gridHeight);
 }
@@ -743,6 +806,8 @@ void KNMusicAlbumView::updateParameters()
     m_gridHeight=m_gridWidth+(fontMetrics().height()<<1);
     m_iconSizeParam=qMin(m_gridWidth-m_spacing,
                          m_gridHeight-(fontMetrics().height()<<1)-m_spacing);
+    m_spacingHeight=m_gridHeight+m_spacing;
+    m_spacingWidth=m_gridWidth+m_spacing;
 }
 
 void KNMusicAlbumView::paintAlbum(QPainter *painter,
@@ -759,10 +824,11 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                         currentIcon.pixmap(m_iconSizeParam, m_iconSizeParam));
 
     //To draw the text.
-    int textTop=rect.y()+m_iconSizeParam+5;
+    int textTop=rect.y()+m_iconSizeParam+5,
+        textWidth=rect.width()-m_spacing;
     painter->drawText(rect.x(),
                       textTop,
-                      rect.width()-m_spacing,
+                      textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       m_model->data(index).toString());
@@ -771,7 +837,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
     painter->setPen(QColor(128,128,128));
     painter->drawText(rect.x(),
                       textTop,
-                      rect.width()-m_spacing,
+                      textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
                       m_model->data(index, Qt::UserRole).toString());
@@ -804,7 +870,10 @@ void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
     }
     else
     {
-        m_albumDetail->foldDetail();
-        selectionModel()->clear();
+        if(m_albumDetail->isVisible())
+        {
+            m_albumDetail->foldDetail();
+            selectionModel()->clear();
+        }
     }
 }
