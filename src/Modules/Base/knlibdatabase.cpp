@@ -1,7 +1,6 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QJsonParseError>
 
 #include <QDebug>
 
@@ -42,8 +41,7 @@ void KNLibDatabase::replace(int i, const QJsonValue &value)
 void KNLibDatabase::setBatchCount(int batch)
 {
     m_batchCount=batch;
-    m_currentBatchCount=m_batchCount;
-    writeToDisk();
+    flush();
 }
 
 void KNLibDatabase::append(const QJsonValue &value)
@@ -92,8 +90,7 @@ bool KNLibDatabase::readFromDisk()
     QByteArray readCache=m_databaseFile->readAll();
     m_databaseFile->close();
 
-    QJsonParseError error;
-    m_document=QJsonDocument::fromJson(readCache, &error);
+    m_document=QJsonDocument::fromJson(readCache, &m_error);
 
     if(m_document.isNull())
     {
@@ -120,9 +117,10 @@ void KNLibDatabase::writeToDisk()
 
 void KNLibDatabase::flush()
 {
-    if(m_databaseChanged)
+    if(m_currentBatchCount!=0)
     {
         writeToDisk();
+        m_currentBatchCount=0;
     }
 }
 
@@ -143,12 +141,15 @@ void KNLibDatabase::createDatabase()
 
 void KNLibDatabase::reduceBatchCount()
 {
-    m_databaseChanged=true;
-    m_currentBatchCount--;
-    if(m_currentBatchCount==0)
+    if(++m_currentBatchCount==m_batchCount)
     {
         writeToDisk();
-        m_databaseChanged=false;
-        m_currentBatchCount=m_batchCount;
+        m_currentBatchCount=0;
     }
 }
+
+QJsonParseError KNLibDatabase::error() const
+{
+    return m_error;
+}
+

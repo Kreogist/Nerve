@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonParseError>
 #include <QStringList>
 #include <QObject>
 
@@ -25,6 +26,7 @@ public:
     void removeAt(int i);
     int size() const;
     void flush();
+    QJsonParseError error() const;
 
 signals:
 
@@ -41,10 +43,10 @@ private:
     QFileInfo m_databaseFileInfo;
     QJsonObject m_content;
     QJsonDocument m_document;
+    QJsonParseError m_error;
     QJsonArray m_databaseArray;
     int m_majorVersion=0, m_minorVersion=1, m_batchCount=10,
-        m_currentBatchCount=10;
-    bool m_databaseChanged=false;
+        m_currentBatchCount=0;
 };
 
 #endif // KNLIBDATABASE_H
