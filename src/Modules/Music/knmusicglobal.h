@@ -20,11 +20,12 @@ public:
         int duration=0;
         float bitRate=0.0;
         float samplingRate=0.0;
-        QString filePath;
         QDateTime dateModified;
         QDateTime lastPlayed;
-        QDateTime dateAdded;
         QPixmap coverImage;
+        QString filePath;
+        QDateTime dateAdded;
+        QString coverImageHash;
     };
 
     enum MusicDatas

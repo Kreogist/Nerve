@@ -21,6 +21,8 @@ void KNMusicDatabase::setModel(QAbstractItemModel *model)
             this, &KNMusicDatabase::onActionRowRemove);
     connect(m_model, &KNMusicModel::musicUpdate,
             this, &KNMusicDatabase::onActionRowUpdate);
+    connect(m_model, &KNMusicModel::musicAlbumArtUpdate,
+            this, &KNMusicDatabase::onActionUpdateCoverImage);
 }
 
 void KNMusicDatabase::recoverData()
@@ -38,6 +40,8 @@ void KNMusicDatabase::recoverData()
         {
             textList.append(displayText.at(j).toString());
         }
+        currentDetails.filePath=currentSong["FilePath"].toString();
+        currentDetails.coverImageHash=currentSong["CoverImage"].toString();
 
         currentDetails.duration=(int)currentSong["Time"].toDouble();
         currentDetails.size=(int)currentSong["Size"].toDouble();
@@ -58,8 +62,6 @@ void KNMusicDatabase::recoverData()
         dateTimeCache=stringToDateTime(dateTimeStringCache);
         currentDetails.dateAdded=dateTimeCache;
         textList[KNMusicGlobal::DateAdded]=dateTimeCache.toString("yyyy-MM-dd APhh:mm");
-
-        currentDetails.filePath=currentSong["FilePath"].toString();
         m_model->recoverFile(textList, currentDetails);
     }
 }
@@ -77,6 +79,13 @@ void KNMusicDatabase::onActionRowUpdate(const QModelIndex &index)
 void KNMusicDatabase::onActionRowRemove(const QModelIndex &index)
 {
     removeAt(index.row());
+}
+
+void KNMusicDatabase::onActionUpdateCoverImage(const int &index)
+{
+    QJsonObject currentSong=row(index);
+    currentSong["CoverImage"]=m_model->itemArtworkKey(index);
+    replace(index, currentSong);
 }
 
 QJsonObject KNMusicDatabase::createRowObject(const int &row)

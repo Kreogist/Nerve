@@ -61,7 +61,6 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
         currentItem=new KNMusicArtistItem(currentName);
         currentItem->setData(currentName, Qt::UserRole);
         currentItem->setData(1, Qt::UserRole+1);
-        currentItem->setIcon(itemIcon(index.row()));
         searchResult.append(currentItem);
         appendRow(currentItem);
     }
@@ -70,6 +69,34 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
         currentItem=static_cast<KNMusicArtistItem *>(searchResult.first());
         currentItem->setData(currentItem->data(Qt::UserRole+1).toInt()+1,
                              Qt::UserRole+1);
+    }
+}
+
+void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
+{
+    QString currentName=categoryName(index.row());
+    KNMusicArtistItem *currentItem;
+    if(currentName.isEmpty())
+    {
+        m_noCategoryItemCount++;
+        emit requireShowFirstItem();
+        return;
+    }
+    QList<QStandardItem *> searchResult=findItems(currentName);
+    if(searchResult.size()==0)
+    {
+        currentItem=new KNMusicArtistItem(currentName);
+        currentItem->setData(currentName, Qt::UserRole);
+        currentItem->setData(1, Qt::UserRole+1);
+        searchResult.append(currentItem);
+        appendRow(currentItem);
+    }
+    else
+    {
+        currentItem=static_cast<KNMusicArtistItem *>(searchResult.first());
+        currentItem->setData(currentItem->data(Qt::UserRole+1).toInt()+1,
+                             Qt::UserRole+1);
+        currentItem->setIcon(itemIcon(index.row()));
     }
 }
 
@@ -103,6 +130,28 @@ void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
     }
 }
 
+void KNMusicCategoryModel::onAlbumArtUpdate(const int &index)
+{
+    QString currentName=categoryName(index);
+    if(currentName.isEmpty())
+    {
+        return;
+    }
+    QList<QStandardItem *> searchResult=findItems(currentName);
+    if(searchResult.size()==0)
+    {
+        return;
+    }
+    KNMusicArtistItem *currentItem=
+            static_cast<KNMusicArtistItem *>(searchResult.first());
+    if(currentItem->hasIcon())
+    {
+        return;
+    }
+    currentItem->setIcon(itemIcon(index));
+    currentItem->setHasIcon(true);
+}
+
 void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     KNMusicModel *musicModel=qobject_cast<KNMusicModel *>(sourceModel);
@@ -110,7 +159,9 @@ void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
     connect(m_sourceModel, &KNMusicModel::musicAppend,
             this, &KNMusicCategoryModel::onMusicAdded);
     connect(m_sourceModel, &KNMusicModel::musicRecover,
-            this, &KNMusicCategoryModel::onMusicAdded);
+            this, &KNMusicCategoryModel::onMusicRecover);
+    connect(m_sourceModel, &KNMusicModel::musicAlbumArtUpdate,
+            this, &KNMusicCategoryModel::onAlbumArtUpdate);
 }
 
 QIcon KNMusicCategoryModel::itemIcon(const int &index) const

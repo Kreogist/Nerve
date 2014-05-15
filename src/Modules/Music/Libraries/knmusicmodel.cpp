@@ -12,6 +12,7 @@
 #include <QDebug>
 
 #include "../../Base/knlibdatabase.h"
+#include "../../Base/knlibhashpixmaplist.h"
 #include "../../knglobal.h"
 #include "knmusicstarrating.h"
 
@@ -23,6 +24,11 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     KNModel(parent)
 {
     m_musicGlobal=KNMusicGlobal::instance();
+
+    m_pixmapList=new KNLibHashPixmapList;
+    m_pixmapList->moveToThread(&m_pixmapListThread);
+    connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
+            this, &KNMusicModel::onActionUpdatePixmap);
 
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -41,6 +47,16 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::DateAdded, Qt::Horizontal, 4, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DateModified, Qt::Horizontal, 4, Qt::UserRole);
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
+
+    m_pixmapListThread.start();
+}
+
+KNMusicModel::~KNMusicModel()
+{
+    m_pixmapListThread.quit();
+    m_pixmapListThread.wait();
+
+    m_pixmapList->deleteLater();
 }
 
 QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
@@ -60,7 +76,12 @@ QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
 
 QPixmap KNMusicModel::itemArtwork(const int &row) const
 {
-    return data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).value<QPixmap>();
+    return m_pixmapList->pixmap(data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).toString());
+}
+
+QString KNMusicModel::itemArtworkKey(const int &row) const
+{
+    return data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).toString();
 }
 
 void KNMusicModel::addRawFileItem(QString filePath)
@@ -108,6 +129,11 @@ void KNMusicModel::addRawFileItems(QStringList fileList)
     }
 }
 
+void KNMusicModel::setAlbumArtPath(const QString &path)
+{
+    m_pixmapList->setAlbumArtPath(path);
+}
+
 void KNMusicModel::recoverFile(QStringList textList,
                                KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
@@ -125,6 +151,8 @@ void KNMusicModel::recoverFile(QStringList textList,
     songItem->setData(currentDetails.dateAdded, Qt::UserRole);
     setMusicDetailsInfo(currentRow,
                         currentDetails);
+    songItem=item(currentRow, KNMusicGlobal::Time);
+    songItem->setData(currentDetails.coverImageHash, Qt::UserRole+1);
     songItem=item(currentRow, KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, Qt::UserRole);
     emit musicRecover(songItem->index());
@@ -159,7 +187,7 @@ void KNMusicModel::onActionUpdateRowInfo()
         songItem->setText(currentText.at(i));
     }
     setMusicDetailsInfo(currentRow, currentDetails);
-
+    m_pixmapList->append(currentRow, currentDetails.coverImage);
     songItem=item(currentRow,KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, Qt::UserRole);
     if(songItem->data().toInt()==1)
@@ -187,6 +215,16 @@ void KNMusicModel::onActionUpdateRowInfo()
     }
 }
 
+void KNMusicModel::onActionUpdatePixmap()
+{
+    setData(index(m_pixmapList->currentRow(),
+                  KNMusicGlobal::Time),
+            m_pixmapList->currentKey(),
+            Qt::UserRole+1);
+    emit musicAlbumArtUpdate(m_pixmapList->currentRow());
+    m_pixmapList->removeCurrentUpdate();
+}
+
 void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
                                        const KNMusicGlobal::MusicDetailsInfo &currentDetails)
 {
@@ -194,7 +232,6 @@ void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
     songItem=item(currentRow,KNMusicGlobal::Time);
     songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem->setData(currentDetails.duration, Qt::UserRole);
-    songItem->setData(currentDetails.coverImage, Qt::UserRole+1);
     songItem=item(currentRow,KNMusicGlobal::BitRate);
     songItem->setData(QVariant(currentDetails.bitRate), Qt::UserRole);
     songItem=item(currentRow,KNMusicGlobal::SampleRate);

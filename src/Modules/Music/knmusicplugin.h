@@ -56,7 +56,8 @@ private:
             m_collectThread,
             m_modelThread,
             m_databaseThread;
-    QString m_musicDatabase;
+    QString m_musicDatabase,
+            m_musicAlbumArt;
 };
 
 #endif // KNMUSICPLUIN_H

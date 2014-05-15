@@ -23,6 +23,7 @@ private slots:
     void onActionRowAppend(const QModelIndex &index);
     void onActionRowUpdate(const QModelIndex &index);
     void onActionRowRemove(const QModelIndex &index);
+    void onActionUpdateCoverImage(const int &index);
 
 private:
     QJsonObject createRowObject(const int &row);

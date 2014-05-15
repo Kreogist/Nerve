@@ -51,10 +51,12 @@ void KNLibSearcher::analysisFolder(const QString &folderPath)
 {
     QDir folderInfo(folderPath);
     QFileInfoList filesData=folderInfo.entryInfoList();
+    QFileInfo currentParser;
+    QString currentName;
     for(int i=0; i<filesData.size(); i++)
     {
-        QFileInfo currentParser=filesData.at(i);
-        QString currentName=currentParser.fileName();
+        currentParser=filesData.at(i);
+        currentName=currentParser.fileName();
         if(currentName=="." || currentName=="..")
         {
             continue;

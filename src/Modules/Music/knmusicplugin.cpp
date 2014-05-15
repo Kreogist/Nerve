@@ -23,8 +23,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     KNPluginBase(parent)
 {
     m_global=KNGlobal::instance();
+    m_musicAlbumArt=QDir::toNativeSeparators(m_global->databaseFolder()+"/AlbumArt/");
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
+    m_model->setAlbumArtPath(m_musicAlbumArt);
 
     m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
     m_database=new KNMusicDatabase;

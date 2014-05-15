@@ -27,7 +27,9 @@ public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
     virtual void onMusicAdded(const QModelIndex &index);
+    virtual void onMusicRecover(const QModelIndex &index);
     virtual void onMusicRemoved(const QModelIndex &index);
+    virtual void onAlbumArtUpdate(const int &index);
     void setSourceModel(QAbstractItemModel *sourceModel);
 
 protected:
