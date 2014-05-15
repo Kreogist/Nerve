@@ -3,6 +3,7 @@
 #include <QModelIndexList>
 #include <QDataStream>
 #include <QFileInfo>
+#include <QDateTime>
 #include <QBuffer>
 #include <QStringList>
 
@@ -80,6 +81,9 @@ void KNMusicModel::addRawFileItem(QString filePath)
         songItemList.append(songItem);
     }
     QFileInfo rawFileInfo(filePath);
+    QDateTime currentTime=QDateTime::currentDateTime();
+    songItem=songItemList.at(KNMusicGlobal::DateAdded);
+    songItem->setData(currentTime, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::Name);
     songItem->setText(rawFileInfo.fileName());
     songItem->setData(filePath, Qt::UserRole);
@@ -115,9 +119,11 @@ void KNMusicModel::recoverFile(QStringList textList,
     }
     appendRow(songItemList);
     int currentRow=songItem->index().row();
+    songItem=item(currentRow, KNMusicGlobal::DateAdded);
+    songItem->setData(currentDetails.dateAdded, Qt::UserRole);
     setMusicDetailsInfo(currentRow,
                         currentDetails);
-    songItem=item(currentRow,KNMusicGlobal::Name);
+    songItem=item(currentRow, KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, Qt::UserRole);
 }
 
@@ -205,6 +211,9 @@ void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
     songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
                       0);
     songItem->setEditable(true);
+    songItem=item(currentRow,KNMusicGlobal::DateAdded);
+    songItem->setText(KNGlobal::instance()->dateTimeToDisplayString(
+                          songItem->data(Qt::UserRole).toDateTime()));
 }
 
 void KNMusicModel::updateIndexInfo(const QModelIndex &index,

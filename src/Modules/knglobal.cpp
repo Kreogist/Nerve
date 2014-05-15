@@ -139,6 +139,11 @@ void KNGlobal::uint32ToChars(const quint32 &value, char *item)
     item[3]=(quint8)((value & 0b00000000000000000000000011111111));
 }
 
+QString KNGlobal::dateTimeToDisplayString(const QDateTime &dateTime)
+{
+    return dateTime.toString("yyyy-MM-dd APhh:mm");
+}
+
 quint32 KNGlobal::charsToUint32(const char *value)
 {
     return ((((quint32)value[0])<<24)&0b11111111000000000000000000000000)+
