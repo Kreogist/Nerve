@@ -10,6 +10,7 @@
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
+#include "Libraries/knmusicdatabase.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
@@ -23,7 +24,11 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
 
-    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music");
+    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
+    m_database=new KNMusicDatabase;
+    m_database->moveToThread(&m_databaseThread);
+    m_database->setDatabase(m_musicDatabase);
+    m_database->setModel(m_model);
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
@@ -51,22 +56,28 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_infoCollectManager->moveToThread(&m_collectThread);
     m_model->setInfoCollectorManager(m_infoCollectManager);
 
+    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+
     m_modelThread.start();
     m_collectThread.start();
+    m_databaseThread.start();
 
-    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+    m_database->load();
 }
 
 KNMusicPlugin::~KNMusicPlugin()
 {
     m_collectThread.quit();
-    m_collectThread.wait();
-
     m_modelThread.quit();
+    m_databaseThread.quit();
+
+    m_collectThread.wait();
     m_modelThread.wait();
+    m_databaseThread.wait();
 
     m_model->deleteLater();
     m_infoCollectManager->deleteLater();
+    m_database->deleteLater();
 }
 
 void KNMusicPlugin::applyPlugin()
@@ -78,25 +89,12 @@ void KNMusicPlugin::applyPlugin()
 
 void KNMusicPlugin::writeDatabase()
 {
-    QFile musicDatabase(m_musicDatabase);
-    if(musicDatabase.open(QIODevice::WriteOnly))
-    {
-        QDataStream dataOut(&musicDatabase);
-        m_model->writeToDataStream(dataOut);
-        musicDatabase.close();
-    }
+    ;
 }
 
 void KNMusicPlugin::readDatabase()
 {
-    QFile musicDatabase(m_musicDatabase);
-    if(musicDatabase.exists() &&
-            musicDatabase.open(QIODevice::ReadOnly))
-    {
-        QDataStream dataIn(&musicDatabase);
-        m_model->readFromDataStream(dataIn);
-        musicDatabase.close();
-    }
+    ;
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,

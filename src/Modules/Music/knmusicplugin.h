@@ -8,6 +8,7 @@
 #include "../Base/knpluginbase.h"
 
 class KNGlobal;
+class KNMusicDatabase;
 class KNMusicModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
@@ -45,9 +46,11 @@ private:
     KNMusicSearcher *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
+    KNMusicDatabase *m_database;
 
     QThread m_collectThread,
-            m_modelThread;
+            m_modelThread,
+            m_databaseThread;
     QString m_musicDatabase;
 };
 

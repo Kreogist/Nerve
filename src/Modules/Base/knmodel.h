@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 
 class KNLibInfoCollectorManager;
+class KNStdLibDatabase;
 class KNModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -14,10 +15,9 @@ public:
     void resetHeaderOrder();
     virtual void addRawFileItem(QString filePath);
     virtual void addRawFileItems(QStringList fileList);
-    virtual bool readFromDataStream(QDataStream &stream);
-    virtual bool writeToDataStream(QDataStream &stream);
     KNLibInfoCollectorManager *infoCollectorManager() const;
     virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
+    void setDatabase(KNStdLibDatabase *database);
 
 signals:
     void requireResetHeaderOrder();

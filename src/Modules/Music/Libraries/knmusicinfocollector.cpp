@@ -205,7 +205,7 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     numberData=rawInfoData.left(secondPos);
     numberData.remove(' ');
     setMediaData(KNMusicGlobal::SampleRate, numberData+" "+rawInfoData.mid(secondPos+1));
-    m_samplingRate=numberData.toInt();
+    m_samplingRate=numberData.toFloat();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)

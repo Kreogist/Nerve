@@ -109,6 +109,8 @@ void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
     m_sourceModel=musicModel;
     connect(m_sourceModel, &KNMusicModel::musicAppend,
             this, &KNMusicCategoryModel::onMusicAdded);
+    connect(m_sourceModel, &KNMusicModel::musicRecover,
+            this, &KNMusicCategoryModel::onMusicAdded);
 }
 
 QIcon KNMusicCategoryModel::itemIcon(const int &index) const

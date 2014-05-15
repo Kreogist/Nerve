@@ -40,113 +40,6 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
 }
 
-bool KNMusicModel::readFromDataStream(QDataStream &stream)
-{
-    /*if(!stream.device()->isReadable())
-    {
-        return false;
-    }
-    char dataLength[4];
-    stream.readRawData(dataLength, 4);
-    quint32 dataLong=KNGlobal::charsToUint32(dataLength), i, j, songCount,
-            rawPointer=4, itemLength;
-    QByteArray byteCache;
-    QString stringCache;
-    char *rawData=new char[dataLong];
-    stream.readRawData(rawData, dataLong);
-    songCount=KNGlobal::charsToUint32(rawData);
-    for(i=0; i<songCount; i++)
-    {
-        QStringList currentSong;
-        KNMusicGlobal::MusicDetailsInfo currentData;
-        for(j=0; j<KNMusicGlobal::MusicDataCount; j++)
-        {
-            itemLength=KNGlobal::charsToUint32(rawData+rawPointer);
-            rawPointer+=4;
-            currentSong<<QString::fromUtf8(rawData+rawPointer, itemLength);
-            rawPointer+=itemLength;
-        }
-
-        itemLength=KNGlobal::charsToUint32(rawData+rawPointer);
-        rawPointer+=4;
-        stringCache=QByteArray(rawData+rawPointer, itemLength);
-        currentData.dateModified=QDateTime::fromString(stringCache,
-                                                       "yyyyMMddhhmmss");
-        rawPointer+=itemLength;
-
-        itemLength=KNGlobal::charsToUint32(rawData+rawPointer);
-        rawPointer+=4;
-        stringCache=QByteArray(rawData+rawPointer, itemLength);
-        currentData.lastPlayed=QDateTime::fromString(stringCache,
-                                                     "yyyyMMddhhmmss");
-        rawPointer+=itemLength;
-
-        itemLength=KNGlobal::charsToUint32(rawData+rawPointer);
-        rawPointer+=4;
-        currentData.filePath=QByteArray(rawData+rawPointer, itemLength);
-        rawPointer+=itemLength;
-        appendMusic(currentSong, currentData);
-    }
-    delete[] rawData;*/
-    return true;
-}
-
-bool KNMusicModel::writeToDataStream(QDataStream &stream)
-{
-    /*if(!stream.device()->isWritable())
-    {
-        return false;
-    }
-
-    char lengthChar[4];
-    QByteArray outputCache;
-    QString stringCache;
-    QByteArray byteCache, imageCache;
-    QBuffer pixmapBuf(&imageCache);
-
-    quint32 songCount=(quint32)rowCount(), i, j;
-    KNGlobal::uint32ToChars(songCount, lengthChar);
-    outputCache.append(lengthChar, 4);
-    QStandardItem *songItem;
-    for(i=0; i<songCount; i++)
-    {
-        for(j=0; j<KNMusicGlobal::MusicDataCount; j++)
-        {
-            songItem=item(i, j);
-            byteCache.clear();
-            byteCache.append(songItem->text());
-            KNGlobal::uint32ToChars(byteCache.size(), lengthChar);
-            outputCache.append(lengthChar, 4);
-            outputCache.append(byteCache);
-        }
-
-        songItem=item(i, KNMusicGlobal::DateModified);
-        stringCache=songItem->data(Qt::UserRole).toDateTime().toString("yyyyMMddhhmmss");
-        byteCache.clear();
-        byteCache.append(stringCache);
-        KNGlobal::uint32ToChars(byteCache.size(), lengthChar);
-        outputCache.append(lengthChar, 4);
-        outputCache.append(byteCache);
-
-        songItem=item(i, KNMusicGlobal::LastPlayed);
-        stringCache=songItem->data(Qt::UserRole).toDateTime().toString("yyyyMMddhhmmss");
-        byteCache.clear();
-        byteCache.append(stringCache);
-        KNGlobal::uint32ToChars(byteCache.size(), lengthChar);
-        outputCache.append(lengthChar, 4);
-        outputCache.append(byteCache);
-
-        songItem=item(i, KNMusicGlobal::Name);
-        byteCache.clear();
-        byteCache.append(songItem->data(Qt::UserRole).toString());
-        KNGlobal::uint32ToChars(byteCache.size(), lengthChar);
-        outputCache.append(lengthChar, 4);
-        outputCache.append(byteCache);
-    }
-    stream.writeBytes(outputCache.data(), outputCache.size());*/
-    return true;
-}
-
 QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 {
     return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
@@ -155,6 +48,11 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 QString KNMusicModel::itemText(const int &row, const int &column) const
 {
     return data(index(row, column), Qt::DisplayRole).toString();
+}
+
+QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
+{
+    return data(index(row, column), role);
 }
 
 QPixmap KNMusicModel::itemArtwork(const int &row) const
@@ -194,12 +92,33 @@ void KNMusicModel::addRawFileItem(QString filePath)
 void KNMusicModel::addRawFileItems(QStringList fileList)
 {
     int listFileCount=fileList.size();
-    qDebug()<<listFileCount;
+    //***Speed Test***
+    qDebug()<<"***Speed Test***"<<endl<<"Files Count: "<<listFileCount;
     m_startTime=QTime::currentTime().msecsSinceStartOfDay();
+    //****************
     while(listFileCount--)
     {
         addRawFileItem(fileList.takeFirst());
     }
+}
+
+void KNMusicModel::recoverFile(QStringList textList,
+                               KNMusicGlobal::MusicDetailsInfo currentDetails)
+{
+    QList<QStandardItem *> songItemList;
+    QStandardItem *songItem;
+    for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
+    {
+        songItem=new QStandardItem(textList.at(i));
+        songItem->setEditable(false);
+        songItemList.append(songItem);
+    }
+    appendRow(songItemList);
+    int currentRow=songItem->index().row();
+    setMusicDetailsInfo(currentRow,
+                        currentDetails);
+    songItem=item(currentRow,KNMusicGlobal::Name);
+    songItem->setData(currentDetails.filePath, Qt::UserRole);
 }
 
 void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
@@ -230,6 +149,43 @@ void KNMusicModel::onActionUpdateRowInfo()
         songItem=item(currentRow, i);
         songItem->setText(currentText.at(i));
     }
+    setMusicDetailsInfo(currentRow, currentDetails);
+
+    songItem=item(currentRow,KNMusicGlobal::Name);
+    songItem->setData(currentDetails.filePath, Qt::UserRole);
+    if(songItem->data().toInt()==1)
+    {
+        //This is a new file, never add to list.
+        songItem->setData(0);
+        m_rawFileCount--;
+        emit musicAppend(songItem->index());
+        if(m_rawFileCount==0)
+        {
+            //***Speed Test***
+            qDebug()<<"Time Use(ms): "<<
+                       QTime::currentTime().msecsSinceStartOfDay()-m_startTime;
+            //****************
+        }
+    }
+    else
+    {
+        emit musicDataUpdate(indexFromItem(songItem));
+    }
+    m_infoCollectorManager->removeFirstUpdateResult();
+    if(m_infoCollectorManager->isUpdateQueueEmpty())
+    {
+        //emit requireResort();
+    }
+    else
+    {
+        emit requireUpdateNextRow();
+    }
+}
+
+void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
+                                       const KNMusicGlobal::MusicDetailsInfo &currentDetails)
+{
+    QStandardItem *songItem;
     songItem=item(currentRow,KNMusicGlobal::Time);
     songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem->setData(currentDetails.duration, Qt::UserRole);
@@ -249,33 +205,6 @@ void KNMusicModel::onActionUpdateRowInfo()
     songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
                       0);
     songItem->setEditable(true);
-
-    songItem=item(currentRow,KNMusicGlobal::Name);
-    songItem->setData(currentDetails.filePath, Qt::UserRole);
-    if(songItem->data().toInt()==1)
-    {
-        //This is a new file, never add to list.
-        songItem->setData(0);
-        m_rawFileCount--;
-        emit musicAppend(indexFromItem(songItem));
-        if(m_rawFileCount==0)
-        {
-            qDebug()<<m_startTime-QTime::currentTime().msecsSinceStartOfDay();
-        }
-    }
-    else
-    {
-        emit musicDataUpdate(indexFromItem(songItem));
-    }
-    m_infoCollectorManager->removeFirstUpdateResult();
-    if(m_infoCollectorManager->isUpdateQueueEmpty())
-    {
-        emit requireResort();
-    }
-    else
-    {
-        emit requireUpdateNextRow();
-    }
 }
 
 void KNMusicModel::updateIndexInfo(const QModelIndex &index,
