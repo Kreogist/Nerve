@@ -2,6 +2,8 @@
 
 #include <QList>
 #include <QFile>
+#include <QEvent>
+#include <QKeyEvent>
 #include <QDir>
 
 #include <QDebug>
@@ -32,6 +34,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
+    m_musicViewer->installEventFilter(this);
     connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
             this, &KNMusicPlugin::onActionOpenUrl);
 
@@ -46,7 +49,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::onActionShowContextMenu);
 
-    m_searcher=new KNMusicSearcher(this);
+    m_searcher=new KNMusicSearcher;
+    m_searcher->moveToThread(&m_searcherThread);
     m_searcher->setModel(m_model);
     m_musicViewer->setSearcher(m_searcher);
     connect(m_model, &KNMusicModel::requireResort,
@@ -61,6 +65,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_modelThread.start();
     m_collectThread.start();
     m_databaseThread.start();
+    m_searcherThread.start();
 
     m_database->load();
 }
@@ -70,14 +75,17 @@ KNMusicPlugin::~KNMusicPlugin()
     m_database->flush();
 
     m_collectThread.quit();
+    m_searcherThread.quit();
     m_modelThread.quit();
     m_databaseThread.quit();
 
     m_collectThread.wait();
+    m_searcherThread.wait();
     m_modelThread.wait();
     m_databaseThread.wait();
 
     m_model->deleteLater();
+    m_searcher->deleteLater();
     m_infoCollectManager->deleteLater();
     m_database->deleteLater();
 }
@@ -98,6 +106,17 @@ void KNMusicPlugin::readDatabase()
 {
     ;
 }
+
+bool KNMusicPlugin::eventFilter(QObject *watched, QEvent *event)
+{
+    if(event->type()==QEvent::KeyRelease)
+    {
+        QKeyEvent *keyEvent=static_cast<QKeyEvent *>(event);
+    }
+    return KNPluginBase::eventFilter(watched, event);
+}
+
+
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
                                     const QModelIndex &index,

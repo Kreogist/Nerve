@@ -19,10 +19,10 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     //Set properties.
     setIndentation(0);
     setMouseTracking(true);
-    setUniformRowHeights(true);
+    //setUniformRowHeights(true);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
-    setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    //setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setAllColumnsShowFocus(true);
 

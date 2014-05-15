@@ -40,6 +40,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
+    m_libraryView->installEventFilter(this);
     connect(m_libraryView, &KNMusicListView::requireOpenUrl,
             this, &KNMusicViewer::onActionListviewOpenUrl);
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
@@ -47,6 +48,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_artistView=new KNMusicArtistView(this);
     m_artistSongView=new KNMusicArtistSongs(m_artistView);
+    m_artistView->installEventFilter(this);
+    m_artistSongView->installEventFilter(this);
     m_artistView->setSongListView(m_artistSongView);
     m_artistView->setModel(m_artistModel);
     connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
@@ -56,6 +59,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_albumView=new KNMusicAlbumView(this);
     m_albumView->setCategoryModel(m_albumModel);
+    m_albumView->installEventFilter(this);
     connect(m_albumView, &KNMusicAlbumView::requireOpenUrl,
             this, &KNMusicViewer::onActionAlbumOpenUrl);
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
@@ -63,6 +67,8 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     m_genreView=new KNMusicArtistView(this);
     m_genreSongView=new KNMusicGenreSongs(m_genreView);
+    m_genreView->installEventFilter(this);
+    m_genreSongView->installEventFilter(this);
     m_genreView->setSongListView(m_genreSongView);
     m_genreView->setModel(m_genreModel);
     connect(m_genreSongView, &KNMusicGenreSongs::requireOpenUrl,

@@ -125,6 +125,7 @@ void KNMusicModel::recoverFile(QStringList textList,
                         currentDetails);
     songItem=item(currentRow, KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, Qt::UserRole);
+    emit musicRecover(songItem->index());
 }
 
 void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
@@ -175,7 +176,7 @@ void KNMusicModel::onActionUpdateRowInfo()
     }
     else
     {
-        emit musicUpdate(indexFromItem(songItem));
+        emit musicUpdate(songItem->index());
     }
     m_infoCollectorManager->removeFirstUpdateResult();
     if(!m_infoCollectorManager->isUpdateQueueEmpty())

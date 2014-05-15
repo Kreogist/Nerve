@@ -77,7 +77,8 @@ SOURCES += \
     Modules/Music/Libraries/knmusictagflac.cpp \
     Modules/Base/knlibdatabase.cpp \
     Modules/Base/knstdlibdatabase.cpp \
-    Modules/Music/Libraries/knmusicdatabase.cpp
+    Modules/Music/Libraries/knmusicdatabase.cpp \
+    Modules/Base/knlibhashpixmaplist.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -143,7 +144,8 @@ HEADERS += \
     Modules/Music/Libraries/knmusictagflac.h \
     Modules/Base/knlibdatabase.h \
     Modules/Base/knstdlibdatabase.h \
-    Modules/Music/Libraries/knmusicdatabase.h
+    Modules/Music/Libraries/knmusicdatabase.h \
+    Modules/Base/knlibhashpixmaplist.h
 
 RESOURCES += \
     res.qrc
