@@ -52,7 +52,6 @@ void KNModel::setDatabase(KNStdLibDatabase *database)
     ;
 }
 
-
 void KNModel::addRawFileItem(QString filePath)
 {
     Q_UNUSED(filePath);

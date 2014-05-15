@@ -222,3 +222,8 @@ void KNMusicModel::updateIndexInfo(const QModelIndex &index,
     infoCollectorManager()->addAnalysisList(index.row(),
                                             filePath);
 }
+
+void KNMusicModel::prepareRemove(const QModelIndex &index)
+{
+    emit musicAboutToRemove(index);
+}

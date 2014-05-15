@@ -168,6 +168,7 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
     m_artistModel->onMusicRemoved(index);
     m_albumModel->onMusicRemoved(index);
     m_genreModel->onMusicRemoved(index);
+    m_sourceModel->prepareRemove(index);
     m_listViewModel->removeOriginalItem(index);
 }
 

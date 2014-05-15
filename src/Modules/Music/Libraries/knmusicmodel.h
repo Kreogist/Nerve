@@ -21,10 +21,12 @@ public:
                      KNMusicGlobal::MusicDetailsInfo currentDetails);
     void updateIndexInfo(const QModelIndex &index,
                          const QString &filePath);
+    void prepareRemove(const QModelIndex &index);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
     void musicAppend(const QModelIndex &index);
+    void musicAboutToRemove(const QModelIndex &index);
     void musicDataUpdate(const QModelIndex &index);
     void musicRecover(const QModelIndex &index);
 

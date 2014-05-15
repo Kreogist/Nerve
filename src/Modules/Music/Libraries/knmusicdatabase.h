@@ -21,6 +21,7 @@ signals:
 
 public slots:
     void onActionRowAppend(QModelIndex index);
+    void onActionRowRemove(QModelIndex index);
 
 private:
     QString dateTimeToString(const QDateTime &dateTime);

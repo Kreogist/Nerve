@@ -36,21 +36,33 @@ void KNLibDatabase::load()
 void KNLibDatabase::replace(int i, const QJsonValue &value)
 {
     m_databaseArray.replace(i, value);
+    reduceBatchCount();
+}
+
+void KNLibDatabase::setBatchCount(int batch)
+{
+    m_batchCount=batch;
+    m_currentBatchCount=m_batchCount;
+    writeToDisk();
 }
 
 void KNLibDatabase::append(const QJsonValue &value)
 {
     m_databaseArray.append(value);
+    reduceBatchCount();
 }
 
 QJsonValue KNLibDatabase::takeAt(int i)
 {
-    return m_databaseArray.takeAt(i);
+    QJsonValue value=m_databaseArray.takeAt(i);
+    reduceBatchCount();
+    return value;
 }
 
 void KNLibDatabase::removeAt(int i)
 {
-    return m_databaseArray.removeAt(i);
+    m_databaseArray.removeAt(i);
+    reduceBatchCount();
 }
 
 QJsonValue KNLibDatabase::at(int i) const
@@ -80,10 +92,8 @@ bool KNLibDatabase::readFromDisk()
     QByteArray readCache=m_databaseFile->readAll();
     m_databaseFile->close();
 
-    qDebug()<<readCache.size();
     QJsonParseError error;
     m_document=QJsonDocument::fromJson(readCache, &error);
-    qDebug()<<error.errorString();
 
     if(m_document.isNull())
     {
@@ -108,6 +118,14 @@ void KNLibDatabase::writeToDisk()
     m_databaseFile->close();
 }
 
+void KNLibDatabase::flush()
+{
+    if(m_databaseChanged)
+    {
+        writeToDisk();
+    }
+}
+
 void KNLibDatabase::createDatabase()
 {
     QDir databaseDir=m_databaseFileInfo.absoluteDir();
@@ -121,4 +139,16 @@ void KNLibDatabase::createDatabase()
     m_content.insert("MajorVersion", m_majorVersion);
     m_content.insert("MinorVersion", m_minorVersion);
     writeToDisk();
+}
+
+void KNLibDatabase::reduceBatchCount()
+{
+    m_databaseChanged=true;
+    m_currentBatchCount--;
+    if(m_currentBatchCount==0)
+    {
+        writeToDisk();
+        m_databaseChanged=false;
+        m_currentBatchCount=m_batchCount;
+    }
 }

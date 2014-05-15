@@ -16,8 +16,10 @@ KNMusicDatabase::KNMusicDatabase(QObject *parent) :
 void KNMusicDatabase::setModel(QAbstractItemModel *model)
 {
     m_model=static_cast<KNMusicModel *>(model);
-    connect(m_model, SIGNAL(musicAppend(QModelIndex)),
-            this, SLOT(onActionRowAppend(QModelIndex)));
+    connect(m_model, &KNMusicModel::musicAppend,
+            this, &KNMusicDatabase::onActionRowAppend);
+    connect(m_model, &KNMusicModel::musicAboutToRemove,
+            this, &KNMusicDatabase::onActionRowRemove);
 }
 
 void KNMusicDatabase::recoverData()
@@ -85,7 +87,11 @@ void KNMusicDatabase::onActionRowAppend(QModelIndex index)
     currentSong["Time"]=m_model->itemRoleData(row, KNMusicGlobal::Time, Qt::UserRole).toInt();
     currentSong["FilePath"]=m_model->itemRoleData(row, KNMusicGlobal::Name, Qt::UserRole).toString();
     append(currentSong);
-    writeToDisk();
+}
+
+void KNMusicDatabase::onActionRowRemove(QModelIndex index)
+{
+    removeAt(index.row());
 }
 
 QString KNMusicDatabase::dateTimeToString(const QDateTime &dateTime)

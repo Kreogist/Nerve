@@ -67,6 +67,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
 KNMusicPlugin::~KNMusicPlugin()
 {
+    m_database->flush();
+
     m_collectThread.quit();
     m_modelThread.quit();
     m_databaseThread.quit();
