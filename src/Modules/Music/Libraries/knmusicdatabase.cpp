@@ -20,12 +20,13 @@ void KNMusicDatabase::setModel(QAbstractItemModel *model)
             this, &KNMusicDatabase::onActionRowAppend);
     connect(m_model, &KNMusicModel::musicAboutToRemove,
             this, &KNMusicDatabase::onActionRowRemove);
+    connect(m_model, &KNMusicModel::musicUpdate,
+            this, &KNMusicDatabase::onActionRowUpdate);
 }
 
 void KNMusicDatabase::recoverData()
 {
-    int recoverCount=size(), wholeCache, minuate, second;
-    float decimalCache;
+    int recoverCount=size();
     QString dateTimeStringCache;
     QDateTime dateTimeCache;
     for(int i=0; i<recoverCount; i++)
@@ -64,9 +65,23 @@ void KNMusicDatabase::recoverData()
     }
 }
 
-void KNMusicDatabase::onActionRowAppend(QModelIndex index)
+void KNMusicDatabase::onActionRowAppend(const QModelIndex &index)
 {
-    int row=index.row();
+    append(createRowObject(index.row()));
+}
+
+void KNMusicDatabase::onActionRowUpdate(const QModelIndex &index)
+{
+    replace(index.row(), createRowObject(index.row()));
+}
+
+void KNMusicDatabase::onActionRowRemove(const QModelIndex &index)
+{
+    removeAt(index.row());
+}
+
+QJsonObject KNMusicDatabase::createRowObject(const int &row)
+{
     QJsonObject currentSong;
     QJsonArray currentSongText;
     for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
@@ -86,12 +101,7 @@ void KNMusicDatabase::onActionRowAppend(QModelIndex index)
     currentSong["Size"]=m_model->itemRoleData(row, KNMusicGlobal::Size, Qt::UserRole).toInt();
     currentSong["Time"]=m_model->itemRoleData(row, KNMusicGlobal::Time, Qt::UserRole).toInt();
     currentSong["FilePath"]=m_model->itemRoleData(row, KNMusicGlobal::Name, Qt::UserRole).toString();
-    append(currentSong);
-}
-
-void KNMusicDatabase::onActionRowRemove(QModelIndex index)
-{
-    removeAt(index.row());
+    return currentSong;
 }
 
 QString KNMusicDatabase::dateTimeToString(const QDateTime &dateTime)

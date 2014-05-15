@@ -175,14 +175,10 @@ void KNMusicModel::onActionUpdateRowInfo()
     }
     else
     {
-        emit musicDataUpdate(indexFromItem(songItem));
+        emit musicUpdate(indexFromItem(songItem));
     }
     m_infoCollectorManager->removeFirstUpdateResult();
-    if(m_infoCollectorManager->isUpdateQueueEmpty())
-    {
-        //emit requireResort();
-    }
-    else
+    if(!m_infoCollectorManager->isUpdateQueueEmpty())
     {
         emit requireUpdateNextRow();
     }

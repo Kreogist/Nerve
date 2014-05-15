@@ -25,10 +25,10 @@ public:
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
-    void musicAppend(const QModelIndex &index);
-    void musicAboutToRemove(const QModelIndex &index);
-    void musicDataUpdate(const QModelIndex &index);
-    void musicRecover(const QModelIndex &index);
+    void musicAppend(QModelIndex index);
+    void musicAboutToRemove(QModelIndex index);
+    void musicUpdate(QModelIndex index);
+    void musicRecover(QModelIndex index);
 
 public slots:
     void retranslate();

@@ -19,11 +19,13 @@ public:
 
 signals:
 
-public slots:
-    void onActionRowAppend(QModelIndex index);
-    void onActionRowRemove(QModelIndex index);
+private slots:
+    void onActionRowAppend(const QModelIndex &index);
+    void onActionRowUpdate(const QModelIndex &index);
+    void onActionRowRemove(const QModelIndex &index);
 
 private:
+    QJsonObject createRowObject(const int &row);
     QString dateTimeToString(const QDateTime &dateTime);
     QDateTime stringToDateTime(const QString &string);
     KNMusicModel *m_model;
