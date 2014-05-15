@@ -51,17 +51,13 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
             m_global->byteToHigher(currentFile.size());
     currentFileInfo.size=currentFile.size();
     m_musicInfos[KNMusicGlobal::DateModified]=
-            currentFile.lastModified().toString("yyyy-MM-dd APhh:mm");
+            m_global->dateTimeToDisplayString(currentFile.lastModified());
     currentFileInfo.dateModified=currentFile.lastModified();
     m_musicInfos[KNMusicGlobal::LastPlayed]=
-            currentFile.lastRead().toString("yyyy-MM-dd APhh:mm");
+            m_global->dateTimeToDisplayString(currentFile.lastRead());
     currentFileInfo.lastPlayed=currentFile.lastRead();
-    QDateTime musicAddDate=QDateTime::currentDateTime();
-    m_musicInfos[KNMusicGlobal::DateAdded]=
-            musicAddDate.toString("yyyy-MM-dd APhh:mm");
     m_musicInfos[KNMusicGlobal::Kind]=
             m_musicGlobal->getDescription(m_musicGlobal->getMusicType(currentFile.suffix()));
-    currentFileInfo.dateAdded=musicAddDate;
 
     readID3v1Tag(filePathBackup);
     readAPEv2Tag(filePathBackup);
@@ -206,7 +202,7 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     numberData=rawInfoData.left(secondPos);
     numberData.remove(' ');
     setMediaData(KNMusicGlobal::SampleRate, numberData+" "+rawInfoData.mid(secondPos+1));
-    m_samplingRate=numberData.toInt();
+    m_samplingRate=numberData.toFloat();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(const QString &value)

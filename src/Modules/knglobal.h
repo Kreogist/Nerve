@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QDateTime>
 #include <QTextCodec>
 
 class KNGlobal : public QObject
@@ -18,6 +19,7 @@ public:
     static void showInGraphicalShell(const QString &filePath);
     static void openLocalUrl(const QString &filePath);
     static void uint32ToChars(const quint32 &value, char *item);
+    static QString dateTimeToDisplayString(const QDateTime &dateTime);
     static quint32 charsToUint32(const char *value);
     void copyFileToClipboard(const QStringList &files);
     void copyTextToClipboard(const QString &text);

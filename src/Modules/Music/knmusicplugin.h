@@ -7,7 +7,9 @@
 
 #include "../Base/knpluginbase.h"
 
+class QEvent;
 class KNGlobal;
+class KNMusicDatabase;
 class KNMusicModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
@@ -24,10 +26,13 @@ public:
     void applyPlugin();
     void writeDatabase();
     void readDatabase();
+    bool eventFilter(QObject * watched, QEvent * event);
 
 signals:
 
 public slots:
+
+protected:
 
 private slots:
     void onActionShowContextMenu(const QPoint &position,
@@ -45,9 +50,12 @@ private:
     KNMusicSearcher *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
+    KNMusicDatabase *m_database;
 
-    QThread m_collectThread,
-            m_modelThread;
+    QThread m_searcherThread,
+            m_collectThread,
+            m_modelThread,
+            m_databaseThread;
     QString m_musicDatabase;
 };
 

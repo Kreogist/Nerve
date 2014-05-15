@@ -2,6 +2,8 @@
 
 #include <QList>
 #include <QFile>
+#include <QEvent>
+#include <QKeyEvent>
 #include <QDir>
 
 #include <QDebug>
@@ -10,6 +12,7 @@
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
+#include "Libraries/knmusicdatabase.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
@@ -23,10 +26,15 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
 
-    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music");
+    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
+    m_database=new KNMusicDatabase;
+    m_database->moveToThread(&m_databaseThread);
+    m_database->setDatabase(m_musicDatabase);
+    m_database->setModel(m_model);
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
+    m_musicViewer->installEventFilter(this);
     connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
             this, &KNMusicPlugin::onActionOpenUrl);
 
@@ -41,7 +49,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::onActionShowContextMenu);
 
-    m_searcher=new KNMusicSearcher(this);
+    m_searcher=new KNMusicSearcher;
+    m_searcher->moveToThread(&m_searcherThread);
     m_searcher->setModel(m_model);
     m_musicViewer->setSearcher(m_searcher);
     connect(m_model, &KNMusicModel::requireResort,
@@ -51,22 +60,34 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_infoCollectManager->moveToThread(&m_collectThread);
     m_model->setInfoCollectorManager(m_infoCollectManager);
 
+    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+
     m_modelThread.start();
     m_collectThread.start();
+    m_databaseThread.start();
+    m_searcherThread.start();
 
-    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+    m_database->load();
 }
 
 KNMusicPlugin::~KNMusicPlugin()
 {
-    m_collectThread.quit();
-    m_collectThread.wait();
+    m_database->flush();
 
+    m_collectThread.quit();
+    m_searcherThread.quit();
     m_modelThread.quit();
+    m_databaseThread.quit();
+
+    m_collectThread.wait();
+    m_searcherThread.wait();
     m_modelThread.wait();
+    m_databaseThread.wait();
 
     m_model->deleteLater();
+    m_searcher->deleteLater();
     m_infoCollectManager->deleteLater();
+    m_database->deleteLater();
 }
 
 void KNMusicPlugin::applyPlugin()
@@ -78,26 +99,24 @@ void KNMusicPlugin::applyPlugin()
 
 void KNMusicPlugin::writeDatabase()
 {
-    QFile musicDatabase(m_musicDatabase);
-    if(musicDatabase.open(QIODevice::WriteOnly))
-    {
-        QDataStream dataOut(&musicDatabase);
-        m_model->writeToDataStream(dataOut);
-        musicDatabase.close();
-    }
+    ;
 }
 
 void KNMusicPlugin::readDatabase()
 {
-    QFile musicDatabase(m_musicDatabase);
-    if(musicDatabase.exists() &&
-            musicDatabase.open(QIODevice::ReadOnly))
-    {
-        QDataStream dataIn(&musicDatabase);
-        m_model->readFromDataStream(dataIn);
-        musicDatabase.close();
-    }
+    ;
 }
+
+bool KNMusicPlugin::eventFilter(QObject *watched, QEvent *event)
+{
+    if(event->type()==QEvent::KeyRelease)
+    {
+        QKeyEvent *keyEvent=static_cast<QKeyEvent *>(event);
+    }
+    return KNPluginBase::eventFilter(watched, event);
+}
+
+
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
                                     const QModelIndex &index,
