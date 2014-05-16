@@ -15,6 +15,32 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_localeCodec=KNGlobal::instance()->codecForCurrentLocale();
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
+
+    m_longFrames[Name]="TIT2";
+    m_longFrames[Artist]="TPE1";
+    m_longFrames[Album]="TALB";
+    m_longFrames[AlbumArtist]="TPE2";
+    m_longFrames[BeatsPerMinuate]="TBPM";
+    m_longFrames[Category]="TIT1";
+    m_longFrames[Composer]="TCOM";
+    m_longFrames[Description]="TIT3";
+    m_longFrames[Genre]="TCON";
+    m_longFrames[Track]="TRCK";
+    m_longFrames[Disc]="TPOS";
+    m_longFrames[Year]="TYER";
+
+    m_shortFrames[Name]="TT2";
+    m_shortFrames[Artist]="TP1";
+    m_shortFrames[Album]="TAL";
+    m_shortFrames[AlbumArtist]="TP2";
+    m_shortFrames[BeatsPerMinuate]="TBP";
+    m_shortFrames[Category]="TT1";
+    m_shortFrames[Composer]="TCM";
+    m_shortFrames[Description]="TT3";
+    m_shortFrames[Genre]="TCO";
+    m_shortFrames[Track]="TRK";
+    m_shortFrames[Disc]="TPA";
+    m_shortFrames[Year]="TYE";
 }
 
 QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
@@ -73,6 +99,19 @@ int KNMusicTagID3v2::hexTo5Rating(const quint8 &hex) const
         return 5;
     }
     return 0;
+}
+
+
+QString KNMusicTagID3v2::textData(const int &key) const
+{
+    if(m_useLongFrames)
+    {
+        return id3v2String(m_longFrames[key]);
+    }
+    else
+    {
+        return id3v2String(m_shortFrames[key]);
+    }
 }
 
 QString KNMusicTagID3v2::id3v2String(const QString &frameID) const
@@ -256,6 +295,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     }
     //All process code above.
     delete[] rawTagData; //Don't touch this.
+    m_useLongFrames=(strlen(rawFrameID)==4);
     return true;
 }
 

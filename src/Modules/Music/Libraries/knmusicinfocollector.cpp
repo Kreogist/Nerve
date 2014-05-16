@@ -210,12 +210,12 @@ void KNMusicInfoCollector::readID3v1Tag(const QString &value)
 {
     if(m_tagID3v1->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name,   m_tagID3v1->textData(KNMusicTagID3v1::Title));
-        setMediaData(KNMusicGlobal::Artist, m_tagID3v1->textData(KNMusicTagID3v1::Artist));
-        setMediaData(KNMusicGlobal::Album,  m_tagID3v1->textData(KNMusicTagID3v1::Album));
-        setMediaData(KNMusicGlobal::Genre,  m_tagID3v1->textData(KNMusicTagID3v1::Genre));
-        setMediaData(KNMusicGlobal::Year,   m_tagID3v1->textData(KNMusicTagID3v1::Year));
-        setMediaData(KNMusicGlobal::Comments,m_tagID3v1->textData(KNMusicTagID3v1::Comment));
+        setMediaData(KNMusicGlobal::Name       ,m_tagID3v1->textData(KNMusicTagID3v1::Title));
+        setMediaData(KNMusicGlobal::Artist     ,m_tagID3v1->textData(KNMusicTagID3v1::Artist));
+        setMediaData(KNMusicGlobal::Album      ,m_tagID3v1->textData(KNMusicTagID3v1::Album));
+        setMediaData(KNMusicGlobal::Genre      ,m_tagID3v1->textData(KNMusicTagID3v1::Genre));
+        setMediaData(KNMusicGlobal::Year       ,m_tagID3v1->textData(KNMusicTagID3v1::Year));
+        setMediaData(KNMusicGlobal::Comments   ,m_tagID3v1->textData(KNMusicTagID3v1::Comment));
         setMediaData(KNMusicGlobal::TrackNumber,m_tagID3v1->textData(KNMusicTagID3v1::Track));
     }
 }
@@ -224,78 +224,45 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
 {
     if(m_tagID3v2->readTag(value))
     {
-        if(m_tagID3v2->version()>2)
+        setMediaData(KNMusicGlobal::Name            ,m_tagID3v2->textData(KNMusicTagID3v2::Name));
+        setMediaData(KNMusicGlobal::Artist          ,m_tagID3v2->textData(KNMusicTagID3v2::Artist));
+        setMediaData(KNMusicGlobal::Album           ,m_tagID3v2->textData(KNMusicTagID3v2::Album));
+        setMediaData(KNMusicGlobal::AlbumArtist     ,m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate ,m_tagID3v2->textData(KNMusicTagID3v2::BeatsPerMinuate));
+        setMediaData(KNMusicGlobal::Category        ,m_tagID3v2->textData(KNMusicTagID3v2::Category));
+        setMediaData(KNMusicGlobal::Composer        ,m_tagID3v2->textData(KNMusicTagID3v2::Composer));
+        setMediaData(KNMusicGlobal::Description     ,m_tagID3v2->textData(KNMusicTagID3v2::Description));
+        setMediaData(KNMusicGlobal::Year            ,m_tagID3v2->textData(KNMusicTagID3v2::Year));
+        setMediaData(KNMusicGlobal::Genre,
+                     m_musicGlobal->getGenre(m_tagID3v2->textData(KNMusicTagID3v2::Genre)));
+        QString trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Track);
+        int diagonalPos=trackInfo.indexOf("/");
+        if(diagonalPos!=-1)
         {
-            setMediaData(KNMusicGlobal::Name,m_tagID3v2->id3v2String("TIT2"));
-            setMediaData(KNMusicGlobal::Artist,m_tagID3v2->id3v2String("TPE1"));
-            setMediaData(KNMusicGlobal::Album,m_tagID3v2->id3v2String("TALB"));
-            setMediaData(KNMusicGlobal::AlbumArtist,m_tagID3v2->id3v2String("TPE2"));
-            setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBPM"));
-            setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TIT1"));
-            setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCOM"));
-            setMediaData(KNMusicGlobal::Description,m_tagID3v2->id3v2String("TIT3"));
-            setMediaData(KNMusicGlobal::Genre,
-                         m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCON")));
-            setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYER"));
-            QString trackInfo=m_tagID3v2->id3v2String("TRCK");
-            int diagonalPos=trackInfo.indexOf("/");
-            if(diagonalPos!=-1)
-            {
-                setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
-                setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
-            }
-            else
-            {
-                setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
-            }
-            trackInfo=m_tagID3v2->id3v2String("TPOS");
-            diagonalPos=trackInfo.indexOf("/");
-            if(diagonalPos!=-1)
-            {
-                setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
-                setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
-            }
-            else
-            {
-                setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
-            }
-            m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
+            setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
+            setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
         }
         else
         {
-            setMediaData(KNMusicGlobal::Name,m_tagID3v2->id3v2String("TT2"));
-            setMediaData(KNMusicGlobal::Artist,m_tagID3v2->id3v2String("TP1"));
-            setMediaData(KNMusicGlobal::Album,m_tagID3v2->id3v2String("TAL"));
-            setMediaData(KNMusicGlobal::AlbumArtist,m_tagID3v2->id3v2String("TP2"));
-            setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagID3v2->id3v2String("TBP"));
-            setMediaData(KNMusicGlobal::Category,m_tagID3v2->id3v2String("TT1"));
-            setMediaData(KNMusicGlobal::Composer,m_tagID3v2->id3v2String("TCM"));
-            setMediaData(KNMusicGlobal::Description,m_tagID3v2->id3v2String("TT3"));
-            setMediaData(KNMusicGlobal::Genre,
-                         m_musicGlobal->getGenre(m_tagID3v2->id3v2String("TCO")));
-            setMediaData(KNMusicGlobal::Year,m_tagID3v2->id3v2String("TYE"));
-            QString trackInfo=m_tagID3v2->id3v2String("TRK");
-            int diagonalPos=trackInfo.indexOf("/");
-            if(diagonalPos!=-1)
-            {
-                setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
-                setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
-            }
-            else
-            {
-                setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
-            }
-            trackInfo=m_tagID3v2->id3v2String("TPA");
-            diagonalPos=trackInfo.indexOf("/");
-            if(diagonalPos!=-1)
-            {
-                setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
-                setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
-            }
-            else
-            {
-                setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
-            }
+            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
+        }
+        trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Disc);
+        diagonalPos=trackInfo.indexOf("/");
+        if(diagonalPos!=-1)
+        {
+            setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
+            setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
+        }
+        else
+        {
+            setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
+        }
+        if(m_tagID3v2->version()>2)
+        {
+            m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
+        }
+        else
+        { 
             m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
         }
         setMusicCover(m_tagID3v2->tagImage(3)); //3 is the Cover front.
