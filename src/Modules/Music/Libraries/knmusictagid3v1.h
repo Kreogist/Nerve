@@ -10,22 +10,21 @@ class KNMusicTagID3v1 : public KNMusicTagBase
 {
     Q_OBJECT
 public:
-    struct ID3v1Data
+    enum ID3v1Items
     {
-        QString title;
-        QString artist;
-        QString album;
-        QString year;
-        QString comment;
-        quint8 track;
-        QString genre;
+        Title,
+        Artist,
+        Album,
+        Year,
+        Comment,
+        Track,
+        Genre,
+        ID3v1ItemCount
     };
     explicit KNMusicTagID3v1(QObject *parent = 0);
     bool readTag(const QString &filePath);
     void clearCache();
-
-    KNMusicTagID3v1::ID3v1Data tagData() const;
-    void setTagData(const ID3v1Data &tagData);
+    QString textData(const int &key) const;
 
 signals:
 
@@ -33,7 +32,7 @@ public slots:
 
 private:
     QString getGenre(const int &index);
-    ID3v1Data m_tagData;
+    QString m_tagData[ID3v1ItemCount];
     QTextCodec *m_codec;
 };
 

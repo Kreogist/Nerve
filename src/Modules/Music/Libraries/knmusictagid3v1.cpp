@@ -43,47 +43,42 @@ bool KNMusicTagID3v1::readTag(const QString &filePath)
     }
     char rawText[30];
     strncpy(rawText, rawTagData+3, 30);
-    m_tagData.title=QString::fromLocal8Bit(rawText).simplified();
+    m_tagData[Title]=QString::fromLocal8Bit(rawText).simplified();
     strncpy(rawText, rawTagData+33, 30);
-    m_tagData.artist=QString::fromLocal8Bit(rawText).simplified();
+    m_tagData[Artist]=QString::fromLocal8Bit(rawText).simplified();
     strncpy(rawText, rawTagData+63, 30);
-    m_tagData.album=QString::fromLocal8Bit(rawText).simplified();
+    m_tagData[Album]=QString::fromLocal8Bit(rawText).simplified();
     strncpy(rawText, rawTagData+93, 4);
     rawText[4]='\0';
-    m_tagData.year=QString::fromLocal8Bit(rawText).simplified();
+    m_tagData[Year]=QString::fromLocal8Bit(rawText).simplified();
     if(rawTagData[125]==0)
     {
-        m_tagData.track=(int)rawTagData[126];
+        m_tagData[Track]=QString::number((int)rawTagData[126]);
         strncpy(rawText, rawTagData+97, 28);
-        m_tagData.comment=QString::fromLocal8Bit(rawText).simplified();
+        m_tagData[Comment]=QString::fromLocal8Bit(rawText).simplified();
     }
     else
     {
-        m_tagData.track=0;
+        m_tagData[Track]="0";
         strncpy(rawText, rawTagData+97, 30);
-        m_tagData.comment=QString::fromLocal8Bit(rawText).simplified();
+        m_tagData[Comment]=QString::fromLocal8Bit(rawText).simplified();
     }
-    m_tagData.genre=KNMusicGlobal::instance()->getGenre((int)rawTagData[127]);
+    m_tagData[Genre]=KNMusicGlobal::instance()->getGenre((int)rawTagData[127]);
     return true;
 }
 
 void KNMusicTagID3v1::clearCache()
 {
-    m_tagData.title.clear();
-    m_tagData.artist.clear();
-    m_tagData.album.clear();
-    m_tagData.year.clear();
-    m_tagData.comment.clear();
-    m_tagData.track=0;
-    m_tagData.genre.clear();
+    m_tagData[Title].clear();
+    m_tagData[Artist].clear();
+    m_tagData[Album].clear();
+    m_tagData[Year].clear();
+    m_tagData[Comment].clear();
+    m_tagData[Track]="0";
+    m_tagData[Genre].clear();
 }
 
-KNMusicTagID3v1::ID3v1Data KNMusicTagID3v1::tagData() const
+QString KNMusicTagID3v1::textData(const int &key) const
 {
-    return m_tagData;
-}
-
-void KNMusicTagID3v1::setTagData(const KNMusicTagID3v1::ID3v1Data &tagData)
-{
-    m_tagData=tagData;
+    return m_tagData[key];
 }

@@ -66,6 +66,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     readM4ATag(filePathBackup);
     readFLACTag(filePathBackup);
     parseByMediaInfo(filePathBackup);
+
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.duration=m_duration;
     currentFileInfo.bitRate=m_bitRate;
@@ -209,14 +210,13 @@ void KNMusicInfoCollector::readID3v1Tag(const QString &value)
 {
     if(m_tagID3v1->readTag(value))
     {
-        KNMusicTagID3v1::ID3v1Data id3v1Info=m_tagID3v1->tagData();
-        setMediaData(KNMusicGlobal::Name,id3v1Info.title);
-        setMediaData(KNMusicGlobal::Artist,id3v1Info.artist);
-        setMediaData(KNMusicGlobal::Album,id3v1Info.album);
-        setMediaData(KNMusicGlobal::Genre,id3v1Info.genre);
-        setMediaData(KNMusicGlobal::Year,id3v1Info.year);
-        setMediaData(KNMusicGlobal::Comments,id3v1Info.comment);
-        setMediaData(KNMusicGlobal::TrackNumber,QString::number(id3v1Info.track));
+        setMediaData(KNMusicGlobal::Name,   m_tagID3v1->textData(KNMusicTagID3v1::Title));
+        setMediaData(KNMusicGlobal::Artist, m_tagID3v1->textData(KNMusicTagID3v1::Artist));
+        setMediaData(KNMusicGlobal::Album,  m_tagID3v1->textData(KNMusicTagID3v1::Album));
+        setMediaData(KNMusicGlobal::Genre,  m_tagID3v1->textData(KNMusicTagID3v1::Genre));
+        setMediaData(KNMusicGlobal::Year,   m_tagID3v1->textData(KNMusicTagID3v1::Year));
+        setMediaData(KNMusicGlobal::Comments,m_tagID3v1->textData(KNMusicTagID3v1::Comment));
+        setMediaData(KNMusicGlobal::TrackNumber,m_tagID3v1->textData(KNMusicTagID3v1::Track));
     }
 }
 

@@ -15,3 +15,8 @@ bool KNMusicTagBase::readTag(const QString &filePath)
     Q_UNUSED(filePath);
     return false;
 }
+
+QString KNMusicTagBase::textData(const int &key) const
+{
+    Q_UNUSED(key);
+}

@@ -10,6 +10,7 @@ public:
     explicit KNMusicTagBase(QObject *parent = 0);
     virtual void clearCache();
     virtual bool readTag(const QString &filePath);
+    virtual QString textData(const int &key) const;
 
 signals:
 
