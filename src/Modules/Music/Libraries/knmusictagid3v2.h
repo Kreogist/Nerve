@@ -70,7 +70,7 @@ public slots:
 
 private:
     QString id3v2DataToString(const QByteArray &value) const;
-    int hexTo5Rating(const quint8 &hex) const;
+    int hexToStarRating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);
     void processPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;

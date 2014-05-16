@@ -304,15 +304,18 @@ void KNMusicInfoCollector::readM4ATag(const QString &value)
 {
     if(m_tagM4A->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name, m_tagM4A->metaData(KNMusicTagM4A::Title));
-        setMediaData(KNMusicGlobal::Artist, m_tagM4A->metaData(KNMusicTagM4A::Artist));
-        setMediaData(KNMusicGlobal::Album, m_tagM4A->metaData(KNMusicTagM4A::Album));
-        setMediaData(KNMusicGlobal::AlbumArtist, m_tagM4A->metaData(KNMusicTagM4A::AlbumArtist));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate, m_tagM4A->metaData(KNMusicTagM4A::BPM));
-        setMediaData(KNMusicGlobal::Genre, m_tagM4A->metaData(KNMusicTagM4A::Genre));
-        setMediaData(KNMusicGlobal::Year, m_tagM4A->metaData(KNMusicTagM4A::Year));
-        setMediaData(KNMusicGlobal::Composer, m_tagM4A->metaData(KNMusicTagM4A::Composer));
-        setMediaData(KNMusicGlobal::Comments, m_tagM4A->metaData(KNMusicTagM4A::Comment));
+        setMediaData(KNMusicGlobal::Name,           m_tagM4A->textData(KNMusicTagM4A::Title));
+        setMediaData(KNMusicGlobal::Artist,         m_tagM4A->textData(KNMusicTagM4A::Artist));
+        setMediaData(KNMusicGlobal::Album,          m_tagM4A->textData(KNMusicTagM4A::Album));
+        setMediaData(KNMusicGlobal::AlbumArtist,    m_tagM4A->textData(KNMusicTagM4A::AlbumArtist));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagM4A->textData(KNMusicTagM4A::BPM));
+        setMediaData(KNMusicGlobal::Category,       m_tagM4A->textData(KNMusicTagM4A::Category));
+        setMediaData(KNMusicGlobal::Composer,       m_tagM4A->textData(KNMusicTagM4A::Composer));
+        setMediaData(KNMusicGlobal::Comments,       m_tagM4A->textData(KNMusicTagM4A::Comment));
+        setMediaData(KNMusicGlobal::Description,    m_tagM4A->textData(KNMusicTagM4A::Description));
+        setMediaData(KNMusicGlobal::Genre,          m_tagM4A->textData(KNMusicTagM4A::Genre));
+        setMediaData(KNMusicGlobal::Grouping,       m_tagM4A->textData(KNMusicTagM4A::Grouping));
+        setMediaData(KNMusicGlobal::Year,           m_tagM4A->textData(KNMusicTagM4A::Year));
         QByteArray trackData=m_tagM4A->metaData(KNMusicTagM4A::Tracknumber);
         if(trackData.size()>6)
         {
@@ -327,19 +330,19 @@ void KNMusicInfoCollector::readFLACTag(const QString &value)
 {
     if(m_tagFLAC->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name, m_tagFLAC->metaData("title"));
-        setMediaData(KNMusicGlobal::Artist, m_tagFLAC->metaData("artist"));
-        setMediaData(KNMusicGlobal::Album, m_tagFLAC->metaData("album"));
-        setMediaData(KNMusicGlobal::Genre, m_tagFLAC->metaData("genre"));
-        setMediaData(KNMusicGlobal::Description, m_tagFLAC->metaData("description"));
-        setMediaData(KNMusicGlobal::Composer, m_tagFLAC->metaData("composer"));
-        setMediaData(KNMusicGlobal::DiscCount, m_tagFLAC->metaData("totaldiscs"));
-        setMediaData(KNMusicGlobal::DiscNumber, m_tagFLAC->metaData("discnumber"));
-        setMediaData(KNMusicGlobal::Comments, m_tagFLAC->metaData("comment"));
-        setMediaData(KNMusicGlobal::AlbumArtist, m_tagFLAC->metaData("album artist"));
-        setMediaData(KNMusicGlobal::TrackCount, m_tagFLAC->metaData("tracktotal"));
-        setMediaData(KNMusicGlobal::Year, m_tagFLAC->metaData("date").left(4));
-        setMediaData(KNMusicGlobal::TrackNumber, m_tagFLAC->metaData("tracknumber"));
+        setMediaData(KNMusicGlobal::Name        ,m_tagFLAC->textData(KNMusicTagFLAC::Name));
+        setMediaData(KNMusicGlobal::Artist      ,m_tagFLAC->textData(KNMusicTagFLAC::Artist));
+        setMediaData(KNMusicGlobal::Album       ,m_tagFLAC->textData(KNMusicTagFLAC::Album));
+        setMediaData(KNMusicGlobal::Genre       ,m_tagFLAC->textData(KNMusicTagFLAC::Genre));
+        setMediaData(KNMusicGlobal::Description ,m_tagFLAC->textData(KNMusicTagFLAC::Description));
+        setMediaData(KNMusicGlobal::Composer    ,m_tagFLAC->textData(KNMusicTagFLAC::Composer));
+        setMediaData(KNMusicGlobal::DiscCount   ,m_tagFLAC->textData(KNMusicTagFLAC::DiscCount));
+        setMediaData(KNMusicGlobal::DiscNumber  ,m_tagFLAC->textData(KNMusicTagFLAC::DiscNumber));
+        setMediaData(KNMusicGlobal::Comments    ,m_tagFLAC->textData(KNMusicTagFLAC::Comments));
+        setMediaData(KNMusicGlobal::AlbumArtist ,m_tagFLAC->textData(KNMusicTagFLAC::AlbumArtist));
+        setMediaData(KNMusicGlobal::TrackCount  ,m_tagFLAC->textData(KNMusicTagFLAC::TrackCount));
+        setMediaData(KNMusicGlobal::Year        ,m_tagFLAC->textData(KNMusicTagFLAC::Year).left(4));
+        setMediaData(KNMusicGlobal::TrackNumber ,m_tagFLAC->textData(KNMusicTagFLAC::TrackNumber));
         setMusicCover(m_tagFLAC->tagImage(3));
         if(m_musicCover.isNull())
         {

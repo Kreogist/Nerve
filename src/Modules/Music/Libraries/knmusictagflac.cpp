@@ -8,6 +8,19 @@
 KNMusicTagFLAC::KNMusicTagFLAC(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    m_frames[Name       ]="title";
+    m_frames[Artist     ]="artist";
+    m_frames[Album      ]="album";
+    m_frames[Genre      ]="genre";
+    m_frames[Description]="description";
+    m_frames[Composer   ]="composer";
+    m_frames[DiscCount  ]="totaldiscs";
+    m_frames[DiscNumber ]="discnumber";
+    m_frames[Comments   ]="comment";
+    m_frames[AlbumArtist]="albumartist";
+    m_frames[TrackCount ]="tracktotal";
+    m_frames[Year       ]="date";
+    m_frames[TrackNumber]="tracknumber";
 }
 
 bool KNMusicTagFLAC::readTag(const QString &filePath)
@@ -68,7 +81,12 @@ void KNMusicTagFLAC::clearCache()
     m_picture.clear();
 }
 
-QString KNMusicTagFLAC::metaData(const QString &index)
+QString KNMusicTagFLAC::textData(const int &key) const
+{
+    return metaData(m_frames[key]);
+}
+
+QString KNMusicTagFLAC::metaData(const QString &index) const
 {
     return m_metadata[index].simplified();
 }

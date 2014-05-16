@@ -9,10 +9,29 @@ class KNMusicTagFLAC : public KNMusicTagBase
 {
     Q_OBJECT
 public:
+    enum FLACItems
+    {
+        Name,
+        Artist,
+        Album,
+        Genre,
+        Description,
+        Composer,
+        DiscCount,
+        DiscNumber,
+        Comments,
+        AlbumArtist,
+        TrackCount,
+        Year,
+        TrackNumber,
+        FLACItemsCount
+    };
+
     explicit KNMusicTagFLAC(QObject *parent = 0);
     bool readTag(const QString &filePath);
     void clearCache();
-    QString metaData(const QString &index);
+    QString textData(const int &key) const;
+    QString metaData(const QString &index) const;
     QString rawMetaData(const QString &index);
     QImage tagImage(const int &index) const;
     QImage firstAvaliableImage() const;
@@ -35,6 +54,7 @@ private:
     MetadataHeader analysisHeader(char *rawHeader);
     QMap<QString, QString> m_metadata;
     QMap<int, QImage> m_picture;
+    QString m_frames[FLACItemsCount];
 };
 
 #endif // KNMUSICTAGFLAC_H

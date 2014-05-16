@@ -89,6 +89,11 @@ QString KNMusicTagM4A::metaDataName(const int &index) const
     return QString();
 }
 
+QString KNMusicTagM4A::textData(const int &key) const
+{
+    return metaData(key);
+}
+
 QByteArray KNMusicTagM4A::metaData(const QString &name) const
 {
     return m_ilstData[name];

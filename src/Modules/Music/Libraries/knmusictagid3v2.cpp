@@ -78,7 +78,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
     }
 }
 
-int KNMusicTagID3v2::hexTo5Rating(const quint8 &hex) const
+int KNMusicTagID3v2::hexToStarRating(const quint8 &hex) const
 {
     if(hex>0 && hex<32)
     {
@@ -130,7 +130,7 @@ int KNMusicTagID3v2::id3v2RatingData() const
     QString windowsMediaTest=QString(ratingRaw);
     if(windowsMediaTest.indexOf("Windows Media Player")!=-1)
     {
-        return hexTo5Rating((quint8)ratingRaw.at(ratingRaw.size()-1));
+        return hexToStarRating((quint8)ratingRaw.at(ratingRaw.size()-1));
     }
     return 0;
 }
@@ -198,9 +198,9 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     bool id3v23=(m_tagData.version>2);
     m_tagData.revision=(int)header[4];
     //Process header: header[5]
-    m_tagData.unsynchronisation     =(header[5]&0b10000000);
-    m_tagData.extendedHeader        =(header[5]&0b01000000);
-    m_tagData.experimentalIndicator =(header[5]&0b00100000);
+    m_tagData.unsynchronisation    =(header[5]&0b10000000);
+    m_tagData.extendedHeader       =(header[5]&0b01000000);
+    m_tagData.experimentalIndicator=(header[5]&0b00100000);
     char *rawTagData=new char[tagSize];
     mediaData.readRawData(rawTagData, tagSize);
     mediaFile.close();
@@ -226,7 +226,6 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
                           (((quint32)rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
                           (((quint32)rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
                           ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000011111111);
-
             }
             else
             {
@@ -290,7 +289,10 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     }
     //All process code above.
     delete[] rawTagData; //Don't touch this.
-    m_useShortFrames=(strlen(rawFrameID)==3);
+    if(!m_tagData.frameID.isEmpty())
+    {
+        m_useShortFrames=(m_tagData.frameID.first().length()==3);
+    }
     return true;
 }
 
