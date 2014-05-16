@@ -74,9 +74,9 @@ private:
     void processPIC(const QByteArray &value);
     QMap<int, ID3v2Image> m_tagImages;
     ID3v2Data m_tagData;
-    bool m_useLongFrames;
+    bool m_useShortFrames;
     QTextCodec *m_beCodec, *m_leCodec, *m_utf8Codec, *m_localeCodec;
-    QString m_longFrames[ID3v2ItemCount], m_shortFrames[ID3v2ItemCount];
+    QString m_frames[ID3v2ItemCount][2];
 };
 
 #endif // KNMUSICTAGID3V2_H
