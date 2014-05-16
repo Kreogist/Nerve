@@ -97,8 +97,6 @@ void KNMusicGlobal::retranslate()
     m_header[LastPlayed]=tr("Last Played");
     m_header[Rating]=tr("Rating");
     m_header[SampleRate]=tr("Sample Rate");
-    m_header[Season]=tr("Season");
-    m_header[Show]=tr("Show");
     m_header[Size]=tr("Size");
     m_header[Time]=tr("Time");
     m_header[TrackCount]=tr("Track Count");

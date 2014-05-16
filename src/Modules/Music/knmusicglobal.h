@@ -52,8 +52,6 @@ public:
         LastPlayed,
         Rating,
         SampleRate,
-        Season,
-        Show,
         Size,
         Time,
         TrackCount,
