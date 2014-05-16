@@ -53,8 +53,6 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
 
     m_pixmapListThread.start();
-
-    emit requireLoadImage();
 }
 
 KNMusicModel::~KNMusicModel()
@@ -148,6 +146,7 @@ void KNMusicModel::addRawFileItems(QStringList fileList)
 void KNMusicModel::setAlbumArtPath(const QString &path)
 {
     m_pixmapList->setAlbumArtPath(path);
+    emit requireLoadImage();
 }
 
 void KNMusicModel::recoverFile(QStringList textList,
