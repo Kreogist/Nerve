@@ -27,6 +27,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_frames[Genre          ][0]="TCON";
     m_frames[Track          ][0]="TRCK";
     m_frames[Disc           ][0]="TPOS";
+    m_frames[Rating         ][0]="POPM";
     m_frames[Year           ][0]="TYER";
 
     m_frames[Name           ][1]="TT2";
@@ -40,6 +41,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_frames[Genre          ][1]="TCO";
     m_frames[Track          ][1]="TRK";
     m_frames[Disc           ][1]="TPA";
+    m_frames[Rating         ][1]="POP";
     m_frames[Year           ][1]="TYE";
 }
 
@@ -117,9 +119,9 @@ QString KNMusicTagID3v2::id3v2String(const QString &frameID) const
     return id3v2DataToString(m_tagData.frameData.at(frameDataIndex));
 }
 
-int KNMusicTagID3v2::id3v2DataToRating(const QString &frameID) const
+int KNMusicTagID3v2::id3v2RatingData() const
 {
-    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    int frameDataIndex=m_tagData.frameID.indexOf(m_frames[Rating][m_useShortFrames]);
     if(frameDataIndex==-1)
     {
         return 0;

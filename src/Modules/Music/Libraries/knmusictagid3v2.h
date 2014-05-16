@@ -26,6 +26,7 @@ public:
         Genre,
         Track,
         Disc,
+        Rating,
         Year,
         ID3v2ItemCount
     };
@@ -53,7 +54,7 @@ public:
     QString textData(const int &key) const;
     explicit KNMusicTagID3v2(QObject *parent = 0);
     QString id3v2String(const QString &frameID) const;
-    int id3v2DataToRating(const QString &frameID) const;
+    int id3v2RatingData() const;
     QByteArray id3v2Raw(const QString &frameID) const;
     void clearCache();
     int version();

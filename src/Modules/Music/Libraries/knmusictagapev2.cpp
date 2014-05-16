@@ -10,11 +10,19 @@
 KNMusicTagAPEv2::KNMusicTagAPEv2(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    m_frames[Name    ]="Title";
+    m_frames[Artist  ]="Artist";
+    m_frames[Album   ]="Album";
+    m_frames[Comments]="Comment";
+    m_frames[Composer]="Composer";
+    m_frames[Genre   ]="Genre";
+    m_frames[Year    ]="Year";
+    m_frames[Track   ]="Track";
 }
 
-QString KNMusicTagAPEv2::tagStringData(const QString &frameKey) const
+QString KNMusicTagAPEv2::textData(const int &key) const
 {
-    return QString(m_frameDatas[frameKey]).simplified();
+    return QString(m_frameDatas[m_frames[key]]).simplified();
 }
 
 QByteArray KNMusicTagAPEv2::tagRawData(const QString &frameKey) const

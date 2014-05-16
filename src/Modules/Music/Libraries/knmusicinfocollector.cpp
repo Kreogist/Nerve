@@ -257,14 +257,7 @@ void KNMusicInfoCollector::readID3v2Tag(const QString &value)
         {
             setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
         }
-        if(m_tagID3v2->version()>2)
-        {
-            m_musicRating=m_tagID3v2->id3v2DataToRating("POPM");
-        }
-        else
-        { 
-            m_musicRating=m_tagID3v2->id3v2DataToRating("POP");
-        }
+        m_musicRating=m_tagID3v2->id3v2RatingData();
         setMusicCover(m_tagID3v2->tagImage(3)); //3 is the Cover front.
         if(m_musicCover.isNull())
         {
@@ -277,14 +270,14 @@ void KNMusicInfoCollector::readAPEv2Tag(const QString &value)
 {
     if(m_tagAPEv2->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name,m_tagAPEv2->tagStringData("Title"));
-        setMediaData(KNMusicGlobal::Artist,m_tagAPEv2->tagStringData("Artist"));
-        setMediaData(KNMusicGlobal::Album,m_tagAPEv2->tagStringData("Album"));
-        setMediaData(KNMusicGlobal::Composer,m_tagAPEv2->tagStringData("Composer"));
-        setMediaData(KNMusicGlobal::Genre,m_tagAPEv2->tagStringData("Genre"));
-        setMediaData(KNMusicGlobal::Year,m_tagAPEv2->tagStringData("Year"));
-        QString trackInfo=m_tagAPEv2->tagStringData("Track");
-        setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
+        setMediaData(KNMusicGlobal::Name        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
+        setMediaData(KNMusicGlobal::Artist      ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
+        setMediaData(KNMusicGlobal::Album       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Album));
+        setMediaData(KNMusicGlobal::Comments    ,m_tagAPEv2->textData(KNMusicTagAPEv2::Comments));
+        setMediaData(KNMusicGlobal::Composer    ,m_tagAPEv2->textData(KNMusicTagAPEv2::Composer));
+        setMediaData(KNMusicGlobal::Genre       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Genre));
+        setMediaData(KNMusicGlobal::Year        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Year));
+        setMediaData(KNMusicGlobal::TrackNumber ,m_tagAPEv2->textData(KNMusicTagAPEv2::Track));
     }
 }
 

@@ -10,8 +10,21 @@ class KNMusicTagAPEv2 : public KNMusicTagBase
 {
     Q_OBJECT
 public:
+    enum APEv2Items
+    {
+        Name,
+        Artist,
+        Album,
+        Comments,
+        Composer,
+        Genre,
+        Year,
+        Track,
+        APEv2ItemsCount
+    };
+
     explicit KNMusicTagAPEv2(QObject *parent = 0);
-    QString tagStringData(const QString &frameKey) const;
+    QString textData(const int &key) const;
     QByteArray tagRawData(const QString &frameKey) const;
     bool readTag(const QString &filePath);
     void clearCache();
@@ -33,6 +46,7 @@ private:
     quint32 m_itemCount;
     quint32 m_tagsFlags;
     QMap<QString, QByteArray> m_frameDatas;
+    QString m_frames[APEv2ItemsCount];
 };
 
 #endif // KNMUSICTAGAPEV2_H
