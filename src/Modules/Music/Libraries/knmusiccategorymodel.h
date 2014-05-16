@@ -39,12 +39,12 @@ protected:
     virtual QString categoryName(const int &index) const;
     KNMusicModel *m_sourceModel;
     int m_noCategoryItemCount=0;
+    QIcon m_noAlbumArtIcon;
 
 private slots:
     void updateAllImage();
 
 private:
-    QIcon m_noAlbumArtIcon;
     QString m_noCategoryText;
 };
 

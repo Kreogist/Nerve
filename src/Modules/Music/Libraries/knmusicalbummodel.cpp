@@ -96,11 +96,56 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     }
 }
 
+void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
+{
+    QString currentName=categoryName(index.row());
+    KNMusicArtistItem *currentAlbum;
+    if(currentName.isEmpty())
+    {
+        m_noCategoryItemCount++;
+        emit requireShowFirstItem();
+        return;
+    }
+    QList<QStandardItem *> searchResult=findItems(currentName);
+    QString currentArtist=artistName(index.row());
+    if(searchResult.size()==0)
+    {
+        currentAlbum=new KNMusicArtistItem(currentName);
+        currentAlbum->setData(currentName, Qt::DisplayRole);
+        currentAlbum->setData(currentArtist, Qt::UserRole);
+        currentAlbum->setData(0, Qt::UserRole+1);
+        currentAlbum->setData(1, Qt::UserRole+2);
+        currentAlbum->setIconKey(m_sourceModel->itemArtworkKey(index.row()));
+        searchResult.append(currentAlbum);
+        appendRow(currentAlbum);
+    }
+    else
+    {
+        currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.first());
+        currentAlbum->setData(currentAlbum->data(Qt::UserRole+2).toInt()+1,
+                              Qt::UserRole+2);
+        if(currentAlbum->data(Qt::UserRole+1).toInt() == 0 &&
+           currentAlbum->data(Qt::UserRole).toString() != currentArtist)
+        {
+            currentAlbum->setData(m_variousArtist, Qt::UserRole);
+            currentAlbum->setData(1, Qt::UserRole+1);
+        }
+    }
+}
+
 void KNMusicAlbumModel::updateImage(const int &index)
 {
     KNMusicArtistItem *currentAlbum=
             static_cast<KNMusicArtistItem *>(item(index));
-    currentAlbum->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(currentAlbum->iconKey())));
+    QString iconKey=currentAlbum->iconKey();
+    if(iconKey.isEmpty())
+    {
+        currentAlbum->setIcon(m_noAlbumArtIcon);
+    }
+    else
+    {
+        currentAlbum->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(iconKey)));
+    }
 }
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const

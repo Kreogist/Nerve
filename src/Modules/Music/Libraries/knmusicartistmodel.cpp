@@ -27,7 +27,15 @@ void KNMusicArtistModel::updateImage(const int &index)
 {
     KNMusicArtistItem *currentItem=
             static_cast<KNMusicArtistItem *>(item(index));
-    currentItem->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(currentItem->iconKey())));
+    QString iconKey=currentItem->iconKey();
+    if(iconKey.isEmpty())
+    {
+        currentItem->setIcon(m_noAlbumArtIcon);
+    }
+    else
+    {
+        currentItem->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(iconKey)));
+    }
 }
 
 QIcon KNMusicArtistModel::itemIcon(const int &index) const

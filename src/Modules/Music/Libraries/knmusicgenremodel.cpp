@@ -28,7 +28,15 @@ void KNMusicGenreModel::retranslateAndSet()
 void KNMusicGenreModel::updateImage(const int &index)
 {
     QStandardItem *currentItem=item(index, 0);
-    currentItem->setIcon(m_musicGlobal->getGenreImage(currentItem->text()));
+    QPixmap genreImage=m_musicGlobal->getGenreImage(currentItem->text());
+    if(genreImage.isNull())
+    {
+        currentItem->setIcon(m_noAlbumArtIcon);
+    }
+    else
+    {
+        currentItem->setIcon(genreImage);
+    }
 }
 
 QIcon KNMusicGenreModel::itemIcon(const int &index) const
