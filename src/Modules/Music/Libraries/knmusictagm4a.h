@@ -16,7 +16,7 @@ public:
     QByteArray metaData(const QString &name) const;
     QByteArray metaData(const int &index) const;
     bool readTag(const QString &filePath);
-    QPixmap albumArt() const;
+    QImage albumArt() const;
     void clearCache();
     enum M4AMetaData
     {
@@ -83,7 +83,7 @@ private:
     char m_idCache[5];
     QMap<QString, tagData> m_tagData;
     QMap<QString, QByteArray> m_ilstData;
-    QPixmap m_albumArt;
+    QImage m_albumArt;
 };
 
 #endif // KNMUSICTAGM4A_H

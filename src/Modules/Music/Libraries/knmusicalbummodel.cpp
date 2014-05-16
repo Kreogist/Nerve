@@ -98,7 +98,7 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=m_sourceModel->itemArtwork(index);
+    QPixmap albumArt=QPixmap::fromImage(m_sourceModel->itemArtwork(index));
     if(albumArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);

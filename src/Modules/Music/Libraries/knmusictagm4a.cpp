@@ -160,7 +160,7 @@ bool KNMusicTagM4A::readTag(const QString &filePath)
     return true;
 }
 
-QPixmap KNMusicTagM4A::albumArt() const
+QImage KNMusicTagM4A::albumArt() const
 {
     return m_albumArt;
 }
@@ -219,7 +219,7 @@ void KNMusicTagM4A::clearCache()
 {
     m_tagData.clear();
     m_ilstData.clear();
-    m_albumArt=QPixmap();
+    m_albumArt=QImage();
     m_idCache[4]='\0';
 }
 

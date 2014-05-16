@@ -2,7 +2,7 @@
 #define KNMUSICTAGFLAC_H
 
 #include <QMap>
-#include <QPixmap>
+#include <QImage>
 #include "knmusictagbase.h"
 
 class KNMusicTagFLAC : public KNMusicTagBase
@@ -14,8 +14,8 @@ public:
     void clearCache();
     QString metaData(const QString &index);
     QString rawMetaData(const QString &index);
-    QPixmap tagImage(const int &index) const;
-    QPixmap firstAvaliableImage() const;
+    QImage tagImage(const int &index) const;
+    QImage firstAvaliableImage() const;
 
 signals:
 
@@ -34,7 +34,7 @@ private:
     };
     MetadataHeader analysisHeader(char *rawHeader);
     QMap<QString, QString> m_metadata;
-    QMap<int, QPixmap> m_picture;
+    QMap<int, QImage> m_picture;
 };
 
 #endif // KNMUSICTAGFLAC_H

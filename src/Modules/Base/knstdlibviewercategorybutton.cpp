@@ -55,31 +55,31 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
     m_mouseInAnime->setUpdateInterval(5);
     m_mouseInAnime->setEndFrame(0);
     m_mouseInAnime->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseInAnime, SIGNAL(frameChanged(int)),
-            this, SLOT(moveCaption(int)));
-    connect(m_mouseInAnime, SIGNAL(valueChanged(qreal)),
-            this, SLOT(mouseInAnime(qreal)));
+    connect(m_mouseInAnime, &QTimeLine::frameChanged,
+            this, &KNStdLibViewerCategoryButton::moveCaption);
+    connect(m_mouseInAnime, &QTimeLine::valueChanged,
+            this, &KNStdLibViewerCategoryButton::mouseInAnime);
 
     m_mouseOutAnime=new QTimeLine(animeDuration, this);
     m_mouseOutAnime->setUpdateInterval(5);
     m_mouseOutAnime->setEndFrame(-height());
     m_mouseOutAnime->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseOutAnime, SIGNAL(frameChanged(int)),
-            this, SLOT(moveCaption(int)));
-    connect(m_mouseOutAnime, SIGNAL(valueChanged(qreal)),
-            this, SLOT(mouseOutAnime(qreal)));
+    connect(m_mouseOutAnime, &QTimeLine::frameChanged,
+            this, &KNStdLibViewerCategoryButton::moveCaption);
+    connect(m_mouseOutAnime, &QTimeLine::valueChanged,
+            this, &KNStdLibViewerCategoryButton::mouseOutAnime);
 
     m_mouseDownAnime=new QTimeLine(textDuration, this);
     m_mouseDownAnime->setUpdateInterval(1);
     m_mouseDownAnime->setEndFrame(m_pressedFontSize);
-    connect(m_mouseDownAnime, SIGNAL(frameChanged(int)),
-            this, SLOT(setCaptionFontSize(int)));
+    connect(m_mouseDownAnime, &QTimeLine::frameChanged,
+            this, &KNStdLibViewerCategoryButton::setCaptionFontSize);
 
     m_mouseUpAnime=new QTimeLine(textDuration, this);
     m_mouseUpAnime->setUpdateInterval(1);
     m_mouseUpAnime->setEndFrame(m_defaultFontSize);
-    connect(m_mouseUpAnime, SIGNAL(frameChanged(int)),
-            this, SLOT(setCaptionFontSize(int)));
+    connect(m_mouseUpAnime, &QTimeLine::frameChanged,
+            this, &KNStdLibViewerCategoryButton::setCaptionFontSize);
 }
 
 void KNStdLibViewerCategoryButton::resizeEvent(QResizeEvent *event)

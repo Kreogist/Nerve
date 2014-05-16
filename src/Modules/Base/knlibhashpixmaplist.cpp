@@ -2,84 +2,75 @@
 #include <QBuffer>
 #include <QStringList>
 #include <QDir>
+#include <QDataStream>
+#include <QImage>
 
 #include <QDebug>
 
 #include "knlibhashpixmaplist.h"
 
-KNLibPixmapBuffer::KNLibPixmapBuffer(QObject *parent) :
+KNLibImageBuffer::KNLibImageBuffer(QObject *parent) :
     QObject(parent)
 {
-    m_buffer=new QBuffer(&m_pixmapCache, this);
+    ;
 }
 
-void KNLibPixmapBuffer::cachePixmap(const QPixmap &pixmap)
+void KNLibImageBuffer::setFolderPath(const QString &folderPath)
 {
-    m_pixmap=pixmap;
-    m_pixmapCache.clear();
-    m_pixmap.save(m_buffer, "png");
-    m_hashCache=QCryptographicHash::hash(m_pixmapCache,
-                                         QCryptographicHash::Md4);
-    m_hashData.clear();
-    for(int i=0; i<m_hashCache.size(); i++)
+    QDir folder(folderPath);
+    m_albumArtFolder=folder.absolutePath()+"/";
+    if(!folder.exists())
     {
-        m_hashData+=QString::number((quint8)m_hashCache.at(i), 16);
+        folder.mkpath(m_albumArtFolder);
     }
-    emit cacheComplete();
 }
 
-void KNLibPixmapBuffer::savePixmap()
+QString KNLibImageBuffer::hash() const
 {
-    m_pixmap.save(m_folderPath + m_hashData + ".png");
+    return m_hash;
+}
+
+void KNLibImageBuffer::hashImage(const QImage &image)
+{
+    if(image.isNull())
+    {
+        m_hash.clear();
+        emit hashComplete();
+        return;
+    }
+    m_imageByteCache.clear();
+    m_imageByteCache.append((char *)image.bits(), image.byteCount());
+    m_hashResult=QCryptographicHash::hash(m_imageByteCache, QCryptographicHash::Md4);
+    m_hash.clear();
+    for(int i=0; i<m_hashResult.size(); i++)
+    {
+        m_hash+=QString::number((quint8)m_hashResult.at(i), 16);
+    }
+    m_imageCache=image;
+    emit hashComplete();
+}
+
+void KNLibImageBuffer::saveImage()
+{
+    m_imageCache.save(m_albumArtFolder+m_hash+".png", "PNG");
     emit saveComplete();
-}
-
-QString KNLibPixmapBuffer::hashData() const
-{
-    return m_hashData;
-}
-
-void KNLibPixmapBuffer::setFolderPath(const QString &folderPath)
-{
-    QDir albumFolder(folderPath);
-    m_folderPath=albumFolder.absolutePath() + "/";
-    if(!albumFolder.exists())
-    {
-        albumFolder.mkpath(m_folderPath);
-    }
-    QStringList cacheFileList=albumFolder.entryList(QStringList("*.png"),
-                                                    QDir::Files | QDir::NoDotAndDotDot);
-    QPixmap readingCache;
-    int fileCount=cacheFileList.size();
-    QString fileName;
-    while(fileCount--)
-    {
-        fileName=cacheFileList.takeFirst();
-        readingCache.load(m_folderPath+fileName, "png");
-        fileName.resize(fileName.length()-4);
-        emit requireRecoverData(fileName,
-                                readingCache);
-    }
-}
-
-QPixmap KNLibPixmapBuffer::pixmap() const
-{
-    return m_pixmap;
 }
 
 KNLibHashPixmapList::KNLibHashPixmapList(QObject *parent) :
     QObject(parent)
 {
-    m_buffer=new KNLibPixmapBuffer;
+    m_buffer=new KNLibImageBuffer;
     m_buffer->moveToThread(&m_bufferThread);
-    connect(m_buffer, &KNLibPixmapBuffer::cacheComplete,
-            this, &KNLibHashPixmapList::onActionCacheComplete);
-    connect(m_buffer, &KNLibPixmapBuffer::saveComplete,
+
+    connect(this, &KNLibHashPixmapList::requireCacheImage,
+            m_buffer, &KNLibImageBuffer::hashImage);
+    connect(m_buffer, &KNLibImageBuffer::hashComplete,
+            this, &KNLibHashPixmapList::onActionHashComplete);
+    connect(this, &KNLibHashPixmapList::requireSaveImage,
+            m_buffer, &KNLibImageBuffer::saveImage);
+    connect(m_buffer, &KNLibImageBuffer::saveComplete,
             this, &KNLibHashPixmapList::onActionSaveComplete);
-    connect(m_buffer, &KNLibPixmapBuffer::requireRecoverData,
-            this, &KNLibHashPixmapList::onActionRecoverData);
-    connect(this, &KNLibHashPixmapList::requireCachePixmap,
-            m_buffer, &KNLibPixmapBuffer::cachePixmap);
+
     m_bufferThread.start();
 }
 
@@ -90,23 +81,14 @@ KNLibHashPixmapList::~KNLibHashPixmapList()
     m_buffer->deleteLater();
 }
 
-QPixmap KNLibHashPixmapList::pixmap(const QString &key) const
+QImage KNLibHashPixmapList::pixmap(const QString &key) const
 {
-    if(key.isEmpty())
-    {
-        return QPixmap();
-    }
     return m_list[key];
 }
 
 void KNLibHashPixmapList::append(const int rowIndex,
-                                 const QPixmap pixmap)
+                                 const QImage pixmap)
 {
-    qDebug()<<"Start: append.";
-    if(pixmap.isNull())
-    {
-        return;
-    }
     AnalysisQueueItem analysisItem;
     analysisItem.row=rowIndex;
     analysisItem.pixmap=pixmap;
@@ -114,7 +96,7 @@ void KNLibHashPixmapList::append(const int rowIndex,
     if(!m_working)
     {
         m_working=true;
-        emit requireCachePixmap(m_analysisQueue.first().pixmap);
+        emit requireCacheImage(m_analysisQueue.first().pixmap);
     }
 }
 
@@ -126,6 +108,7 @@ void KNLibHashPixmapList::removeCurrentUpdate()
 void KNLibHashPixmapList::setAlbumArtPath(const QString &path)
 {
     m_buffer->setFolderPath(path);
+    m_folderPath=path;
 }
 
 int KNLibHashPixmapList::currentRow() const
@@ -138,37 +121,47 @@ QString KNLibHashPixmapList::currentKey() const
     return m_updateQueue.first().key;
 }
 
-void KNLibHashPixmapList::onActionCacheComplete()
+void KNLibHashPixmapList::onActionHashComplete()
 {
-    qDebug()<<"Slots: Cache Compelte.";
-    QString keyData=m_buffer->hashData();
-    if(!m_list.contains(keyData))
+    QString currentKey=m_buffer->hash();
+    m_needToSaveImage=false;
+    if(!currentKey.isEmpty())
     {
-        m_list[keyData]=m_buffer->pixmap();
+        QImage pixmap=m_analysisQueue.first().pixmap;
+        m_needToSaveImage=!m_list.contains(currentKey);
+        if(m_needToSaveImage)
+        {
+            m_list[currentKey]=pixmap;
+        }
     }
     UpdateQueueItem updateItem;
     updateItem.row=m_analysisQueue.first().row;
-    updateItem.key=keyData;
+    updateItem.key=currentKey;
     m_updateQueue.append(updateItem);
-    emit requireUpdatePixmap();
     m_analysisQueue.removeFirst();
-    m_buffer->savePixmap();
+    emit requireUpdatePixmap();
+    if(m_needToSaveImage)
+    {
+        emit requireSaveImage();
+    }
+    else
+    {
+        onActionSaveComplete();
+    }
 }
 
 void KNLibHashPixmapList::onActionSaveComplete()
 {
-    qDebug()<<"Slots: Save Compelte."<<endl<<"Check:"
-              <<"m_analysisQueue is empty: "<<m_analysisQueue.isEmpty();
     if(m_analysisQueue.isEmpty())
     {
         m_working=false;
         return;
     }
-    emit requireCachePixmap(m_analysisQueue.first().pixmap);
+    emit requireCacheImage(m_analysisQueue.first().pixmap);
 }
 
 void KNLibHashPixmapList::onActionRecoverData(const QString &key,
-                                              const QPixmap &pixmap)
+                                              const QImage &pixmap)
 {
     m_list[key]=pixmap;
 }

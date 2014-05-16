@@ -11,7 +11,7 @@ KNMusicCategoryModel::KNMusicCategoryModel(QObject *parent) :
 {
     retranslate();
 
-    m_noAlbumArtIcon=QIcon(QPixmap(":/Music/Resources/Music/noalbum.png"));
+    m_noAlbumArtIcon=QIcon(QPixmap::fromImage(KNMusicGlobal::instance()->noAlbumImage()));
     setSortRole(Qt::UserRole);
 
     resetModel();

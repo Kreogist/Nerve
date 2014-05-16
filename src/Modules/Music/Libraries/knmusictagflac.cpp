@@ -78,18 +78,18 @@ QString KNMusicTagFLAC::rawMetaData(const QString &index)
     return m_metadata[index];
 }
 
-QPixmap KNMusicTagFLAC::tagImage(const int &index) const
+QImage KNMusicTagFLAC::tagImage(const int &index) const
 {
     return m_picture[index];
 }
 
-QPixmap KNMusicTagFLAC::firstAvaliableImage() const
+QImage KNMusicTagFLAC::firstAvaliableImage() const
 {
     if(m_picture.size()!=0)
     {
         return m_picture.first();
     }
-    return QPixmap();
+    return QImage();
 }
 
 void KNMusicTagFLAC::parseVorbisComment(char *rawTagData, int length)
@@ -141,7 +141,7 @@ void KNMusicTagFLAC::parsePicture(char *rawTagData)
     QByteArray pictureData;
     pictureData.append(pictureRawData, pictureDataLength);
     delete[] pictureRawData;
-    QPixmap currentImage;
+    QImage currentImage;
     currentImage.loadFromData(pictureData);
     m_picture[imageType]=currentImage;
 }

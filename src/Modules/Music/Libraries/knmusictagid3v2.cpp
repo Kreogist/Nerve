@@ -367,16 +367,16 @@ void KNMusicTagID3v2::processPIC(const QByteArray &value)
     m_tagImages[pictureType]=currentImage;
 }
 
-QPixmap KNMusicTagID3v2::tagImage(const int &index) const
+QImage KNMusicTagID3v2::tagImage(const int &index) const
 {
     return m_tagImages[index].image;
 }
 
-QPixmap KNMusicTagID3v2::firstAvaliableImage() const
+QImage KNMusicTagID3v2::firstAvaliableImage() const
 {
     if(m_tagImages.size()!=0)
     {
         return m_tagImages.first().image;
     }
-    return QPixmap();
+    return QImage();
 }

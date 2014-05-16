@@ -152,7 +152,7 @@ KNMusicGlobal::KNMusicGlobal() :
     QObject()
 {
     retranslate();
-    qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
+    m_noAlbumImage=QImage(":/Music/Resources/Music/noalbum.png");
     qRegisterMetaType<QVector<int>>("QVector<int>");
     m_genreList<<"Blues"
                <<"Classic Rock"
@@ -489,4 +489,9 @@ KNMusicGlobal::KNMusicGlobal() :
              <<"ac3"
              <<"xm"
              <<"umx";
+}
+
+QImage KNMusicGlobal::noAlbumImage() const
+{
+    return m_noAlbumImage;
 }

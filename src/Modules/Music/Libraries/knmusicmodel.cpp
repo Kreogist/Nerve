@@ -66,7 +66,7 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 
 QString KNMusicModel::itemText(const int &row, const int &column) const
 {
-    return data(index(row, column), Qt::DisplayRole).toString();
+    return itemRoleData(row, column, Qt::DisplayRole).toString();
 }
 
 QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
@@ -74,9 +74,14 @@ QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
     return data(index(row, column), role);
 }
 
-QPixmap KNMusicModel::itemArtwork(const int &row) const
+QImage KNMusicModel::itemArtwork(const int &row) const
 {
-    return m_pixmapList->pixmap(data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).toString());
+    QString imageKey=itemArtworkKey(row);
+    if(imageKey.isEmpty())
+    {
+        return m_musicGlobal->noAlbumImage();
+    }
+    return m_pixmapList->pixmap(imageKey);
 }
 
 QString KNMusicModel::itemArtworkKey(const int &row) const

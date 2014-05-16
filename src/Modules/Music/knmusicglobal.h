@@ -22,7 +22,7 @@ public:
         float samplingRate=0.0;
         QDateTime dateModified;
         QDateTime lastPlayed;
-        QPixmap coverImage;
+        QImage coverImage;
         QString filePath;
         QDateTime dateAdded;
         QString coverImageHash;
@@ -77,6 +77,7 @@ public:
     QString getHeader(const int &index);
     int getMusicType(const QString &suffix) const;
     QString getDescription(const int &type) const;
+    QImage noAlbumImage() const;
 
 signals:
 
@@ -91,6 +92,7 @@ private:
     QStringList m_suffixs;
     QStringList m_suffixDescription;
     QString m_header[MusicDataCount];
+    QImage m_noAlbumImage;
     QMap<QString, QString> m_genreImage;
 };
 

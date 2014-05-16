@@ -30,7 +30,7 @@ public:
     struct ID3v2Image
     {
         QString description;
-        QPixmap image;
+        QImage image;
     };
 
     explicit KNMusicTagID3v2(QObject *parent = 0);
@@ -42,8 +42,8 @@ public:
 
     bool readTag(const QString &filePath);
 
-    QPixmap tagImage(const int &index) const;
-    QPixmap firstAvaliableImage() const;
+    QImage tagImage(const int &index) const;
+    QImage firstAvaliableImage() const;
 
 signals:
 

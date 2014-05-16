@@ -93,7 +93,7 @@ void KNMusicInfoCollector::resetInfoCache()
     m_duration=0;
     m_bitRate=0;
     m_samplingRate=0;
-    m_musicCover=QPixmap();
+    m_musicCover=QImage();
 }
 
 void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
@@ -383,7 +383,7 @@ void KNMusicInfoCollector::readFLACTag(const QString &value)
         setMusicCover(m_tagFLAC->tagImage(3));
         if(m_musicCover.isNull())
         {
-            m_tagFLAC->firstAvaliableImage();
+            setMusicCover(m_tagFLAC->firstAvaliableImage());
         }
     }
 }
@@ -397,7 +397,7 @@ void KNMusicInfoCollector::setMediaData(const int &index,
     }
 }
 
-void KNMusicInfoCollector::setMusicCover(const QPixmap &pixmap)
+void KNMusicInfoCollector::setMusicCover(const QImage &pixmap)
 {
     if(!pixmap.isNull())
     {

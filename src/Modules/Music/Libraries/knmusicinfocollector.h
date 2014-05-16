@@ -41,7 +41,7 @@ private:
     void readFLACTag(const QString &value);
     void setMediaData(const int &index,
                       const QString &value);
-    void setMusicCover(const QPixmap &pixmap);
+    void setMusicCover(const QImage &pixmap);
     KNLibMediaInfo *m_mediaInfo;
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;
@@ -51,7 +51,7 @@ private:
     KNMusicTagFLAC *m_tagFLAC;
 
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
-    QPixmap m_musicCover;
+    QImage m_musicCover;
     int m_musicRating, m_duration, m_bitRate, m_samplingRate;
     KNGlobal *m_global;
     KNMusicGlobal *m_musicGlobal;

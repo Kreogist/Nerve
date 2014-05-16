@@ -1,40 +1,33 @@
 #ifndef KNLIBHASHPIXMAPLIST_H
 #define KNLIBHASHPIXMAPLIST_H
 
-#include <QPixmap>
+#include <QImage>
 #include <QHash>
 #include <QByteArray>
 #include <QThread>
 #include <QList>
 #include <QObject>
 
-class QBuffer;
-
-class KNLibPixmapBuffer : public QObject
+class KNLibImageBuffer : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNLibPixmapBuffer(QObject *parent = 0);
-    void savePixmap();
-    QString hashData() const;
+    explicit KNLibImageBuffer(QObject *parent = 0);
     void setFolderPath(const QString &folderPath);
-    QPixmap pixmap() const;
+    QString hash() const;
 
 signals:
-    void cacheComplete();
+    void hashComplete();
     void saveComplete();
-    void requireRecoverData(QString key,
-                            QPixmap pixmap);
 
 public slots:
-    void cachePixmap(const QPixmap &pixmap);
+    void hashImage(const QImage &image);
+    void saveImage();
 
 private:
-    QByteArray m_pixmapCache, m_hashCache, m_deepHashCache;
-    QString m_hashData;
-    QBuffer *m_buffer;
-    QString m_folderPath;
-    QPixmap m_pixmap;
+    QByteArray m_imageByteCache, m_hashResult;
+    QString m_albumArtFolder, m_hash;
+    QImage m_imageCache;
 };
 
 class KNLibHashPixmapList : public QObject
@@ -43,30 +36,31 @@ class KNLibHashPixmapList : public QObject
 public:
     explicit KNLibHashPixmapList(QObject *parent = 0);
     ~KNLibHashPixmapList();
-    QPixmap pixmap(const QString &key) const;
-    void append(const int rowIndex, const QPixmap pixmap);
+    QImage pixmap(const QString &key) const;
+    void append(const int rowIndex, const QImage pixmap);
     void removeCurrentUpdate();
     void setAlbumArtPath(const QString &path);
     int currentRow() const;
     QString currentKey() const;
 
 signals:
+    void requireCacheImage(QImage pixmap);
     void requireUpdatePixmap();
-    void requireCachePixmap(const QPixmap &pixmap);
+    void requireSaveImage();
 
 public slots:
 
 private slots:
-    void onActionCacheComplete();
+    void onActionHashComplete();
     void onActionSaveComplete();
     void onActionRecoverData(const QString &key,
-                             const QPixmap &pixmap);
+                             const QImage &pixmap);
 
 private:
     struct AnalysisQueueItem
     {
         int row;
-        QPixmap pixmap;
+        QImage pixmap;
     };
     struct UpdateQueueItem
     {
@@ -76,9 +70,9 @@ private:
 
     QList<AnalysisQueueItem> m_analysisQueue;
     QList<UpdateQueueItem> m_updateQueue;
-    QHash<QString, QPixmap> m_list;
-    KNLibPixmapBuffer *m_buffer;
-    bool m_working=false;
+    QHash<QString, QImage> m_list;
+    KNLibImageBuffer *m_buffer;
+    bool m_working=false, m_needToSaveImage=false;
     QString m_folderPath;
     QThread m_bufferThread;
 };
