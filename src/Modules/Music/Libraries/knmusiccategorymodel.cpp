@@ -88,6 +88,7 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
         currentItem=new KNMusicArtistItem(currentName);
         currentItem->setData(currentName, Qt::UserRole);
         currentItem->setData(1, Qt::UserRole+1);
+        currentItem->setIconKey(m_sourceModel->itemArtworkKey(index.row()));
         searchResult.append(currentItem);
         appendRow(currentItem);
     }
@@ -96,7 +97,6 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
         currentItem=static_cast<KNMusicArtistItem *>(searchResult.first());
         currentItem->setData(currentItem->data(Qt::UserRole+1).toInt()+1,
                              Qt::UserRole+1);
-        currentItem->setIcon(itemIcon(index.row()));
     }
 }
 
@@ -148,8 +148,14 @@ void KNMusicCategoryModel::onAlbumArtUpdate(const int &index)
     {
         return;
     }
+    currentItem->setIconKey(m_sourceModel->itemArtworkKey(index));
     currentItem->setIcon(itemIcon(index));
     currentItem->setHasIcon(true);
+}
+
+void KNMusicCategoryModel::updateImage(const int &index)
+{
+    Q_UNUSED(index);
 }
 
 void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
@@ -162,6 +168,8 @@ void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
             this, &KNMusicCategoryModel::onMusicRecover);
     connect(m_sourceModel, &KNMusicModel::musicAlbumArtUpdate,
             this, &KNMusicCategoryModel::onAlbumArtUpdate);
+    connect(m_sourceModel, &KNMusicModel::requireUpdateImage,
+            this, &KNMusicCategoryModel::updateAllImage);
 }
 
 QIcon KNMusicCategoryModel::itemIcon(const int &index) const
@@ -174,6 +182,14 @@ QString KNMusicCategoryModel::categoryName(const int &index) const
 {
     Q_UNUSED(index);
     return QString();
+}
+
+void KNMusicCategoryModel::updateAllImage()
+{
+    for(int i=0; i<rowCount(); i++)
+    {
+        updateImage(i);
+    }
 }
 
 void KNMusicCategoryModel::setNoCategoryText(const QString &noCategoryText)

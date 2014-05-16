@@ -44,10 +44,10 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     {
         currentAlbum=new KNMusicArtistItem(currentName);
         currentAlbum->setData(currentName, Qt::DisplayRole);
-        currentAlbum->setIcon(itemIcon(index.row()));
         currentAlbum->setData(currentArtist, Qt::UserRole);
         currentAlbum->setData(0, Qt::UserRole+1);
         currentAlbum->setData(1, Qt::UserRole+2);
+        currentAlbum->setIconKey(m_sourceModel->itemArtworkKey(index.row()));
         searchResult.append(currentAlbum);
         appendRow(currentAlbum);
     }
@@ -96,9 +96,16 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     }
 }
 
+void KNMusicAlbumModel::updateImage(const int &index)
+{
+    KNMusicArtistItem *currentAlbum=
+            static_cast<KNMusicArtistItem *>(item(index));
+    currentAlbum->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(currentAlbum->iconKey())));
+}
+
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=QPixmap::fromImage(m_sourceModel->itemArtwork(index));
+    QPixmap albumArt=QPixmap::fromImage(m_sourceModel->artwork(index));
     if(albumArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);

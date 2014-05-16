@@ -1,7 +1,6 @@
 #include <QDebug>
 
-#include <QStandardItem>
-
+#include "knmusicartistitem.h"
 #include "../knmusicglobal.h"
 
 #include "knmusicartistmodel.h"
@@ -24,9 +23,16 @@ void KNMusicArtistModel::retranslateAndSet()
     noArtistItem->setText(noCategoryText());
 }
 
+void KNMusicArtistModel::updateImage(const int &index)
+{
+    KNMusicArtistItem *currentItem=
+            static_cast<KNMusicArtistItem *>(item(index));
+    currentItem->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(currentItem->iconKey())));
+}
+
 QIcon KNMusicArtistModel::itemIcon(const int &index) const
 {
-    QPixmap albumArt=QPixmap::fromImage(m_sourceModel->itemArtwork(index));
+    QPixmap albumArt=QPixmap::fromImage(m_sourceModel->artwork(index));
     if(albumArt.isNull())
     {
         return KNMusicCategoryModel::itemIcon(index);

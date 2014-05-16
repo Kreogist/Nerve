@@ -23,6 +23,8 @@ void KNMusicDatabase::setModel(QAbstractItemModel *model)
             this, &KNMusicDatabase::onActionRowUpdate);
     connect(m_model, &KNMusicModel::musicAlbumArtUpdate,
             this, &KNMusicDatabase::onActionUpdateCoverImage);
+    connect(this, &KNMusicDatabase::recoverComplete,
+            m_model, &KNMusicModel::onActionRecoverComplete);
 }
 
 void KNMusicDatabase::recoverData()
@@ -64,6 +66,7 @@ void KNMusicDatabase::recoverData()
         textList[KNMusicGlobal::DateAdded]=dateTimeCache.toString("yyyy-MM-dd APhh:mm");
         m_model->recoverFile(textList, currentDetails);
     }
+    emit recoverComplete();
 }
 
 void KNMusicDatabase::onActionRowAppend(const QModelIndex &index)

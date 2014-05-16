@@ -32,11 +32,16 @@ public slots:
     virtual void onAlbumArtUpdate(const int &index);
     void setSourceModel(QAbstractItemModel *sourceModel);
 
+
 protected:
+    virtual void updateImage(const int &index);
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
     KNMusicModel *m_sourceModel;
     int m_noCategoryItemCount=0;
+
+private slots:
+    void updateAllImage();
 
 private:
     QIcon m_noAlbumArtIcon;

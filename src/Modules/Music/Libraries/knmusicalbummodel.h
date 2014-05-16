@@ -20,6 +20,7 @@ public slots:
     void onMusicRemoved(const QModelIndex &index);
 
 protected:
+    void updateImage(const int &index);
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
     QString artistName(const int &index) const;

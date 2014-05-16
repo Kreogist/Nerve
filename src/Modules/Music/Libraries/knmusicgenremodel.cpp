@@ -25,6 +25,12 @@ void KNMusicGenreModel::retranslateAndSet()
     noArtistItem->setText(noCategoryText());
 }
 
+void KNMusicGenreModel::updateImage(const int &index)
+{
+    QStandardItem *currentItem=item(index, 0);
+    currentItem->setIcon(m_musicGlobal->getGenreImage(currentItem->text()));
+}
+
 QIcon KNMusicGenreModel::itemIcon(const int &index) const
 {
     QPixmap genreArt=m_musicGlobal->getGenreImage(m_sourceModel->item(index,

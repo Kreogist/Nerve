@@ -16,6 +16,7 @@ public slots:
     void retranslateAndSet();
 
 protected:
+    void updateImage(const int &index);
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
 

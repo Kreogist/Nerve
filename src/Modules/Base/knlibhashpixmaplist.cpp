@@ -15,7 +15,7 @@ KNLibImageBuffer::KNLibImageBuffer(QObject *parent) :
     ;
 }
 
-void KNLibImageBuffer::setFolderPath(const QString &folderPath)
+void KNLibImageBuffer::setAlbumArtPath(const QString &folderPath)
 {
     QDir folder(folderPath);
     m_albumArtFolder=folder.absolutePath()+"/";
@@ -23,6 +23,11 @@ void KNLibImageBuffer::setFolderPath(const QString &folderPath)
     {
         folder.mkpath(m_albumArtFolder);
     }
+}
+
+QString KNLibImageBuffer::albumArtPath() const
+{
+    return m_albumArtFolder;
 }
 
 QString KNLibImageBuffer::hash() const
@@ -100,6 +105,27 @@ void KNLibHashPixmapList::append(const int rowIndex,
     }
 }
 
+void KNLibHashPixmapList::loadImages()
+{
+    QDir albumArt(m_folderPath);
+    QStringList albumArtFiles=albumArt.entryList(QStringList("*.png"));
+    int fileCount=albumArtFiles.size();
+    QString currentFile;
+    QImage imageCache;
+    while(fileCount--)
+    {
+        currentFile=albumArtFiles.takeFirst();
+        if(currentFile=="." || currentFile=="..")
+        {
+            continue;
+        }
+        imageCache=QImage(m_folderPath+currentFile);
+        currentFile.resize(currentFile.size()-4);
+        m_list[currentFile]=imageCache;
+    }
+    emit loadComplete();
+}
+
 void KNLibHashPixmapList::removeCurrentUpdate()
 {
     m_updateQueue.removeFirst();
@@ -107,8 +133,8 @@ void KNLibHashPixmapList::removeCurrentUpdate()
 
 void KNLibHashPixmapList::setAlbumArtPath(const QString &path)
 {
-    m_buffer->setFolderPath(path);
-    m_folderPath=path;
+    m_buffer->setAlbumArtPath(path);
+    m_folderPath=m_buffer->albumArtPath();
 }
 
 int KNLibHashPixmapList::currentRow() const

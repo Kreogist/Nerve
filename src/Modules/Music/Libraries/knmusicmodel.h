@@ -18,7 +18,8 @@ public:
     QString filePathFromIndex(const QModelIndex &index);
     QString itemText(const int &row, const int &column) const;
     QVariant itemRoleData(int row, int column, int role) const;
-    QImage itemArtwork(const int &row) const;
+    QImage artwork(const int &row) const;
+    QImage artworkFromKey(const QString &key) const;
     QString itemArtworkKey(const int &row) const;
     void addRawFileItem(QString filePath);
     void addRawFileItems(QStringList fileList);
@@ -36,13 +37,17 @@ signals:
     void musicUpdate(QModelIndex index);
     void musicRecover(QModelIndex index);
     void musicAlbumArtUpdate(int index);
+    void requireLoadImage();
+    void requireUpdateImage();
 
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void onActionRecoverComplete();
 
 protected slots:
     void onActionUpdateRowInfo();
+    void onActionImageLoadComplete();
 
 private slots:
     void onActionUpdatePixmap();
@@ -55,6 +60,7 @@ private:
     KNLibHashPixmapList *m_pixmapList;
     QThread m_pixmapListThread;
     int m_rawFileCount=0;
+    bool m_imageRecoverComplete=false, m_dataRecoverComplete=false;
 
     //Debug
     int m_startTime;

@@ -13,7 +13,8 @@ class KNLibImageBuffer : public QObject
     Q_OBJECT
 public:
     explicit KNLibImageBuffer(QObject *parent = 0);
-    void setFolderPath(const QString &folderPath);
+    void setAlbumArtPath(const QString &folderPath);
+    QString albumArtPath() const;
     QString hash() const;
 
 signals:
@@ -47,8 +48,10 @@ signals:
     void requireCacheImage(QImage pixmap);
     void requireUpdatePixmap();
     void requireSaveImage();
+    void loadComplete();
 
 public slots:
+    void loadImages();
 
 private slots:
     void onActionHashComplete();

@@ -29,6 +29,10 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     m_pixmapList->moveToThread(&m_pixmapListThread);
     connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
             this, &KNMusicModel::onActionUpdatePixmap);
+    connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
+            this, &KNMusicModel::onActionImageLoadComplete);
+    connect(this, &KNMusicModel::requireLoadImage,
+            m_pixmapList, &KNLibHashPixmapList::loadImages);
 
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -49,6 +53,8 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
 
     m_pixmapListThread.start();
+
+    emit requireLoadImage();
 }
 
 KNMusicModel::~KNMusicModel()
@@ -74,7 +80,7 @@ QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
     return data(index(row, column), role);
 }
 
-QImage KNMusicModel::itemArtwork(const int &row) const
+QImage KNMusicModel::artwork(const int &row) const
 {
     QString imageKey=itemArtworkKey(row);
     if(imageKey.isEmpty())
@@ -82,6 +88,11 @@ QImage KNMusicModel::itemArtwork(const int &row) const
         return m_musicGlobal->noAlbumImage();
     }
     return m_pixmapList->pixmap(imageKey);
+}
+
+QImage KNMusicModel::artworkFromKey(const QString &key) const
+{
+    return m_pixmapList->pixmap(key);
 }
 
 QString KNMusicModel::itemArtworkKey(const int &row) const
@@ -179,6 +190,15 @@ void KNMusicModel::retranslateAndSet()
     KNModel::retranslate();
 }
 
+void KNMusicModel::onActionRecoverComplete()
+{
+    m_dataRecoverComplete=true;
+    if(m_imageRecoverComplete)
+    {
+        emit requireUpdateImage();
+    }
+}
+
 void KNMusicModel::onActionUpdateRowInfo()
 {
     QStringList currentText=m_infoCollectorManager->currentFileData();
@@ -217,6 +237,15 @@ void KNMusicModel::onActionUpdateRowInfo()
     if(!m_infoCollectorManager->isUpdateQueueEmpty())
     {
         emit requireUpdateNextRow();
+    }
+}
+
+void KNMusicModel::onActionImageLoadComplete()
+{
+    m_imageRecoverComplete=true;
+    if(m_dataRecoverComplete)
+    {
+        emit requireUpdateImage();
     }
 }
 

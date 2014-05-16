@@ -18,6 +18,7 @@ public:
     void recoverData();
 
 signals:
+    void recoverComplete();
 
 private slots:
     void onActionRowAppend(const QModelIndex &index);

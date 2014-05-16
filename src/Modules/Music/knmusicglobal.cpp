@@ -153,6 +153,8 @@ KNMusicGlobal::KNMusicGlobal() :
 {
     retranslate();
     m_noAlbumImage=QImage(":/Music/Resources/Music/noalbum.png");
+    //Don't touch this. I don't why, but it works.
+    qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
     qRegisterMetaType<QVector<int>>("QVector<int>");
     m_genreList<<"Blues"
                <<"Classic Rock"
