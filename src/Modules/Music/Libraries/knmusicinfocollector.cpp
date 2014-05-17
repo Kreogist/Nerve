@@ -65,11 +65,10 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     QDataStream mediaData(&mediaFile);
     if(mediaFile.open(QIODevice::ReadOnly))
     {
-        readID3v1Tag(mediaFile, mediaData);
-        readAPEv2Tag(mediaFile, mediaData);
-        /*mediaFile.reset();
+        //readID3v1Tag(mediaFile, mediaData);
+        //readAPEv2Tag(mediaFile, mediaData);
         readID3v2Tag(mediaFile, mediaData);
-        mediaFile.reset();
+        /*mediaFile.reset();
         readWMATag(mediaFile, mediaData);
         mediaFile.reset();
         readM4ATag(mediaFile, mediaData);
@@ -218,12 +217,12 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
     m_samplingRate=numberData.toFloat();
 }
 
-void KNMusicInfoCollector::readID3v1Tag(const QFile &m_mediaFile,
-                                        QDataStream &m_mediaData)
+void KNMusicInfoCollector::readID3v1Tag(QFile &mediaFile,
+                                        QDataStream &mediaData)
 {
     mediaFile.reset();
-    if(m_tagID3v1->readTag(m_mediaFile,
-                           m_mediaData))
+    if(m_tagID3v1->readTag(mediaFile,
+                           mediaData))
     {
         setMediaData(KNMusicGlobal::Name       ,m_tagID3v1->textData(KNMusicTagID3v1::Title));
         setMediaData(KNMusicGlobal::Artist     ,m_tagID3v1->textData(KNMusicTagID3v1::Artist));
@@ -235,11 +234,12 @@ void KNMusicInfoCollector::readID3v1Tag(const QFile &m_mediaFile,
     }
 }
 
-void KNMusicInfoCollector::readID3v2Tag(const QFile &m_mediaFile,
-                                        QDataStream &m_mediaData)
+void KNMusicInfoCollector::readID3v2Tag(QFile &mediaFile,
+                                        QDataStream &mediaData)
 {
-    if(m_tagID3v2->readTag(m_mediaFile,
-                           m_mediaData))
+    mediaFile.reset();
+    if(m_tagID3v2->readTag(mediaFile,
+                           mediaData))
     {
         setMediaData(KNMusicGlobal::Name            ,m_tagID3v2->textData(KNMusicTagID3v2::Name));
         setMediaData(KNMusicGlobal::Artist          ,m_tagID3v2->textData(KNMusicTagID3v2::Artist));
@@ -283,12 +283,12 @@ void KNMusicInfoCollector::readID3v2Tag(const QFile &m_mediaFile,
     }
 }
 
-void KNMusicInfoCollector::readAPEv2Tag(const QFile &m_mediaFile,
-                                        QDataStream &m_mediaData)
+void KNMusicInfoCollector::readAPEv2Tag(QFile &mediaFile,
+                                        QDataStream &mediaData)
 {
     mediaFile.reset();
-    if(m_tagAPEv2->readTag(m_mediaFile,
-                           m_mediaData))
+    if(m_tagAPEv2->readTag(mediaFile,
+                           mediaData))
     {
         setMediaData(KNMusicGlobal::Name        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
         setMediaData(KNMusicGlobal::Artist      ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
@@ -301,11 +301,11 @@ void KNMusicInfoCollector::readAPEv2Tag(const QFile &m_mediaFile,
     }
 }
 
-void KNMusicInfoCollector::readWMATag(const QFile &m_mediaFile,
-                                      QDataStream &m_mediaData)
+void KNMusicInfoCollector::readWMATag(QFile &mediaFile,
+                                      QDataStream &mediaData)
 {
-    if(m_tagWMA->readTag(m_mediaFile,
-                         m_mediaData))
+    if(m_tagWMA->readTag(mediaFile,
+                         mediaData))
     {
         setMediaData(KNMusicGlobal::Name           ,m_tagWMA->textData(KNMusicTagWma::Name));
         setMediaData(KNMusicGlobal::Artist         ,m_tagWMA->textData(KNMusicTagWma::Artist));
@@ -322,11 +322,11 @@ void KNMusicInfoCollector::readWMATag(const QFile &m_mediaFile,
     }
 }
 
-void KNMusicInfoCollector::readM4ATag(const QFile &m_mediaFile,
-                                      QDataStream &m_mediaData)
+void KNMusicInfoCollector::readM4ATag(QFile &mediaFile,
+                                      QDataStream &mediaData)
 {
-    if(m_tagM4A->readTag(m_mediaFile,
-                         m_mediaData))
+    if(m_tagM4A->readTag(mediaFile,
+                         mediaData))
     {
         setMediaData(KNMusicGlobal::Name,           m_tagM4A->textData(KNMusicTagM4A::Title));
         setMediaData(KNMusicGlobal::Artist,         m_tagM4A->textData(KNMusicTagM4A::Artist));
@@ -350,11 +350,11 @@ void KNMusicInfoCollector::readM4ATag(const QFile &m_mediaFile,
     }
 }
 
-void KNMusicInfoCollector::readFLACTag(const QFile &m_mediaFile,
-                                       QDataStream &m_mediaData)
+void KNMusicInfoCollector::readFLACTag(QFile &mediaFile,
+                                       QDataStream &mediaData)
 {
-    if(m_tagFLAC->readTag(m_mediaFile,
-                          m_mediaData))
+    if(m_tagFLAC->readTag(mediaFile,
+                          mediaData))
     {
         setMediaData(KNMusicGlobal::Name        ,m_tagFLAC->textData(KNMusicTagFLAC::Name));
         setMediaData(KNMusicGlobal::Artist      ,m_tagFLAC->textData(KNMusicTagFLAC::Artist));

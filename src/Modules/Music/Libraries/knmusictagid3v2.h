@@ -43,7 +43,6 @@ public:
     int id3v2RatingData() const;
     QByteArray id3v2Raw(const QString &frameID) const;
     void clearCache();
-    int version();
 
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
@@ -60,6 +59,7 @@ private:
     int hexToStarRating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);
     void processPIC(const QByteArray &value);
+    void detectCodec(const QByteArray &value);
     //Version
     int m_version, m_revision;
     //Flags
@@ -72,8 +72,9 @@ private:
     QList<QByteArray> m_frameData;
 
     QMap<int, ID3v2Image> m_tagImages;
-    QTextCodec *m_beCodec, *m_leCodec, *m_utf8Codec, *m_localeCodec;
+    QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec;
     QString m_frames[ID3v2ItemCount][2];
+    char *m_rawTagData, *m_rawFrameData;
 };
 
 #endif // KNMUSICTAGID3V2_H

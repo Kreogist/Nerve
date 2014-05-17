@@ -19,10 +19,10 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     //Set properties.
     setIndentation(0);
     setMouseTracking(true);
-    //setUniformRowHeights(true);
+    setUniformRowHeights(true);
     setSortingEnabled(true);
     setAlternatingRowColors(true);
-    //setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setAllColumnsShowFocus(true);
 
@@ -54,6 +54,8 @@ void KNMusicListViewBase::resetHeader()
     setEditTriggers(QAbstractItemView::SelectedClicked);
     setHeaderAlignment(KNMusicGlobal::Time, Qt::AlignRight);
     setHeaderAlignment(KNMusicGlobal::Size, Qt::AlignRight);
+    connect(header(), &QHeaderView::sortIndicatorChanged,
+            this, &KNMusicListViewBase::onActionSort);
     /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
@@ -95,6 +97,16 @@ void KNMusicListViewBase::retranslate()
 void KNMusicListViewBase::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicListViewBase::onActionSort(int logicalIndex, Qt::SortOrder order)
+{
+    Q_UNUSED(logicalIndex);
+    Q_UNUSED(order);
+    if(currentIndex().isValid())
+    {
+        scrollTo(currentIndex(), PositionAtCenter);
+    }
 }
 
 void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)

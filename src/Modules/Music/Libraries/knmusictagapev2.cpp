@@ -25,11 +25,6 @@ QString KNMusicTagAPEv2::textData(const int &key) const
     return QString(m_frameDatas[m_frames[key]]).simplified();
 }
 
-QByteArray KNMusicTagAPEv2::tagRawData(const QString &frameKey) const
-{
-    return m_frameDatas[frameKey];
-}
-
 bool KNMusicTagAPEv2::readTag(const QFile &mediaFile,
                               QDataStream &mediaData)
 {

@@ -25,7 +25,6 @@ public:
 
     explicit KNMusicTagAPEv2(QObject *parent = 0);
     QString textData(const int &key) const;
-    QByteArray tagRawData(const QString &frameKey) const;
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
     void clearCache();

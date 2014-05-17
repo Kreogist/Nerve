@@ -35,18 +35,18 @@ public slots:
 private:
     void resetInfoCache();
     void parseByMediaInfo(const QString &value);
-    void readID3v1Tag(const QFile &m_mediaFile,
-                      QDataStream &m_mediaData);
-    void readID3v2Tag(const QFile &m_mediaFile,
-                      QDataStream &m_mediaData);
-    void readAPEv2Tag(const QFile &m_mediaFile,
-                      QDataStream &m_mediaData);
-    void readWMATag(const QFile &m_mediaFile,
-                    QDataStream &m_mediaData);
-    void readM4ATag(const QFile &m_mediaFile,
-                    QDataStream &m_mediaData);
-    void readFLACTag(const QFile &m_mediaFile,
-                     QDataStream &m_mediaData);
+    void readID3v1Tag(QFile &mediaFile,
+                      QDataStream &mediaData);
+    void readID3v2Tag(QFile &mediaFile,
+                      QDataStream &mediaData);
+    void readAPEv2Tag(QFile &mediaFile,
+                      QDataStream &mediaData);
+    void readWMATag(QFile &mediaFile,
+                    QDataStream &mediaData);
+    void readM4ATag(QFile &mediaFile,
+                    QDataStream &mediaData);
+    void readFLACTag(QFile &mediaFile,
+                     QDataStream &mediaData);
     void setMediaData(const int &index,
                       const QString &value);
     void setMusicCover(const QImage &pixmap);

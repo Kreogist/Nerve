@@ -24,6 +24,9 @@ public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
 
+protected slots:
+    virtual void onActionSort(int logicalIndex, Qt::SortOrder order);
+
 private slots:
     void onSectionVisibleChanged(const int &index,
                                  const bool &visible);

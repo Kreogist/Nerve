@@ -12,6 +12,8 @@ KNMusicAlbumSongListView::KNMusicAlbumSongListView(QWidget *parent) :
 
 void KNMusicAlbumSongListView::resetHeader()
 {
+    connect(header(), &QHeaderView::sortIndicatorChanged,
+            this, &KNMusicAlbumSongListView::onActionSort);
     for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)

@@ -1,3 +1,5 @@
+#include <QHeaderView>
+
 #include "../knmusicglobal.h"
 
 #include "knmusicgenresongs.h"
@@ -10,6 +12,8 @@ KNMusicGenreSongs::KNMusicGenreSongs(QWidget *parent) :
 
 void KNMusicGenreSongs::resetHeader()
 {
+    connect(header(), &QHeaderView::sortIndicatorChanged,
+            this, &KNMusicGenreSongs::onActionSort);
     for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
