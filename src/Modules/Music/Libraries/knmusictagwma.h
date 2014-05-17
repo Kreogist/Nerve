@@ -11,6 +11,24 @@ class KNMusicTagWma : public KNMusicTagBase
 {
     Q_OBJECT
 public:
+    enum WMAItems
+    {
+        Artist,
+        Copyright,
+        Description,
+        Rating,
+        Name,
+        AlbumArtist,
+        Album,
+        BeatsPerMinuate,
+        Comments,
+        Composer,
+        Genre,
+        Year,
+        TrackNumber,
+        WMAItemsCount
+    };
+
     enum WMA_FRAMEID_T
     {
         WMA_FRAMEID_AUTHOR = 0,
@@ -18,7 +36,7 @@ public:
         WMA_FRAMEID_DESCRIPTION,
         WMA_FRAMEID_RATING,
         WMA_FRAMEID_TITLE,
-        WMAFrameCount
+        WMAFrameIDCount
     };
     explicit KNMusicTagWma(QObject *parent = 0);
 
@@ -54,9 +72,10 @@ private:
         Rating
     };
 
-    QByteArray m_wmaTags[WMAFrameCount];
+    QByteArray m_wmaTags[WMAFrameIDCount];
     QTextCodec *m_utf16Codec;
     QMap<QString, QByteArray> m_frameDatas;
+    QString m_frames[WMAItemsCount];
 };
 
 #endif // KNMUSICTAGWMA_H
