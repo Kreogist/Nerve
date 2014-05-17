@@ -29,20 +29,21 @@ KNMusicTagWma::KNMusicTagWma(QObject *parent) :
     m_frames[TrackNumber    ]="WM/TrackNumber";
 }
 
-bool KNMusicTagWma::readTag(const QString &filePath)
+bool KNMusicTagWma::readTag(const QFile &mediaFile,
+                            QDataStream &mediaData)
 {
     clearCache();
-    QFile mediaFile(filePath);
+    //QFile mediaFile(filePath);
     if(mediaFile.size()<16)
     {
         //If file is less than WMA header, it can't contains ID3v2 tag.
         return false;
     }
-    if(!mediaFile.open(QIODevice::ReadOnly))
+    /*if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     //Detect ID3v2 header.
     char header[16];
     mediaData.readRawData(header, 16);

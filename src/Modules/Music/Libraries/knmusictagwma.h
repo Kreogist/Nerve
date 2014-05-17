@@ -32,7 +32,8 @@ public:
     explicit KNMusicTagWma(QObject *parent = 0);
 
     void clearCache();
-    bool readTag(const QString &filePath);
+    bool readTag(const QFile &mediaFile,
+                 QDataStream &mediaData);
     QString textData(const int &key) const;
     QImage albumArt() const;
 

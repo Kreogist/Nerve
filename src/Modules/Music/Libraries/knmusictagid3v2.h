@@ -59,7 +59,8 @@ public:
     void clearCache();
     int version();
 
-    bool readTag(const QString &filePath);
+    bool readTag(const QFile &mediaFile,
+                 QDataStream &mediaData);
 
     QImage tagImage(const int &index) const;
     QImage firstAvaliableImage() const;

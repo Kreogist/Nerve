@@ -16,25 +16,26 @@ KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
     m_codec=QTextCodec::codecForName("GBK");
 }
 
-bool KNMusicTagID3v1::readTag(const QString &filePath)
+bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
+                              QDataStream &mediaData)
 {
     clearCache();
     //Get raw tag data
-    QFile mediaFile(filePath);
+    //QFile mediaFile(filePath);
     if(mediaFile.size()<128)
     {
         //If the size is less than 128, it can't contains ID3v1.
         return false;
     }
-    if(!mediaFile.open(QIODevice::ReadOnly))
+    /*if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     mediaData.skipRawData(mediaFile.size()-128);
     char rawTagData[128];
     mediaData.readRawData(rawTagData, 128);
-    mediaFile.close();
+    //mediaFile.close();
 
     if(rawTagData[0]!='T' || rawTagData[1]!='A' || rawTagData[2]!='G')
     {

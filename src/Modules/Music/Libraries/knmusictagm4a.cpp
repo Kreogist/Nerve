@@ -109,20 +109,21 @@ QByteArray KNMusicTagM4A::metaData(const int &index) const
     return metaData(metaName);
 }
 
-bool KNMusicTagM4A::readTag(const QString &filePath)
+bool KNMusicTagM4A::readTag(const QFile &mediaFile,
+                            QDataStream &mediaData)
 {
     clearCache();
-    QFile mediaFile(filePath);
+    //QFile mediaFile(filePath);
     if(mediaFile.size()<4)
     {
         //Smaller than header size number.
         return false;
     }
-    if(!mediaFile.open(QIODevice::ReadOnly))
+    /*if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     quint32 headerSize;
     mediaData>>headerSize;
     char headerChecker[4];
@@ -130,7 +131,7 @@ bool KNMusicTagM4A::readTag(const QString &filePath)
     if(memcmp(headerChecker, m_m4aHeader, 4)!=0)
     {
         //It's not m4a file.
-        mediaFile.close();
+        //mediaFile.close();
         return false;
     }
     headerSize-=8;
@@ -142,7 +143,7 @@ bool KNMusicTagM4A::readTag(const QString &filePath)
     char *rawTagData=new char[rawTagLength];
     mediaData.skipRawData(4); //Skip the name.
     mediaData.readRawData(rawTagData, rawTagLength);
-    mediaFile.close();
+    //mediaFile.close();
     searchIn(rawTagData, 0, rawTagLength-1, true);
     if(m_tagData["meta"].start!=m_tagData["meta"].end)
     {

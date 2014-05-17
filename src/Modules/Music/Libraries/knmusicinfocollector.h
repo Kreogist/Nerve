@@ -2,6 +2,8 @@
 #define KNMUSICINFOCOLLECTOR_H
 
 #include <QStringList>
+#include <QFile>
+#include <QDataStream>
 
 #include "../knmusicglobal.h"
 
@@ -33,12 +35,18 @@ public slots:
 private:
     void resetInfoCache();
     void parseByMediaInfo(const QString &value);
-    void readID3v1Tag(const QString &value);
-    void readID3v2Tag(const QString &value);
-    void readAPEv2Tag(const QString &value);
-    void readWMATag(const QString &value);
-    void readM4ATag(const QString &value);
-    void readFLACTag(const QString &value);
+    void readID3v1Tag(const QFile &m_mediaFile,
+                      QDataStream &m_mediaData);
+    void readID3v2Tag(const QFile &m_mediaFile,
+                      QDataStream &m_mediaData);
+    void readAPEv2Tag(const QFile &m_mediaFile,
+                      QDataStream &m_mediaData);
+    void readWMATag(const QFile &m_mediaFile,
+                    QDataStream &m_mediaData);
+    void readM4ATag(const QFile &m_mediaFile,
+                    QDataStream &m_mediaData);
+    void readFLACTag(const QFile &m_mediaFile,
+                     QDataStream &m_mediaData);
     void setMediaData(const int &index,
                       const QString &value);
     void setMusicCover(const QImage &pixmap);

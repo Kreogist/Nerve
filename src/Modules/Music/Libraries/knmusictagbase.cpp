@@ -10,9 +10,11 @@ void KNMusicTagBase::clearCache()
     ;
 }
 
-bool KNMusicTagBase::readTag(const QString &filePath)
+bool KNMusicTagBase::readTag(const QFile &mediaFile,
+                             QDataStream &mediaData)
 {
-    Q_UNUSED(filePath);
+    Q_UNUSED(mediaFile);
+    Q_UNUSED(mediaData);
     return false;
 }
 

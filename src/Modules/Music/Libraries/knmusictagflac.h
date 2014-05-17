@@ -28,7 +28,8 @@ public:
     };
 
     explicit KNMusicTagFLAC(QObject *parent = 0);
-    bool readTag(const QString &filePath);
+    bool readTag(const QFile &mediaFile,
+                 QDataStream &mediaData);
     void clearCache();
     QString textData(const int &key) const;
     QString metaData(const QString &index) const;

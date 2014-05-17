@@ -162,20 +162,21 @@ int KNMusicTagID3v2::version()
     return m_tagData.version;
 }
 
-bool KNMusicTagID3v2::readTag(const QString &filePath)
+bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
+                              QDataStream &mediaData)
 {
     clearCache();
-    QFile mediaFile(filePath);
+    //QFile mediaFile(filePath);
     if(mediaFile.size()<10)
     {
         //If file is less than ID3v2 header, it can't contains ID3v2 tag.
         return false;
     }
-    if(!mediaFile.open(QIODevice::ReadOnly))
+    /*if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     //Detect ID3v2 header.
     char header[10];
     mediaData.readRawData(header, 10);
@@ -191,7 +192,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
-        mediaFile.close();
+        //mediaFile.close();
         return false;
     }
     m_tagData.version=(int)header[3];
@@ -203,7 +204,7 @@ bool KNMusicTagID3v2::readTag(const QString &filePath)
     m_tagData.experimentalIndicator=(header[5]&0b00100000);
     char *rawTagData=new char[tagSize];
     mediaData.readRawData(rawTagData, tagSize);
-    mediaFile.close();
+    //mediaFile.close();
 
     //All process code here.
     quint32 rawPosition=0;

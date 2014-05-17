@@ -23,15 +23,16 @@ KNMusicTagFLAC::KNMusicTagFLAC(QObject *parent) :
     m_frames[TrackNumber]="tracknumber";
 }
 
-bool KNMusicTagFLAC::readTag(const QString &filePath)
+bool KNMusicTagFLAC::readTag(const QFile &mediaFile,
+                             QDataStream &mediaData)
 {
     clearCache();
-    QFile mediaFile(filePath);
+    /*QFile mediaFile(filePath);
     if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     char rawHeader[5];
     rawHeader[4]='\0';
     mediaData.readRawData(rawHeader, 4);

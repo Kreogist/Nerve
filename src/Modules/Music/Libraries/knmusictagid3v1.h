@@ -1,6 +1,9 @@
 #ifndef KNMUSICTAGID3V1_H
 #define KNMUSICTAGID3V1_H
 
+#include <QFile>
+#include <QDataStream>
+
 #include <QStringList>
 
 #include "knmusictagbase.h"
@@ -22,7 +25,8 @@ public:
         ID3v1ItemCount
     };
     explicit KNMusicTagID3v1(QObject *parent = 0);
-    bool readTag(const QString &filePath);
+    bool readTag(const QFile &mediaFile,
+                 QDataStream &mediaData);
     void clearCache();
     QString textData(const int &key) const;
 

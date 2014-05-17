@@ -30,26 +30,27 @@ QByteArray KNMusicTagAPEv2::tagRawData(const QString &frameKey) const
     return m_frameDatas[frameKey];
 }
 
-bool KNMusicTagAPEv2::readTag(const QString &filePath)
+bool KNMusicTagAPEv2::readTag(const QFile &mediaFile,
+                              QDataStream &mediaData)
 {
     clearCache();
-    QFile mediaFile(filePath);
+    //QFile mediaFile(filePath);
     if(mediaFile.size()<32)
     {
         //A file even can't contains a header.
         return false;
     }
-    if(!mediaFile.open(QIODevice::ReadOnly))
+    /*if(!mediaFile.open(QIODevice::ReadOnly))
     {
         return false;
     }
-    QDataStream mediaData(&mediaFile);
+    QDataStream mediaData(&mediaFile);*/
     m_headerPosition=0;
     if(checkAPEHeaderAt(m_headerPosition, mediaData))
     {
         m_headerPosition+=32;
         bool result=readTagAt(m_headerPosition, mediaData);
-        mediaFile.close();
+        //mediaFile.close();
         return result;
     }
     m_headerPosition=mediaFile.size()-32;
@@ -57,7 +58,7 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
     {
         m_headerPosition=m_headerPosition-m_tagSize+32;
         bool result=readTagAt(m_headerPosition, mediaData);
-        mediaFile.close();
+        //mediaFile.close();
         return result;
     }
     m_headerPosition=mediaFile.size()-160;
@@ -65,10 +66,10 @@ bool KNMusicTagAPEv2::readTag(const QString &filePath)
     {
         m_headerPosition=m_headerPosition-m_tagSize+32;
         bool result=readTagAt(m_headerPosition, mediaData);
-        mediaFile.close();
+        //mediaFile.close();
         return result;
     }
-    mediaFile.close();
+    //mediaFile.close();
     return false;
 }
 

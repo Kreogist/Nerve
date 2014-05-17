@@ -16,7 +16,8 @@ public:
     QString textData(const int &key) const;
     QByteArray metaData(const QString &name) const;
     QByteArray metaData(const int &index) const;
-    bool readTag(const QString &filePath);
+    bool readTag(const QFile &mediaFile,
+                 QDataStream &mediaData);
     QImage albumArt() const;
     void clearCache();
     enum M4AMetaData
