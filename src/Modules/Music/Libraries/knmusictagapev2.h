@@ -35,8 +35,8 @@ signals:
 public slots:
 
 private:
-    bool checkAPEHeaderAt(int position, QDataStream &mediaData);
-    bool readTagAt(int position, QDataStream &mediaData);
+    bool checkAPEHeaderAt(QDataStream &mediaData);
+    bool readTagAt(QDataStream &mediaData);
     const char m_apePreamble[9]={'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X', '\0'};
 
     char m_apeHeader[32];

@@ -34,42 +34,29 @@ bool KNMusicTagAPEv2::readTag(const QFile &mediaFile,
                               QDataStream &mediaData)
 {
     clearCache();
-    //QFile mediaFile(filePath);
     if(mediaFile.size()<32)
     {
         //A file even can't contains a header.
         return false;
     }
-    /*if(!mediaFile.open(QIODevice::ReadOnly))
-    {
-        return false;
-    }
-    QDataStream mediaData(&mediaFile);*/
     m_headerPosition=0;
-    if(checkAPEHeaderAt(m_headerPosition, mediaData))
+    if(checkAPEHeaderAt(mediaData))
     {
         m_headerPosition+=32;
-        bool result=readTagAt(m_headerPosition, mediaData);
-        //mediaFile.close();
-        return result;
+        return readTagAt(mediaData);
     }
     m_headerPosition=mediaFile.size()-32;
-    if(checkAPEHeaderAt(m_headerPosition, mediaData))
+    if(checkAPEHeaderAt(mediaData))
     {
-        m_headerPosition=m_headerPosition-m_tagSize+32;
-        bool result=readTagAt(m_headerPosition, mediaData);
-        //mediaFile.close();
-        return result;
+        m_headerPosition-=(m_tagSize+32);
+        return readTagAt(mediaData);
     }
     m_headerPosition=mediaFile.size()-160;
-    if(checkAPEHeaderAt(m_headerPosition, mediaData))
+    if(checkAPEHeaderAt(mediaData))
     {
-        m_headerPosition=m_headerPosition-m_tagSize+32;
-        bool result=readTagAt(m_headerPosition, mediaData);
-        //mediaFile.close();
-        return result;
+        m_headerPosition-=(m_tagSize+32);
+        return readTagAt(mediaData);
     }
-    //mediaFile.close();
     return false;
 }
 
@@ -79,11 +66,10 @@ void KNMusicTagAPEv2::clearCache()
     m_frameDatas.clear();
 }
 
-bool KNMusicTagAPEv2::checkAPEHeaderAt(int position,
-                                       QDataStream &mediaData)
+bool KNMusicTagAPEv2::checkAPEHeaderAt(QDataStream &mediaData)
 {
     mediaData.device()->reset();
-    mediaData.skipRawData(position);
+    mediaData.skipRawData(m_headerPosition);
     mediaData.readRawData(m_apeHeader, 32);
     m_preambleCheck[8]='\0';
     memcpy(m_preambleCheck, m_apeHeader, 8);
@@ -110,10 +96,10 @@ bool KNMusicTagAPEv2::checkAPEHeaderAt(int position,
     return headerExsist;
 }
 
-bool KNMusicTagAPEv2::readTagAt(int position, QDataStream &mediaData)
+bool KNMusicTagAPEv2::readTagAt(QDataStream &mediaData)
 {
     mediaData.device()->reset();
-    mediaData.skipRawData(position);
+    mediaData.skipRawData(m_headerPosition);
     char *rawTagData=new char[m_tagSize];
     mediaData.readRawData(rawTagData, m_tagSize);
 

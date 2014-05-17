@@ -49,7 +49,7 @@ void KNModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorMa
 
 void KNModel::setDatabase(KNStdLibDatabase *database)
 {
-    ;
+    Q_UNUSED(database);
 }
 
 void KNModel::addRawFileItem(QString filePath)

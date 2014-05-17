@@ -111,22 +111,22 @@ QString KNMusicTagID3v2::textData(const int &key) const
 
 QString KNMusicTagID3v2::id3v2String(const QString &frameID) const
 {
-    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    int frameDataIndex=m_frameID.indexOf(frameID);
     if(frameDataIndex==-1)
     {
         return QString();
     }
-    return id3v2DataToString(m_tagData.frameData.at(frameDataIndex));
+    return id3v2DataToString(m_frameData.at(frameDataIndex));
 }
 
 int KNMusicTagID3v2::id3v2RatingData() const
 {
-    int frameDataIndex=m_tagData.frameID.indexOf(m_frames[Rating][m_useShortFrames]);
+    int frameDataIndex=m_frameID.indexOf(m_frames[Rating][m_useShortFrames]);
     if(frameDataIndex==-1)
     {
         return 0;
     }
-    QByteArray ratingRaw=m_tagData.frameData.at(frameDataIndex);
+    QByteArray ratingRaw=m_frameData.at(frameDataIndex);
     QString windowsMediaTest=QString(ratingRaw);
     if(windowsMediaTest.indexOf("Windows Media Player")!=-1)
     {
@@ -137,46 +137,40 @@ int KNMusicTagID3v2::id3v2RatingData() const
 
 QByteArray KNMusicTagID3v2::id3v2Raw(const QString &frameID) const
 {
-    int frameDataIndex=m_tagData.frameID.indexOf(frameID);
+    int frameDataIndex=m_frameID.indexOf(frameID);
     if(frameDataIndex==-1)
     {
         return QByteArray();
     }
-    return m_tagData.frameData.at(frameDataIndex);
+    return m_frameData.at(frameDataIndex);
 }
 
 void KNMusicTagID3v2::clearCache()
 {
-    m_tagData.version=0;
-    m_tagData.revision=0;
-    m_tagData.unsynchronisation=false;
-    m_tagData.extendedHeader=false;
-    m_tagData.experimentalIndicator=false;
-    m_tagData.frameID.clear();
-    m_tagData.frameData.clear();
+    m_version=0;
+    m_revision=0;
+    m_unsynchronisation=false;
+    m_extendedHeader=false;
+    m_experimentalIndicator=false;
+    m_frameID.clear();
+    m_frameData.clear();
     m_tagImages.clear();
 }
 
 int KNMusicTagID3v2::version()
 {
-    return m_tagData.version;
+    return m_version;
 }
 
 bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
                               QDataStream &mediaData)
 {
     clearCache();
-    //QFile mediaFile(filePath);
     if(mediaFile.size()<10)
     {
         //If file is less than ID3v2 header, it can't contains ID3v2 tag.
         return false;
     }
-    /*if(!mediaFile.open(QIODevice::ReadOnly))
-    {
-        return false;
-    }
-    QDataStream mediaData(&mediaFile);*/
     //Detect ID3v2 header.
     char header[10];
     mediaData.readRawData(header, 10);
@@ -192,27 +186,26 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
     if(mediaFile.size()<((qint64)tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
-        //mediaFile.close();
         return false;
     }
-    m_tagData.version=(int)header[3];
-    bool id3v23=(m_tagData.version>2);
-    m_tagData.revision=(int)header[4];
+    m_version=(int)header[3];
+    bool id3v23=(m_version>2);
+    m_revision=(int)header[4];
     //Process header: header[5]
-    m_tagData.unsynchronisation    =(header[5]&0b10000000);
-    m_tagData.extendedHeader       =(header[5]&0b01000000);
-    m_tagData.experimentalIndicator=(header[5]&0b00100000);
+    m_unsynchronisation    =(header[5]&0b10000000);
+    m_extendedHeader       =(header[5]&0b01000000);
+    m_experimentalIndicator=(header[5]&0b00100000);
     char *rawTagData=new char[tagSize];
     mediaData.readRawData(rawTagData, tagSize);
     //mediaFile.close();
 
     //All process code here.
-    quint32 rawPosition=0;
+    quint32 rawPosition=0, frameSize;
     char rawFrameID[5];
+    char *rawFrameData;
     if(id3v23)
     {
         rawFrameID[4]='\0';
-        quint32 frameSize;
         while(rawPosition<tagSize)
         {
             strncpy(rawFrameID, rawTagData+rawPosition, 4);
@@ -221,32 +214,27 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
                 //If no tags, means behind of these datas are all '\0'.
                 break;
             }
-            if(m_tagData.version==3)
-            {
-                frameSize=(((quint32)rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
-                          (((quint32)rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
-                          (((quint32)rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
-                          ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000011111111);
-            }
-            else
-            {
-                frameSize=(((quint32)rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
-                          (((quint32)rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
-                          (((quint32)rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
-                          ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
-            }
+            frameSize=m_version==3?
+                        (((quint32)rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
+                        (((quint32)rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
+                        (((quint32)rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
+                        ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000011111111):
+                        (((quint32)rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
+                        (((quint32)rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
+                        (((quint32)rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
+                        ( (quint32)rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.
                 break;
             }
-            char *rawFrameData=new char[frameSize+1];
+            rawFrameData=new char[frameSize+1];
             memcpy(rawFrameData, rawTagData+rawPosition+10, frameSize);
             rawFrameData[frameSize]='\0';
             QByteArray frameData;
             frameData.append(rawFrameData, frameSize);
-            m_tagData.frameID.append(rawFrameID);
-            m_tagData.frameData.append(frameData);
+            m_frameData.append(frameData);
+            m_frameID.append(rawFrameID);
             if(QString(rawFrameID)=="APIC")
             {
                 processAPIC(frameData);
@@ -266,20 +254,20 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
                 //If no tags, means behind of these datas are all '\0'.
                 break;
             }
-            quint32 frameSize=(((quint32)rawTagData[rawPosition+3]<<16)&0b00000000111111110000000000000000)+
-                              (((quint32)rawTagData[rawPosition+4]<<8) &0b00000000000000001111111100000000)+
-                              ( (quint32)rawTagData[rawPosition+5]     &0b00000000000000000000000011111111);
+            frameSize=(((quint32)rawTagData[rawPosition+3]<<16)&0b00000000111111110000000000000000)+
+                      (((quint32)rawTagData[rawPosition+4]<<8) &0b00000000000000001111111100000000)+
+                      ( (quint32)rawTagData[rawPosition+5]     &0b00000000000000000000000011111111);
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.
                 break;
             }
-            char *rawFrameData=new char[frameSize];
+            rawFrameData=new char[frameSize];
             memcpy(rawFrameData, rawTagData+rawPosition+6, frameSize);
             QByteArray frameData;
             frameData.append(rawFrameData, frameSize);
-            m_tagData.frameID.append(rawFrameID);
-            m_tagData.frameData.append(frameData);
+            m_frameID.append(rawFrameID);
+            m_frameData.append(frameData);
             if(QString(rawFrameID)=="PIC")
             {
                 processPIC(frameData);
@@ -290,9 +278,9 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
     }
     //All process code above.
     delete[] rawTagData; //Don't touch this.
-    if(!m_tagData.frameID.isEmpty())
+    if(!m_frameID.isEmpty())
     {
-        m_useShortFrames=(m_tagData.frameID.first().length()==3);
+        m_useShortFrames=(m_frameID.first().length()==3);
     }
     return true;
 }

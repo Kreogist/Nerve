@@ -31,20 +31,6 @@ public:
         ID3v2ItemCount
     };
 
-    struct ID3v2Data
-    {
-        //Version
-        int version;
-        int revision;
-        //Flags
-        bool unsynchronisation;
-        bool extendedHeader;
-        bool experimentalIndicator;
-        //Frames
-        QStringList frameID;
-        QList<QByteArray> frameData;
-    };
-
     struct ID3v2Image
     {
         QString description;
@@ -74,9 +60,18 @@ private:
     int hexToStarRating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);
     void processPIC(const QByteArray &value);
+    //Version
+    int m_version, m_revision;
+    //Flags
+    bool m_unsynchronisation,
+         m_extendedHeader,
+         m_experimentalIndicator,
+         m_useShortFrames;
+    //Frames
+    QStringList m_frameID;
+    QList<QByteArray> m_frameData;
+
     QMap<int, ID3v2Image> m_tagImages;
-    ID3v2Data m_tagData;
-    bool m_useShortFrames;
     QTextCodec *m_beCodec, *m_leCodec, *m_utf8Codec, *m_localeCodec;
     QString m_frames[ID3v2ItemCount][2];
 };

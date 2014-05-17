@@ -38,6 +38,7 @@ private:
     QString getGenre(const int &index);
     QString m_tagData[ID3v1ItemCount];
     QTextCodec *m_codec;
+    char m_rawTagData[128], m_rawText[30];
 };
 
 #endif // KNMUSICTAGID3V1_H
