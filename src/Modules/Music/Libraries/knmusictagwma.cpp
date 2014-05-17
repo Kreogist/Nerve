@@ -13,7 +13,19 @@ KNMusicTagWma::KNMusicTagWma(QObject *parent) :
 {
     m_utf16Codec=QTextCodec::codecForName("UTF-16LE");
 
-    //m_frames[];
+    m_frames[Name           ]="WMA_FRAMEID_TITLE";
+    m_frames[Artist         ]="WMA_FRAMEID_AUTHOR";
+    m_frames[Copyright      ]="WMA_FRAMEID_COPYRIGHT";
+    m_frames[Description    ]="WMA_FRAMEID_DESCRIPTION";
+    m_frames[Rating         ]="WMA_FRAMEID_RATING";
+    m_frames[AlbumArtist    ]="WM/AlbumArtist";
+    m_frames[Album          ]="WM/AlbumTitle";
+    m_frames[BeatsPerMinuate]="WM/BeatsPerMinute";
+    m_frames[Comments       ]="WM/Text";
+    m_frames[Composer       ]="WM/Composer";
+    m_frames[Genre          ]="WM/Genre";
+    m_frames[Year           ]="WM/Year";
+    m_frames[TrackNumber    ]="WM/TrackNumber";
 }
 
 bool KNMusicTagWma::readTag(const QString &filePath)
@@ -67,12 +79,7 @@ bool KNMusicTagWma::readTag(const QString &filePath)
             tagPosition+=16;
 
             quint16 stdItemLength[5];
-            int standardItemCounter=Title,
-                stdItemIndex[5]={WMA_FRAMEID_TITLE,
-                                 WMA_FRAMEID_AUTHOR,
-                                 WMA_FRAMEID_COPYRIGHT,
-                                 WMA_FRAMEID_DESCRIPTION,
-                                 WMA_FRAMEID_RATING};
+            int standardItemCounter=Name;
 
             for(int i=8; i<18; i+=2)
             {
@@ -90,19 +97,12 @@ bool KNMusicTagWma::readTag(const QString &filePath)
                 char *stdItemString=new char[stdItemLength[i]];
                 memcpy(stdItemString, rawTagData+tagPosition, stdItemLength[i]);
                 stringLength=stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i];
-                m_wmaTags[stdItemIndex[i]].append(stdItemString, stringLength);
+                QByteArray frameData;
+                frameData.append(stdItemString, stringLength);
                 delete[] stdItemString;
+                m_frameDatas[m_frames[i]]=frameData;
                 tagPosition+=stdItemLength[i];
             }
-
-            memcpy(frameTest, rawTagData+tagPosition, 16);
-            if(memcmp(frameTest, m_extendedFrame, 16)!=0)
-            {
-                //Can't find extended frame.
-                delete[] rawTagData;
-                return false;
-            }
-            tagPosition+=16;
             continue;
         }
         if(memcmp(frameTest, m_extendedFrame, 16)==0)
@@ -150,7 +150,6 @@ bool KNMusicTagWma::readTag(const QString &filePath)
         tagPosition+=frameSize;
     }
     delete[] rawTagData;
-
     return true;
 }
 
@@ -161,16 +160,12 @@ QString KNMusicTagWma::tagStringData(const QString &frameKey) const
     return m_utf16Codec->toUnicode(textData);
 }
 
-QString KNMusicTagWma::standardTag(const int &index) const
+QString KNMusicTagWma::textData(const int &key) const
 {
-    return m_utf16Codec->toUnicode(m_wmaTags[index]);
+    return tagStringData(m_frames[key]);
 }
 
 void KNMusicTagWma::clearCache()
 {
-    for(int i=0; i<WMAFrameIDCount; i++)
-    {
-        m_wmaTags[i].clear();
-    }
     m_frameDatas.clear();
 }

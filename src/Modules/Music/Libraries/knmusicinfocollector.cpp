@@ -285,17 +285,17 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
 {
     if(m_tagWMA->readTag(value))
     {
-        setMediaData(KNMusicGlobal::Name           ,m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_TITLE));
-        setMediaData(KNMusicGlobal::Artist         ,m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_AUTHOR));
-        setMediaData(KNMusicGlobal::AlbumArtist    ,m_tagWMA->tagStringData("WM/AlbumArtist"));
-        setMediaData(KNMusicGlobal::Album          ,m_tagWMA->tagStringData("WM/AlbumTitle"));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagWMA->tagStringData("WM/BeatsPerMinute"));
-        setMediaData(KNMusicGlobal::Comments       ,m_tagWMA->tagStringData("WM/Text"));
-        setMediaData(KNMusicGlobal::Composer       ,m_tagWMA->tagStringData("WM/Composer"));
-        setMediaData(KNMusicGlobal::Description    ,m_tagWMA->standardTag(KNMusicTagWma::WMA_FRAMEID_DESCRIPTION));
-        setMediaData(KNMusicGlobal::Genre          ,m_tagWMA->tagStringData("WM/Genre"));
-        setMediaData(KNMusicGlobal::Year           ,m_tagWMA->tagStringData("WM/Year"));
-        setMediaData(KNMusicGlobal::TrackNumber    ,m_tagWMA->tagStringData("WM/TrackNumber"));
+        setMediaData(KNMusicGlobal::Name           ,m_tagWMA->textData(KNMusicTagWma::Name));
+        setMediaData(KNMusicGlobal::Artist         ,m_tagWMA->textData(KNMusicTagWma::Artist));
+        setMediaData(KNMusicGlobal::AlbumArtist    ,m_tagWMA->textData(KNMusicTagWma::AlbumArtist));
+        setMediaData(KNMusicGlobal::Album          ,m_tagWMA->textData(KNMusicTagWma::Album));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagWMA->textData(KNMusicTagWma::BeatsPerMinuate));
+        setMediaData(KNMusicGlobal::Comments       ,m_tagWMA->textData(KNMusicTagWma::Comments));
+        setMediaData(KNMusicGlobal::Composer       ,m_tagWMA->textData(KNMusicTagWma::Composer));
+        setMediaData(KNMusicGlobal::Description    ,m_tagWMA->textData(KNMusicTagWma::Description));
+        setMediaData(KNMusicGlobal::Genre          ,m_tagWMA->textData(KNMusicTagWma::Genre));
+        setMediaData(KNMusicGlobal::Year           ,m_tagWMA->textData(KNMusicTagWma::Year));
+        setMediaData(KNMusicGlobal::TrackNumber    ,m_tagWMA->textData(KNMusicTagWma::TrackNumber));
     }
 }
 
