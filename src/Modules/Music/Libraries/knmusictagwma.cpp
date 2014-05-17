@@ -11,7 +11,8 @@
 KNMusicTagWma::KNMusicTagWma(QObject *parent) :
     KNMusicTagBase(parent)
 {
-    m_utf16Codec=QTextCodec::codecForName("UTF-16LE");
+    m_utf16leCodec=QTextCodec::codecForName("UTF-16LE");
+    m_utf16beCodec=QTextCodec::codecForName("UTF-16BE");
 
     m_frames[Name           ]="WMA_FRAMEID_TITLE";
     m_frames[Artist         ]="WMA_FRAMEID_AUTHOR";
@@ -115,21 +116,22 @@ bool KNMusicTagWma::readTag(const QString &filePath)
 
             quint16 rawNameLength, nameLength, dataLength;
             QString frameName;
+            char *rawFrameName, *rawFrameData;
 
             while(extFrames--)
             {
                 rawNameLength=(((quint16)rawTagData[tagPosition+1]<<8)&0b1111111100000000)+
                               (((quint16)rawTagData[tagPosition])     &0b0000000011111111);
-                char *rawFrameName=new char[rawNameLength+1];
+                rawFrameName=new char[rawNameLength+1];
                 memcpy(rawFrameName, rawTagData+tagPosition+2, rawNameLength);
                 nameLength=rawNameLength>2?rawNameLength-2:rawNameLength;
-                frameName=m_utf16Codec->toUnicode(rawFrameName, nameLength);
+                frameName=m_utf16leCodec->toUnicode(rawFrameName, nameLength);
                 delete[] rawFrameName;
                 tagPosition+=rawNameLength;
                 dataLength=(((quint16)rawTagData[tagPosition+5]<<8)&0b1111111100000000)+
                            (((quint16)rawTagData[tagPosition+4])   &0b0000000011111111);
                 tagPosition+=6;
-                char *rawFrameData=new char[dataLength];
+                rawFrameData=new char[dataLength];
                 memcpy(rawFrameData, rawTagData+tagPosition, dataLength);
                 QByteArray frameData;
                 frameData.append(rawFrameData, dataLength);
@@ -150,19 +152,42 @@ bool KNMusicTagWma::readTag(const QString &filePath)
         tagPosition+=frameSize;
     }
     delete[] rawTagData;
+
+    if(m_frameDatas.contains("WM/Picture"))
+    {
+        processPicture();
+    }
+
     return true;
 }
 
 QString KNMusicTagWma::tagStringData(const QString &frameKey) const
 {
-    QByteArray textData=m_frameDatas[frameKey];
-    textData.resize(textData.size()-2);
-    return m_utf16Codec->toUnicode(textData);
+    return m_utf16leCodec->toUnicode(m_frameDatas[frameKey]);
 }
 
 QString KNMusicTagWma::textData(const int &key) const
 {
     return tagStringData(m_frames[key]);
+}
+
+QImage KNMusicTagWma::albumArt() const
+{
+    return m_albumArt;
+}
+
+void KNMusicTagWma::processPicture()
+{
+    QByteArray content=m_frameDatas["WM/Picture"],
+               dblZero, mimeTypeData;
+    dblZero.append('\0');
+    dblZero.append('\0');
+    int mimeStart=content.indexOf('\0', 1)+1,
+        mimeEnd=content.indexOf(dblZero, mimeStart),
+        descriptionEnd=content.indexOf(dblZero, mimeEnd+2);
+    mimeTypeData=content.mid(mimeStart, mimeEnd-mimeStart);
+    content.remove(0, descriptionEnd+3);
+    m_albumArt.loadFromData(content, "gif");
 }
 
 void KNMusicTagWma::clearCache()

@@ -296,6 +296,7 @@ void KNMusicInfoCollector::readWMATag(const QString &value)
         setMediaData(KNMusicGlobal::Genre          ,m_tagWMA->textData(KNMusicTagWma::Genre));
         setMediaData(KNMusicGlobal::Year           ,m_tagWMA->textData(KNMusicTagWma::Year));
         setMediaData(KNMusicGlobal::TrackNumber    ,m_tagWMA->textData(KNMusicTagWma::TrackNumber));
+        setMusicCover(m_tagWMA->albumArt());
     }
 }
 
