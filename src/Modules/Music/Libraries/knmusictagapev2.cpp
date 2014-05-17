@@ -73,8 +73,7 @@ bool KNMusicTagAPEv2::checkAPEHeaderAt(QDataStream &mediaData)
     mediaData.readRawData(m_apeHeader, 32);
     m_preambleCheck[8]='\0';
     memcpy(m_preambleCheck, m_apeHeader, 8);
-    bool headerExsist=(strcmp(m_preambleCheck, m_apePreamble)==0);
-    if(headerExsist)
+    if(strcmp(m_preambleCheck, m_apePreamble)==0)
     {
         m_versionNumber=(((quint32)m_apeHeader[11]<<24)&0b11111111000000000000000000000000)+
                         (((quint32)m_apeHeader[10]<<16)&0b00000000111111110000000000000000)+
@@ -92,20 +91,22 @@ bool KNMusicTagAPEv2::checkAPEHeaderAt(QDataStream &mediaData)
                 ((((quint32)m_apeHeader[22])<<16)&0b00000000111111110000000000000000)+
                 (((((quint32)m_apeHeader[21]))<<8)&0b00000000000000001111111100000000)+
                 (((quint32)m_apeHeader[20])&0b00000000000000000000000011111111);
+        return true;
     }
-    return headerExsist;
+    return false;
 }
 
 bool KNMusicTagAPEv2::readTagAt(QDataStream &mediaData)
 {
     mediaData.device()->reset();
     mediaData.skipRawData(m_headerPosition);
-    char *rawTagData=new char[m_tagSize];
+    char *rawTagData=new char[m_tagSize],
+         *frameLabel, *rawFrameData;
     mediaData.readRawData(rawTagData, m_tagSize);
 
     //All process code here.
-    quint32 currentPosition=0;
-    quint32 currentFrameSize, currentFlag;
+    quint32 currentPosition=0,
+            currentFrameSize;
     int labelStart, labelEnd, labelLength;
     for(quint32 i=0; i<m_itemCount; i++)
     {
@@ -117,10 +118,6 @@ bool KNMusicTagAPEv2::readTagAt(QDataStream &mediaData)
         {
             break;
         }
-        currentFlag=(((quint32)rawTagData[currentPosition+7]<<24)&0b11111111000000000000000000000000)+
-                    (((quint32)rawTagData[currentPosition+6]<<16)&0b00000000111111110000000000000000)+
-                    (((quint32)rawTagData[currentPosition+5] <<8)&0b00000000000000001111111100000000)+
-                    ( (quint32)rawTagData[currentPosition+4]     &0b00000000000000000000000011111111);
         labelStart=currentPosition+8;
         labelEnd=labelStart;
         while(rawTagData[labelEnd]!=0)
@@ -128,9 +125,9 @@ bool KNMusicTagAPEv2::readTagAt(QDataStream &mediaData)
             labelEnd++;
         }
         labelLength=labelEnd-labelStart+1;
-        char *frameLabel=new char[labelLength+1];
+        frameLabel=new char[labelLength+1];
+        rawFrameData=new char[currentFrameSize+1];
         memcpy(frameLabel, rawTagData+labelStart, labelLength);
-        char *rawFrameData=new char[currentFrameSize+1];
         memcpy(rawFrameData, rawTagData+labelEnd+1, currentFrameSize);
         rawFrameData[currentFrameSize]='\0';
         QByteArray frameData;
