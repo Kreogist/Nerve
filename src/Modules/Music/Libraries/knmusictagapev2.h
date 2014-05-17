@@ -41,10 +41,10 @@ private:
     char m_apeHeader[32];
     char m_preambleCheck[9];
     int m_headerPosition;
-    quint32 m_versionNumber;
-    quint32 m_tagSize;
-    quint32 m_itemCount;
-    quint32 m_tagsFlags;
+    quint32 m_versionNumber,
+            m_tagSize,
+            m_itemCount,
+            m_tagsFlags;
     QMap<QString, QByteArray> m_frameDatas;
     QString m_frames[APEv2ItemsCount];
 };

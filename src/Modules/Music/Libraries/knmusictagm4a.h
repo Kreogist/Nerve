@@ -74,15 +74,12 @@ private:
     };
     QString m_m4aCharCode[M4AMetaDataCount];
 
-    void parseMeta(const char *rawTagData,
-                   const int &start,
+    void parseMeta(const int &start,
                    const int &end);
-    void searchIn(const char *rawTagData,
-                  const int &start,
+    void searchIn(const int &start,
                   const int &end,
                   bool searchDeep=false);
-    char m_m4aHeader[4]={'f', 't', 'y', 'p'};
-    char m_idCache[5];
+    char m_m4aHeader[4]={'f', 't', 'y', 'p'}, m_idCache[5], *m_rawTagData;
     QMap<QString, tagData> m_tagData;
     QMap<QString, QByteArray> m_ilstData;
     QImage m_albumArt;

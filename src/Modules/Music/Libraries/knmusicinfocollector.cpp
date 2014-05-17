@@ -65,15 +65,12 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     QDataStream mediaData(&mediaFile);
     if(mediaFile.open(QIODevice::ReadOnly))
     {
-        //readID3v1Tag(mediaFile, mediaData);
-        //readAPEv2Tag(mediaFile, mediaData);
+        readID3v1Tag(mediaFile, mediaData);
+        readAPEv2Tag(mediaFile, mediaData);
         readID3v2Tag(mediaFile, mediaData);
-        /*mediaFile.reset();
         readWMATag(mediaFile, mediaData);
-        mediaFile.reset();
         readM4ATag(mediaFile, mediaData);
-        mediaFile.reset();
-        readFLACTag(mediaFile, mediaData);*/
+        readFLACTag(mediaFile, mediaData);
         mediaFile.close();
     }
     parseByMediaInfo(filePathBackup);
@@ -304,6 +301,7 @@ void KNMusicInfoCollector::readAPEv2Tag(QFile &mediaFile,
 void KNMusicInfoCollector::readWMATag(QFile &mediaFile,
                                       QDataStream &mediaData)
 {
+    mediaFile.reset();
     if(m_tagWMA->readTag(mediaFile,
                          mediaData))
     {
@@ -325,6 +323,7 @@ void KNMusicInfoCollector::readWMATag(QFile &mediaFile,
 void KNMusicInfoCollector::readM4ATag(QFile &mediaFile,
                                       QDataStream &mediaData)
 {
+    mediaFile.reset();
     if(m_tagM4A->readTag(mediaFile,
                          mediaData))
     {
@@ -353,6 +352,7 @@ void KNMusicInfoCollector::readM4ATag(QFile &mediaFile,
 void KNMusicInfoCollector::readFLACTag(QFile &mediaFile,
                                        QDataStream &mediaData)
 {
+    mediaFile.reset();
     if(m_tagFLAC->readTag(mediaFile,
                           mediaData))
     {

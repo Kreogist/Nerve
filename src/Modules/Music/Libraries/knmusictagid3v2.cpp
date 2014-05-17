@@ -107,12 +107,7 @@ int KNMusicTagID3v2::hexToStarRating(const quint8 &hex) const
 
 QString KNMusicTagID3v2::textData(const int &key) const
 {
-    return id3v2String(m_frames[key][m_useShortFrames]);
-}
-
-QString KNMusicTagID3v2::id3v2String(const QString &frameID) const
-{
-    int frameDataIndex=m_frameID.indexOf(frameID);
+    int frameDataIndex=m_frameID.indexOf(m_frames[key][m_useShortFrames]);
     if(frameDataIndex==-1)
     {
         return QString();
@@ -134,16 +129,6 @@ int KNMusicTagID3v2::id3v2RatingData() const
         return hexToStarRating((quint8)ratingRaw.at(ratingRaw.size()-1));
     }
     return 0;
-}
-
-QByteArray KNMusicTagID3v2::id3v2Raw(const QString &frameID) const
-{
-    int frameDataIndex=m_frameID.indexOf(frameID);
-    if(frameDataIndex==-1)
-    {
-        return QByteArray();
-    }
-    return m_frameData.at(frameDataIndex);
 }
 
 void KNMusicTagID3v2::clearCache()
@@ -185,8 +170,8 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
         return false;
     }
     m_version=(int)header[3];
-    bool id3v23=(m_version>2);
     m_revision=(int)header[4];
+    bool id3v23=(m_version>2);
     //Process header: header[5]
     m_unsynchronisation    =(header[5]&0b10000000);
     m_extendedHeader       =(header[5]&0b01000000);
@@ -196,54 +181,50 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
 
     //All process code here.
     quint32 rawPosition=0, frameSize;
-    char m_rawFrameID[5];
+    char rawFrameID[5];
     if(id3v23)
     {
-        m_rawFrameID[4]='\0';
+        rawFrameID[4]='\0';
         while(rawPosition<tagSize)
         {
-            strncpy(m_rawFrameID, m_rawTagData+rawPosition, 4);
-            if(strlen(m_rawFrameID)==0)
+            strncpy(rawFrameID, m_rawTagData+rawPosition, 4);
+            if(rawFrameID[0]==0)
             {
                 //If no tags, means behind of these datas are all '\0'.
                 break;
             }
             frameSize=m_version==3?
-                        (((quint32)m_rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
-                        (((quint32)m_rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
-                        (((quint32)m_rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
-                        ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000011111111):
-                        (((quint32)m_rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
-                        (((quint32)m_rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
-                        (((quint32)m_rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
-                        ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
+                      (((quint32)m_rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
+                      (((quint32)m_rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
+                      (((quint32)m_rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
+                      ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000011111111):
+                      (((quint32)m_rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
+                      (((quint32)m_rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
+                      (((quint32)m_rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
+                      ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
             if(frameSize>tagSize)
             {
                 //Reach an unexpect frame.
                 break;
             }
-            m_rawFrameData=new char[frameSize+1];
-            memcpy(m_rawFrameData, m_rawTagData+rawPosition+10, frameSize);
-            m_rawFrameData[frameSize]='\0';
-            QByteArray frameData;
-            frameData.append(m_rawFrameData, frameSize);
+            rawPosition+=10;
+            QByteArray frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
             m_frameData.append(frameData);
-            m_frameID.append(m_rawFrameID);
-            if(QString(m_rawFrameID)=="APIC")
+            m_frameID.append(rawFrameID);
+            if(QString(rawFrameID)=="APIC")
             {
                 processAPIC(frameData);
             }
-            rawPosition+=(frameSize+10);
-            delete[] m_rawFrameData;
+            rawPosition+=frameSize;
         }
     }
     else
     {
-        m_rawFrameID[3]='\0';
+        rawFrameID[3]='\0';
         while(rawPosition<tagSize)
         {
-            strncpy(m_rawFrameID, m_rawTagData+rawPosition, 3);
-            if(strlen(m_rawFrameID)==0)
+            strncpy(rawFrameID, m_rawTagData+rawPosition, 3);
+            if(rawFrameID[0]==0)
             {
                 //If no tags, means behind of these datas are all '\0'.
                 break;
@@ -256,18 +237,15 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
                 //Reach an unexpect frame.
                 break;
             }
-            m_rawFrameData=new char[frameSize];
-            memcpy(m_rawFrameData, m_rawTagData+rawPosition+6, frameSize);
-            QByteArray frameData;
-            frameData.append(m_rawFrameData, frameSize);
-            m_frameID.append(m_rawFrameID);
+            rawPosition+=6;
+            QByteArray frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
+            m_frameID.append(rawFrameID);
             m_frameData.append(frameData);
-            if(QString(m_rawFrameID)=="PIC")
+            if(QString(rawFrameID)=="PIC")
             {
                 processPIC(frameData);
             }
-            rawPosition+=(frameSize+6);
-            delete[] m_rawFrameData;
+            rawPosition+=frameSize;
         }
     }
     //All process code above.
@@ -285,15 +263,10 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
     QByteArray content=value;
     quint8 encoding=(quint8)(value.at(0));
     int zeroCharEnd=content.indexOf('\0', 1);
-    QString mimeType(content.mid(1, zeroCharEnd-1).toLower()),
-            imageType;
-    if(mimeType.left(6)=="image/")
+    QString mimeType(content.mid(1, zeroCharEnd-1).toLower());
+    if(mimeType.length()>6)
     {
-        imageType=mimeType.mid(6);
-    }
-    else
-    {
-        imageType=mimeType;
+        mimeType.remove(0, 6);
     }
     quint8 pictureType=(quint8)(value.at(zeroCharEnd+1));
     zeroCharEnd+=2;
@@ -304,38 +277,31 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
         //ISO
         descriptionEnd=content.indexOf('\0', zeroCharEnd);
         currentImage.description=
-            QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
+            QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1));
         content.remove(0, descriptionEnd+1);
         break;
     case 1:
         //UTF-16
-        descriptionEnd=zeroCharEnd;
-        while(content.at(descriptionEnd)!=0 &&
-              content.at(descriptionEnd+1)!=0)
-        {
-            descriptionEnd+=2;
-        }
+        descriptionEnd=content.indexOf(QByteArray(2, '\0'), zeroCharEnd);
         if((quint8)content.at(zeroCharEnd)==0xFE && (quint8)content.at(zeroCharEnd+1)==0xFF)
         {
             content.remove(0,2);
             currentImage.description=m_beCodec->toUnicode(content.mid(zeroCharEnd,
-                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+                                                                      descriptionEnd-zeroCharEnd+1));
         }
         if((quint8)content.at(zeroCharEnd)==0xFF && (quint8)content.at(zeroCharEnd+1)==0xFE)
         {
             content.remove(0,2);
             currentImage.description=m_leCodec->toUnicode(content.mid(zeroCharEnd,
-                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+                                                                      descriptionEnd-zeroCharEnd+1));
         }
         content.remove(0, descriptionEnd+2);
         break;
     default:
-        descriptionEnd=content.indexOf('\0', zeroCharEnd);
-        content.remove(0, descriptionEnd+1);
+        content.remove(0, content.indexOf('\0', zeroCharEnd)+1);
         break;
     }
-    //JFIF Test
-    currentImage.image.loadFromData(content, imageType.toStdString().data());
+    currentImage.image.loadFromData(content, mimeType.toStdString().data());
     m_tagImages[pictureType]=currentImage;
 }
 
@@ -343,48 +309,41 @@ void KNMusicTagID3v2::processPIC(const QByteArray &value)
 {
     ID3v2Image currentImage;
     QByteArray content=value;
-    quint8 encoding=(quint8)(value.at(0)),
-           pictureType=(quint8)(value.at(4));
+    quint8 encoding=(quint8)(value.at(0));
     QString imageType(content.mid(1, 3).toLower());
-    int zeroCharEnd=5, descriptionEnd;
+    int descriptionEnd;
     switch(encoding)
     {
     case 0:
         //ISO
-        descriptionEnd=content.indexOf('\0', zeroCharEnd);
+        descriptionEnd=content.indexOf('\0', 5);
         currentImage.description=
-            QString::fromLocal8Bit(content.mid(zeroCharEnd, descriptionEnd-zeroCharEnd+1)).simplified();
+            QString::fromLocal8Bit(content.mid(5, descriptionEnd-4));
         content.remove(0, descriptionEnd+1);
         break;
     case 1:
         //UTF-16
-        descriptionEnd=zeroCharEnd;
-        while(content.at(descriptionEnd)!=0 &&
-              content.at(descriptionEnd+1)!=0)
-        {
-            descriptionEnd+=2;
-        }
-        if((quint8)content.at(zeroCharEnd)==0xFE && (quint8)content.at(zeroCharEnd+1)==0xFF)
+        descriptionEnd=content.indexOf(QByteArray(2, '\0'), 5);
+        if((quint8)content.at(5)==0xFE && (quint8)content.at(6)==0xFF)
         {
             content.remove(0,2);
-            currentImage.description=m_beCodec->toUnicode(content.mid(zeroCharEnd,
-                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+            currentImage.description=m_beCodec->toUnicode(content.mid(5,
+                                                                      descriptionEnd-4));
         }
-        if((quint8)content.at(zeroCharEnd)==0xFF && (quint8)content.at(zeroCharEnd+1)==0xFE)
+        if((quint8)content.at(5)==0xFF && (quint8)content.at(6)==0xFE)
         {
             content.remove(0,2);
-            currentImage.description=m_leCodec->toUnicode(content.mid(zeroCharEnd,
-                                                                      descriptionEnd-zeroCharEnd+1)).simplified();
+            currentImage.description=m_leCodec->toUnicode(content.mid(5,
+                                                                      descriptionEnd-4));
         }
         content.remove(0, descriptionEnd+2);
         break;
     default:
-        descriptionEnd=content.indexOf('\0', zeroCharEnd);
-        content.remove(0, descriptionEnd+1);
+        content.remove(0, content.indexOf('\0', 5)+1);
         break;
     }
     currentImage.image.loadFromData(content, imageType.toStdString().data());
-    m_tagImages[pictureType]=currentImage;
+    m_tagImages[(quint8)value.at(4)]=currentImage;
 }
 
 QImage KNMusicTagID3v2::tagImage(const int &index) const

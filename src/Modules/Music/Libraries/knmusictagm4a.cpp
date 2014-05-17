@@ -17,8 +17,7 @@ KNMusicTagM4A::KNMusicTagM4A(QObject *parent) :
     m_m4aCharCode[Album]=QString(rawCharCode);
     rawCharCode[0]=0xA9; rawCharCode[1]='A'; rawCharCode[2]='R'; rawCharCode[3]='T';
     m_m4aCharCode[Artist]=QString(rawCharCode);
-    rawCharCode[0]='a'; rawCharCode[1]='A'; rawCharCode[2]='R'; rawCharCode[3]='T';
-    m_m4aCharCode[AlbumArtist]=QString(rawCharCode);
+    m_m4aCharCode[AlbumArtist]="aART";
     rawCharCode[0]=0xA9; rawCharCode[1]='c'; rawCharCode[2]='m'; rawCharCode[3]='t';
     m_m4aCharCode[Comment]=QString(rawCharCode);
     rawCharCode[0]=0xA9; rawCharCode[1]='d'; rawCharCode[2]='a'; rawCharCode[3]='y';
@@ -27,71 +26,47 @@ KNMusicTagM4A::KNMusicTagM4A(QObject *parent) :
     m_m4aCharCode[Title]=QString(rawCharCode);
     rawCharCode[0]=0xA9; rawCharCode[1]='g'; rawCharCode[2]='e'; rawCharCode[3]='n';
     m_m4aCharCode[Genre]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='r'; rawCharCode[2]='k'; rawCharCode[3]='n';
-    m_m4aCharCode[Tracknumber]=QString(rawCharCode);
-    rawCharCode[0]='d'; rawCharCode[1]='i'; rawCharCode[2]='s'; rawCharCode[3]='k';
-    m_m4aCharCode[Disknumber]=QString(rawCharCode);
+    m_m4aCharCode[Tracknumber]=QString("trkn");
+    m_m4aCharCode[Disknumber]=QString("disk");
     rawCharCode[0]=0xA9; rawCharCode[1]='w'; rawCharCode[2]='r'; rawCharCode[3]='t';
     m_m4aCharCode[Composer]=QString(rawCharCode);
     rawCharCode[0]=0xA9; rawCharCode[1]='t'; rawCharCode[2]='o'; rawCharCode[3]='o';
     m_m4aCharCode[Encoder]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='m'; rawCharCode[2]='p'; rawCharCode[3]='o';
-    m_m4aCharCode[BPM]=QString(rawCharCode);
-    rawCharCode[0]='c'; rawCharCode[1]='p'; rawCharCode[2]='r'; rawCharCode[3]='t';
-    m_m4aCharCode[Copyright]=QString(rawCharCode);
-    rawCharCode[0]='c'; rawCharCode[1]='p'; rawCharCode[2]='i'; rawCharCode[3]='l';
-    m_m4aCharCode[Compilation]=QString(rawCharCode);
-    rawCharCode[0]='c'; rawCharCode[1]='o'; rawCharCode[2]='v'; rawCharCode[3]='r';
-    m_m4aCharCode[Artwork]=QString(rawCharCode);
-    rawCharCode[0]='r'; rawCharCode[1]='t'; rawCharCode[2]='n'; rawCharCode[3]='g';
-    m_m4aCharCode[Rating]=QString(rawCharCode);
+    m_m4aCharCode[BPM]=QString("tmpo");
+    m_m4aCharCode[Copyright]=QString("cprt");
+    m_m4aCharCode[Compilation]=QString("cpil");
+    m_m4aCharCode[Artwork]=QString("covr");
+    m_m4aCharCode[Rating]=QString("rtng");
     rawCharCode[0]=0xA9; rawCharCode[1]='g'; rawCharCode[2]='r'; rawCharCode[3]='p';
     m_m4aCharCode[Grouping]=QString(rawCharCode);
-    rawCharCode[0]='s'; rawCharCode[1]='t'; rawCharCode[2]='i'; rawCharCode[3]='k';
-    m_m4aCharCode[MediaType]=QString(rawCharCode);
-    rawCharCode[0]='p'; rawCharCode[1]='c'; rawCharCode[2]='s'; rawCharCode[3]='t';
-    m_m4aCharCode[Podcast]=QString(rawCharCode);
-    rawCharCode[0]='c'; rawCharCode[1]='a'; rawCharCode[2]='t'; rawCharCode[3]='g';
-    m_m4aCharCode[Category]=QString(rawCharCode);
-    rawCharCode[0]='k'; rawCharCode[1]='e'; rawCharCode[2]='y'; rawCharCode[3]='w';
-    m_m4aCharCode[Keyword]=QString(rawCharCode);
-    rawCharCode[0]='p'; rawCharCode[1]='u'; rawCharCode[2]='r'; rawCharCode[3]='l';
-    m_m4aCharCode[PodcastURL]=QString(rawCharCode);
-    rawCharCode[0]='e'; rawCharCode[1]='g'; rawCharCode[2]='i'; rawCharCode[3]='d';
-    m_m4aCharCode[EpisodeGlobalUniqueID]=QString(rawCharCode);
-    rawCharCode[0]='d'; rawCharCode[1]='e'; rawCharCode[2]='s'; rawCharCode[3]='c';
-    m_m4aCharCode[Description]=QString(rawCharCode);
+    m_m4aCharCode[MediaType]=QString("stik");
+    m_m4aCharCode[Podcast]=QString("pcst");
+    m_m4aCharCode[Category]=QString("catg");
+    m_m4aCharCode[Keyword]=QString("keyw");
+    m_m4aCharCode[PodcastURL]=QString("purl");
+    m_m4aCharCode[EpisodeGlobalUniqueID]=QString("egid");
+    m_m4aCharCode[Description]=QString("desc");
     rawCharCode[0]=0xA9; rawCharCode[1]='l'; rawCharCode[2]='y'; rawCharCode[3]='r';
     m_m4aCharCode[Lyrics]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='v'; rawCharCode[2]='n'; rawCharCode[3]='n';
-    m_m4aCharCode[TVNetworkName]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='v'; rawCharCode[2]='s'; rawCharCode[3]='h';
-    m_m4aCharCode[TVShowName]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='v'; rawCharCode[2]='e'; rawCharCode[3]='n';
-    m_m4aCharCode[TVEpisodeNumber]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='v'; rawCharCode[2]='s'; rawCharCode[3]='n';
-    m_m4aCharCode[TVSeason]=QString(rawCharCode);
-    rawCharCode[0]='t'; rawCharCode[1]='v'; rawCharCode[2]='e'; rawCharCode[3]='s';
-    m_m4aCharCode[TVEpisode]=QString(rawCharCode);
-    rawCharCode[0]='p'; rawCharCode[1]='u'; rawCharCode[2]='r'; rawCharCode[3]='d';
-    m_m4aCharCode[PurchaseDate]=QString(rawCharCode);
-    rawCharCode[0]='p'; rawCharCode[1]='g'; rawCharCode[2]='a'; rawCharCode[3]='p';
-    m_m4aCharCode[GaplessPlayback]=QString(rawCharCode);
+    m_m4aCharCode[TVNetworkName]=QString("tvnn");
+    m_m4aCharCode[TVShowName]=QString("tvsh");
+    m_m4aCharCode[TVEpisodeNumber]=QString("tven");
+    m_m4aCharCode[TVSeason]=QString("tvsn");
+    m_m4aCharCode[TVEpisode]=QString("tves");
+    m_m4aCharCode[PurchaseDate]=QString("purd");
+    m_m4aCharCode[GaplessPlayback]=QString("pgap");
 
 }
 
 QString KNMusicTagM4A::metaDataName(const int &index) const
 {
-    if(index<M4AMetaDataCount)
-    {
-        return m_m4aCharCode[index];
-    }
-    return QString();
+    return index<M4AMetaDataCount?m_m4aCharCode[index]:QString();
 }
 
 QString KNMusicTagM4A::textData(const int &key) const
 {
-    return metaData(key);
+    QString metaName=metaDataName(key);
+    return metaName.isNull()?QByteArray():m_ilstData[metaName];
 }
 
 QByteArray KNMusicTagM4A::metaData(const QString &name) const
@@ -113,17 +88,11 @@ bool KNMusicTagM4A::readTag(const QFile &mediaFile,
                             QDataStream &mediaData)
 {
     clearCache();
-    //QFile mediaFile(filePath);
     if(mediaFile.size()<4)
     {
         //Smaller than header size number.
         return false;
     }
-    /*if(!mediaFile.open(QIODevice::ReadOnly))
-    {
-        return false;
-    }
-    QDataStream mediaData(&mediaFile);*/
     quint32 headerSize;
     mediaData>>headerSize;
     char headerChecker[4];
@@ -131,7 +100,6 @@ bool KNMusicTagM4A::readTag(const QFile &mediaFile,
     if(memcmp(headerChecker, m_m4aHeader, 4)!=0)
     {
         //It's not m4a file.
-        //mediaFile.close();
         return false;
     }
     headerSize-=8;
@@ -140,24 +108,22 @@ bool KNMusicTagM4A::readTag(const QFile &mediaFile,
     quint32 rawTagLength;
     mediaData>>rawTagLength;
     rawTagLength-=8;
-    char *rawTagData=new char[rawTagLength];
+    m_rawTagData=new char[rawTagLength];
     mediaData.skipRawData(4); //Skip the name.
-    mediaData.readRawData(rawTagData, rawTagLength);
+    mediaData.readRawData(m_rawTagData, rawTagLength);
     //mediaFile.close();
-    searchIn(rawTagData, 0, rawTagLength-1, true);
+    searchIn(0, rawTagLength-1, true);
     if(m_tagData["meta"].start!=m_tagData["meta"].end)
     {
-        searchIn(rawTagData,
-                 m_tagData["meta"].start+4,
+        searchIn(m_tagData["meta"].start+4,
                  m_tagData["meta"].end);
         if(m_tagData["ilst"].start!=m_tagData["ilst"].end)
         {
-            parseMeta(rawTagData,
-                      m_tagData["ilst"].start,
+            parseMeta(m_tagData["ilst"].start,
                       m_tagData["ilst"].end);
         }
     }
-    delete[] rawTagData;
+    delete[] m_rawTagData;
     QByteArray coverImageData=metaData("covr");
     if(!coverImageData.isNull())
     {
@@ -171,8 +137,7 @@ QImage KNMusicTagM4A::albumArt() const
     return m_albumArt;
 }
 
-void KNMusicTagM4A::parseMeta(const char *rawTagData,
-                              const int &start,
+void KNMusicTagM4A::parseMeta(const int &start,
                               const int &end)
 {
     int position=start, rawFrameEnd;
@@ -180,10 +145,10 @@ void KNMusicTagM4A::parseMeta(const char *rawTagData,
     char *rawFrameData;
     while(position<=end)
     {
-        tagSize=((((quint32)rawTagData[position])<<24)  &0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[position+1])<<16)&0b00000000111111110000000000000000)+
-                ((((quint32)rawTagData[position+2])<<8) &0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[position+3])      &0b00000000000000000000000011111111);
+        tagSize=(((quint32)m_rawTagData[position  ]<<24)&0b11111111000000000000000000000000)+
+                (((quint32)m_rawTagData[position+1]<<16)&0b00000000111111110000000000000000)+
+                (((quint32)m_rawTagData[position+2]<<8 )&0b00000000000000001111111100000000)+
+                ( (quint32)m_rawTagData[position+3]     &0b00000000000000000000000011111111);
         if(tagSize==0)
         {
             return;
@@ -193,18 +158,18 @@ void KNMusicTagM4A::parseMeta(const char *rawTagData,
         {
             return;
         }
-        memcpy(m_idCache, rawTagData+position+4, 4);
-        realSize=((((quint32)rawTagData[position+8])<<24)&0b11111111000000000000000000000000)+
-                 ((((quint32)rawTagData[position+9])<<16)&0b00000000111111110000000000000000)+
-                 ((((quint32)rawTagData[position+10])<<8)&0b00000000000000001111111100000000)+
-                 (((quint32)rawTagData[position+11])     &0b00000000000000000000000011111111);
+        memcpy(m_idCache, m_rawTagData+position+4, 4);
+        realSize=(((quint32)m_rawTagData[position+8 ]<<24)&0b11111111000000000000000000000000)+
+                 (((quint32)m_rawTagData[position+9 ]<<16)&0b00000000111111110000000000000000)+
+                 (((quint32)m_rawTagData[position+10]<<8 )&0b00000000000000001111111100000000)+
+                 ( (quint32)m_rawTagData[position+11]     &0b00000000000000000000000011111111);
         QByteArray frameData;
         if(realSize==tagSize-8)
         {
             position+=24;
             realSize-=16;
             rawFrameData=new char[realSize];
-            memcpy(rawFrameData, rawTagData+position, realSize);
+            memcpy(rawFrameData, m_rawTagData+position, realSize);
             frameData.append(rawFrameData, realSize);
             m_ilstData[m_idCache]=frameData;
             delete[] rawFrameData;
@@ -213,7 +178,7 @@ void KNMusicTagM4A::parseMeta(const char *rawTagData,
         }
         realSize=rawFrameEnd-position-8;
         rawFrameData=new char[realSize];
-        memcpy(rawFrameData, rawTagData+position+8, realSize);
+        memcpy(rawFrameData, m_rawTagData+position+8, realSize);
         frameData.append(rawFrameData, realSize);
         m_ilstData[m_idCache]=frameData;
         delete[] rawFrameData;
@@ -229,8 +194,7 @@ void KNMusicTagM4A::clearCache()
     m_idCache[4]='\0';
 }
 
-void KNMusicTagM4A::searchIn(const char *rawTagData,
-                             const int &start,
+void KNMusicTagM4A::searchIn(const int &start,
                              const int &end,
                              bool searchDeep)
 {
@@ -238,10 +202,10 @@ void KNMusicTagM4A::searchIn(const char *rawTagData,
     int position=start, frameEnd;
     while(position<=end)
     {
-        tagSize=((((quint32)rawTagData[position])<<24)  &0b11111111000000000000000000000000)+
-                ((((quint32)rawTagData[position+1])<<16)&0b00000000111111110000000000000000)+
-                ((((quint32)rawTagData[position+2])<<8) &0b00000000000000001111111100000000)+
-                (((quint32)rawTagData[position+3])      &0b00000000000000000000000011111111);
+        tagSize=(((quint32)m_rawTagData[position  ]<<24)&0b11111111000000000000000000000000)+
+                (((quint32)m_rawTagData[position+1]<<16)&0b00000000111111110000000000000000)+
+                (((quint32)m_rawTagData[position+2]<<8 )&0b00000000000000001111111100000000)+
+                ( (quint32)m_rawTagData[position+3]     &0b00000000000000000000000011111111);
         if(tagSize==0)
         {
             return;
@@ -251,14 +215,14 @@ void KNMusicTagM4A::searchIn(const char *rawTagData,
         {
             return;
         }
-        memcpy(m_idCache, rawTagData+position+4, 4);
+        memcpy(m_idCache, m_rawTagData+position+4, 4);
         tagData currentTag;
         currentTag.start=position+8;
         currentTag.end=frameEnd;
         m_tagData[m_idCache]=currentTag;
         if(searchDeep)
         {
-            searchIn(rawTagData, currentTag.start, currentTag.end);
+            searchIn(currentTag.start, currentTag.end);
         }
         position=currentTag.end+1;
     }

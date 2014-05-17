@@ -37,11 +37,9 @@ public:
         QImage image;
     };
 
-    QString textData(const int &key) const;
     explicit KNMusicTagID3v2(QObject *parent = 0);
-    QString id3v2String(const QString &frameID) const;
+    QString textData(const int &key) const;
     int id3v2RatingData() const;
-    QByteArray id3v2Raw(const QString &frameID) const;
     void clearCache();
 
     bool readTag(const QFile &mediaFile,
@@ -74,7 +72,7 @@ private:
     QMap<int, ID3v2Image> m_tagImages;
     QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec;
     QString m_frames[ID3v2ItemCount][2];
-    char *m_rawTagData, *m_rawFrameData;
+    char *m_rawTagData;
 };
 
 #endif // KNMUSICTAGID3V2_H
