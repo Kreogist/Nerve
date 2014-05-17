@@ -45,7 +45,7 @@ private:
     QJsonDocument m_document;
     QJsonParseError m_error;
     QJsonArray m_databaseArray;
-    int m_majorVersion=0, m_minorVersion=1, m_batchCount=10,
+    int m_majorVersion=0, m_minorVersion=1, m_batchCount=50,
         m_currentBatchCount=0;
 };
 

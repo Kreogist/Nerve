@@ -179,6 +179,9 @@ void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
                                              const QModelIndex &previous)
 {
     Q_UNUSED(previous);
-    m_artistDetails->setArtistName(m_artistModel->data(current,Qt::DisplayRole).toString());
-    m_artistDetailModel->setCategoryIndex(current);
+    if(current.isValid())
+    {
+        m_artistDetails->setArtistName(m_artistModel->data(current,Qt::DisplayRole).toString());
+        m_artistDetailModel->setCategoryIndex(current);
+    }
 }
