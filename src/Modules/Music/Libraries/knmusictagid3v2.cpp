@@ -276,7 +276,12 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
         break;
     case 1:
         //UTF-16
-        descriptionEnd=content.indexOf(QByteArray(2, '\0'), zeroCharEnd);
+        descriptionEnd=zeroCharEnd;
+        while(content.at(descriptionEnd)!=0 &&
+              content.at(descriptionEnd+1)!=0)
+        {
+            descriptionEnd+=2;
+        }
         if((quint8)content.at(zeroCharEnd)==0xFE && (quint8)content.at(zeroCharEnd+1)==0xFF)
         {
             content.remove(0,2);
@@ -317,7 +322,12 @@ void KNMusicTagID3v2::processPIC(const QByteArray &value)
         break;
     case 1:
         //UTF-16
-        descriptionEnd=content.indexOf(QByteArray(2, '\0'), 5);
+        descriptionEnd=5;
+        while(content.at(descriptionEnd)!=0 &&
+              content.at(descriptionEnd+1)!=0)
+        {
+            descriptionEnd+=2;
+        }
         if((quint8)content.at(5)==0xFE && (quint8)content.at(6)==0xFF)
         {
             content.remove(0,2);

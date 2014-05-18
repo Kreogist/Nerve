@@ -772,6 +772,7 @@ void KNMusicAlbumView::onActionHideAlbumDetailFinished()
     m_albumDetail->hide();
     m_detailIndex=QModelIndex();
     viewport()->update();
+    m_hidingAlbum=false;
 }
 
 void KNMusicAlbumView::onActionAlbumRemoved(const QModelIndex &index)
@@ -815,8 +816,9 @@ void KNMusicAlbumView::hideFirstItem()
 
 void KNMusicAlbumView::foldAlbumDetail()
 {
-    if(m_albumDetail->isVisible())
+    if(m_albumDetail->isVisible() && !m_hidingAlbum)
     {
+        m_hidingAlbum=true;
         m_albumDetail->foldDetail();
         selectionModel()->clear();
     }

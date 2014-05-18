@@ -186,9 +186,10 @@ private:
     int m_lineCount=0;
     int m_iconSizeParam=124;
     int m_spacingHeight=154, m_spacingWidth=134;
+    int m_minGrey=0x30;
+    bool m_hidingAlbum=false;
     QPalette m_palette;
     QColor m_backgroundColor;
-    int m_minGrey=0x30;
     QTimeLine *m_scrollTimeLine;
     QPropertyAnimation *m_albumShow, *m_albumHide,
                        *m_albumThrow;
