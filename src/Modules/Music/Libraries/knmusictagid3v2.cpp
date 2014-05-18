@@ -12,7 +12,7 @@
 KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     KNMusicTagBase(parent)
 {
-    m_isoCodec=QTextCodec::codecForName("ISO-8859-1");
+    m_isoCodec=QTextCodec::codecForName("GB18030");
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
@@ -190,11 +190,11 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
             frameSize=m_version==3?
                       (((quint32)m_rawTagData[rawPosition+4]<<24)&0b11111111000000000000000000000000)+
                       (((quint32)m_rawTagData[rawPosition+5]<<16)&0b00000000111111110000000000000000)+
-                      (((quint32)m_rawTagData[rawPosition+6]<<8) &0b00000000000000001111111100000000)+
+                      (((quint32)m_rawTagData[rawPosition+6]<<8 )&0b00000000000000001111111100000000)+
                       ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000011111111):
                       (((quint32)m_rawTagData[rawPosition+4]<<21)&0b00001111111000000000000000000000)+
                       (((quint32)m_rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
-                      (((quint32)m_rawTagData[rawPosition+6]<<7) &0b00000000000000000011111110000000)+
+                      (((quint32)m_rawTagData[rawPosition+6]<<7 )&0b00000000000000000011111110000000)+
                       ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
             if(frameSize>tagSize)
             {

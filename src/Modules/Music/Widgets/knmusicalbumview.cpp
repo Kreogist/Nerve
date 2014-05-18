@@ -628,6 +628,17 @@ void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
     }
 }
 
+void KNMusicAlbumView::keyReleaseEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Escape:
+        foldAlbumDetail();
+        break;
+    }
+    QAbstractItemView::keyReleaseEvent(event);
+}
+
 int KNMusicAlbumView::horizontalOffset() const
 {
     return horizontalScrollBar()->value();
@@ -650,7 +661,31 @@ bool KNMusicAlbumView::isIndexHidden(const QModelIndex &index) const
 QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorAction,
                                          Qt::KeyboardModifiers modifiers)
 {
-    QModelIndex current=currentIndex();
+    QModelIndex current=currentIndex(), movedIndex;
+    /*switch (cursorAction)
+    {
+    case QAbstractItemView::MoveUp:
+        movedIndex=m_model->index(current.row()-m_maxColumnCount, 0);
+        break;
+    case QAbstractItemView::MoveDown:
+        movedIndex=m_model->index(current.row()+m_maxColumnCount, 0);
+        break;
+    case QAbstractItemView::MoveLeft:
+        movedIndex=m_model->index(current.row()-1, 0);
+        break;
+    case QAbstractItemView::MoveRight:
+        movedIndex=m_model->index(current.row()+1, 0);
+        break;
+    case QAbstractItemView::MoveHome:
+        movedIndex=m_model->index(0, 0);
+        break;
+    case QAbstractItemView::MoveEnd:
+        movedIndex=m_model->index(m_model->rowCount()-1, 0);
+        break;
+    default:
+        break;
+    }*/
+    selectAlbum(movedIndex);
     viewport()->update();
     return current;
 }
@@ -678,13 +713,17 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
+    m_pressedIndex=indexAt(e->pos());
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
      QAbstractItemView::mouseReleaseEvent(e);
-     selectAlbum(indexAt(e->pos()));
-     viewport()->update();
+     if(m_pressedIndex==indexAt(e->pos()))
+     {
+         selectAlbum(m_pressedIndex);
+         viewport()->update();
+     }
      /*if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {
@@ -772,6 +811,15 @@ void KNMusicAlbumView::showFirstItem()
 void KNMusicAlbumView::hideFirstItem()
 {
     ;
+}
+
+void KNMusicAlbumView::foldAlbumDetail()
+{
+    if(m_albumDetail->isVisible())
+    {
+        m_albumDetail->foldDetail();
+        selectionModel()->clear();
+    }
 }
 
 QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
@@ -863,17 +911,17 @@ void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
 {
     if(index.isValid())
     {
-        if(index!=m_detailIndex)
+        if(index==m_detailIndex)
+        {
+            foldAlbumDetail();
+        }
+        else
         {
             onActionAlbumClicked(index);
         }
     }
     else
     {
-        if(m_albumDetail->isVisible())
-        {
-            m_albumDetail->foldDetail();
-            selectionModel()->clear();
-        }
+        foldAlbumDetail();
     }
 }

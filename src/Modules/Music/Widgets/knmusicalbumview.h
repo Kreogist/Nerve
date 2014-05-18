@@ -7,6 +7,7 @@ class QBoxLayout;
 class QLabel;
 class QMouseEvent;
 class QPaintEvent;
+//class QKeyEvent;
 class QPropertyAnimation;
 class QParallelAnimationGroup;
 class QTimeLine;
@@ -147,6 +148,7 @@ protected slots:
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
     int horizontalOffset() const;
     int verticalOffset() const;
     bool isIndexHidden(const QModelIndex &index) const;
@@ -169,6 +171,7 @@ private slots:
     void hideFirstItem();
 
 private:
+    void foldAlbumDetail();
     QRect itemRect(const QModelIndex &index) const;
     void updateParameters();
     void paintAlbum(QPainter *painter,
@@ -191,7 +194,7 @@ private:
                        *m_albumThrow;
     QParallelAnimationGroup *m_flyawayGroup;
     KNMusicAlbumDetail *m_albumDetail;
-    QModelIndex m_detailIndex;
+    QModelIndex m_detailIndex, m_pressedIndex;
     KNMusicAlbumDetailModel *m_detailModel;
     KNMusicAlbumModel *m_model;
 };

@@ -182,12 +182,12 @@ QTextCodec *KNGlobal::codecForCurrentLocale() const
     switch(QLocale::system().country())
     {
     case QLocale::China:
-        return QTextCodec::codecForName("GB18030");
     case QLocale::HongKong:
     case QLocale::Macau:
-        return QTextCodec::codecForName("Big5-HKSCS");
     case QLocale::Taiwan:
-        return QTextCodec::codecForName("Big5");
+        return QTextCodec::codecForName("GB18030");
+    case QLocale::Japan:
+        return QTextCodec::codecForName("Shift-JIS");
     default:
         return QTextCodec::codecForName("UTF-8");
     }
