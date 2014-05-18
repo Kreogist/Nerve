@@ -83,7 +83,8 @@ SOURCES += \
     Modules/Base/knstdlibheaderwidget.cpp \
     Modules/Music/Widgets/knmusicheaderwidget.cpp \
     Modules/Base/knlibheaderswitcher.cpp \
-    Modules/Base/knstdlibswitcher.cpp
+    Modules/Base/knstdlibswitcher.cpp \
+    Modules/Base/knstdlibheaderswitcher.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -155,7 +156,8 @@ HEADERS += \
     Modules/Base/knstdlibheaderwidget.h \
     Modules/Music/Widgets/knmusicheaderwidget.h \
     Modules/Base/knlibheaderswitcher.h \
-    Modules/Base/knstdlibswitcher.h
+    Modules/Base/knstdlibswitcher.h \
+    Modules/Base/knstdlibheaderswitcher.h
 
 RESOURCES += \
     res.qrc

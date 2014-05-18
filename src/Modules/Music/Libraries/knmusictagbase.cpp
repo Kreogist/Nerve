@@ -21,4 +21,5 @@ bool KNMusicTagBase::readTag(const QFile &mediaFile,
 QString KNMusicTagBase::textData(const int &key) const
 {
     Q_UNUSED(key);
+    return QString();
 }

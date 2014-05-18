@@ -5,6 +5,7 @@
 
 class KNPluginBase;
 class KNStdLibCategorySwitcher;
+class KNStdLibHeaderSwitcher;
 class KNGlobal;
 class QDataStream;
 class QCloseEvent;
@@ -26,6 +27,7 @@ private slots:
 
 private:
     KNStdLibCategorySwitcher *m_mainWidget;
+    KNStdLibHeaderSwitcher *m_headerWidget;
     KNGlobal *m_global;
     QString m_databaseFile;
 };
