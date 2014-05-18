@@ -28,26 +28,19 @@ QString KNMusicGlobal::getGenre(const QString &value) const
         //Ignore the bug.
         return value;
     }
-    QString resultValue=value;
+    QString resultValue=qPrintable(QString(value));
     if(resultValue.at(0)=='(')
     {
-        if(resultValue.at(resultValue.size()-1)==')')
+        int rightBracketIndex=resultValue.indexOf(')');
+        if(rightBracketIndex!=-1)
         {
             //Means it might be sth like: (24)
-            resultValue=resultValue.mid(1, resultValue.length()-2);
-            quint8 valueTest=(quint8)resultValue.toInt();
-            if(valueTest<m_genreList.size())
-            {
-                return m_genreList.at(valueTest);
-            }
-            return resultValue;
+            quint8 valueTest=(quint8)resultValue.mid(1, rightBracketIndex-1).toInt();
+            return valueTest<m_genreList.size()?
+                   m_genreList.at(valueTest):
+                   resultValue.mid(rightBracketIndex+1);
+
         }
-        int rightBracketIndex=resultValue.indexOf(")");
-        if(rightBracketIndex>0)
-        {
-            resultValue=resultValue.mid(rightBracketIndex+1);
-        }
-        return resultValue;
     }
     return resultValue;
 }
