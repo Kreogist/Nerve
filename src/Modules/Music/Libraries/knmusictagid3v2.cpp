@@ -49,10 +49,6 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
 QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
 {
     QByteArray content=value;
-    if(content.at(content.length()-1)==0)
-    {
-        content.remove(content.length()-1, 1);
-    }
     quint8 encoding=(quint8)(content.at(0));
     switch(encoding)
     {
@@ -65,12 +61,10 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         content.remove(0,1);
         if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
         {
-            content.remove(0,2);
             return m_beCodec->toUnicode(content).simplified();
         }
         if((quint8)content.at(0)==0xFF && (quint8)content.at(1)==0xFE)
         {
-            content.remove(0,2);
             return m_leCodec->toUnicode(content).simplified();
         }
         return QString::fromUtf8(content).simplified();
@@ -209,8 +203,8 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
             }
             rawPosition+=10;
             QByteArray frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
-            m_frameData.append(frameData);
             m_frameID.append(rawFrameID);
+            m_frameData.append(frameData);
             if(QString(rawFrameID)=="APIC")
             {
                 processAPIC(frameData);
