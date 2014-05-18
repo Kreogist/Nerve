@@ -19,5 +19,5 @@ void KNMusicAlbumDetailModel::setCategoryIndex(const QModelIndex &index)
 
 QString KNMusicAlbumDetailModel::getFilterText(const QModelIndex &index) const
 {
-    return m_artistModel->artistItem(index)->data(Qt::DisplayRole).toString();
+    return m_artistModel->filterText(index);
 }

@@ -9,6 +9,8 @@ class KNMusicAlbumModel : public KNMusicCategoryModel
 public:
     explicit KNMusicAlbumModel(QObject *parent = 0);
     bool isNoAlbumHidden() const;
+    void resetModel();
+    QString indexArtist(const QModelIndex &index) const;
 
 signals:
     void albumRemoved(const QModelIndex &index);
@@ -25,8 +27,15 @@ protected:
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
     QString artistName(const int &index) const;
+    void onActionRemoveRow(const int &index);
 
 private:
+    struct AlbumExtras
+    {
+        QString artist;
+        bool variousArtist;
+    };
+    QList<AlbumExtras> m_extraList;
     QString m_variousArtist;
 };
 

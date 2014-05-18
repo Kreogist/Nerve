@@ -526,13 +526,12 @@ void KNMusicAlbumView::selectCategoryItem(const QString &value)
         selectAlbum(model()->index(0,0));
         return;
     }
-    QList<QStandardItem *> albumSearch=m_model->findItems(value);
-    if(albumSearch.size()==0)
+    QModelIndex albumSearch=m_model->indexOf(value);
+    if(albumSearch.isValid())
     {
-        return;
+        scrollTo(albumSearch);
+        selectAlbum(albumSearch);
     }
-    scrollTo(albumSearch.at(0)->index());
-    selectAlbum(albumSearch.at(0)->index());
 }
 
 void KNMusicAlbumView::selectItem(const QModelIndex &index)
@@ -890,7 +889,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      m_model->data(index, Qt::UserRole).toString());
+                      m_model->indexArtist(index));
     painter->setPen(penBackup);
 }
 

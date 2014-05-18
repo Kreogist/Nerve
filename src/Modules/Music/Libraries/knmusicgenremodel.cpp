@@ -21,33 +21,22 @@ void KNMusicGenreModel::retranslate()
 void KNMusicGenreModel::retranslateAndSet()
 {
     retranslate();
-    QStandardItem *noArtistItem=item(0);
-    noArtistItem->setText(noCategoryText());
+    setData(index(0,0), noCategoryText(), Qt::DisplayRole);
 }
 
 void KNMusicGenreModel::updateImage(const int &index)
 {
-    QStandardItem *currentItem=item(index, 0);
-    QPixmap genreImage=m_musicGlobal->getGenreImage(currentItem->text());
-    if(genreImage.isNull())
-    {
-        currentItem->setIcon(m_noAlbumArtIcon);
-    }
-    else
-    {
-        currentItem->setIcon(genreImage);
-    }
+    MusicCategoryItem currentItem=m_detailList.at(index);
+    QPixmap genreImage=m_musicGlobal->getGenreImage(m_textList.at(index));
+    currentItem.decoration=genreImage.isNull()?m_noAlbumArtIcon:genreImage;
+    m_detailList.replace(index, currentItem);
 }
 
 QIcon KNMusicGenreModel::itemIcon(const int &index) const
 {
     QPixmap genreArt=m_musicGlobal->getGenreImage(m_sourceModel->item(index,
                                                                       KNMusicGlobal::Genre)->text());
-    if(genreArt.isNull())
-    {
-        return KNMusicCategoryModel::itemIcon(index);
-    }
-    return QIcon(genreArt);
+    return genreArt.isNull()?KNMusicCategoryModel::itemIcon(index):QIcon(genreArt);
 }
 
 QString KNMusicGenreModel::categoryName(const int &index) const

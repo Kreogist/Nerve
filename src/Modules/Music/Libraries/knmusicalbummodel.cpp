@@ -8,11 +8,27 @@ KNMusicAlbumModel::KNMusicAlbumModel(QObject *parent) :
     KNMusicCategoryModel(parent)
 {
     retranslateAndSet();
+    resetModel();
 }
 
 bool KNMusicAlbumModel::isNoAlbumHidden() const
 {
     return (m_noCategoryItemCount==0);
+}
+
+void KNMusicAlbumModel::resetModel()
+{
+    KNMusicCategoryModel::resetModel();
+    m_extraList.clear();
+
+    AlbumExtras currentExtras;
+    currentExtras.variousArtist=false;
+    m_extraList.append(currentExtras);
+}
+
+QString KNMusicAlbumModel::indexArtist(const QModelIndex &index) const
+{
+    return m_extraList.at(index.row()).artist;
 }
 
 void KNMusicAlbumModel::retranslate()
@@ -24,43 +40,43 @@ void KNMusicAlbumModel::retranslate()
 void KNMusicAlbumModel::retranslateAndSet()
 {
     retranslate();
-    QStandardItem *noArtistItem=item(0);
-    noArtistItem->setText(noCategoryText());
+    setData(index(0,0), noCategoryText(), Qt::DisplayRole);
 }
 
 void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
 {
     QString currentName=categoryName(index.row());
-    KNMusicArtistItem *currentAlbum;
     if(currentName.isEmpty())
     {
         m_noCategoryItemCount++;
         emit requireShowFirstItem();
         return;
     }
-    QList<QStandardItem *> searchResult=findItems(currentName);
+    int searchResult=m_textList.indexOf(currentName);
+    MusicCategoryItem currentAlbum;
+    AlbumExtras currentAlbumExtras;
     QString currentArtist=artistName(index.row());
-    if(searchResult.size()==0)
+    if(searchResult==-1)
     {
-        currentAlbum=new KNMusicArtistItem(currentName);
-        currentAlbum->setData(currentName, Qt::DisplayRole);
-        currentAlbum->setData(currentArtist, Qt::UserRole);
-        currentAlbum->setData(0, Qt::UserRole+1);
-        currentAlbum->setData(1, Qt::UserRole+2);
-        currentAlbum->setIconKey(m_sourceModel->itemArtworkKey(index.row()));
-        searchResult.append(currentAlbum);
-        appendRow(currentAlbum);
+        m_textList.append(currentName);
+        currentAlbum.songCount=1;
+        m_detailList.append(currentAlbum);
+        currentAlbumExtras.artist=currentArtist;
+        currentAlbumExtras.variousArtist=false;
+        m_extraList.append(currentAlbumExtras);
     }
     else
     {
-        currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.first());
-        currentAlbum->setData(currentAlbum->data(Qt::UserRole+2).toInt()+1,
-                              Qt::UserRole+2);
-        if(currentAlbum->data(Qt::UserRole+1).toInt() == 0 &&
-           currentAlbum->data(Qt::UserRole).toString() != currentArtist)
+        currentAlbum=m_detailList.at(searchResult);
+        currentAlbum.songCount++;
+        m_detailList.replace(searchResult, currentAlbum);
+        currentAlbumExtras=m_extraList.at(searchResult);
+        if(currentAlbumExtras.variousArtist==false &&
+           currentAlbumExtras.artist!=currentArtist)
         {
-            currentAlbum->setData(m_variousArtist, Qt::UserRole);
-            currentAlbum->setData(1, Qt::UserRole+1);
+            currentAlbumExtras.artist=m_variousArtist;
+            currentAlbumExtras.variousArtist=true;
+            m_extraList.replace(searchResult, currentAlbumExtras);
         }
     }
 }
@@ -77,90 +93,86 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
         }
         return;
     }
-    KNMusicArtistItem *currentAlbum;
-    QList<QStandardItem *> searchResult=findItems(currentName);
-    if(searchResult.size()==0)
+    int searchResult=m_textList.indexOf(currentName);
+    if(searchResult==-1)
     {
         return;
     }
-    currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.first());
-    int currentAlbumSong=currentAlbum->data(Qt::UserRole+2).toInt();
-    if(currentAlbumSong==1)
+    MusicCategoryItem currentAlbum=m_detailList.at(searchResult);
+    if(currentAlbum.songCount==1)
     {
-        emit albumRemoved(currentAlbum->index());
-        removeRow(currentAlbum->row());
+        emit albumRemoved(this->index(searchResult, 0));
+        removeRow(searchResult);
     }
     else
     {
-        currentAlbum->setData(currentAlbumSong-1, Qt::UserRole+2);
+        currentAlbum.songCount--;
+        m_detailList.replace(searchResult, currentAlbum);
     }
 }
 
 void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
 {
     QString currentName=categoryName(index.row());
-    KNMusicArtistItem *currentAlbum;
     if(currentName.isEmpty())
     {
         m_noCategoryItemCount++;
         emit requireShowFirstItem();
         return;
     }
-    QList<QStandardItem *> searchResult=findItems(currentName);
+    int searchResult=m_textList.indexOf(currentName);
+    MusicCategoryItem currentAlbum;
+    AlbumExtras currentAlbumExtras;
     QString currentArtist=artistName(index.row());
-    if(searchResult.size()==0)
+    if(searchResult==-1)
     {
-        currentAlbum=new KNMusicArtistItem(currentName);
-        currentAlbum->setData(currentName, Qt::DisplayRole);
-        currentAlbum->setData(currentArtist, Qt::UserRole);
-        currentAlbum->setData(0, Qt::UserRole+1);
-        currentAlbum->setData(1, Qt::UserRole+2);
-        currentAlbum->setIconKey(m_sourceModel->itemArtworkKey(index.row()));
-        searchResult.append(currentAlbum);
-        appendRow(currentAlbum);
+        m_textList.append(currentName);
+        currentAlbum.songCount=1;
+        currentAlbum.iconKey=m_sourceModel->itemArtworkKey(index.row());
+        m_detailList.append(currentAlbum);
+        currentAlbumExtras.artist=currentArtist;
+        currentAlbumExtras.variousArtist=false;
+        m_extraList.append(currentAlbumExtras);
     }
     else
     {
-        currentAlbum=static_cast<KNMusicArtistItem *>(searchResult.first());
-        currentAlbum->setData(currentAlbum->data(Qt::UserRole+2).toInt()+1,
-                              Qt::UserRole+2);
-        if(currentAlbum->data(Qt::UserRole+1).toInt() == 0 &&
-           currentAlbum->data(Qt::UserRole).toString() != currentArtist)
+        currentAlbum=m_detailList.at(searchResult);
+        currentAlbum.songCount++;
+        m_detailList.replace(searchResult, currentAlbum);
+        currentAlbumExtras=m_extraList.at(searchResult);
+        if(currentAlbumExtras.variousArtist==false &&
+           currentAlbumExtras.artist!=currentArtist)
         {
-            currentAlbum->setData(m_variousArtist, Qt::UserRole);
-            currentAlbum->setData(1, Qt::UserRole+1);
+            currentAlbumExtras.artist=m_variousArtist;
+            currentAlbumExtras.variousArtist=true;
+            m_extraList.replace(searchResult, currentAlbumExtras);
         }
     }
 }
 
 void KNMusicAlbumModel::updateImage(const int &index)
 {
-    KNMusicArtistItem *currentAlbum=
-            static_cast<KNMusicArtistItem *>(item(index));
-    QString iconKey=currentAlbum->iconKey();
-    if(iconKey.isEmpty())
-    {
-        currentAlbum->setIcon(m_noAlbumArtIcon);
-    }
-    else
-    {
-        currentAlbum->setIcon(QPixmap::fromImage(m_sourceModel->artworkFromKey(iconKey)));
-    }
+    MusicCategoryItem currentItem=m_detailList.at(index);
+    currentItem.decoration=currentItem.iconKey.isEmpty()?
+                           m_noAlbumArtIcon:
+                           QPixmap::fromImage(m_sourceModel->artworkFromKey(currentItem.iconKey));
+    m_detailList.replace(index, currentItem);
 }
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const
 {
     QPixmap albumArt=QPixmap::fromImage(m_sourceModel->artwork(index));
-    if(albumArt.isNull())
-    {
-        return KNMusicCategoryModel::itemIcon(index);
-    }
-    return QIcon(albumArt);
+    return albumArt.isNull()?KNMusicCategoryModel::itemIcon(index):QIcon(albumArt);
 }
 
 QString KNMusicAlbumModel::artistName(const int &index) const
 {
     return m_sourceModel->itemText(index, KNMusicGlobal::Artist);
+}
+
+void KNMusicAlbumModel::onActionRemoveRow(const int &index)
+{
+    m_extraList.removeAt(index);
 }
 
 QString KNMusicAlbumModel::categoryName(const int &index) const

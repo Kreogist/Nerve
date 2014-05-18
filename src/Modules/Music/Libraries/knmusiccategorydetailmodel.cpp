@@ -38,7 +38,7 @@ void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
 
 QString KNMusicCategoryDetailModel::getFilterText(const QModelIndex &index) const
 {
-    return m_artistModel->filterString(index);
+    return m_artistModel->filterText(index);
 }
 
 bool KNMusicCategoryDetailModel::lessThan(const QModelIndex &left,
