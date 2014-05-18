@@ -2,8 +2,6 @@
 
 #include <QList>
 #include <QFile>
-#include <QEvent>
-#include <QKeyEvent>
 #include <QDir>
 
 #include <QDebug>
@@ -36,7 +34,6 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
-    m_musicViewer->installEventFilter(this);
     connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
             this, &KNMusicPlugin::onActionOpenUrl);
 
@@ -108,17 +105,6 @@ void KNMusicPlugin::readDatabase()
 {
     ;
 }
-
-bool KNMusicPlugin::eventFilter(QObject *watched, QEvent *event)
-{
-    if(event->type()==QEvent::KeyRelease)
-    {
-        QKeyEvent *keyEvent=static_cast<QKeyEvent *>(event);
-    }
-    return KNPluginBase::eventFilter(watched, event);
-}
-
-
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
                                     const QModelIndex &index,

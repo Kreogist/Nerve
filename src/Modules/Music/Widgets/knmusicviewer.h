@@ -9,6 +9,7 @@
 
 #include "../../Base/knstdlibviewer.h"
 
+class QEvent;
 class QDragEnterEvent;
 class QDropEvent;
 class KNLibSearcher;
@@ -31,6 +32,7 @@ public:
     explicit KNMusicViewer(QWidget *parent = 0);
     void setDefaultHeader();
     void setModel(KNMusicModel *model);
+    bool eventFilter(QObject *watched, QEvent *event);
 
 signals:
     void requireShowContextMenu(const QPoint &position,

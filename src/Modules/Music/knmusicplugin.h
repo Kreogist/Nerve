@@ -7,7 +7,6 @@
 
 #include "../Base/knpluginbase.h"
 
-class QEvent;
 class KNGlobal;
 class KNMusicDatabase;
 class KNMusicModel;
@@ -26,7 +25,6 @@ public:
     void applyPlugin();
     void writeDatabase();
     void readDatabase();
-    bool eventFilter(QObject * watched, QEvent * event);
 
 signals:
 

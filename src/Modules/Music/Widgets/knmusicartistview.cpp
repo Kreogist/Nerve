@@ -147,6 +147,11 @@ void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
 
 void KNMusicArtistView::selectCategoryItem(const QString &value)
 {
+    if(value.isEmpty())
+    {
+        m_artistList->selectionModel()->setCurrentIndex(m_artistModel->index(0,0),
+                                                        QItemSelectionModel::SelectCurrent);
+    }
     QList<QStandardItem *> artistSearch=m_artistModel->findItems(value);
     if(artistSearch.size()==0)
     {
@@ -154,6 +159,8 @@ void KNMusicArtistView::selectCategoryItem(const QString &value)
     }
     m_artistList->selectionModel()->setCurrentIndex(artistSearch.at(0)->index(),
                                                     QItemSelectionModel::SelectCurrent);
+    m_artistList->scrollTo(artistSearch.at(0)->index(),
+                           QAbstractItemView::PositionAtCenter);
 }
 
 void KNMusicArtistView::selectItem(const QModelIndex &index)

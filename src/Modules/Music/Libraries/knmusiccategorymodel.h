@@ -18,6 +18,7 @@ public:
     void resetModel();
     QString noCategoryText() const;
     void setNoCategoryText(const QString &noCategoryText);
+    QString filterString(const QModelIndex &index) const;
 
 signals:
     void requireHideFirstItem();

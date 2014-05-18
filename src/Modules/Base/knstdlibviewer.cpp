@@ -45,3 +45,13 @@ void KNStdLibViewer::setSearcher(KNLibSearcher *searcher)
 {
     m_searcher=searcher;
 }
+
+void KNStdLibViewer::moveLeft()
+{
+    m_category->moveLeft();
+}
+
+void KNStdLibViewer::moveRight()
+{
+    m_category->moveRight();
+}

@@ -1,6 +1,8 @@
 #include <QAbstractItemModel>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QEvent>
+#include <QKeyEvent>
 #include <QMimeData>
 #include <QModelIndex>
 
@@ -119,6 +121,29 @@ void KNMusicViewer::setModel(KNMusicModel *model)
     m_albumView->resetHeader();
     m_genreView->resetHeader();
     m_sourceModel=model;
+}
+
+bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
+{
+    /*if(event->type()==QEvent::KeyRelease)
+    {
+        QKeyEvent *releasedKey=static_cast<QKeyEvent *>(event);
+        if(releasedKey->modifiers()==Qt::ControlModifier)
+        {
+            switch(releasedKey->key())
+            {
+            case Qt::Key_Left:
+                moveLeft();
+                return true;
+            case Qt::Key_Right:
+                moveRight();
+                return true;
+            default:
+                return KNStdLibViewer::eventFilter(watched, event);
+            }
+        }
+    }*/
+    return KNStdLibViewer::eventFilter(watched, event);
 }
 
 void KNMusicViewer::retranslate()

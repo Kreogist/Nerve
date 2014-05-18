@@ -196,3 +196,8 @@ void KNMusicCategoryModel::setNoCategoryText(const QString &noCategoryText)
 {
     m_noCategoryText = noCategoryText;
 }
+
+QString KNMusicCategoryModel::filterString(const QModelIndex &index) const
+{
+    return data(index, Qt::UserRole).toString();
+}

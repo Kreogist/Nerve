@@ -90,6 +90,30 @@ void KNStdLibViewerCategory::setCurrentIndex(const int &index)
     };
 }
 
+void KNStdLibViewerCategory::moveLeft()
+{
+    if(m_currentCategory==0)
+    {
+        setCurrentIndex(m_categories.size()-1);
+    }
+    else
+    {
+        setCurrentIndex(m_currentCategory-1);
+    }
+}
+
+void KNStdLibViewerCategory::moveRight()
+{
+    if(m_currentCategory==m_categories.size()-1)
+    {
+        setCurrentIndex(0);
+    }
+    else
+    {
+        setCurrentIndex(m_currentCategory+1);
+    }
+}
+
 void KNStdLibViewerCategory::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
