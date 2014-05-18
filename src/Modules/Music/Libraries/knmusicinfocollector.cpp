@@ -107,111 +107,32 @@ void KNMusicInfoCollector::resetInfoCache()
 
 void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
 {
-    m_mediaInfo->analysisFile(value);
+    m_mediaInfo->quickAnalysisFile(value);
     QString mediaInfoData=m_mediaInfo->originalData();
     if(mediaInfoData.isEmpty())
     {
         return;
     }
-    QStringList itemLines, basicInfo;
-#ifdef Q_OS_WIN32
-    itemLines=mediaInfoData.split("\n");
-#endif
-#ifdef Q_OS_MACX
-    itemLines=mediaInfoData.split("\r");
-#endif
-#ifdef Q_OS_LINUX
-    itemLines=mediaInfoData.split("\n");
-#endif
-    QMap<QString, QString> basicInfoData;
-    QString currentItem, itemCaption;
-    int colonPosition, basicInfoIndex;
-    bool audioBlock=false;
-    basicInfo<<"Duration"
-             <<"Bit rate"
-             <<"Sampling rate";
-    for(int i=0; i<itemLines.size(); i++)
+    QStringList itemLines=mediaInfoData.split('\n');
+    if(itemLines.size()==3)
     {
-        currentItem=itemLines.at(i).simplified();
-        if(currentItem.isEmpty())
+        m_duration=itemLines.at(0).toInt()/1000;
+        if(m_duration!=0)
         {
-            continue;
+            int minuate=m_duration/60, second=m_duration-minuate*60;
+            setMediaData(KNMusicGlobal::Time, QString::number(minuate) + ":" + QString::number(second));
         }
-        colonPosition=currentItem.indexOf(':');
-        if(colonPosition==-1)
+        m_bitRate=itemLines.at(1).toInt()/1000;
+        if(m_bitRate!=0)
         {
-            audioBlock=(currentItem=="Audio");
-            continue;
+            setMediaData(KNMusicGlobal::BitRate, itemLines.at(1)+" Kbps");
         }
-        if(audioBlock)
+        m_samplingRate=itemLines.at(2).toInt();
+        if(m_samplingRate!=0)
         {
-            itemCaption=currentItem.left(colonPosition).simplified();
-            basicInfoIndex=basicInfo.indexOf(itemCaption);
-            if(basicInfoIndex!=-1)
-            {
-                basicInfoData[basicInfo.takeAt(basicInfoIndex)]=
-                        currentItem.mid(colonPosition+1).simplified();
-            }
+            setMediaData(KNMusicGlobal::SampleRate, itemLines.at(2)+" Hz");
         }
     }
-
-    QString rawInfoData;
-
-    //Parse the datas.
-    rawInfoData=basicInfoData["Duration"];
-    int hourPos=rawInfoData.indexOf("h"),
-        minutePos=rawInfoData.indexOf("mn"),
-        secondPos=rawInfoData.indexOf("s"),
-        hour, minute, second;
-    if(hourPos==-1)
-    {
-        if(minutePos==-1)
-        {
-            //Too short.
-            m_duration=rawInfoData.left(secondPos).toInt();
-            setMediaData(KNMusicGlobal::Time, "0:"+QString::number(m_duration));
-        }
-        else
-        {
-            minute=rawInfoData.left(minutePos).toInt();
-            second=rawInfoData.mid(minutePos+3, secondPos-minutePos-3).toInt();
-            m_duration=minute*60+second;
-            setMediaData(KNMusicGlobal::Time, QString::number(minute)+
-                                              ":"+
-                                              QString::number(second));
-        }
-    }
-    else
-    {
-        //So long.
-        hour=rawInfoData.left(hourPos).toInt();
-        minute=rawInfoData.mid(hourPos+2, minutePos-hourPos-2).toInt();
-        second=rawInfoData.mid(minutePos+3, secondPos-minutePos-3).toInt();
-        //Calculate minuate
-        m_duration=hour*60+minute;
-        setMediaData(KNMusicGlobal::Time, QString::number(m_duration)+
-                                          ":"+
-                                          QString::number(second));
-        //Calculate second
-        m_duration=m_duration*60+second;
-    }
-
-    QString numberData;
-    //Parse the bit rate.
-    rawInfoData=basicInfoData["Bit rate"];
-    secondPos=rawInfoData.lastIndexOf(" ");
-    numberData=rawInfoData.left(secondPos);
-    numberData.remove(' ');
-    setMediaData(KNMusicGlobal::BitRate, numberData+" "+rawInfoData.mid(secondPos+1));
-    m_bitRate=numberData.toFloat();
-
-    //Parse the sampling rate.
-    rawInfoData=basicInfoData["Sampling rate"];
-    secondPos=rawInfoData.lastIndexOf(" ");
-    numberData=rawInfoData.left(secondPos);
-    numberData.remove(' ');
-    setMediaData(KNMusicGlobal::SampleRate, numberData+" "+rawInfoData.mid(secondPos+1));
-    m_samplingRate=numberData.toFloat();
 }
 
 void KNMusicInfoCollector::readID3v1Tag(QFile &mediaFile,

@@ -13,12 +13,7 @@ KNMusicGlobal *KNMusicGlobal::instance()
 
 QString KNMusicGlobal::getGenre(const int &index) const
 {
-    quint8 genreIndex=(quint8)index;
-    if(genreIndex<m_genreList.size())
-    {
-        return m_genreList.at(genreIndex);
-    }
-    return QString("Unknown");
+    return index>0&&index<m_genreList.size()?m_genreList.at(index):"Unknown";
 }
 
 QString KNMusicGlobal::getGenre(const QString &value) const
