@@ -11,6 +11,7 @@ public:
     bool isNoAlbumHidden() const;
     void resetModel();
     QString indexArtist(const QModelIndex &index) const;
+    QString indexYear(const QModelIndex &index) const;
 
 signals:
     void albumRemoved(const QModelIndex &index);
@@ -26,7 +27,8 @@ protected:
     void updateImage(const int &index);
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
-    QString artistName(const int &index) const;
+    QString artistFromSource(const int &index) const;
+    QString yearFromSource(const int &index) const;
     void onActionRemoveRow(const int &index);
 
 private:
@@ -34,6 +36,7 @@ private:
     {
         QString artist;
         bool variousArtist;
+        QString year;
     };
     QList<AlbumExtras> m_extraList;
     QString m_variousArtist;

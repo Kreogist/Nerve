@@ -122,10 +122,10 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
             int minuate=m_duration/60, second=m_duration-minuate*60;
             setMediaData(KNMusicGlobal::Time, QString::number(minuate) + ":" + QString::number(second));
         }
-        m_bitRate=itemLines.at(1).toInt()/1000;
+        m_bitRate=itemLines.at(1).toInt();
         if(m_bitRate!=0)
         {
-            setMediaData(KNMusicGlobal::BitRate, itemLines.at(1)+" Kbps");
+            setMediaData(KNMusicGlobal::BitRate, QString::number(m_bitRate/1000)+" Kbps");
         }
         m_samplingRate=itemLines.at(2).toInt();
         if(m_samplingRate!=0)

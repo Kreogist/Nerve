@@ -170,6 +170,12 @@ int KNMusicAlbumInfoDetail::minimalExpandedHeight() const
     return m_minimalExpandedHeight;
 }
 
+void KNMusicAlbumInfoDetail::setCaption(const int &index,
+                                        const QString &value)
+{
+    m_albumInfo[index]->setText(value);
+}
+
 void KNMusicAlbumInfoDetail::retranslate()
 {
     m_songCountText=tr("1 song");
@@ -278,6 +284,12 @@ void KNMusicAlbumDetail::setAlbumName(const QString &name)
 void KNMusicAlbumDetail::setArtistName(const QString &name)
 {
     m_songPanel->setArtistName(name);
+}
+
+void KNMusicAlbumDetail::setYear(const QString &value)
+{
+    m_infoPanel->setCaption(KNMusicAlbumInfoDetail::Year,
+                            value);
 }
 
 void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
@@ -522,15 +534,15 @@ void KNMusicAlbumView::selectCategoryItem(const QString &value)
 {
     if(value.isEmpty())
     {
-        scrollTo(model()->index(0,0));
-        selectAlbum(model()->index(0,0));
+        expandAlbumDetails(model()->index(0,0));
+        scrollTo(model()->index(0,0), QAbstractItemView::PositionAtTop);
         return;
     }
     QModelIndex albumSearch=m_model->indexOf(value);
     if(albumSearch.isValid())
     {
-        scrollTo(albumSearch);
-        selectAlbum(albumSearch);
+        expandAlbumDetails(albumSearch);
+        scrollTo(albumSearch, QAbstractItemView::PositionAtCenter);
     }
 }
 
@@ -684,7 +696,7 @@ QModelIndex KNMusicAlbumView::moveCursor(QAbstractItemView::CursorAction cursorA
     default:
         break;
     }*/
-    selectAlbum(movedIndex);
+    //selectAlbum(movedIndex);
     viewport()->update();
     return current;
 }
@@ -720,6 +732,11 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      QAbstractItemView::mouseReleaseEvent(e);
      if(m_pressedIndex==indexAt(e->pos()))
      {
+         if(m_pressedIndex==m_detailIndex)
+         {
+             foldAlbumDetail();
+             return;
+         }
          selectAlbum(m_pressedIndex);
          viewport()->update();
      }
@@ -730,7 +747,7 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      }*/
 }
 
-void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
+void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
 {
     m_albumDetail->hide();
     m_detailIndex=index;
@@ -739,7 +756,8 @@ void KNMusicAlbumView::onActionAlbumClicked(const QModelIndex &index)
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
     m_detailModel->setCategoryIndex(index);
     m_albumDetail->setAlbumName(m_model->data(index).toString());
-    m_albumDetail->setArtistName(m_model->data(index, Qt::UserRole).toString());
+    m_albumDetail->setArtistName(m_model->indexArtist(index));
+    m_albumDetail->setYear(m_model->indexYear(index));
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
@@ -912,14 +930,7 @@ void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
 {
     if(index.isValid())
     {
-        if(index==m_detailIndex)
-        {
-            foldAlbumDetail();
-        }
-        else
-        {
-            onActionAlbumClicked(index);
-        }
+        expandAlbumDetails(index);
     }
     else
     {

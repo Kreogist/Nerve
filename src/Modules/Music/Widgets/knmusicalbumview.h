@@ -50,12 +50,12 @@ public:
     explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
     enum AlbumInfoData
     {
-        Year,
         SongCount,
+        Year,
         AlbumInfoDataCount
     };
     int minimalExpandedHeight() const;
-    void setArtistName(const QString &value);
+    void setCaption(const int &index, const QString &value);
 
 signals:
     void changeInfoVisible(const bool &visible);
@@ -86,6 +86,7 @@ public:
                      const QSize &size);
     void setAlbumName(const QString &name);
     void setArtistName(const QString &name);
+    void setYear(const QString &value);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
     void resetHeader();
@@ -161,7 +162,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e);
 
 private slots:
-    void onActionAlbumClicked(const QModelIndex &index);
+    void expandAlbumDetails(const QModelIndex &index);
     void onActionHideAlbumDetail();
     void onActionHideAlbumDetailFinished();
     void onActionAlbumRemoved(const QModelIndex &index);

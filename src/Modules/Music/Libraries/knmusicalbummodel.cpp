@@ -31,6 +31,11 @@ QString KNMusicAlbumModel::indexArtist(const QModelIndex &index) const
     return m_extraList.at(index.row()).artist;
 }
 
+QString KNMusicAlbumModel::indexYear(const QModelIndex &index) const
+{
+    return m_extraList.at(index.row()).year;
+}
+
 void KNMusicAlbumModel::retranslate()
 {
     setNoCategoryText(tr("No Album"));
@@ -55,7 +60,7 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     int searchResult=m_textList.indexOf(currentName);
     MusicCategoryItem currentAlbum;
     AlbumExtras currentAlbumExtras;
-    QString currentArtist=artistName(index.row());
+    QString currentArtist=artistFromSource(index.row());
     if(searchResult==-1)
     {
         m_textList.append(currentName);
@@ -123,7 +128,8 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
     int searchResult=m_textList.indexOf(currentName);
     MusicCategoryItem currentAlbum;
     AlbumExtras currentAlbumExtras;
-    QString currentArtist=artistName(index.row());
+    QString currentArtist=artistFromSource(index.row()),
+            currentYear=yearFromSource(index.row());
     if(searchResult==-1)
     {
         m_textList.append(currentName);
@@ -132,6 +138,7 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
         m_detailList.append(currentAlbum);
         currentAlbumExtras.artist=currentArtist;
         currentAlbumExtras.variousArtist=false;
+        currentAlbumExtras.year=currentYear;
         m_extraList.append(currentAlbumExtras);
     }
     else
@@ -145,6 +152,12 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
         {
             currentAlbumExtras.artist=m_variousArtist;
             currentAlbumExtras.variousArtist=true;
+            m_extraList.replace(searchResult, currentAlbumExtras);
+        }
+        if(currentAlbumExtras.year.isEmpty() &&
+                !currentYear.isEmpty())
+        {
+            currentAlbumExtras.year=currentYear;
             m_extraList.replace(searchResult, currentAlbumExtras);
         }
     }
@@ -165,9 +178,14 @@ QIcon KNMusicAlbumModel::itemIcon(const int &index) const
     return albumArt.isNull()?KNMusicCategoryModel::itemIcon(index):QIcon(albumArt);
 }
 
-QString KNMusicAlbumModel::artistName(const int &index) const
+QString KNMusicAlbumModel::artistFromSource(const int &index) const
 {
     return m_sourceModel->itemText(index, KNMusicGlobal::Artist);
+}
+
+QString KNMusicAlbumModel::yearFromSource(const int &index) const
+{
+    return m_sourceModel->itemText(index, KNMusicGlobal::Year);
 }
 
 void KNMusicAlbumModel::onActionRemoveRow(const int &index)

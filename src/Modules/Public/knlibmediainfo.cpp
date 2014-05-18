@@ -78,8 +78,17 @@ void KNLibMediaInfo::deepAnalysisFile(const QString &filePath)
 
 void KNLibMediaInfo::quickAnalysisFile(const QString &filePath)
 {
-#ifdef Q_OS_UNIX
     MediaInfo MI;
+#ifdef Q_OS_WIN32
+    MI.Open(filePath.toStdWString());
+    MI.Option(__T("inform"), __T("Audio;%Duration%"));
+    m_originalData=QString::fromWCharArray(MI.Inform().c_str())+"\n";
+    MI.Option(__T("inform"), __T("Audio;%BitRate%"));
+    m_originalData+=QString::fromWCharArray(MI.Inform().c_str())+"\n";
+    MI.Option(__T("inform"), __T("Audio;%SamplingRate%"));
+    m_originalData+=QString::fromWCharArray(MI.Inform().c_str());
+#endif
+#ifdef Q_OS_UNIX
     MI.Open(filePath.toStdString().c_str());
     MI.Option("inform", "Audio;%Duration%");
     m_originalData=QString(MI.Inform().c_str())+"\n";
@@ -87,8 +96,8 @@ void KNLibMediaInfo::quickAnalysisFile(const QString &filePath)
     m_originalData+=QString(MI.Inform().c_str())+"\n";
     MI.Option("inform", "Audio;%SamplingRate%");
     m_originalData+=MI.Inform().c_str();
-    MI.Close();
 #endif
+    MI.Close();
 }
 
 QString KNLibMediaInfo::originalData() const
