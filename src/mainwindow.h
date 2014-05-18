@@ -15,8 +15,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
 
 signals:
-    void requireReadData();
-    void requireWriteData();
 
 public slots:
     void addPlugin(KNPluginBase *plugin);
@@ -27,8 +25,6 @@ protected:
 private slots:
 
 private:
-    void readDatabase();
-    void writeDatabase();
     KNStdLibCategorySwitcher *m_mainWidget;
     KNGlobal *m_global;
     QString m_databaseFile;

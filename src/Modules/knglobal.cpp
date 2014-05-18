@@ -41,6 +41,7 @@ KNGlobal::KNGlobal() :
     m_storageUnit[2]="MB";
     m_storageUnit[3]="GB";
     m_storageUnit[4]="TB";
+    m_clipboard=QApplication::clipboard();
     m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library"));
     QDir libraryCheck(m_libraryPath);
     if(!libraryCheck.exists())
@@ -164,7 +165,7 @@ void KNGlobal::copyFileToClipboard(const QStringList &files)
         fileUrlList.append(currentUrl);
     }
     fileData.setUrls(fileUrlList);
-    QApplication::clipboard()->setMimeData(&fileData);
+    m_clipboard->setMimeData(&fileData);
 }
 
 void KNGlobal::copyTextToClipboard(const QString &text)

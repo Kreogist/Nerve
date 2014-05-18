@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QTextCodec>
 
+class QClipboard;
 class KNGlobal : public QObject
 {
     Q_OBJECT
@@ -39,6 +40,7 @@ private:
     static KNGlobal *m_instance;
     QString m_storageUnit[5], m_libraryPath;
     QWidget *m_mainWindow;
+    QClipboard *m_clipboard;
 };
 
 #endif // KNGLOBAL_H

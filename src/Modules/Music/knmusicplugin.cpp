@@ -12,6 +12,7 @@
 #include "Libraries/knmusicsearcher.h"
 #include "Libraries/knmusicdatabase.h"
 #include "Widgets/knmusicdetailinfo.h"
+#include "Widgets/knmusicheaderwidget.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
 
@@ -36,6 +37,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicViewer->setModel(m_model);
     connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
             this, &KNMusicPlugin::onActionOpenUrl);
+
+    m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
@@ -94,6 +97,7 @@ void KNMusicPlugin::applyPlugin()
     emit requireAddCategory("Music",
                             QPixmap(),
                             m_musicViewer);
+    emit requireAddHeader(m_headerWidget);
 }
 
 void KNMusicPlugin::writeDatabase()

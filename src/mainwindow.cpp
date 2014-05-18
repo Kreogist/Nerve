@@ -25,33 +25,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
     addPlugin(musicPlugin);
-
-    readDatabase();
 }
 
 void MainWindow::addPlugin(KNPluginBase *plugin)
 {
     connect(plugin, &KNPluginBase::requireAddCategory,
             m_mainWidget, &KNStdLibCategorySwitcher::addCategory);
-    connect(this, &MainWindow::requireReadData,
-            plugin, &KNPluginBase::readDatabase);
-    connect(this, &MainWindow::requireWriteData,
-            plugin, &KNPluginBase::writeDatabase);
     plugin->applyPlugin();
-}
-
-void MainWindow::readDatabase()
-{
-    emit requireReadData();
-}
-
-void MainWindow::writeDatabase()
-{
-    emit requireWriteData();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    writeDatabase();
     event->accept();
 }

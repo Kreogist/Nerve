@@ -21,10 +21,11 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setMouseTracking(true);
     setUniformRowHeights(true);
     setSortingEnabled(true);
+    setAllColumnsShowFocus(true);
     setAlternatingRowColors(true);
+    //setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setAllColumnsShowFocus(true);
 
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);
@@ -56,7 +57,7 @@ void KNMusicListViewBase::resetHeader()
     setHeaderAlignment(KNMusicGlobal::Size, Qt::AlignRight);
     connect(header(), &QHeaderView::sortIndicatorChanged,
             this, &KNMusicListViewBase::onActionSort);
-    /*for(int i=KNMusicGlobal::Name+1;
+    for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
     {
@@ -66,7 +67,7 @@ void KNMusicListViewBase::resetHeader()
     setColumnHidden(KNMusicGlobal::Artist, false);
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);*/
+    setColumnHidden(KNMusicGlobal::Rating, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);

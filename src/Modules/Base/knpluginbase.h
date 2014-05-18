@@ -16,10 +16,9 @@ signals:
     void requireAddCategory(const QString &title,
                             const QPixmap &icon,
                             QWidget *widget);
+    void requireAddHeader(QWidget *widget);
 
 public slots:
-    virtual void writeDatabase();
-    virtual void readDatabase();
 
 };
 

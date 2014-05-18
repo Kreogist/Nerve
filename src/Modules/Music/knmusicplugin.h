@@ -9,6 +9,7 @@
 
 class KNGlobal;
 class KNMusicDatabase;
+class KNMusicHeaderWidget;
 class KNMusicModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
@@ -49,6 +50,7 @@ private:
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
     KNMusicDatabase *m_database;
+    KNMusicHeaderWidget *m_headerWidget;
 
     QThread m_searcherThread,
             m_collectThread,

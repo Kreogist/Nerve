@@ -78,7 +78,12 @@ SOURCES += \
     Modules/Base/knlibdatabase.cpp \
     Modules/Base/knstdlibdatabase.cpp \
     Modules/Music/Libraries/knmusicdatabase.cpp \
-    Modules/Base/knlibhashpixmaplist.cpp
+    Modules/Base/knlibhashpixmaplist.cpp \
+    Modules/Base/knlibheaderwidget.cpp \
+    Modules/Base/knstdlibheaderwidget.cpp \
+    Modules/Music/Widgets/knmusicheaderwidget.cpp \
+    Modules/Base/knlibheaderswitcher.cpp \
+    Modules/Base/knstdlibswitcher.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -145,7 +150,12 @@ HEADERS += \
     Modules/Base/knlibdatabase.h \
     Modules/Base/knstdlibdatabase.h \
     Modules/Music/Libraries/knmusicdatabase.h \
-    Modules/Base/knlibhashpixmaplist.h
+    Modules/Base/knlibhashpixmaplist.h \
+    Modules/Base/knlibheaderwidget.h \
+    Modules/Base/knstdlibheaderwidget.h \
+    Modules/Music/Widgets/knmusicheaderwidget.h \
+    Modules/Base/knlibheaderswitcher.h \
+    Modules/Base/knstdlibswitcher.h
 
 RESOURCES += \
     res.qrc
