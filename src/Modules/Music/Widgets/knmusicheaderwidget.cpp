@@ -29,3 +29,8 @@ void KNMusicHeaderWidget::retranslateAndSet()
     retranslate();
     m_searchBox->setPlaceHolderText(m_searchPlaceHolder);
 }
+
+void KNMusicHeaderWidget::setSearchFocus()
+{
+    m_searchBox->setSearchFocus();
+}

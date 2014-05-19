@@ -42,6 +42,7 @@ class KNSearchBox : public QWidget
 public:
     explicit KNSearchBox(QWidget *parent = 0);
     void setPlaceHolderText(const QString &text);
+    void setSearchFocus();
 
 signals:
     void editingFinished();

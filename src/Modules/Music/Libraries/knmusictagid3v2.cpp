@@ -15,6 +15,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_isoCodec=QTextCodec::codecForName("GB18030");
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
+    m_utf8Codec=QTextCodec::codecForName("UTF-8");
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
 
     m_frames[Name           ][0]="TIT2";
@@ -50,15 +51,14 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
 {
     QByteArray content=value;
     quint8 encoding=(quint8)(content.at(0));
+    content.remove(0,1);
     switch(encoding)
     {
     case 0:
         //ISO-8859-1
-        content.remove(0,1);
         return m_isoCodec->toUnicode(content).simplified();
     case 1:
         //UTF-16 LE/BE
-        content.remove(0,1);
         if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
         {
             return m_beCodec->toUnicode(content).simplified();
@@ -68,6 +68,12 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
             return m_leCodec->toUnicode(content).simplified();
         }
         return QString::fromUtf8(content).simplified();
+    case 2:
+        //UTF-16 BE without BOM
+        return m_beCodec->toUnicode(content).simplified();
+    case 3:
+        //UTF-8
+        return m_utf8Codec->toUnicode(content).simplified();
     default:
         return m_localCodec->toUnicode(content).simplified();
     }

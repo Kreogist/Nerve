@@ -7,6 +7,7 @@
 
 #include "../Base/knpluginbase.h"
 
+class QAction;
 class KNGlobal;
 class KNMusicDatabase;
 class KNMusicHeaderWidget;
@@ -41,6 +42,7 @@ private slots:
     void onActionGetInfo(const QString &filePath);
 
 private:
+    void createShortcuts();
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
     KNMusicModel *m_model;

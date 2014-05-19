@@ -1,5 +1,7 @@
 #include "../knglobal.h"
 
+#include <QAction>
+#include <QKeySequence>
 #include <QList>
 #include <QFile>
 #include <QDir>
@@ -65,6 +67,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_model->setInfoCollectorManager(m_infoCollectManager);
 
     m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+
+    createShortcuts();
 
     m_modelThread.start();
     m_collectThread.start();
@@ -132,4 +136,13 @@ void KNMusicPlugin::onActionGetInfo(const QString &filePath)
 {
     m_detailsDialog->setFilePath(filePath);
     m_detailsDialog->show();
+}
+
+void KNMusicPlugin::createShortcuts()
+{
+    QAction *searchShortcut=new QAction(m_musicViewer);
+    searchShortcut->setShortcut(QKeySequence::Find);
+    connect(searchShortcut, SIGNAL(triggered()),
+            m_headerWidget, SLOT(setSearchFocus()));
+    m_musicViewer->addAction(searchShortcut);
 }

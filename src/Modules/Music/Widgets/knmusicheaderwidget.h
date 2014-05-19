@@ -17,6 +17,7 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void setSearchFocus();
 
 private:
     QBoxLayout *m_mainLayout;

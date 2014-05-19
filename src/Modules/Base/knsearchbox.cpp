@@ -103,6 +103,11 @@ void KNSearchBox::setPlaceHolderText(const QString &text)
     m_keyText->setPlaceholderText(text);
 }
 
+void KNSearchBox::setSearchFocus()
+{
+    m_keyText->setFocus();
+}
+
 void KNSearchBox::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
