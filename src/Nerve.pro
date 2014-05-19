@@ -86,7 +86,8 @@ SOURCES += \
     Modules/Base/knsearchbox.cpp \
     Modules/Base/knlibfilter.cpp \
     Modules/Music/Libraries/knmusicfilter.cpp \
-    Modules/Music/Libraries/knmusicsearcher.cpp
+    Modules/Music/Libraries/knmusicsearcher.cpp \
+    Modules/Music/Libraries/knmusiccategorysortfiltermodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -161,7 +162,8 @@ HEADERS += \
     Modules/Base/knsearchbox.h \
     Modules/Base/knlibfilter.h \
     Modules/Music/Libraries/knmusicfilter.h \
-    Modules/Music/Libraries/knmusicsearcher.h
+    Modules/Music/Libraries/knmusicsearcher.h \
+    Modules/Music/Libraries/knmusiccategorysortfiltermodel.h
 
 RESOURCES += \
     res.qrc

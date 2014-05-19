@@ -450,9 +450,9 @@ QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
         return QModelIndex();
     }
     int originalRow=pointLine*m_maxColumnCount+pointColumn;
-    return m_model->index(m_model->isNoAlbumHidden()?originalRow+1:originalRow,
-                          0,
-                          rootIndex());
+    return m_proxyModel->index(originalRow,
+                               0,
+                               rootIndex());
 }
 
 void KNMusicAlbumView::scrollTo(const QModelIndex &index,
@@ -512,10 +512,11 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
     updateGeometries();
 }
 
-void KNMusicAlbumView::setCategoryModel(KNMusicAlbumModel *model)
+void KNMusicAlbumView::setCategoryModel(QSortFilterProxyModel *model)
 {
     setModel(model);
-    m_model=model;
+    m_proxyModel=model;
+    m_model=static_cast<KNMusicAlbumModel *>(model->sourceModel());
     connect(m_model, &KNMusicAlbumModel::requireShowFirstItem,
             this, &KNMusicAlbumView::showFirstItem);
     connect(m_model, &KNMusicAlbumModel::requireHideFirstItem,
@@ -534,8 +535,8 @@ void KNMusicAlbumView::selectCategoryItem(const QString &value)
 {
     if(value.isEmpty())
     {
-        expandAlbumDetails(model()->index(0,0));
-        scrollTo(model()->index(0,0), QAbstractItemView::PositionAtTop);
+        expandAlbumDetails(m_model->index(0,0));
+        scrollTo(m_model->index(0,0), QAbstractItemView::PositionAtTop);
         return;
     }
     QModelIndex albumSearch=m_model->indexOf(value);
@@ -566,7 +567,7 @@ void KNMusicAlbumView::updateGeometries()
 
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
 {
-    QStyleOptionViewItem option = viewOptions();
+    QStyleOptionViewItem option=viewOptions();
     QBrush background = option.palette.base();
     QPen foreground(option.palette.color(QPalette::Text));
     QPainter painter(viewport());
@@ -579,7 +580,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
 
     updateParameters();
 
-    int albumIndex=0, albumCount=m_model->rowCount(),
+    int albumIndex=0, albumCount=m_proxyModel->rowCount(),
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
@@ -590,15 +591,11 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentRow+=skipLineCount;
     currentTop+=m_spacingHeight*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
-    if(m_model->isNoAlbumHidden())
-    {
-        albumIndex++;
-    }
     m_firstVisibleIndex=albumIndex;
     QModelIndex currentPaintIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
-        currentPaintIndex=m_model->index(albumIndex, 0, rootIndex());
+        currentPaintIndex=m_proxyModel->index(albumIndex, 0);
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
@@ -607,7 +604,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         {
             paintAlbum(&painter,
                        currentRect,
-                       currentPaintIndex);
+                       m_proxyModel->mapToSource(currentPaintIndex));
         }
         currentColumn++;
         if(currentColumn==m_maxColumnCount)
@@ -751,13 +748,14 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
 {
     m_albumDetail->hide();
     m_detailIndex=index;
-    QIcon currentIcon=m_model->data(index, Qt::DecorationRole).value<QIcon>();
+    QModelIndex dataIndex=m_proxyModel->mapToSource(index);
+    QIcon currentIcon=m_model->data(dataIndex, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
-    m_detailModel->setCategoryIndex(index);
-    m_albumDetail->setAlbumName(m_model->data(index).toString());
-    m_albumDetail->setArtistName(m_model->indexArtist(index));
-    m_albumDetail->setYear(m_model->indexYear(index));
+    m_detailModel->setCategoryIndex(dataIndex);
+    m_albumDetail->setAlbumName(m_model->data(dataIndex).toString());
+    m_albumDetail->setArtistName(m_model->indexArtist(dataIndex));
+    m_albumDetail->setYear(m_model->indexYear(dataIndex));
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
@@ -847,7 +845,7 @@ QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
     {
         return QRect();
     }
-    int itemIndex=m_model->isNoAlbumHidden()?index.row()-1:index.row(),
+    int itemIndex=index.row(),
         itemLine=itemIndex/m_maxColumnCount,
         itemColumn=itemIndex-itemLine*m_maxColumnCount;
     return QRect(itemColumn*m_spacingWidth+m_spacing,
@@ -882,7 +880,8 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                                   const QModelIndex &index)
 {
     //To draw the album art.
-    QIcon currentIcon=m_model->data(index, Qt::DecorationRole).value<QIcon>();
+    QModelIndex originalIndex=index;
+    QIcon currentIcon=m_model->data(originalIndex, Qt::DecorationRole).value<QIcon>();
     QRect albumArtRect=QRect(rect.x()+1,
                              rect.y()+1,
                              m_iconSizeParam-2,
@@ -898,7 +897,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      m_model->data(index).toString());
+                      m_model->data(originalIndex).toString());
     textTop+=fontMetrics().height();
     QColor penBackup=painter->pen().color();
     painter->setPen(QColor(128,128,128));
@@ -907,7 +906,7 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      m_model->indexArtist(index));
+                      m_model->indexArtist(originalIndex));
     painter->setPen(penBackup);
 }
 
@@ -924,6 +923,12 @@ void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 void KNMusicAlbumView::resetHeader()
 {
     m_albumDetail->resetHeader();
+}
+
+void KNMusicAlbumView::setFilterFixedString(const QString &text)
+{
+    m_proxyModel->setFilterFixedString(text);
+    viewport()->update();
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

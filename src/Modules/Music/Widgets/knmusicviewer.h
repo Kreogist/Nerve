@@ -13,6 +13,7 @@
 class QEvent;
 class QDragEnterEvent;
 class QDropEvent;
+class KNMusicCategorySortFilterModel;
 class KNLibFilter;
 class KNMusicModel;
 class KNMusicListView;
@@ -92,6 +93,7 @@ private:
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
     KNMusicAlbumDetailModel *m_albumDetails;
+    KNMusicCategorySortFilterModel *m_albumSortModel;
 
     KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;

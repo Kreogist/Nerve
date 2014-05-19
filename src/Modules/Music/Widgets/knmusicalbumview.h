@@ -3,11 +3,11 @@
 
 #include <QAbstractItemView>
 
+class QSortFilterProxyModel;
 class QBoxLayout;
 class QLabel;
 class QMouseEvent;
 class QPaintEvent;
-//class QKeyEvent;
 class QPropertyAnimation;
 class QParallelAnimationGroup;
 class QTimeLine;
@@ -127,13 +127,14 @@ public:
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     QRect visualRect(const QModelIndex &index) const;
     void setModel(QAbstractItemModel *model);
-    void setCategoryModel(KNMusicAlbumModel *model);
+    void setCategoryModel(QSortFilterProxyModel *model);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
     void resetHeader();
+    void setFilterFixedString(const QString &text);
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -199,6 +200,7 @@ private:
     QModelIndex m_detailIndex, m_pressedIndex;
     KNMusicAlbumDetailModel *m_detailModel;
     KNMusicAlbumModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
 };
 
 #endif // KNMUSICALBUMVIEW_H

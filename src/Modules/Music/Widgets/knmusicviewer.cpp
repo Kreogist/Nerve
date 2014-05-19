@@ -25,6 +25,7 @@
 #include "../Libraries/knmusicgenremodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
+#include "../Libraries/knmusiccategorysortfiltermodel.h"
 
 #include "knmusicviewer.h"
 
@@ -42,6 +43,11 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistModel=new KNMusicArtistModel(this);
     m_albumModel=new KNMusicAlbumModel(this);
     m_genreModel=new KNMusicGenreModel(this);
+
+    m_albumSortModel=new KNMusicCategorySortFilterModel(this);
+    m_albumSortModel->setFilterKeyColumn(-1);
+    m_albumSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_albumSortModel->setSourceModel(m_albumModel);
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
@@ -63,7 +69,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionArtistShowContextMenu);
 
     m_albumView=new KNMusicAlbumView(this);
-    m_albumView->setCategoryModel(m_albumModel);
+    m_albumView->setCategoryModel(m_albumSortModel);
     m_albumView->installEventFilter(this);
     connect(m_albumView, &KNMusicAlbumView::requireOpenUrl,
             this, &KNMusicViewer::onActionAlbumOpenUrl);
@@ -209,6 +215,7 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
 void KNMusicViewer::onActionSearch(const QString &text)
 {
     m_listViewModel->setFilterFixedString(text);
+    m_albumView->setFilterFixedString(text);
 }
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
