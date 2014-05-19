@@ -1,5 +1,4 @@
-#include <QFile>
-#include <QDataStream>
+#include <QBoxLayout>
 #include <QCloseEvent>
 
 #include "Modules/Base/knpluginbase.h"
@@ -21,10 +20,19 @@ MainWindow::MainWindow(QWidget *parent) :
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);
 
+    QWidget *holder=new QWidget(this);
+    holder->setContentsMargins(0,0,0,0);
+    setCentralWidget(holder);
+
+    QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, holder);
+    mainLayout->setContentsMargins(0,0,0,0);
+    mainLayout->setSpacing(0);
+    holder->setLayout(mainLayout);
+
     m_headerWidget=new KNStdLibHeaderSwitcher(this);
-    addDockWidget(Qt::TopDockWidgetArea, m_headerWidget);
+    mainLayout->addWidget(m_headerWidget);
     m_mainWidget=new KNStdLibCategorySwitcher(this);
-    setCentralWidget(m_mainWidget);
+    mainLayout->addWidget(m_mainWidget, 1);
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
     addPlugin(musicPlugin);

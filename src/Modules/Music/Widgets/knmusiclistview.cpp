@@ -24,12 +24,14 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
+    m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseIn->setEndFrame(0x30);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setUpdateInterval(5);
+    m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseOut->setEndFrame(minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicListView::changeBackground);

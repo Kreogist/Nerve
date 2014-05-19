@@ -5,8 +5,8 @@
 
 #include "knstdlibheaderswitcher.h"
 
-KNStdLibHeaderSwitcherWidget::KNStdLibHeaderSwitcherWidget(QWidget *parent) :
-    KNLibHeaderSwitcherWidget(parent)
+KNStdLibHeaderSwitcher::KNStdLibHeaderSwitcher(QWidget *parent) :
+    KNLibHeaderSwitcher(parent)
 {
     m_moveOut=new QPropertyAnimation(this);
     m_moveOut->setPropertyName("geometry");
@@ -18,10 +18,10 @@ KNStdLibHeaderSwitcherWidget::KNStdLibHeaderSwitcherWidget(QWidget *parent) :
     m_movedGroup->addAnimation(m_moveOut);
     m_movedGroup->addAnimation(m_moveIn);
     connect(m_movedGroup, &QParallelAnimationGroup::finished,
-            this, &KNStdLibHeaderSwitcherWidget::onActionAnimationComplete);
+            this, &KNStdLibHeaderSwitcher::onActionAnimationComplete);
 }
 
-void KNStdLibHeaderSwitcherWidget::setCurrentIndex(const int &index)
+void KNStdLibHeaderSwitcher::setCurrentIndex(const int &index)
 {
     if(index==currentIndex())
     {
@@ -47,14 +47,7 @@ void KNStdLibHeaderSwitcherWidget::setCurrentIndex(const int &index)
     m_movedGroup->start();
 }
 
-void KNStdLibHeaderSwitcherWidget::onActionAnimationComplete()
+void KNStdLibHeaderSwitcher::onActionAnimationComplete()
 {
-    KNLibHeaderSwitcherWidget::setCurrentIndex(m_aboutToBeCurrentIndex);
-}
-
-KNStdLibHeaderSwitcher::KNStdLibHeaderSwitcher(QWidget *parent) :
-    KNLibHeaderSwitcher(parent)
-{
-    m_swicher=new KNStdLibHeaderSwitcherWidget(this);
-    setSwitcher(m_swicher);
+    KNLibHeaderSwitcher::setCurrentIndex(m_aboutToBeCurrentIndex);
 }

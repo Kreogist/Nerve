@@ -3,12 +3,11 @@
 
 #include <QMainWindow>
 
+class QCloseEvent;
 class KNPluginBase;
 class KNStdLibCategorySwitcher;
 class KNStdLibHeaderSwitcher;
 class KNGlobal;
-class QDataStream;
-class QCloseEvent;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

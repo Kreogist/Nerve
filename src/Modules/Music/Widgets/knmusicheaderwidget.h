@@ -3,6 +3,8 @@
 
 #include "../../Base/knstdlibheaderwidget.h"
 
+class QBoxLayout;
+class KNSearchBox;
 class KNMusicHeaderWidget : public KNStdLibHeaderWidget
 {
     Q_OBJECT
@@ -12,7 +14,13 @@ public:
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
 
+private:
+    QBoxLayout *m_mainLayout;
+    KNSearchBox *m_searchBox;
+    QString m_searchPlaceHolder;
 };
 
 #endif // KNMUSICHEADERWIDGET_H

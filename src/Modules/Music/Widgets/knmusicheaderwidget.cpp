@@ -1,10 +1,29 @@
+#include <QBoxLayout>
+
+#include "../../Base/knsearchbox.h"
+
 #include "knmusicheaderwidget.h"
 
 KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     KNStdLibHeaderWidget(parent)
 {
-    setAutoFillBackground(true);
-    QPalette pal=this->palette();
-    pal.setColor(QPalette::Window, QColor(255,0,0));
-    setPalette(pal);
+    retranslate();
+
+    m_mainLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
+    setLayout(m_mainLayout);
+
+    m_searchBox=new KNSearchBox(this);
+    m_searchBox->setPlaceHolderText(m_searchPlaceHolder);
+    m_mainLayout->addWidget(m_searchBox);
+}
+
+void KNMusicHeaderWidget::retranslate()
+{
+    m_searchPlaceHolder=tr("Search Music");
+}
+
+void KNMusicHeaderWidget::retranslateAndSet()
+{
+    retranslate();
+    m_searchBox->setPlaceHolderText(m_searchPlaceHolder);
 }
