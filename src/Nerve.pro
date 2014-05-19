@@ -40,7 +40,6 @@ SOURCES += \
     Modules/knglobal.cpp \
     Modules/Music/Widgets/knmusiclistviewheader.cpp \
     Modules/Music/knmusicglobal.cpp \
-    Modules/Music/Libraries/knmusicsearcher.cpp \
     Modules/Music/Libraries/knmusicinfocollector.cpp \
     Modules/Music/Libraries/knmusictagapev2.cpp \
     Modules/Music/Libraries/knmusictagwma.cpp \
@@ -65,7 +64,6 @@ SOURCES += \
     Modules/Music/Widgets/knmusicalbumsonglistview.cpp \
     Modules/Music/Widgets/knmusiclistviewbase.cpp \
     Modules/Base/knmodel.cpp \
-    Modules/Base/knlibsearcher.cpp \
     Modules/Base/knlibinfocollector.cpp \
     Modules/Base/knlibinfocollectormanager.cpp \
     Modules/Music/Libraries/knmusicalbumdetailmodel.cpp \
@@ -85,7 +83,10 @@ SOURCES += \
     Modules/Base/knlibheaderswitcher.cpp \
     Modules/Base/knstdlibswitcher.cpp \
     Modules/Base/knstdlibheaderswitcher.cpp \
-    Modules/Base/knsearchbox.cpp
+    Modules/Base/knsearchbox.cpp \
+    Modules/Base/knlibfilter.cpp \
+    Modules/Music/Libraries/knmusicfilter.cpp \
+    Modules/Music/Libraries/knmusicsearcher.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -113,7 +114,6 @@ HEADERS += \
     Modules/knglobal.h \
     Modules/Music/Widgets/knmusiclistviewheader.h \
     Modules/Music/knmusicglobal.h \
-    Modules/Music/Libraries/knmusicsearcher.h \
     Modules/Music/Libraries/knmusicinfocollector.h \
     Modules/Music/Libraries/knmusictagapev2.h \
     Modules/Music/Libraries/knmusictagwma.h \
@@ -138,7 +138,6 @@ HEADERS += \
     Modules/Music/Widgets/knmusicalbumsonglistview.h \
     Modules/Music/Widgets/knmusiclistviewbase.h \
     Modules/Base/knmodel.h \
-    Modules/Base/knlibsearcher.h \
     Modules/Base/knlibinfocollector.h \
     Modules/Base/knlibinfocollectormanager.h \
     Modules/Music/Libraries/knmusicalbumdetailmodel.h \
@@ -159,7 +158,10 @@ HEADERS += \
     Modules/Base/knlibheaderswitcher.h \
     Modules/Base/knstdlibswitcher.h \
     Modules/Base/knstdlibheaderswitcher.h \
-    Modules/Base/knsearchbox.h
+    Modules/Base/knsearchbox.h \
+    Modules/Base/knlibfilter.h \
+    Modules/Music/Libraries/knmusicfilter.h \
+    Modules/Music/Libraries/knmusicsearcher.h
 
 RESOURCES += \
     res.qrc

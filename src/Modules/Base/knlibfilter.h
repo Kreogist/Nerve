@@ -9,11 +9,11 @@
 #include <QObject>
 
 class KNModel;
-class KNLibSearcher : public QObject
+class KNLibFilter : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNLibSearcher(QObject *parent = 0);
+    explicit KNLibFilter(QObject *parent = 0);
     KNModel *model() const;
     void setModel(KNModel *model);
 

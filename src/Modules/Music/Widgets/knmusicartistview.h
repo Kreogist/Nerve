@@ -3,7 +3,6 @@
 
 #include <QTreeView>
 #include <QSplitter>
-#include <QThread>
 
 class QBoxLayout;
 class QLabel;

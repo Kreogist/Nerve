@@ -16,7 +16,7 @@
 #include "knmusicartistsongs.h"
 #include "knmusicgenresongs.h"
 
-#include "../../Base/knlibsearcher.h"
+#include "../../Base/knlibfilter.h"
 
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusicsortmodel.h"
@@ -36,6 +36,9 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setAcceptDrops(true);
 
     m_listViewModel=new KNMusicSortModel(this);
+    m_listViewModel->setFilterKeyColumn(-1);
+    m_listViewModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_listViewModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_artistModel=new KNMusicArtistModel(this);
     m_albumModel=new KNMusicAlbumModel(this);
     m_genreModel=new KNMusicGenreModel(this);
@@ -203,6 +206,12 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
     m_listViewModel->removeOriginalItem(index);
 }
 
+void KNMusicViewer::onActionSearch(const QString &text)
+{
+    m_searchReg.setPattern(text);
+    m_listViewModel->setFilterRegExp(m_searchReg);
+}
+
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls())
@@ -213,7 +222,7 @@ void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 
 void KNMusicViewer::dropEvent(QDropEvent *event)
 {
-    m_searcher->analysisList(event->mimeData()->urls());
+    m_filter->analysisList(event->mimeData()->urls());
 }
 
 void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,

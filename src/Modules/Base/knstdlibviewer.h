@@ -4,7 +4,7 @@
 #include "knlibviewer.h"
 
 class QBoxLayout;
-class KNLibSearcher;
+class KNLibFilter;
 class KNStdLibViewerCategory;
 class KNWidgetSwitcher;
 class KNStdLibViewer : public KNLibViewer
@@ -16,7 +16,7 @@ public:
                      const QString &category,
                      QWidget *widget);
     void setCategoryIndex(const int &index);
-    void setSearcher(KNLibSearcher *searcher);
+    void setFilter(KNLibFilter *searcher);
     void moveLeft();
     void moveRight();
 
@@ -25,7 +25,7 @@ signals:
 public slots:
 
 protected:
-    KNLibSearcher *m_searcher;
+    KNLibFilter *m_filter;
 
 private:
     QBoxLayout *m_layout;

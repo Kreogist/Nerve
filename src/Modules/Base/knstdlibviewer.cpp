@@ -2,7 +2,7 @@
 
 #include "knstdlibviewercategory.h"
 #include "knwidgetswitcher.h"
-#include "knlibsearcher.h"
+#include "knlibfilter.h"
 
 #include <QLabel>
 
@@ -41,9 +41,9 @@ void KNStdLibViewer::setCategoryIndex(const int &index)
     m_category->setCurrentIndex(index);
 }
 
-void KNStdLibViewer::setSearcher(KNLibSearcher *searcher)
+void KNStdLibViewer::setFilter(KNLibFilter *searcher)
 {
-    m_searcher=searcher;
+    m_filter=searcher;
 }
 
 void KNStdLibViewer::moveLeft()

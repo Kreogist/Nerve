@@ -14,7 +14,7 @@ class KNMusicModel;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
-class KNMusicSearcher;
+class KNMusicFilter;
 class KNMusicViewerMenu;
 class KNMusicDetailInfo;
 class KNMusicPlugin : public KNPluginBase
@@ -46,7 +46,7 @@ private:
     KNMusicModel *m_model;
     KNMusicInfoCollector *m_infoCollector;
     KNMusicInfoCollectorManager *m_infoCollectManager;
-    KNMusicSearcher *m_searcher;
+    KNMusicFilter *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
     KNMusicDatabase *m_database;

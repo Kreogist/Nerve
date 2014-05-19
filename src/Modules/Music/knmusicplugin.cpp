@@ -9,7 +9,7 @@
 #include "Libraries/knmusicmodel.h"
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
-#include "Libraries/knmusicsearcher.h"
+#include "Libraries/knmusicfilter.h"
 #include "Libraries/knmusicdatabase.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
@@ -39,6 +39,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             this, &KNMusicPlugin::onActionOpenUrl);
 
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
+            m_musicViewer, &KNMusicViewer::onActionSearch);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
@@ -51,10 +53,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::onActionShowContextMenu);
 
-    m_searcher=new KNMusicSearcher;
+    m_searcher=new KNMusicFilter;
     m_searcher->moveToThread(&m_searcherThread);
     m_searcher->setModel(m_model);
-    m_musicViewer->setSearcher(m_searcher);
+    m_musicViewer->setFilter(m_searcher);
     connect(m_model, &KNMusicModel::requireResort,
             m_musicViewer, &KNMusicViewer::resort);
 

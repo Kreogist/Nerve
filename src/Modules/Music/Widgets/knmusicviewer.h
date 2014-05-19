@@ -4,6 +4,7 @@
 #include <QList>
 #include <QUrl>
 #include <QModelIndex>
+#include <QRegExp>
 
 #include "../knmusicglobal.h"
 
@@ -12,7 +13,7 @@
 class QEvent;
 class QDragEnterEvent;
 class QDropEvent;
-class KNLibSearcher;
+class KNLibFilter;
 class KNMusicModel;
 class KNMusicListView;
 class KNMusicArtistView;
@@ -48,6 +49,7 @@ public slots:
     void showIn(KNMusicGlobal::MusicCategory category,
                 const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
+    void onActionSearch(const QString &text);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

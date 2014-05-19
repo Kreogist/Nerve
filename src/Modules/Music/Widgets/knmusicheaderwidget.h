@@ -12,6 +12,7 @@ public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
 
 signals:
+    void requireSearch(const QString &text);
 
 public slots:
     void retranslate();

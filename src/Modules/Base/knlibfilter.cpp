@@ -4,14 +4,14 @@
 #include <QDebug>
 
 #include "knmodel.h"
-#include "knlibsearcher.h"
+#include "knlibfilter.h"
 
-KNLibSearcher::KNLibSearcher(QObject *parent) :
+KNLibFilter::KNLibFilter(QObject *parent) :
     QObject(parent)
 {
 }
 
-void KNLibSearcher::analysisList(const QList<QUrl> &urls)
+void KNLibFilter::analysisList(const QList<QUrl> &urls)
 {
     m_rawFileList.clear();
     QFileInfo currentParser;
@@ -41,13 +41,13 @@ void KNLibSearcher::analysisList(const QList<QUrl> &urls)
     m_rawFileList.clear();
 }
 
-int KNLibSearcher::getType(const QString &suffix)
+int KNLibFilter::getType(const QString &suffix)
 {
     Q_UNUSED(suffix);
     return -1;
 }
 
-void KNLibSearcher::analysisFolder(const QString &folderPath)
+void KNLibFilter::analysisFolder(const QString &folderPath)
 {
     QDir folderInfo(folderPath);
     QFileInfoList filesData=folderInfo.entryInfoList();
@@ -73,7 +73,7 @@ void KNLibSearcher::analysisFolder(const QString &folderPath)
     }
 }
 
-void KNLibSearcher::analysisFile(const QString &suffix,
+void KNLibFilter::analysisFile(const QString &suffix,
                                  const QString &filePath)
 {
     if(getType(suffix)!=-1)
@@ -82,12 +82,12 @@ void KNLibSearcher::analysisFile(const QString &suffix,
     }
 }
 
-KNModel *KNLibSearcher::model() const
+KNModel *KNLibFilter::model() const
 {
     return m_model;
 }
 
-void KNLibSearcher::setModel(KNModel *model)
+void KNLibFilter::setModel(KNModel *model)
 {
     m_model = model;
 }
