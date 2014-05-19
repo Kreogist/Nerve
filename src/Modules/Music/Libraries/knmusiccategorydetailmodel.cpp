@@ -13,6 +13,7 @@ KNMusicCategoryDetailModel::KNMusicCategoryDetailModel(QObject *parent) :
     m_nameFilter.setPattern("^$");
     m_nameFilter.setPatternSyntax(QRegExp::RegExp);
     setFilterRegExp(m_nameFilter);
+    setFilterRole(Qt::DisplayRole);
 }
 
 void KNMusicCategoryDetailModel::setCategoryModel(KNMusicCategoryModel *categoryModel)
@@ -25,12 +26,10 @@ void KNMusicCategoryDetailModel::setCategoryIndex(const QModelIndex &index)
     if(index.row()==0)
     {
         m_nameFilter.setPattern("^$");
-        m_nameFilter.setPatternSyntax(QRegExp::RegExp);
     }
     else
     {
-        m_nameFilter.setPattern(getFilterText(index));
-        m_nameFilter.setPatternSyntax(QRegExp::FixedString);
+        m_nameFilter.setPattern("^" + QRegExp::escape(getFilterText(index)) + "$");
     }
     setFilterRegExp(m_nameFilter);
     emit requireSongCountChange(rowCount());

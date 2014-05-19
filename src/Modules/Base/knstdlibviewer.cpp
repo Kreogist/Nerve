@@ -67,5 +67,5 @@ void KNStdLibViewer::setFilter(KNLibFilter *searcher)
 
 void KNStdLibViewer::setContentsFocus()
 {
-    m_widgetSwicher->setFocus();
+    m_widgetSwicher->setWidgetFocus(m_widgetSwicher->currentIndex());
 }

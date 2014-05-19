@@ -14,6 +14,7 @@ public:
     explicit KNWidgetSwitcher(QWidget *parent = 0);
     void addWidget(QWidget *widget);
     int currentIndex() const;
+    void setWidgetFocus(const int &index);
     int size() const;
 
 signals:
@@ -30,7 +31,6 @@ private slots:
 
 private:
     void setWidgetVisible(const int &index, const bool &visible);
-    void setWidgetFocus(const int &index);
 
     QList<QWidget *> m_widgets;
     int m_currentIndex=-1, m_movedOutPage=-1;

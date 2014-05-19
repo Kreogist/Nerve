@@ -88,6 +88,7 @@ void KNWidgetSwitcher::setCurrentIndex(int currentIndex)
         }
         m_movedOutPage = m_currentIndex;
         setWidgetVisible(currentIndex, true);
+        setWidgetFocus(currentIndex);
         m_switchAnime->start();
         m_currentIndex = currentIndex;
     }

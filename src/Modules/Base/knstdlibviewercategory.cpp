@@ -92,7 +92,7 @@ void KNStdLibViewerCategory::setCurrentIndex(const int &index)
         button->setChecked(true);
         m_moving=true;
         emit categoryChanged(m_currentCategory);
-    };
+    }
 }
 
 void KNStdLibViewerCategory::moveLeft()
