@@ -16,6 +16,8 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     m_searchBox->setPlaceHolderText(m_searchPlaceHolder);
     connect(m_searchBox, &KNSearchBox::textChanged,
             this, &KNMusicHeaderWidget::requireSearch);
+    connect(m_searchBox, &KNSearchBox::requireLostFocus,
+            this, &KNMusicHeaderWidget::requireLostFocus);
     m_mainLayout->addWidget(m_searchBox);
 }
 

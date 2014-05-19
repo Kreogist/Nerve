@@ -13,6 +13,7 @@ public:
 
 signals:
     void requireSearch(const QString &text);
+    void requireLostFocus();
 
 public slots:
     void retranslate();

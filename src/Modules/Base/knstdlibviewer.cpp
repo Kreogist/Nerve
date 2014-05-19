@@ -1,10 +1,13 @@
+#include <QAction>
 #include <QBoxLayout>
+#include <QLabel>
+#include <QKeySequence>
+
+#include <QDebug>
 
 #include "knstdlibviewercategory.h"
 #include "knwidgetswitcher.h"
 #include "knlibfilter.h"
-
-#include <QLabel>
 
 #include "knstdlibviewer.h"
 
@@ -19,13 +22,29 @@ KNStdLibViewer::KNStdLibViewer(QWidget *parent) :
     setLayout(m_layout);
 
     m_category=new KNStdLibViewerCategory(this);
+    m_category->installEventFilter(this);
     m_layout->addWidget(m_category);
 
-    m_listview=new KNWidgetSwitcher(this);
-    m_layout->addWidget(m_listview);
+    m_widgetSwicher=new KNWidgetSwitcher(this);
+    m_widgetSwicher->installEventFilter(this);
+    m_layout->addWidget(m_widgetSwicher);
 
     connect(m_category, &KNStdLibViewerCategory::categoryChanged,
-            m_listview, &KNWidgetSwitcher::setCurrentIndex);
+            m_widgetSwicher, &KNWidgetSwitcher::setCurrentIndex);
+    connect(m_widgetSwicher, &KNWidgetSwitcher::movedComplete,
+            m_category, &KNStdLibViewerCategory::enabledMoving);
+
+    QAction *leftShortcut=new QAction(this);
+    leftShortcut->setShortcut(QKeySequence::Back);
+    connect(leftShortcut, SIGNAL(triggered()),
+            m_category, SLOT(moveLeft()));
+    addAction(leftShortcut);
+
+    QAction *rightShortcut=new QAction(this);
+    rightShortcut->setShortcut(QKeySequence::Forward);
+    connect(rightShortcut, SIGNAL(triggered()),
+            m_category, SLOT(moveRight()));
+    addAction(rightShortcut);
 }
 
 void KNStdLibViewer::addCategory(const QPixmap &icon,
@@ -33,7 +52,7 @@ void KNStdLibViewer::addCategory(const QPixmap &icon,
                                  QWidget *widget)
 {
     m_category->addCategory(icon, category);
-    m_listview->addWidget(widget);
+    m_widgetSwicher->addWidget(widget);
 }
 
 void KNStdLibViewer::setCategoryIndex(const int &index)
@@ -46,12 +65,7 @@ void KNStdLibViewer::setFilter(KNLibFilter *searcher)
     m_filter=searcher;
 }
 
-void KNStdLibViewer::moveLeft()
+void KNStdLibViewer::setContentsFocus()
 {
-    m_category->moveLeft();
-}
-
-void KNStdLibViewer::moveRight()
-{
-    m_category->moveRight();
+    m_widgetSwicher->setFocus();
 }

@@ -19,12 +19,13 @@ public:
     void addCategory(const QPixmap &icon, const QString &category);
     void setText(const int &index, const QString &text);
     void setCurrentIndex(const int &index);
-    void moveLeft();
-    void moveRight();
 
 signals:
 
 public slots:
+    void moveLeft();
+    void moveRight();
+    void enabledMoving();
 
 protected:
     void enterEvent(QEvent *e);
@@ -43,6 +44,7 @@ private:
 
     QList<KNStdLibViewerCategoryButton *> m_categories;
     int m_currentCategory=-1;
+    bool m_moving=false;
 };
 
 #endif // KNSTDLIBVIEWERCATEGORY_H

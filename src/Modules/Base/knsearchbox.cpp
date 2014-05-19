@@ -1,5 +1,7 @@
+#include <QAction>
 #include <QBoxLayout>
 #include <QFocusEvent>
+#include <QKeySequence>
 #include <QTimeLine>
 #include <QFocusEvent>
 #include <QCursor>
@@ -76,6 +78,12 @@ KNSearchBox::KNSearchBox(QWidget *parent) :
             this, &KNSearchBox::textEdited);
     m_layout->addWidget(m_keyText, 1);
 
+    QAction *escapeAction=new QAction(this);
+    escapeAction->setShortcut(QKeySequence(Qt::Key_Escape));
+    connect(escapeAction, SIGNAL(triggered()),
+            this, SLOT(onFocusLost()));
+    addAction(escapeAction);
+
     m_mouseEnterAnime=new QTimeLine(100, this);
     m_mouseEnterAnime->setEndFrame(0x80);
     connect(m_mouseEnterAnime, &QTimeLine::frameChanged,
@@ -151,16 +159,23 @@ void KNSearchBox::onActionTextBackgroundChange(const int &frame)
 
 void KNSearchBox::onFocusGet()
 {
-    m_focus=true;
-    m_focusLost->stop();
-    m_focusGet->setStartFrame(m_grey);
-    m_focusGet->start();
+    if(!m_focus)
+    {
+        m_focus=true;
+        m_focusLost->stop();
+        m_focusGet->setStartFrame(m_grey);
+        m_focusGet->start();
+    }
 }
 
 void KNSearchBox::onFocusLost()
 {
-    m_focus=false;
-    m_focusGet->stop();
-    m_focusLost->setEndFrame(m_originalGrey);
-    m_focusLost->start();
+    if(m_focus)
+    {
+        m_focus=false;
+        m_focusGet->stop();
+        m_focusLost->setEndFrame(m_originalGrey);
+        m_focusLost->start();
+        emit requireLostFocus();
+    }
 }

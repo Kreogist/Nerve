@@ -31,6 +31,7 @@ KNWidgetSwitcher::KNWidgetSwitcher(QWidget *parent) :
 void KNWidgetSwitcher::addWidget(QWidget *widget)
 {
     widget->setParent(this);
+    widget->installEventFilter(this);
     if(m_widgets.size()==0)
     {
         m_currentIndex=0;
@@ -107,6 +108,7 @@ void KNWidgetSwitcher::resizeEvent(QResizeEvent *event)
 void KNWidgetSwitcher::hideMovedOut()
 {
     setWidgetVisible(m_movedOutPage, false);
+    emit movedComplete();
 }
 
 void KNWidgetSwitcher::setWidgetVisible(const int &index,
@@ -118,5 +120,10 @@ void KNWidgetSwitcher::setWidgetVisible(const int &index,
         indexWidget->setEnabled(visible);
         indexWidget->setVisible(visible);
     }
+}
+
+void KNWidgetSwitcher::setWidgetFocus(const int &index)
+{
+    m_widgets.at(index)->setFocus();
 }
 

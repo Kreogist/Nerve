@@ -45,6 +45,7 @@ public:
     void setSearchFocus();
 
 signals:
+    void requireLostFocus();
     void editingFinished();
     void returnPressed();
     void selectionChanged();

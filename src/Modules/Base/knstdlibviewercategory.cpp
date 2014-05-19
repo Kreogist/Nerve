@@ -76,6 +76,10 @@ void KNStdLibViewerCategory::setText(const int &index,
 
 void KNStdLibViewerCategory::setCurrentIndex(const int &index)
 {
+    if(m_moving)
+    {
+        return;
+    }
     if(m_currentCategory!=-1 && m_currentCategory<m_categories.size())
     {
         KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
@@ -86,6 +90,7 @@ void KNStdLibViewerCategory::setCurrentIndex(const int &index)
         m_currentCategory=index;
         KNStdLibViewerCategoryButton *button=m_categories.at(m_currentCategory);
         button->setChecked(true);
+        m_moving=true;
         emit categoryChanged(m_currentCategory);
     };
 }
@@ -112,6 +117,11 @@ void KNStdLibViewerCategory::moveRight()
     {
         setCurrentIndex(m_currentCategory+1);
     }
+}
+
+void KNStdLibViewerCategory::enabledMoving()
+{
+    m_moving=false;
 }
 
 void KNStdLibViewerCategory::enterEvent(QEvent *e)

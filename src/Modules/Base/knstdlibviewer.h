@@ -17,12 +17,11 @@ public:
                      QWidget *widget);
     void setCategoryIndex(const int &index);
     void setFilter(KNLibFilter *searcher);
-    void moveLeft();
-    void moveRight();
 
 signals:
 
 public slots:
+    void setContentsFocus();
 
 protected:
     KNLibFilter *m_filter;
@@ -30,7 +29,7 @@ protected:
 private:
     QBoxLayout *m_layout;
     KNStdLibViewerCategory *m_category;
-    KNWidgetSwitcher *m_listview;
+    KNWidgetSwitcher *m_widgetSwicher;
 };
 
 #endif // KNSTDLIBVIEWER_H
