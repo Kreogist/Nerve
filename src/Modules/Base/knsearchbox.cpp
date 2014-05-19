@@ -1,5 +1,6 @@
 #include <QBoxLayout>
 #include <QLineEdit>
+#include <QToolButton>
 
 #include <QDebug>
 
