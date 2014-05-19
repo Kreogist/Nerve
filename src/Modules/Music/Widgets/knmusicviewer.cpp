@@ -208,8 +208,7 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
 
 void KNMusicViewer::onActionSearch(const QString &text)
 {
-    m_searchReg.setPattern(text);
-    m_listViewModel->setFilterRegExp(m_searchReg);
+    m_listViewModel->setFilterFixedString(text);
 }
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
