@@ -3,7 +3,6 @@
 
 #include <QAbstractItemView>
 
-class QSortFilterProxyModel;
 class QBoxLayout;
 class QLabel;
 class QMouseEvent;
@@ -14,6 +13,7 @@ class QTimeLine;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
+class KNMusicCategorySortFilterModel;
 class KNMusicAlbumSongDetail : public QWidget
 {
     Q_OBJECT
@@ -127,7 +127,7 @@ public:
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
     QRect visualRect(const QModelIndex &index) const;
     void setModel(QAbstractItemModel *model);
-    void setCategoryModel(QSortFilterProxyModel *model);
+    void setCategoryModel(KNMusicCategorySortFilterModel *model);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
@@ -173,6 +173,7 @@ private slots:
     void hideFirstItem();
 
 private:
+    void flyAwayAlbumDetail();
     void foldAlbumDetail();
     QRect itemRect(const QModelIndex &index) const;
     void updateParameters();
@@ -189,7 +190,7 @@ private:
     int m_iconSizeParam=124;
     int m_spacingHeight=154, m_spacingWidth=134;
     int m_minGrey=0x30;
-    bool m_hidingAlbum=false;
+    bool m_hidingAlbum=false, m_flyingAlbum=false;
     QPalette m_palette;
     QColor m_backgroundColor;
     QTimeLine *m_scrollTimeLine;
@@ -200,7 +201,7 @@ private:
     QModelIndex m_detailIndex, m_pressedIndex;
     KNMusicAlbumDetailModel *m_detailModel;
     KNMusicAlbumModel *m_model;
-    QSortFilterProxyModel *m_proxyModel;
+    KNMusicCategorySortFilterModel *m_proxyModel;
 };
 
 #endif // KNMUSICALBUMVIEW_H

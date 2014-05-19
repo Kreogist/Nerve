@@ -8,12 +8,14 @@ class KNMusicCategorySortFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit KNMusicCategorySortFilterModel(QObject *parent = 0);
-    void setFilterFixedString(const QString & pattern);
+    bool isNoCategoryShown();
 
 signals:
 
 public slots:
 
+protected:
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
 
 #endif // KNMUSICCATEGORYSORTFILTERMODEL_H

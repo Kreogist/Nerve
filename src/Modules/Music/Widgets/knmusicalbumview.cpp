@@ -15,6 +15,7 @@
 
 #include "knmusicalbumsonglistview.h"
 #include "../Libraries/knmusicalbummodel.h"
+#include "../Libraries/knmusiccategorysortfiltermodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
 
 #include "knmusicalbumview.h"
@@ -512,7 +513,7 @@ void KNMusicAlbumView::setModel(QAbstractItemModel *model)
     updateGeometries();
 }
 
-void KNMusicAlbumView::setCategoryModel(QSortFilterProxyModel *model)
+void KNMusicAlbumView::setCategoryModel(KNMusicCategorySortFilterModel *model)
 {
     setModel(model);
     m_proxyModel=model;
@@ -592,7 +593,7 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentTop+=m_spacingHeight*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
     m_firstVisibleIndex=albumIndex;
-    QModelIndex currentPaintIndex;
+    QModelIndex currentPaintIndex, sourceIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         currentPaintIndex=m_proxyModel->index(albumIndex, 0);
@@ -600,11 +601,17 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
                                 currentTop,
                                 m_gridWidth,
                                 m_gridHeight);
+        sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
+        if(sourceIndex.row()==0 && m_model->isNoAlbumHidden())
+        {
+            currentPaintIndex=m_proxyModel->index(++albumIndex, 0);
+            sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
+        }
         if(currentPaintIndex!=m_detailIndex)
         {
             paintAlbum(&painter,
                        currentRect,
-                       m_proxyModel->mapToSource(currentPaintIndex));
+                       sourceIndex);
         }
         currentColumn++;
         if(currentColumn==m_maxColumnCount)
@@ -794,10 +801,7 @@ void KNMusicAlbumView::onActionAlbumRemoved(const QModelIndex &index)
 {
     if(index==m_detailIndex)
     {
-        selectionModel()->clear();
-        m_detailIndex=QModelIndex();
-        m_albumDetail->flyAway();
-        viewport()->update();
+        flyAwayAlbumDetail();
     }
 }
 
@@ -817,6 +821,7 @@ void KNMusicAlbumView::onActionFlyAwayAlbumDetailFinished()
 {
     m_albumDetail->hide();
     viewport()->update();
+    m_flyingAlbum=false;
 }
 
 void KNMusicAlbumView::showFirstItem()
@@ -827,6 +832,18 @@ void KNMusicAlbumView::showFirstItem()
 void KNMusicAlbumView::hideFirstItem()
 {
     ;
+}
+
+void KNMusicAlbumView::flyAwayAlbumDetail()
+{
+    if(m_albumDetail->isVisible() && !m_flyingAlbum)
+    {
+        m_flyingAlbum=true;
+        selectionModel()->clear();
+        m_detailIndex=QModelIndex();
+        m_albumDetail->flyAway();
+        viewport()->update();
+    }
 }
 
 void KNMusicAlbumView::foldAlbumDetail()
@@ -927,6 +944,7 @@ void KNMusicAlbumView::resetHeader()
 
 void KNMusicAlbumView::setFilterFixedString(const QString &text)
 {
+    flyAwayAlbumDetail();
     m_proxyModel->setFilterFixedString(text);
     viewport()->update();
 }

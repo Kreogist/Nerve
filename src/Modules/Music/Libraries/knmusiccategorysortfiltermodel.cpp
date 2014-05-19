@@ -7,7 +7,17 @@ KNMusicCategorySortFilterModel::KNMusicCategorySortFilterModel(QObject *parent) 
 {
 }
 
-void KNMusicCategorySortFilterModel::setFilterFixedString(const QString &pattern)
+bool KNMusicCategorySortFilterModel::lessThan(const QModelIndex &left,
+                                              const QModelIndex &right) const
 {
-    QSortFilterProxyModel::setFilterFixedString(pattern);
+    if(left.row()==0)
+    {
+        return true;
+    }
+    if(right.row()==0)
+    {
+        return false;
+    }
+    return QString::compare(sourceModel()->data(left,  filterRole()).toString(),
+                            sourceModel()->data(right, filterRole()).toString())<0;
 }
