@@ -11,14 +11,14 @@ KNStdLibHeaderWidget::KNStdLibHeaderWidget(QWidget *parent) :
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, m_backgroundColor);
-    m_palette.setColor(QPalette::Window, QColor(0x20, 0x20, 0x20));
-    m_palette.setColor(QPalette::Button, QColor(0x20, 0x20, 0x20));
+    m_palette.setColor(QPalette::Window, QColor(0x10, 0x10, 0x10));
+    m_palette.setColor(QPalette::Button, QColor(0x10, 0x10, 0x10));
     m_palette.setColor(QPalette::Text, QColor(0x9f, 0x9f, 0x9f));
     setPalette(m_palette);
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
-    m_mouseIn->setEndFrame(0x40);
+    m_mouseIn->setEndFrame(0x50);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNStdLibHeaderWidget::changeBackground);
 
