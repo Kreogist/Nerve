@@ -1,5 +1,6 @@
 #include <QScrollBar>
 #include <QTimeLine>
+#include <QSortFilterProxyModel>
 
 #include <QDebug>
 
@@ -51,7 +52,8 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
 void KNMusicCategoryList::setModel(QAbstractItemModel *model)
 {
     QListView::setModel(model);
-    KNMusicCategoryModel *categoryModel=qobject_cast<KNMusicCategoryModel *>(model);
+    QSortFilterProxyModel *proxyModel=static_cast<QSortFilterProxyModel *>(model);
+    KNMusicCategoryModel *categoryModel=static_cast<KNMusicCategoryModel *>(proxyModel->sourceModel());
     connect(categoryModel, &KNMusicCategoryModel::requireShowFirstItem,
             this, &KNMusicCategoryList::showFirstItem);
     connect(categoryModel, &KNMusicCategoryModel::requireHideFirstItem,

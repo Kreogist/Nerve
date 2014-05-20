@@ -9,6 +9,7 @@
 #include "../Libraries/knmusicartistitem.h"
 #include "../Libraries/knmusiccategorymodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
+#include "../Libraries/knmusiccategorysortfiltermodel.h"
 
 #include "../knmusicglobal.h"
 
@@ -129,12 +130,13 @@ void KNMusicArtistView::resetHeader()
     m_artistDetails->resetHeader();
 }
 
-void KNMusicArtistView::setModel(KNMusicCategoryModel *model)
+void KNMusicArtistView::setModel(KNMusicCategorySortFilterModel *model)
 {
     m_artistList->setModel(model);
+    m_proxyModel=model;
     connect(m_artistList->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &KNMusicArtistView::onActionItemActivate);
-    m_artistModel=model;
+    m_artistModel=static_cast<KNMusicCategoryModel *>(m_proxyModel->sourceModel());
 }
 
 void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
@@ -147,7 +149,7 @@ void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
 
 void KNMusicArtistView::selectCategoryItem(const QString &value)
 {
-    QModelIndex artistSearch=m_artistModel->indexOf(value);
+    QModelIndex artistSearch=m_proxyModel->mapFromSource(m_artistModel->indexOf(value));
     if(artistSearch.isValid())
     {
         m_artistList->selectionModel()->setCurrentIndex(artistSearch,
@@ -180,7 +182,7 @@ void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
     Q_UNUSED(previous);
     if(current.isValid())
     {
-        m_artistDetails->setArtistName(m_artistModel->data(current,Qt::DisplayRole).toString());
-        m_artistDetailModel->setCategoryIndex(current);
+        m_artistDetails->setArtistName(m_proxyModel->data(current,Qt::DisplayRole).toString());
+        m_artistDetailModel->setCategoryIndex(m_proxyModel->mapToSource(current));
     }
 }

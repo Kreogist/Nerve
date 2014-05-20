@@ -44,10 +44,20 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_albumModel=new KNMusicAlbumModel(this);
     m_genreModel=new KNMusicGenreModel(this);
 
+    m_artistSortModel=new KNMusicCategorySortFilterModel(this);
+    m_artistSortModel->setFilterKeyColumn(0);
+    m_artistSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_artistSortModel->setSourceModel(m_artistModel);
+
     m_albumSortModel=new KNMusicCategorySortFilterModel(this);
-    m_albumSortModel->setFilterKeyColumn(-1);
+    m_albumSortModel->setFilterKeyColumn(0);
     m_albumSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_albumSortModel->setSourceModel(m_albumModel);
+
+    m_genreSortModel=new KNMusicCategorySortFilterModel(this);
+    m_genreSortModel->setFilterKeyColumn(0);
+    m_genreSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_genreSortModel->setSourceModel(m_genreModel);
 
     m_libraryView=new KNMusicListView(this);
     m_libraryView->setModel(m_listViewModel);
@@ -62,7 +72,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_artistView->installEventFilter(this);
     m_artistSongView->installEventFilter(this);
     m_artistView->setSongListView(m_artistSongView);
-    m_artistView->setModel(m_artistModel);
+    m_artistView->setModel(m_artistSortModel);
     connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
             this, &KNMusicViewer::onActionArtistOpenUrl);
     connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
@@ -81,7 +91,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_genreView->installEventFilter(this);
     m_genreSongView->installEventFilter(this);
     m_genreView->setSongListView(m_genreSongView);
-    m_genreView->setModel(m_genreModel);
+    m_genreView->setModel(m_genreSortModel);
     connect(m_genreSongView, &KNMusicGenreSongs::requireOpenUrl,
             this, &KNMusicViewer::onActionGenreOpenUrl);
     connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
@@ -171,9 +181,9 @@ void KNMusicViewer::retranslateAndSet()
 void KNMusicViewer::resort()
 {
     m_listViewModel->sort(0);
-    m_artistModel->sort(0);
+    m_artistSortModel->sort(0);
     m_albumSortModel->sort(0);
-    m_genreModel->sort(0);
+    m_genreSortModel->sort(0);
 }
 
 void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
@@ -216,7 +226,9 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
 void KNMusicViewer::onActionSearch(const QString &text)
 {
     m_listViewModel->setFilterFixedString(text);
+    m_artistSortModel->setFilterFixedString(text);
     m_albumView->setFilterFixedString(text);
+    m_genreSortModel->setFilterFixedString(text);
 }
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)

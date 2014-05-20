@@ -1,3 +1,5 @@
+#include <QSize>
+
 #include <QDebug>
 
 #include "knmusiccategorysortfiltermodel.h"
@@ -5,6 +7,15 @@
 KNMusicCategorySortFilterModel::KNMusicCategorySortFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
+}
+
+QVariant KNMusicCategorySortFilterModel::data(const QModelIndex &index, int role) const
+{
+    if(role==Qt::SizeHintRole)
+    {
+        return QSize(35, 40);
+    }
+    return QSortFilterProxyModel::data(index, role);
 }
 
 bool KNMusicCategorySortFilterModel::lessThan(const QModelIndex &left,

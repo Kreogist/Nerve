@@ -11,7 +11,7 @@ class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
 class KNMusicListView;
-
+class KNMusicCategorySortFilterModel;
 class KNMusicCategoryDetailsDisplay : public QWidget
 {
     Q_OBJECT
@@ -39,7 +39,7 @@ class KNMusicArtistView : public QSplitter
 public:
     explicit KNMusicArtistView(QWidget *parent = 0);
     void resetHeader();
-    void setModel(KNMusicCategoryModel *model);
+    void setModel(KNMusicCategorySortFilterModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
@@ -59,6 +59,7 @@ private:
     KNMusicCategoryDetailsDisplay *m_artistDetails;
     KNMusicCategoryModel *m_artistModel;
     KNMusicCategoryDetailModel *m_artistDetailModel;
+    KNMusicCategorySortFilterModel *m_proxyModel;
 };
 
 #endif // KNMUSICARTISTVIEW_H

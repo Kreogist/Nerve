@@ -170,7 +170,6 @@ void KNSearchBox::onFocusGet()
         m_focusLost->stop();
         m_focusGet->setStartFrame(m_grey);
         m_focusGet->start();
-        emit textChanged(m_keyText->text());
     }
 }
 

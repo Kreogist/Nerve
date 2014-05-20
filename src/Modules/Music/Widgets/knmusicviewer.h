@@ -94,7 +94,9 @@ private:
     KNMusicCategoryDetailModel *m_artistDetails,
                                *m_genreDetails;
     KNMusicAlbumDetailModel *m_albumDetails;
-    KNMusicCategorySortFilterModel *m_albumSortModel;
+    KNMusicCategorySortFilterModel *m_artistSortModel,
+                                   *m_albumSortModel,
+                                   *m_genreSortModel;
 
     KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;
