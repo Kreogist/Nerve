@@ -2,11 +2,14 @@
 
 #include <QDebug>
 
+#include "knmusictagid3v2.h"
+
 #include "knmusictagwav.h"
 
 KNMusicTagWAV::KNMusicTagWAV(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    m_id3v2Parser=new KNMusicTagID3v2(this);
 }
 
 bool KNMusicTagWAV::readTag(const QFile &mediaFile,
@@ -87,18 +90,42 @@ void KNMusicTagWAV::parseLIST()
         }
     }
 
-    m_wavFrameData[Artist]=listData["IART"];
-    m_wavFrameData[Album]=listData["IPRD"];
-    m_wavFrameData[BeatsPerMinuate]=listData["IBPM"];
-    m_wavFrameData[Comments]=listData["ICMT"];
-    m_wavFrameData[Genre]=listData["IGNR"];
-    m_wavFrameData[Name]=listData["INAM"];
-    m_wavFrameData[Track]=listData["ITRK"];
-    m_wavFrameData[Year]=listData["ICRD"];
+    setTagData(Artist, listData["IART"]);
+    setTagData(Album, listData["IPRD"]);
+    setTagData(BeatsPerMinuate, listData["IBPM"]);
+    setTagData(Comments, listData["ICMT"]);
+    setTagData(Genre, listData["IGNR"]);
+    setTagData(Name, listData["INAM"]);
+    setTagData(Track, listData["ITRK"]);
+    setTagData(Year, listData["ICRD"]);
 }
 
 void KNMusicTagWAV::parseID32()
 {
-    qDebug()<<"ID32";
-    qDebug()<<m_chunkSize;
+    m_id3v2Parser->setHeaderData(m_rawChunkData);
+    if(!m_id3v2Parser->parseHeaderData())
+    {
+        return;
+    }
+    m_id3v2Parser->clearCache();
+    m_id3v2Parser->setRawData(m_rawChunkData+10, m_chunkSize-10);
+    m_id3v2Parser->parseRawData();
+    setTagData(Name            ,m_id3v2Parser->textData(KNMusicTagID3v2::Name));
+    setTagData(Artist          ,m_id3v2Parser->textData(KNMusicTagID3v2::Artist));
+    setTagData(Album           ,m_id3v2Parser->textData(KNMusicTagID3v2::Album));
+    setTagData(AlbumArtist     ,m_id3v2Parser->textData(KNMusicTagID3v2::AlbumArtist));
+    setTagData(BeatsPerMinuate ,m_id3v2Parser->textData(KNMusicTagID3v2::BeatsPerMinuate));
+    setTagData(Category        ,m_id3v2Parser->textData(KNMusicTagID3v2::Category));
+    setTagData(Comments        ,m_id3v2Parser->textData(KNMusicTagID3v2::Comments));
+    setTagData(Composer        ,m_id3v2Parser->textData(KNMusicTagID3v2::Composer));
+    setTagData(Description     ,m_id3v2Parser->textData(KNMusicTagID3v2::Description));
+    setTagData(Year            ,m_id3v2Parser->textData(KNMusicTagID3v2::Year));
+}
+
+void KNMusicTagWAV::setTagData(const int &index, const QString &data)
+{
+    if(!data.isEmpty())
+    {
+        m_wavFrameData[index]=data;
+    }
 }

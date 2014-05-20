@@ -21,6 +21,7 @@ public:
         AlbumArtist,
         BeatsPerMinuate,
         Category,
+        Comments,
         Composer,
         Description,
         Genre,
@@ -48,6 +49,11 @@ public:
     QImage tagImage(const int &index) const;
     QImage firstAvaliableImage() const;
 
+    void setHeaderData(char *rawData);
+    void setRawData(char *rawData, const quint32 &rawDataLength);
+    void parseRawData();
+    bool parseHeaderData();
+
 signals:
 
 public slots:
@@ -72,7 +78,10 @@ private:
     QMap<int, ID3v2Image> m_tagImages;
     QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec, *m_utf16Codec,*m_utf8Codec;
     QString m_frames[ID3v2ItemCount][2];
+    char m_header[10];
     char *m_rawTagData;
+    bool m_id3v23Later;
+    quint32 m_tagSize;
 };
 
 #endif // KNMUSICTAGID3V2_H

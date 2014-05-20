@@ -168,6 +168,7 @@ void KNMusicInfoCollector::readID3v2Tag(QFile &mediaFile,
         setMediaData(KNMusicGlobal::AlbumArtist     ,m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
         setMediaData(KNMusicGlobal::BeatsPerMinuate ,m_tagID3v2->textData(KNMusicTagID3v2::BeatsPerMinuate));
         setMediaData(KNMusicGlobal::Category        ,m_tagID3v2->textData(KNMusicTagID3v2::Category));
+        setMediaData(KNMusicGlobal::Comments        ,m_tagID3v2->textData(KNMusicTagID3v2::Comments));
         setMediaData(KNMusicGlobal::Composer        ,m_tagID3v2->textData(KNMusicTagID3v2::Composer));
         setMediaData(KNMusicGlobal::Description     ,m_tagID3v2->textData(KNMusicTagID3v2::Description));
         setMediaData(KNMusicGlobal::Year            ,m_tagID3v2->textData(KNMusicTagID3v2::Year));

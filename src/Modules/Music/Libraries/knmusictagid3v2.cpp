@@ -15,6 +15,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_isoCodec=QTextCodec::codecForName("GB18030");
     m_beCodec=QTextCodec::codecForName("UTF-16BE");
     m_leCodec=QTextCodec::codecForName("UTF-16LE");
+    m_utf16Codec=QTextCodec::codecForName("UTF-16");
     m_utf8Codec=QTextCodec::codecForName("UTF-8");
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
 
@@ -24,6 +25,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_frames[AlbumArtist    ][0]="TPE2";
     m_frames[BeatsPerMinuate][0]="TBPM";
     m_frames[Category       ][0]="TIT1";
+    m_frames[Comments       ][0]="COMM";
     m_frames[Composer       ][0]="TCOM";
     m_frames[Description    ][0]="TIT3";
     m_frames[Genre          ][0]="TCON";
@@ -38,6 +40,7 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_frames[AlbumArtist    ][1]="TP2";
     m_frames[BeatsPerMinuate][1]="TBP";
     m_frames[Category       ][1]="TT1";
+    m_frames[Comments       ][1]="COM";
     m_frames[Composer       ][1]="TCM";
     m_frames[Description    ][1]="TT3";
     m_frames[Genre          ][1]="TCO";
@@ -153,39 +156,60 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
         return false;
     }
     //Detect ID3v2 header.
-    char header[10];
-    mediaData.readRawData(header, 10);
-    if(header[0]!='I' || header[1]!='D' || header[2]!='3')
+    mediaData.readRawData(m_header, 10);
+    if(!parseHeaderData())
     {
-        //Can't find 'ID3' from the very beginning.
+        //Parse header error.
         return false;
     }
-    quint32 tagSize=(((quint32)header[6]<<21)&0b00001111111000000000000000000000)+
-                    (((quint32)header[7]<<14)&0b00000000000111111100000000000000)+
-                    (((quint32)header[8]<<7) &0b00000000000000000011111110000000)+
-                    ( (quint32)header[9]     &0b00000000000000000000000001111111);
-    if(mediaFile.size()<((qint64)tagSize+10))
+    if(mediaFile.size()<((qint64)m_tagSize+10))
     {
         //File is smaller than the tag says, failed to get.
         return false;
     }
-    m_version=(int)header[3];
-    m_revision=(int)header[4];
-    bool id3v23=(m_version>2);
-    //Process header: header[5]
-    m_unsynchronisation    =(header[5]&0b10000000);
-    m_extendedHeader       =(header[5]&0b01000000);
-    m_experimentalIndicator=(header[5]&0b00100000);
-    m_rawTagData=new char[tagSize];
-    mediaData.readRawData(m_rawTagData, tagSize);
 
+    m_rawTagData=new char[m_tagSize];
+    mediaData.readRawData(m_rawTagData, m_tagSize);
+    parseRawData();
+    //All process code above.
+    delete[] m_rawTagData; //Don't touch this.
+    if(!m_frameID.isEmpty())
+    {
+        m_useShortFrames=(m_frameID.first().length()==3);
+    }
+    return true;
+}
+
+bool KNMusicTagID3v2::parseHeaderData()
+{
+    if(m_header[0]!='I' || m_header[1]!='D' || m_header[2]!='3')
+    {
+        //Can't find 'ID3' from the very beginning.
+        return false;
+    }
+    m_tagSize=(((quint32)m_header[6]<<21)&0b00001111111000000000000000000000)+
+              (((quint32)m_header[7]<<14)&0b00000000000111111100000000000000)+
+              (((quint32)m_header[8]<<7) &0b00000000000000000011111110000000)+
+              ( (quint32)m_header[9]     &0b00000000000000000000000001111111);
+    m_version=(int)m_header[3];
+    m_revision=(int)m_header[4];
+    m_id3v23Later=(m_version>2);
+    //Process header: header[5]
+    m_unsynchronisation    =(m_header[5]&0b10000000);
+    m_extendedHeader       =(m_header[5]&0b01000000);
+    m_experimentalIndicator=(m_header[5]&0b00100000);
+    return true;
+}
+
+void KNMusicTagID3v2::parseRawData()
+{
     //All process code here.
     quint32 rawPosition=0, frameSize;
     char rawFrameID[5];
-    if(id3v23)
+    if(m_id3v23Later)
     {
         rawFrameID[4]='\0';
-        while(rawPosition<tagSize)
+        while(rawPosition<m_tagSize)
         {
             strncpy(rawFrameID, m_rawTagData+rawPosition, 4);
             if(rawFrameID[0]==0)
@@ -202,7 +226,7 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
                       (((quint32)m_rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
                       (((quint32)m_rawTagData[rawPosition+6]<<7 )&0b00000000000000000011111110000000)+
                       ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
-            if(frameSize>tagSize)
+            if(frameSize>m_tagSize)
             {
                 //Reach an unexpect frame.
                 break;
@@ -221,7 +245,7 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
     else
     {
         rawFrameID[3]='\0';
-        while(rawPosition<tagSize)
+        while(rawPosition<m_tagSize)
         {
             strncpy(rawFrameID, m_rawTagData+rawPosition, 3);
             if(rawFrameID[0]==0)
@@ -232,7 +256,7 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
             frameSize=(((quint32)m_rawTagData[rawPosition+3]<<16)&0b00000000111111110000000000000000)+
                       (((quint32)m_rawTagData[rawPosition+4]<<8) &0b00000000000000001111111100000000)+
                       ( (quint32)m_rawTagData[rawPosition+5]     &0b00000000000000000000000011111111);
-            if(frameSize>tagSize)
+            if(frameSize>m_tagSize)
             {
                 //Reach an unexpect frame.
                 break;
@@ -248,13 +272,6 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
             rawPosition+=frameSize;
         }
     }
-    //All process code above.
-    delete[] m_rawTagData; //Don't touch this.
-    if(!m_frameID.isEmpty())
-    {
-        m_useShortFrames=(m_frameID.first().length()==3);
-    }
-    return true;
 }
 
 void KNMusicTagID3v2::processAPIC(const QByteArray &value)
@@ -368,4 +385,15 @@ QImage KNMusicTagID3v2::firstAvaliableImage() const
         return m_tagImages.first().image;
     }
     return QImage();
+}
+
+void KNMusicTagID3v2::setHeaderData(char *rawData)
+{
+    memcpy(m_header, rawData, 10);
+}
+
+void KNMusicTagID3v2::setRawData(char *rawData, const quint32 &rawDataLength)
+{
+    m_rawTagData=rawData;
+    m_tagSize=rawDataLength;
 }
