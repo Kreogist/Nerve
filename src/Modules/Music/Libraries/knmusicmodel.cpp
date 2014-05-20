@@ -40,7 +40,14 @@ KNMusicModel::KNMusicModel(QObject *parent) :
         header<<(m_musicGlobal->getHeader(i));
     }
     setHorizontalHeaderLabels(header);
+    setHeaderData(0, Qt::Horizontal, QSize(10,23), Qt::SizeHintRole);
+    for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
+    {
+        setHeaderData(i, Qt::Horizontal, Qt::AlignVCenter, Qt::TextAlignmentRole);
+    }
 
+    setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
+    setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
     setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, 2, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DiscNumber, Qt::Horizontal, 1, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DiscCount, Qt::Horizontal, 1, Qt::UserRole);

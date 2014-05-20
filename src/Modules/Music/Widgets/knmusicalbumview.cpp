@@ -223,6 +223,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_heightExpand=new QPropertyAnimation(this, "geometry", this);
     m_heightExpand->setDuration(125);
+    m_heightExpand->setEasingCurve(QEasingCurve::OutCubic);
     m_widthExpand=new QPropertyAnimation(this, "geometry", this);
     m_widthExpand->setDuration(125);
     m_widthExpand->setEasingCurve(QEasingCurve::OutCubic);
@@ -233,6 +234,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_widthFold=new QPropertyAnimation(this, "geometry", this);
     m_widthFold->setDuration(125);
+    m_widthFold->setEasingCurve(QEasingCurve::OutCubic);
     m_heightFold=new QPropertyAnimation(this, "geometry", this);
     m_heightFold->setDuration(125);
     m_heightFold->setEasingCurve(QEasingCurve::OutCubic);
@@ -313,10 +315,11 @@ void KNMusicAlbumDetail::resetHeader()
 void KNMusicAlbumDetail::expandDetail()
 {
     int parentHeight=parentWidget()->height(),
+        parentWidth=parentWidget()->width(),
         heightEnd=qMax(height()+m_infoPanel->minimalExpandedHeight(),
-                       (parentHeight>>1)),
-        widthEnd=(parentWidget()->width()>>1),
-        topEnd=((parentHeight-heightEnd)>>1);
+                       (parentHeight>>2)*3),
+        widthEnd=(parentWidth>>2)*3,
+        topEnd=(heightEnd>>3);
     QRect heightExpandEnd=QRect(x(),
                                 topEnd,
                                 width(),
@@ -324,7 +327,7 @@ void KNMusicAlbumDetail::expandDetail()
     m_heightExpand->setStartValue(geometry());
     m_heightExpand->setEndValue(heightExpandEnd);
     m_widthExpand->setStartValue(heightExpandEnd);
-    m_widthExpand->setEndValue(QRect((widthEnd>>1),
+    m_widthExpand->setEndValue(QRect(parentWidth>>3,
                                      topEnd,
                                      widthEnd,
                                      heightEnd));
@@ -421,7 +424,7 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     m_albumThrow=new QPropertyAnimation(m_albumDetail,
                                         "geometry",
                                         this);
-    m_albumThrow->setEasingCurve(QEasingCurve::InCubic);
+    m_albumThrow->setEasingCurve(QEasingCurve::OutCubic);
     m_flyawayGroup->addAnimation(m_albumThrow);
     connect(m_albumDetail, &KNMusicAlbumDetail::requireFlyOut,
             this, &KNMusicAlbumView::onActionFlyAwayAlbumDetail);
@@ -640,10 +643,10 @@ void KNMusicAlbumView::resizeEvent(QResizeEvent *event)
     QAbstractItemView::resizeEvent(event);
     if(m_albumDetail->isVisible())
     {
-        m_albumDetail->setGeometry((width()>>2),
-                                   (height()>>2),
-                                   (width()>>1),
-                                   (height()>>1));
+        m_albumDetail->setGeometry((width()>>3),
+                                   (height()>>3),
+                                   (width()>>2)*3,
+                                   (height()>>2)*3);
     }
 }
 
@@ -778,9 +781,9 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
                                m_iconSizeParam-2);
     m_albumShow->setStartValue(m_albumDetail->geometry());
     m_albumShow->setEndValue(QRect(((width()-m_albumDetail->width())>>1),
-                                        ((height()-m_albumDetail->height())>>1),
-                                        m_albumDetail->width(),
-                                        m_albumDetail->height()));
+                                   ((height()-m_albumDetail->height())>>1),
+                                   m_albumDetail->width(),
+                                   m_albumDetail->height()));
     m_albumDetail->hideDetailWidget();
     m_albumDetail->show();
     m_albumShow->start();

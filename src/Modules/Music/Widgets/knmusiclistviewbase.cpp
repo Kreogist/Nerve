@@ -53,11 +53,9 @@ void KNMusicListViewBase::resetHeader()
     setItemDelegateForColumn(KNMusicGlobal::Rating,
                              new KNMusicRatingDelegate(this));
     setEditTriggers(QAbstractItemView::SelectedClicked);
-    setHeaderAlignment(KNMusicGlobal::Time, Qt::AlignRight);
-    setHeaderAlignment(KNMusicGlobal::Size, Qt::AlignRight);
     connect(header(), &QHeaderView::sortIndicatorChanged,
             this, &KNMusicListViewBase::onActionSort);
-    for(int i=KNMusicGlobal::Name+1;
+    /*for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
     {
@@ -67,7 +65,7 @@ void KNMusicListViewBase::resetHeader()
     setColumnHidden(KNMusicGlobal::Artist, false);
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);
+    setColumnHidden(KNMusicGlobal::Rating, false);*/
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);
