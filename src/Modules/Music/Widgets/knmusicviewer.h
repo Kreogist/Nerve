@@ -42,6 +42,7 @@ signals:
                                 KNMusicGlobal::MusicCategory currentMode);
     void requireOpenUrl(const QModelIndex &index);
     void requireDelete(const QModelIndex &index);
+    void requireClearSearch();
 
 public slots:
     void retranslate();

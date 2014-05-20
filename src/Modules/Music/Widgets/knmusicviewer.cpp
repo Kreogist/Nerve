@@ -172,13 +172,14 @@ void KNMusicViewer::resort()
 {
     m_listViewModel->sort(0);
     m_artistModel->sort(0);
-    m_albumModel->sort(0);
+    m_albumSortModel->sort(0);
     m_genreModel->sort(0);
 }
 
 void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
                            const QModelIndex &index)
 {
+    emit requireClearSearch();
     switch(category)
     {
     case KNMusicGlobal::SongsView:

@@ -43,6 +43,7 @@ public:
     explicit KNSearchBox(QWidget *parent = 0);
     void setPlaceHolderText(const QString &text);
     void setSearchFocus();
+    void clear();
 
 signals:
     void requireLostFocus();

@@ -36,3 +36,8 @@ void KNMusicHeaderWidget::setSearchFocus()
 {
     m_searchBox->setSearchFocus();
 }
+
+void KNMusicHeaderWidget::clearSearch()
+{
+    m_searchBox->clear();
+}

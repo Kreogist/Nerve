@@ -116,6 +116,11 @@ void KNSearchBox::setSearchFocus()
     m_keyText->setFocus();
 }
 
+void KNSearchBox::clear()
+{
+    m_keyText->clear();
+}
+
 void KNSearchBox::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
@@ -165,6 +170,7 @@ void KNSearchBox::onFocusGet()
         m_focusLost->stop();
         m_focusGet->setStartFrame(m_grey);
         m_focusGet->start();
+        emit textChanged(m_keyText->text());
     }
 }
 

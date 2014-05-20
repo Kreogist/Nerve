@@ -19,6 +19,7 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void setSearchFocus();
+    void clearSearch();
 
 private:
     QBoxLayout *m_mainLayout;
