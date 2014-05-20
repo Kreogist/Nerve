@@ -534,13 +534,15 @@ void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 
 void KNMusicAlbumView::selectCategoryItem(const QString &value)
 {
+    QModelIndex albumSearch;
     if(value.isEmpty())
     {
-        expandAlbumDetails(m_model->index(0,0));
-        scrollTo(m_model->index(0,0), QAbstractItemView::PositionAtTop);
+        albumSearch=m_proxyModel->mapFromSource(m_model->index(0,0));
+        expandAlbumDetails(albumSearch);
+        scrollTo(albumSearch, QAbstractItemView::PositionAtTop);
         return;
     }
-    QModelIndex albumSearch=m_model->indexOf(value);
+    albumSearch=m_proxyModel->mapFromSource(m_model->indexOf(value));
     if(albumSearch.isValid())
     {
         expandAlbumDetails(albumSearch);
@@ -561,7 +563,6 @@ void KNMusicAlbumView::updateGeometries()
 {
     int verticalMax=qMax(0,
                          m_lineCount*m_spacingHeight+m_spacing-height());
-    qDebug()<<verticalMax<<m_lineCount;
     verticalScrollBar()->setRange(0, verticalMax);
     verticalScrollBar()->setPageStep((m_iconSizeParam>>1)-m_spacing);
     verticalScrollBar()->setSingleStep((m_iconSizeParam>>1)-m_spacing);
@@ -586,8 +587,6 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
-    qDebug()<<"albumCount="<<albumCount<<"m_maxColumnCount="<<m_maxColumnCount
-            <<"sourceRow="<<m_model->rowCount();
 
     painter.translate(0, -verticalScrollBar()->value());
     int skipLineCount=verticalScrollBar()->value()/(m_spacingHeight),
@@ -761,6 +760,10 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
     m_albumDetail->hide();
     m_detailIndex=index;
     QModelIndex dataIndex=m_proxyModel->mapToSource(index);
+    if(!dataIndex.isValid())
+    {
+        return;
+    }
     QIcon currentIcon=m_model->data(dataIndex, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(m_iconSizeParam-2,m_iconSizeParam-2),
                                QSize(m_iconSizeParam-2,m_iconSizeParam-2));
@@ -955,7 +958,7 @@ void KNMusicAlbumView::setFilterFixedString(const QString &text)
 {
     flyAwayAlbumDetail();
     m_proxyModel->setFilterFixedString(text);
-    //viewport()->update();
+    viewport()->update();
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

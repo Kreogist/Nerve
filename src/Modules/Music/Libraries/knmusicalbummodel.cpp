@@ -64,9 +64,9 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
         return;
     }
     int searchResult=m_textList.indexOf(currentName);
+    QString currentArtist=artistFromSource(index.row());
     MusicCategoryItem currentAlbum;
     AlbumExtras currentAlbumExtras;
-    QString currentArtist=artistFromSource(index.row());
     if(searchResult==-1)
     {
         currentAlbum.songCount=1;
@@ -178,11 +178,11 @@ void KNMusicAlbumModel::insertAlbum(const QString &text,
                                     const KNMusicCategoryModel::MusicCategoryItem &details,
                                     const KNMusicAlbumModel::AlbumExtras &extras)
 {
-    emit beginInsertRows(QModelIndex(), m_textList.size(), m_textList.size()+1);
+    //emit beginInsertRows(QModelIndex(), m_textList.size(), m_textList.size()+1);
     m_textList.append(text);
     m_detailList.append(details);
     m_extraList.append(extras);
-    emit endInsertRows();
+    //emit endInsertRows();
 }
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const
