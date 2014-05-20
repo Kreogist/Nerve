@@ -5,7 +5,7 @@
 #include "knmusiccategorymodel.h"
 
 KNMusicCategoryModel::KNMusicCategoryModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QStandardItemModel(parent)
 {
     retranslate();
 
@@ -14,127 +14,31 @@ KNMusicCategoryModel::KNMusicCategoryModel(QObject *parent) :
     resetModel();
 }
 
-int KNMusicCategoryModel::rowCount(const QModelIndex &parent) const
-{
-    if(parent.isValid())
-    {
-        return 1;
-    }
-    return m_detailList.size();
-}
-
-int KNMusicCategoryModel::columnCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-    return 1;
-}
-
-QVariant KNMusicCategoryModel::data(const QModelIndex &index, int role) const
-{
-    if(!index.isValid())
-    {
-        return QVariant();
-    }
-    if(index.row()<m_textList.size())
-    {
-        switch(role)
-        {
-        case Qt::DisplayRole:
-            if(index.row()==0)
-            {
-                return m_noCategoryText;
-            }
-            return m_textList.at(index.row());
-        case Qt::EditRole:
-            return m_textList.at(index.row());
-        case Qt::DecorationRole:
-            return m_detailList.at(index.row()).decoration;
-        case Qt::ToolTipRole:
-        case Qt::StatusTipRole:
-        case Qt::WhatsThisRole:
-            return QString();
-        case Qt::SizeHintRole:
-            return QSize(35, 40);
-        }
-    }
-    return QVariant();
-}
-
-QVariant KNMusicCategoryModel::headerData(int section,
-                                          Qt::Orientation orientation,
-                                          int role) const
-{
-    Q_UNUSED(section);
-    Q_UNUSED(orientation);
-    Q_UNUSED(role);
-    return QVariant();
-}
-
-bool KNMusicCategoryModel::setData(const QModelIndex &index,
-                                   const QVariant &value,
-                                   int role)
-{
-    if(index.isValid())
-    {
-        return false;
-    }
-    MusicCategoryItem currentItem;
-    switch(role)
-    {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-        m_textList.replace(index.row(), value.toString());
-        emit dataChanged(index, index, QVector<int>(1, role));
-        return true;
-    case Qt::DecorationRole:
-        currentItem=m_detailList.at(index.row());
-        currentItem.decoration=value.value<QIcon>();
-        m_detailList.replace(index.row(), currentItem);
-        emit dataChanged(index, index, QVector<int>(1, Qt::DecorationRole));
-        return true;
-    case Qt::ToolTipRole:
-    case Qt::StatusTipRole:
-    case Qt::WhatsThisRole:
-        return false;
-    case Qt::SizeHintRole:
-        return false;
-    }
-    return false;
-}
-
 QModelIndex KNMusicCategoryModel::indexOf(const QString &text) const
 {
-    return index(m_textList.indexOf(text));
-}
-
-bool KNMusicCategoryModel::removeRows(int row, int count, const QModelIndex &parent)
-{
-    Q_UNUSED(parent);
-    while(count-- && row<m_textList.size())
+    QList<QStandardItem *> items=findItems(text);
+    if(items.isEmpty())
     {
-        m_textList.removeAt(row);
-        m_detailList.removeAt(row);
-        onActionRemoveRow(row);
+        return QModelIndex();
     }
-    return true;
+    return items.first()->index();
 }
 
 void KNMusicCategoryModel::resetModel()
 {
-    //Clear the QList
-    m_textList.clear();
-    m_detailList.clear();
+    //Clear the model
+    clear();
 
-    //Initial the first no category text item.
-    MusicCategoryItem currentCategory;
-    currentCategory.decoration=m_noAlbumArtIcon;
-    currentCategory.songCount=0;
-    insertCategoryRow("", currentCategory);
+    //Add initial item
+    QStandardItem *currentItem=new QStandardItem();
+    currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
+    currentItem->setData(0, MusicCount);
+    appendRow(currentItem);
 }
 
 QString KNMusicCategoryModel::filterText(const QModelIndex &index) const
 {
-    return m_textList.at(index.row());
+    return data(index, Qt::DisplayRole).toString();
 }
 
 QString KNMusicCategoryModel::noCategoryText() const
@@ -161,19 +65,17 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
         emit requireShowFirstItem();
         return;
     }
-    int searchResult=m_textList.indexOf(currentName);
-    MusicCategoryItem currentItem;
-    if(searchResult==-1)
+    QModelIndex searchResult=indexOf(currentName);
+    QStandardItem *currentItem;
+    if(searchResult.isValid())
     {
-        currentItem.songCount=1;
-        insertCategoryRow(currentName, currentItem);
+        setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
     }
     else
     {
-        currentItem=m_detailList.at(searchResult);
-        currentItem.songCount++;
-        m_detailList.replace(searchResult,
-                             currentItem);
+        currentItem=new QStandardItem(currentName);
+        currentItem->setData(1, MusicCount);
+        appendRow(currentItem);
     }
 }
 
@@ -186,20 +88,18 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
         emit requireShowFirstItem();
         return;
     }
-    int searchResult=m_textList.indexOf(currentName);
-    MusicCategoryItem currentItem;
-    if(searchResult==-1)
+    QModelIndex searchResult=indexOf(currentName);
+    QStandardItem *currentItem;
+    if(searchResult.isValid())
     {
-        currentItem.songCount=1;
-        currentItem.iconKey=m_sourceModel->itemArtworkKey(index.row());
-        insertCategoryRow(currentName, currentItem);
+        setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
     }
     else
     {
-        currentItem=m_detailList.at(searchResult);
-        currentItem.songCount++;
-        m_detailList.replace(searchResult,
-                             currentItem);
+        currentItem=new QStandardItem(currentName);
+        currentItem->setData(m_sourceModel->itemArtworkKey(index.row()), IconKey);
+        currentItem->setData(1, MusicCount);
+        appendRow(currentItem);
     }
 }
 
@@ -215,20 +115,20 @@ void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
         }
         return;
     }
-    int searchResult=m_textList.indexOf(currentName);
-    if(searchResult==-1)
+    QModelIndex searchResult=indexOf(currentName);
+    if(!searchResult.isValid())
     {
         return;
     }
-    MusicCategoryItem currentItem=m_detailList.at(searchResult);
-    if(currentItem.songCount==1)
+    QStandardItem *currentItem=itemFromIndex(searchResult);
+    int currentMusicCount=currentItem->data(MusicCount).toInt();
+    if(currentMusicCount==1)
     {
-        removeRow(searchResult);
+        removeRow(searchResult.row());
     }
     else
     {
-        currentItem.songCount--;
-        m_detailList.replace(searchResult, currentItem);
+        currentItem->setData(currentMusicCount-1, MusicCount);
     }
 }
 
@@ -239,15 +139,14 @@ void KNMusicCategoryModel::onAlbumArtUpdate(const int &index)
     {
         return;
     }
-    int searchResult=m_textList.indexOf(currentName);
-    if(searchResult==-1)
+    QModelIndex searchResult=indexOf(currentName);
+    if(!searchResult.isValid())
     {
         return;
     }
-    MusicCategoryItem currentItem=m_detailList.at(searchResult);
-    currentItem.iconKey=m_sourceModel->itemArtworkKey(index);
-    currentItem.decoration=itemIcon(index);
-    m_detailList.replace(searchResult, currentItem);
+    QStandardItem *currentItem=itemFromIndex(searchResult);
+    currentItem->setData(m_sourceModel->itemArtworkKey(index), IconKey);
+    currentItem->setData(itemIcon(index), Qt::DecorationRole);
 }
 
 void KNMusicCategoryModel::updateImage(const int &index)
@@ -269,20 +168,6 @@ void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
             this, &KNMusicCategoryModel::updateAllImage);
 }
 
-KNMusicCategoryModel::MusicCategoryItem KNMusicCategoryModel::item(const int &index) const
-{
-    return m_detailList.at(index);
-}
-
-void KNMusicCategoryModel::insertCategoryRow(const QString &text,
-                                          const KNMusicCategoryModel::MusicCategoryItem &details)
-{
-    emit beginInsertRows(QModelIndex(), m_textList.size(), m_textList.size()+1);
-    m_textList.append(text);
-    m_detailList.append(details);
-    emit endInsertRows();
-}
-
 QIcon KNMusicCategoryModel::itemIcon(const int &index) const
 {
     Q_UNUSED(index);
@@ -295,14 +180,10 @@ QString KNMusicCategoryModel::categoryName(const int &index) const
     return QString();
 }
 
-void KNMusicCategoryModel::onActionRemoveRow(const int &index)
-{
-    Q_UNUSED(index);
-}
 
 void KNMusicCategoryModel::updateAllImage()
 {
-    for(int i=0, itemCount=m_textList.size(); i<itemCount; i++)
+    for(int i=0, itemCount=rowCount(); i<itemCount; i++)
     {
         updateImage(i);
     }

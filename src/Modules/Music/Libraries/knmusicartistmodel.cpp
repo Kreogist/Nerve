@@ -24,11 +24,12 @@ void KNMusicArtistModel::retranslateAndSet()
 
 void KNMusicArtistModel::updateImage(const int &index)
 {
-    MusicCategoryItem currentItem=m_detailList.at(index);
-    currentItem.decoration=currentItem.iconKey.isEmpty()?
-                           m_noAlbumArtIcon:
-                           QPixmap::fromImage(m_sourceModel->artworkFromKey(currentItem.iconKey));
-    m_detailList.replace(index, currentItem);
+    QStandardItem *currentItem=item(index);
+    QString currentIconKey=currentItem->data(IconKey).toString();
+    currentItem->setData(currentIconKey.isEmpty()?
+                             m_noAlbumArtIcon:
+                             QPixmap::fromImage(m_sourceModel->artworkFromKey(currentIconKey)),
+                         Qt::DecorationRole);
 }
 
 QIcon KNMusicArtistModel::itemIcon(const int &index) const

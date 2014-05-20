@@ -6,20 +6,14 @@
 
 #include "knmusicmodel.h"
 
-#include <QAbstractListModel>
+#include <QStandardItemModel>
 
-class KNMusicCategoryModel : public QAbstractListModel
+class KNMusicCategoryModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
     explicit KNMusicCategoryModel(QObject *parent = 0);
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
     QModelIndex indexOf(const QString &text) const;
-    bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
     virtual void resetModel();
     virtual QString filterText(const QModelIndex &index) const;
     QString noCategoryText() const;
@@ -40,23 +34,21 @@ public slots:
     void setSourceModel(QAbstractItemModel *sourceModel);
 
 protected:
-    struct MusicCategoryItem
+    enum MusicCategoryData
     {
-        QIcon decoration;
-        QString iconKey;
-        int songCount;
+        IconKey = Qt::UserRole,
+        MusicCount,
+        VariousArtist,
+        ArtistName,
+        Year
     };
-    MusicCategoryItem item(const int &index) const;
-    void insertCategoryRow(const QString &text, const MusicCategoryItem &details);
+
     virtual void updateImage(const int &index);
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
-    virtual void onActionRemoveRow(const int &index);
     KNMusicModel *m_sourceModel;
     int m_noCategoryItemCount=0;
     QIcon m_noAlbumArtIcon;
-    QStringList m_textList;
-    QList<MusicCategoryItem> m_detailList;
 
 private slots:
     void updateAllImage();
