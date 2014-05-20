@@ -180,7 +180,6 @@ QString KNMusicCategoryModel::categoryName(const int &index) const
     return QString();
 }
 
-
 void KNMusicCategoryModel::updateAllImage()
 {
     for(int i=0, itemCount=rowCount(); i<itemCount; i++)
@@ -197,4 +196,9 @@ void KNMusicCategoryModel::setNoCategoryText(const QString &noCategoryText)
 QString KNMusicCategoryModel::filterString(const QModelIndex &index) const
 {
     return data(index, Qt::UserRole).toString();
+}
+
+QIcon KNMusicCategoryModel::albumArt(const QModelIndex &index) const
+{
+    return data(index, Qt::DecorationRole).value<QIcon>();
 }

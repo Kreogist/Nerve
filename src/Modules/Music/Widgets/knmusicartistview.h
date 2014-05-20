@@ -7,10 +7,11 @@
 class QBoxLayout;
 class QLabel;
 class QStandardItemModel;
+class QResizeEvent;
 class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
-class KNMusicListView;
+class KNMusicListViewBase;
 class KNMusicCategorySortFilterModel;
 class KNMusicCategoryDetailsDisplay : public QWidget
 {
@@ -21,15 +22,19 @@ public:
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void setCurrentIndex(const QModelIndex &index);
-    void setSongListView(KNMusicListView *listview);
+    void setSongListView(KNMusicListViewBase *listview);
+    void setBackground(const QIcon &background);
     void resetHeader();
 
 signals:
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 private:
-    QLabel *m_artistName, *m_artistInfo;
+    QLabel *m_artistName, *m_artistInfo, *m_largeIcon;
     QString m_song, m_songs;
-    KNMusicListView *m_songViewer;
+    KNMusicListViewBase *m_songViewer;
     QBoxLayout *m_layout;
 };
 
@@ -43,7 +48,7 @@ public:
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
-    void setSongListView(KNMusicListView *listview);
+    void setSongListView(KNMusicListViewBase *listview);
 
 signals:
 

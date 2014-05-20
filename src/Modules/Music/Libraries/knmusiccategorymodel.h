@@ -19,6 +19,7 @@ public:
     QString noCategoryText() const;
     void setNoCategoryText(const QString &noCategoryText);
     QString filterString(const QModelIndex &index) const;
+    QIcon albumArt(const QModelIndex &index) const;
 
 signals:
     void requireHideFirstItem();

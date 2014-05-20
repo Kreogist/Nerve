@@ -1,8 +1,12 @@
 #include <QItemSelectionModel>
 #include <QSplitter>
 #include <QLabel>
+#include <QRadialGradient>
+#include <QBitmap>
+#include <QGraphicsOpacityEffect>
 #include <QHeaderView>
 #include <QBoxLayout>
+#include <QResizeEvent>
 
 #include <QDebug>
 
@@ -14,7 +18,7 @@
 #include "../knmusicglobal.h"
 
 #include "knmusiccategorylist.h"
-#include "knmusiclistview.h"
+#include "knmusiclistviewbase.h"
 
 #include "knmusicartistview.h"
 
@@ -23,6 +27,23 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
 {
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
+
+    m_largeIcon=new QLabel(this);
+    m_largeIcon->setScaledContents(true);
+    m_largeIcon->setGeometry(width()-256,
+                             height()-256,
+                             256,
+                             256);
+    QGraphicsOpacityEffect *opacityEffect=new QGraphicsOpacityEffect(m_largeIcon);
+    opacityEffect->setOpacity(0.7);
+    QRadialGradient alphaGradient(QPointF(256,256),
+                                  256,
+                                  QPointF(256,256));
+    alphaGradient.setColorAt(0.0, Qt::black);
+    alphaGradient.setColorAt(1.0, Qt::transparent);
+    opacityEffect->setOpacityMask(alphaGradient);
+    m_largeIcon->setGraphicsEffect(opacityEffect);
+
     m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
     m_layout->setSpacing(0);
@@ -89,15 +110,27 @@ void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
     m_songViewer->scrollTo(index, QAbstractItemView::PositionAtCenter);
 }
 
-void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListView *listview)
+void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListViewBase *listview)
 {
     m_songViewer=listview;
     m_layout->addWidget(m_songViewer, 1);
 }
 
+void KNMusicCategoryDetailsDisplay::setBackground(const QIcon &background)
+{
+    m_largeIcon->setPixmap(background.pixmap(m_largeIcon->size()));
+}
+
 void KNMusicCategoryDetailsDisplay::resetHeader()
 {
     m_songViewer->resetHeader();
+}
+
+void KNMusicCategoryDetailsDisplay::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    m_largeIcon->move(event->size().width()-256,
+                      event->size().height()-256);
 }
 
 KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
@@ -167,7 +200,7 @@ void KNMusicArtistView::selectItem(const QModelIndex &index)
     }
 }
 
-void KNMusicArtistView::setSongListView(KNMusicListView *listview)
+void KNMusicArtistView::setSongListView(KNMusicListViewBase *listview)
 {
     m_artistDetails->setSongListView(listview);
 }
@@ -183,7 +216,9 @@ void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
     Q_UNUSED(previous);
     if(current.isValid())
     {
+        QModelIndex originalIndex=m_proxyModel->mapToSource(current);
         m_artistDetails->setArtistName(m_proxyModel->data(current,Qt::DisplayRole).toString());
-        m_artistDetailModel->setCategoryIndex(m_proxyModel->mapToSource(current));
+        m_artistDetails->setBackground(m_artistModel->albumArt(originalIndex));
+        m_artistDetailModel->setCategoryIndex(originalIndex);
     }
 }

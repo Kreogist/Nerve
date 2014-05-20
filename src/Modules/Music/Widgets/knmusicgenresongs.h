@@ -1,9 +1,9 @@
 #ifndef KNMUSICGENRESONGS_H
 #define KNMUSICGENRESONGS_H
 
-#include "knmusiclistview.h"
+#include "knmusiclistviewbase.h"
 
-class KNMusicGenreSongs : public KNMusicListView
+class KNMusicGenreSongs : public KNMusicListViewBase
 {
     Q_OBJECT
 public:
