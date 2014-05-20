@@ -8,7 +8,6 @@ class KNMusicCategorySortFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit KNMusicCategorySortFilterModel(QObject *parent = 0);
-    bool isNoCategoryShown();
 
 signals:
 

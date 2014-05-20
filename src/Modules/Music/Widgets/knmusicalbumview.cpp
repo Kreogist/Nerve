@@ -561,6 +561,7 @@ void KNMusicAlbumView::updateGeometries()
 {
     int verticalMax=qMax(0,
                          m_lineCount*m_spacingHeight+m_spacing-height());
+    qDebug()<<verticalMax<<m_lineCount;
     verticalScrollBar()->setRange(0, verticalMax);
     verticalScrollBar()->setPageStep((m_iconSizeParam>>1)-m_spacing);
     verticalScrollBar()->setSingleStep((m_iconSizeParam>>1)-m_spacing);
@@ -569,7 +570,7 @@ void KNMusicAlbumView::updateGeometries()
 void KNMusicAlbumView::paintEvent(QPaintEvent *event)
 {
     QStyleOptionViewItem option=viewOptions();
-    QBrush background = option.palette.base();
+    QBrush background=option.palette.base();
     QPen foreground(option.palette.color(QPalette::Text));
     QPainter painter(viewport());
     painter.setRenderHint(QPainter::TextAntialiasing);
@@ -585,6 +586,8 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         currentRow=0, currentColumn=0,
         currentLeft=m_spacing, currentTop=m_spacing;
     m_lineCount=(albumCount+m_maxColumnCount-1)/m_maxColumnCount;
+    qDebug()<<"albumCount="<<albumCount<<"m_maxColumnCount="<<m_maxColumnCount
+            <<"sourceRow="<<m_model->rowCount();
 
     painter.translate(0, -verticalScrollBar()->value());
     int skipLineCount=verticalScrollBar()->value()/(m_spacingHeight),
@@ -898,6 +901,10 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                                   const QRect &rect,
                                   const QModelIndex &index)
 {
+    if(!index.isValid())
+    {
+        return;
+    }
     //To draw the album art.
     QModelIndex originalIndex=index;
     QIcon currentIcon=m_model->data(originalIndex, Qt::DecorationRole).value<QIcon>();
@@ -948,7 +955,7 @@ void KNMusicAlbumView::setFilterFixedString(const QString &text)
 {
     flyAwayAlbumDetail();
     m_proxyModel->setFilterFixedString(text);
-    viewport()->update();
+    //viewport()->update();
 }
 
 void KNMusicAlbumView::selectAlbum(const QModelIndex &index)

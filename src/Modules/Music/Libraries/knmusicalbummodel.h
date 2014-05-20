@@ -24,7 +24,16 @@ public slots:
     void onMusicRecover(const QModelIndex &index);
 
 protected:
+    struct AlbumExtras
+    {
+        QString artist;
+        bool variousArtist;
+        QString year;
+    };
     void updateImage(const int &index);
+    void insertAlbum(const QString &text,
+                     const MusicCategoryItem &details,
+                     const AlbumExtras &extras);
     QIcon itemIcon(const int &index) const;
     QString categoryName(const int &index) const;
     QString artistFromSource(const int &index) const;
@@ -32,12 +41,6 @@ protected:
     void onActionRemoveRow(const int &index);
 
 private:
-    struct AlbumExtras
-    {
-        QString artist;
-        bool variousArtist;
-        QString year;
-    };
     QList<AlbumExtras> m_extraList;
     QString m_variousArtist;
 };

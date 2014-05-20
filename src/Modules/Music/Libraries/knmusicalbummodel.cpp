@@ -18,12 +18,18 @@ bool KNMusicAlbumModel::isNoAlbumHidden() const
 
 void KNMusicAlbumModel::resetModel()
 {
-    KNMusicCategoryModel::resetModel();
+    //Clear the QList
+    m_textList.clear();
+    m_detailList.clear();
     m_extraList.clear();
 
+    //Initial the first no category text item.
+    MusicCategoryItem currentCategory;
+    currentCategory.decoration=m_noAlbumArtIcon;
+    currentCategory.songCount=0;
     AlbumExtras currentExtras;
     currentExtras.variousArtist=false;
-    m_extraList.append(currentExtras);
+    insertAlbum("", currentCategory, currentExtras);
 }
 
 QString KNMusicAlbumModel::indexArtist(const QModelIndex &index) const
@@ -63,12 +69,10 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     QString currentArtist=artistFromSource(index.row());
     if(searchResult==-1)
     {
-        m_textList.append(currentName);
         currentAlbum.songCount=1;
-        m_detailList.append(currentAlbum);
         currentAlbumExtras.artist=currentArtist;
         currentAlbumExtras.variousArtist=false;
-        m_extraList.append(currentAlbumExtras);
+        insertAlbum(currentName, currentAlbum, currentAlbumExtras);
     }
     else
     {
@@ -132,14 +136,12 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
             currentYear=yearFromSource(index.row());
     if(searchResult==-1)
     {
-        m_textList.append(currentName);
         currentAlbum.songCount=1;
         currentAlbum.iconKey=m_sourceModel->itemArtworkKey(index.row());
-        m_detailList.append(currentAlbum);
         currentAlbumExtras.artist=currentArtist;
         currentAlbumExtras.variousArtist=false;
         currentAlbumExtras.year=currentYear;
-        m_extraList.append(currentAlbumExtras);
+        insertAlbum(currentName, currentAlbum, currentAlbumExtras);
     }
     else
     {
@@ -170,6 +172,17 @@ void KNMusicAlbumModel::updateImage(const int &index)
                            m_noAlbumArtIcon:
                            QPixmap::fromImage(m_sourceModel->artworkFromKey(currentItem.iconKey));
     m_detailList.replace(index, currentItem);
+}
+
+void KNMusicAlbumModel::insertAlbum(const QString &text,
+                                    const KNMusicCategoryModel::MusicCategoryItem &details,
+                                    const KNMusicAlbumModel::AlbumExtras &extras)
+{
+    emit beginInsertRows(QModelIndex(), m_textList.size(), m_textList.size()+1);
+    m_textList.append(text);
+    m_detailList.append(details);
+    m_extraList.append(extras);
+    emit endInsertRows();
 }
 
 QIcon KNMusicAlbumModel::itemIcon(const int &index) const

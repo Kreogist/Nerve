@@ -47,6 +47,7 @@ protected:
         int songCount;
     };
     MusicCategoryItem item(const int &index) const;
+    void insertCategoryRow(const QString &text, const MusicCategoryItem &details);
     virtual void updateImage(const int &index);
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
