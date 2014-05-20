@@ -86,6 +86,7 @@ void KNMusicCategoryDetailsDisplay::setDetailModel(KNMusicCategoryDetailModel *m
 void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
 {
     m_songViewer->setCurrentIndex(index);
+    m_songViewer->scrollTo(index, QAbstractItemView::PositionAtCenter);
 }
 
 void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListView *listview)

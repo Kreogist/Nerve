@@ -190,10 +190,13 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
                            const QModelIndex &index)
 {
     emit requireClearSearch();
+    QModelIndex songMappedIndex;
     switch(category)
     {
     case KNMusicGlobal::SongsView:
-        m_libraryView->setCurrentIndex(m_listViewModel->mapFromSource(index));
+        songMappedIndex=m_listViewModel->mapFromSource(index);
+        m_libraryView->setCurrentIndex(songMappedIndex);
+        m_libraryView->scrollTo(songMappedIndex, QAbstractItemView::PositionAtCenter);
         break;
     case KNMusicGlobal::ArtistView:
         m_artistView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),

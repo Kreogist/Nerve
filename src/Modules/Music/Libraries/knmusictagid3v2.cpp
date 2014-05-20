@@ -67,7 +67,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         {
             return m_leCodec->toUnicode(content).simplified();
         }
-        return QString::fromUtf8(content).simplified();
+        return m_utf16Codec->toUnicode(content).simplified();
     case 2:
         //UTF-16 BE without BOM
         return m_beCodec->toUnicode(content).simplified();

@@ -192,6 +192,7 @@ void KNMusicModel::retranslateAndSet()
 void KNMusicModel::onActionRecoverComplete()
 {
     m_dataRecoverComplete=true;
+    emit requireResort();
     if(m_imageRecoverComplete)
     {
         emit requireUpdateImage();

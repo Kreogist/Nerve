@@ -70,7 +70,7 @@ private:
     QList<QByteArray> m_frameData;
 
     QMap<int, ID3v2Image> m_tagImages;
-    QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec, *m_utf8Codec;
+    QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec, *m_utf16Codec,*m_utf8Codec;
     QString m_frames[ID3v2ItemCount][2];
     char *m_rawTagData;
 };
