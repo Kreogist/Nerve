@@ -85,7 +85,7 @@ KNSearchBox::KNSearchBox(QWidget *parent) :
     addAction(escapeAction);
 
     m_mouseEnterAnime=new QTimeLine(100, this);
-    m_mouseEnterAnime->setEndFrame(0x80);
+    m_mouseEnterAnime->setEndFrame(0x60);
     connect(m_mouseEnterAnime, &QTimeLine::frameChanged,
             this, &KNSearchBox::onActionBackgroundChanged);
 

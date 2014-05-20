@@ -17,6 +17,7 @@ class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
 class KNMusicTagWma;
 class KNMusicTagM4A;
+class KNMusicTagWAV;
 class KNMusicTagFLAC;
 class KNMusicInfoCollector : public KNLibInfoCollector
 {
@@ -47,6 +48,8 @@ private:
                     QDataStream &mediaData);
     void readFLACTag(QFile &mediaFile,
                      QDataStream &mediaData);
+    void readWAVTag(QFile &mediaFile,
+                    QDataStream &mediaData);
     void setMediaData(const int &index,
                       const QString &value);
     void setMusicCover(const QImage &pixmap);
@@ -57,6 +60,7 @@ private:
     KNMusicTagWma *m_tagWMA;
     KNMusicTagM4A *m_tagM4A;
     KNMusicTagFLAC *m_tagFLAC;
+    KNMusicTagWAV *m_tagWAV;
 
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
     QImage m_musicCover;

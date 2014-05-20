@@ -14,6 +14,7 @@
 #include "knmusictagwma.h"
 #include "knmusictagm4a.h"
 #include "knmusictagflac.h"
+#include "knmusictagwav.h"
 
 #include "../../knglobal.h"
 
@@ -32,6 +33,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     m_tagWMA=new KNMusicTagWma(this);
     m_tagM4A=new KNMusicTagM4A(this);
     m_tagFLAC=new KNMusicTagFLAC(this);
+    m_tagWAV=new KNMusicTagWAV(this);
 }
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
@@ -71,6 +73,7 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
         readWMATag(mediaFile, mediaData);
         readM4ATag(mediaFile, mediaData);
         readFLACTag(mediaFile, mediaData);
+        readWAVTag(mediaFile, mediaData);
         mediaFile.close();
     }
     parseByMediaInfo(filePathBackup);
@@ -295,6 +298,26 @@ void KNMusicInfoCollector::readFLACTag(QFile &mediaFile,
         {
             setMusicCover(m_tagFLAC->firstAvaliableImage());
         }
+    }
+}
+
+void KNMusicInfoCollector::readWAVTag(QFile &mediaFile, QDataStream &mediaData)
+{
+    mediaFile.reset();
+    if(m_tagWAV->readTag(mediaFile,
+                         mediaData))
+    {
+        setMediaData(KNMusicGlobal::Name            ,m_tagWAV->textData(KNMusicTagWAV::Name));
+        setMediaData(KNMusicGlobal::Artist          ,m_tagWAV->textData(KNMusicTagWAV::Artist));
+        setMediaData(KNMusicGlobal::Album           ,m_tagWAV->textData(KNMusicTagWAV::Album));
+        setMediaData(KNMusicGlobal::AlbumArtist     ,m_tagWAV->textData(KNMusicTagWAV::AlbumArtist));
+        setMediaData(KNMusicGlobal::BeatsPerMinuate ,m_tagWAV->textData(KNMusicTagWAV::BeatsPerMinuate));
+        setMediaData(KNMusicGlobal::Category        ,m_tagWAV->textData(KNMusicTagWAV::Category));
+        setMediaData(KNMusicGlobal::Comments        ,m_tagWAV->textData(KNMusicTagWAV::Comments));
+        setMediaData(KNMusicGlobal::Composer        ,m_tagWAV->textData(KNMusicTagWAV::Composer));
+        setMediaData(KNMusicGlobal::Description     ,m_tagWAV->textData(KNMusicTagWAV::Description));
+        setMediaData(KNMusicGlobal::Genre           ,m_tagWAV->textData(KNMusicTagWAV::Genre));
+        setMediaData(KNMusicGlobal::Year            ,m_tagWAV->textData(KNMusicTagWAV::Year));
     }
 }
 
