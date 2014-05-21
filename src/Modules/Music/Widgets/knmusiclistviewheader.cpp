@@ -27,8 +27,8 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     connect(m_viewerMenu, &KNMusicListViewHeaderMenu::requireChangeVisible,
             this, &KNMusicListViewHeader::requireChangeVisible);
 
-    m_ascPoints << QPointF(0, 0) << QPointF(10, 0) << QPointF(5,5);
-    m_desPoints << QPointF(0, 5) << QPointF(10, 5) << QPointF(5,0);
+    m_ascPoints << QPointF(0, 0) << QPointF(10, 0) << QPointF(5, 5) << QPointF(0, 0);
+    m_desPoints << QPointF(0, 5) << QPointF(10, 5) << QPointF(5, 0) << QPointF(0, 5);
 
     //Set palette.
     int minGrey=0x20;
@@ -42,6 +42,8 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     m_palette.setBrush(QPalette::Button, QBrush(buttonGradient));
     m_palette.setColor(QPalette::ButtonText, QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
+
+    m_lineColor=m_backgroundColor;
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
@@ -98,11 +100,11 @@ void KNMusicListViewHeader::paintSection(QPainter *painter,
     QRect contentRect;
     if(logicalIndex==sortIndicatorSection())
     {
-        painter->setPen(QColor(255,255,255));
-        painter->translate(rect.x(), rect.y());
-        painter->drawPolygon(sortIndicatorOrder()==Qt::AscendingOrder?
-                                 m_ascPoints:m_desPoints);
-        painter->resetTransform();
+        painter->drawPixmap(QPoint(rect.x()+rect.width()-20,
+                                   rect.y()+((rect.height()-20)>>1)),
+                            sortIndicatorOrder()==Qt::AscendingOrder?
+                                QPixmap(":/Music/Resources/Public/AscendingIndicator.png"):
+                                QPixmap(":/Music/Resources/Public/DescendingIndicator.png"));
         contentRect=QRect(rect.x()+4,
                           rect.y()+1,
                           rect.width()-28,

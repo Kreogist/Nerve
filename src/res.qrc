@@ -8,6 +8,8 @@
     </qresource>
     <qresource prefix="/Music">
         <file>Resources/Music/noalbum.png</file>
+        <file>Resources/Public/AscendingIndicator.png</file>
+        <file>Resources/Public/DescendingIndicator.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>
