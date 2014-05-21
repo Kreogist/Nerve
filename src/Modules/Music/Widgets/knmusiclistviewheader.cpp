@@ -1,6 +1,7 @@
-#include <QDebug>
-
 #include <QTimeLine>
+#include <QPainter>
+
+#include <QDebug>
 
 #include "knmusiclistviewheadermenu.h"
 
@@ -10,9 +11,15 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     QHeaderView(Qt::Horizontal, parent)
 {
     //Set properties.
-    setSectionsMovable(true);
-    setDefaultAlignment(Qt::AlignLeft);
+    setAutoFillBackground(true);
+    setAutoScroll(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
+    setFrameShape(QFrame::NoFrame);
+    setFrameShadow(QFrame::Plain);
+    setDefaultAlignment(Qt::AlignLeft);
+    setSectionsMovable(true);
+    //setStretchLastSection(true);
+    setContentsMargins(0,0,0,0);
 
     m_viewerMenu=new KNMusicListViewHeaderMenu(this);
     connect(this, &KNMusicListViewHeader::customContextMenuRequested,
@@ -20,13 +27,19 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     connect(m_viewerMenu, &KNMusicListViewHeaderMenu::requireChangeVisible,
             this, &KNMusicListViewHeader::requireChangeVisible);
 
+    m_ascPoints << QPointF(0, 0) << QPointF(10, 0) << QPointF(5,5);
+    m_desPoints << QPointF(0, 5) << QPointF(10, 5) << QPointF(5,0);
+
     //Set palette.
     int minGrey=0x20;
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);
     m_palette=palette();
-    m_palette.setColor(QPalette::Base, m_backgroundColor);
-    m_palette.setColor(QPalette::Window, m_backgroundColor);
-    m_palette.setColor(QPalette::Button, m_backgroundColor);
+    m_palette.setColor(QPalette::Base,       QColor(0,0,0,0));
+    m_palette.setColor(QPalette::Window,     QColor(0,0,0,0));
+    buttonGradient=QLinearGradient(QPoint(0,0), QPoint(0, height()));
+    buttonGradient.setColorAt(0, QColor(0x48,0x48,0x48));
+    buttonGradient.setColorAt(1, QColor(0x48,0x48,0x48));
+    m_palette.setBrush(QPalette::Button, QBrush(buttonGradient));
     m_palette.setColor(QPalette::ButtonText, QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
 
@@ -50,6 +63,16 @@ void KNMusicListViewHeader::moveToFirst(int logicalIndex)
     moveSection(visualIndex(logicalIndex), 0);
 }
 
+void KNMusicListViewHeader::hideStrectch()
+{
+    //setSectionHidden();
+}
+
+void KNMusicListViewHeader::showStrectch()
+{
+    ;
+}
+
 void KNMusicListViewHeader::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
@@ -68,13 +91,45 @@ void KNMusicListViewHeader::leaveEvent(QEvent *e)
     QHeaderView::leaveEvent(e);
 }
 
+void KNMusicListViewHeader::paintSection(QPainter *painter,
+                                         const QRect &rect,
+                                         int logicalIndex) const
+{
+    QRect contentRect;
+    if(logicalIndex==sortIndicatorSection())
+    {
+        painter->setPen(QColor(255,255,255));
+        painter->translate(rect.x(), rect.y());
+        painter->drawPolygon(sortIndicatorOrder()==Qt::AscendingOrder?
+                                 m_ascPoints:m_desPoints);
+        painter->resetTransform();
+        contentRect=QRect(rect.x()+4,
+                          rect.y()+1,
+                          rect.width()-28,
+                          rect.height()-2);
+    }
+    else
+    {
+        contentRect=QRect(rect.x()+4,
+                          rect.y()+1,
+                          rect.width()-8,
+                          rect.height()-2);
+    }
+    painter->drawText(contentRect,
+                      model()->headerData(logicalIndex, Qt::Horizontal, Qt::TextAlignmentRole).toInt(),
+                      model()->headerData(logicalIndex, Qt::Horizontal).toString());
+    painter->setPen(m_lineColor);
+    painter->drawLine(rect.topRight(), rect.bottomRight());
+}
+
 void KNMusicListViewHeader::changeBackground(int frameData)
 {
     m_backgroundColor=QColor(frameData, frameData, frameData);
-    m_palette.setColor(QPalette::Base, m_backgroundColor);
-    m_palette.setColor(QPalette::Window, m_backgroundColor);
-    m_palette.setColor(QPalette::Button, m_backgroundColor);
-    int textParam=(frameData<<1)+127;
+    int textParam=(frameData<<1);
+    m_lineColor=QColor(textParam, textParam, textParam);
+    buttonGradient.setColorAt(1, QColor(frameData+0x38,frameData+0x38,frameData+0x38));
+    m_palette.setBrush(QPalette::Button, QBrush(buttonGradient));
+    textParam+=127;
     m_palette.setColor(QPalette::ButtonText, QColor(textParam,
                                                     textParam,
                                                     textParam));

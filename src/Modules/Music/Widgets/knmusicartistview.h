@@ -3,11 +3,13 @@
 
 #include <QTreeView>
 #include <QSplitter>
+#include <QRadialGradient>
 
 class QBoxLayout;
 class QLabel;
 class QStandardItemModel;
 class QResizeEvent;
+class QGraphicsOpacityEffect;
 class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
@@ -36,6 +38,8 @@ private:
     QString m_song, m_songs;
     KNMusicListViewBase *m_songViewer;
     QBoxLayout *m_layout;
+    QGraphicsOpacityEffect *m_opacityEffect;
+    QRadialGradient m_alphaGradient;
 };
 
 class KNMusicArtistView : public QSplitter

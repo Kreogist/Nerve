@@ -1,6 +1,8 @@
 #ifndef KNMUSICLISTVIEWHEADER_H
 #define KNMUSICLISTVIEWHEADER_H
 
+#include <QLinearGradient>
+
 #include "../knmusicglobal.h"
 
 #include <QHeaderView>
@@ -13,6 +15,8 @@ class KNMusicListViewHeader : public QHeaderView
 public:
     explicit KNMusicListViewHeader(QWidget *parent = 0);
     void moveToFirst(int logicalIndex);
+    void hideStrectch();
+    void showStrectch();
 
 signals:
     void requireChangeVisible(const int &index,
@@ -23,6 +27,7 @@ public slots:
 protected:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
+    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
 
 private slots:
     void changeBackground(int frameData);
@@ -30,8 +35,10 @@ private slots:
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;
-    QColor m_backgroundColor;
+    QColor m_backgroundColor, m_lineColor;
     QPalette m_palette;
+    QLinearGradient buttonGradient;
+    QPolygonF m_ascPoints, m_desPoints;
     KNMusicListViewHeaderMenu *m_viewerMenu;
 };
 

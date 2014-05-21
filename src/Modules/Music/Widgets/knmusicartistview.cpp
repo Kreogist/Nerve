@@ -1,7 +1,6 @@
 #include <QItemSelectionModel>
 #include <QSplitter>
 #include <QLabel>
-#include <QRadialGradient>
 #include <QBitmap>
 #include <QGraphicsOpacityEffect>
 #include <QHeaderView>
@@ -34,15 +33,15 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
                              height()-256,
                              256,
                              256);
-    QGraphicsOpacityEffect *opacityEffect=new QGraphicsOpacityEffect(m_largeIcon);
-    opacityEffect->setOpacity(0.7);
-    QRadialGradient alphaGradient(QPointF(256,256),
-                                  256,
-                                  QPointF(256,256));
-    alphaGradient.setColorAt(0.0, Qt::black);
-    alphaGradient.setColorAt(1.0, Qt::transparent);
-    opacityEffect->setOpacityMask(alphaGradient);
-    m_largeIcon->setGraphicsEffect(opacityEffect);
+    m_opacityEffect=new QGraphicsOpacityEffect(m_largeIcon);
+    m_opacityEffect->setOpacity(0.7);
+    m_alphaGradient=QRadialGradient(QPointF(256,256),
+                                    256,
+                                    QPointF(256,256));
+    m_alphaGradient.setColorAt(0.0, Qt::black);
+    m_alphaGradient.setColorAt(1.0, Qt::transparent);
+    m_opacityEffect->setOpacityMask(m_alphaGradient);
+    m_largeIcon->setGraphicsEffect(m_opacityEffect);
 
     m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
@@ -129,8 +128,15 @@ void KNMusicCategoryDetailsDisplay::resetHeader()
 void KNMusicCategoryDetailsDisplay::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    m_largeIcon->move(event->size().width()-256,
-                      event->size().height()-256);
+    int songViewerHeight=m_songViewer->height();
+    m_largeIcon->setGeometry(event->size().width()-songViewerHeight,
+                             event->size().height()-songViewerHeight,
+                             songViewerHeight,
+                             songViewerHeight);
+    m_alphaGradient.setCenter(QPointF(songViewerHeight, songViewerHeight));
+    m_alphaGradient.setFocalPoint(QPointF(songViewerHeight, songViewerHeight));
+    m_alphaGradient.setRadius(songViewerHeight);
+    m_opacityEffect->setOpacityMask(m_alphaGradient);
 }
 
 KNMusicArtistView::KNMusicArtistView(QWidget *parent) :

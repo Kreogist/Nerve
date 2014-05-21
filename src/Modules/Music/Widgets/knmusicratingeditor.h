@@ -33,7 +33,6 @@ protected:
 
 private:
     int starAtPosition(int x);
-
     KNMusicStarRating m_starRating;
 
 };
