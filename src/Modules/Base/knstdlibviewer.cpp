@@ -65,6 +65,16 @@ void KNStdLibViewer::setFilter(KNLibFilter *searcher)
     m_filter=searcher;
 }
 
+void KNStdLibViewer::moveLeft()
+{
+    m_category->moveLeft();
+}
+
+void KNStdLibViewer::moveRight()
+{
+    m_category->moveRight();
+}
+
 void KNStdLibViewer::setContentsFocus()
 {
     m_widgetSwicher->setWidgetFocus(m_widgetSwicher->currentIndex());

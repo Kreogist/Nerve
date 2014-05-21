@@ -29,6 +29,5 @@ bool KNMusicCategorySortFilterModel::lessThan(const QModelIndex &left,
     {
         return false;
     }
-    return QString::compare(sourceModel()->data(left,  filterRole()).toString(),
-                            sourceModel()->data(right, filterRole()).toString())<0;
+    return QSortFilterProxyModel::lessThan(left, right);
 }

@@ -95,6 +95,13 @@ void KNMusicAlbumSongDetail::resetHeader()
     m_albumSongs->resetHeader();
 }
 
+void KNMusicAlbumSongDetail::resetSongState()
+{
+    m_albumSongs->verticalScrollBar()->setValue(0);
+    m_albumSongs->horizontalScrollBar()->setValue(0);
+    m_albumSongs->resizeHeader();
+}
+
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
     m_albumName->hide();
@@ -309,6 +316,11 @@ void KNMusicAlbumDetail::selectItem(const QModelIndex &index)
 void KNMusicAlbumDetail::resetHeader()
 {
     m_songPanel->resetHeader();
+}
+
+void KNMusicAlbumDetail::resetSongState()
+{
+    m_songPanel->resetSongState();
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -774,6 +786,7 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
     m_albumDetail->setAlbumName(m_model->data(dataIndex).toString());
     m_albumDetail->setArtistName(m_model->indexArtist(dataIndex));
     m_albumDetail->setYear(m_model->indexYear(dataIndex));
+    m_albumDetail->resetSongState();
     QRect startPosition=visualRect(index);
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,

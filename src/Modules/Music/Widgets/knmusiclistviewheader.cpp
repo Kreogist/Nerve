@@ -13,13 +13,13 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     //Set properties.
     setAutoFillBackground(true);
     setAutoScroll(true);
+    setContentsMargins(0,0,0,0);
     setContextMenuPolicy(Qt::CustomContextMenu);
+    setDefaultAlignment(Qt::AlignLeft);
     setFrameShape(QFrame::NoFrame);
     setFrameShadow(QFrame::Plain);
-    setDefaultAlignment(Qt::AlignLeft);
     setSectionsMovable(true);
     //setStretchLastSection(true);
-    setContentsMargins(0,0,0,0);
 
     m_viewerMenu=new KNMusicListViewHeaderMenu(this);
     connect(this, &KNMusicListViewHeader::customContextMenuRequested,
@@ -36,7 +36,7 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     buttonGradient.setColorAt(0, QColor(0x48,0x48,0x48));
     buttonGradient.setColorAt(1, QColor(0x48,0x48,0x48));
     m_palette.setBrush(QPalette::Button,        QBrush(buttonGradient));
-    m_palette.setColor(QPalette::ButtonText, QColor(0xbf, 0xbf, 0xbf));
+    m_palette.setColor(QPalette::ButtonText,    QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
 
     m_mouseIn=new QTimeLine(200, this);

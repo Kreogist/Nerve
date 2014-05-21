@@ -25,6 +25,7 @@ public:
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
     void resetHeader();
+    void resetSongState();
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -90,6 +91,7 @@ public:
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
     void resetHeader();
+    void resetSongState();
 
 signals:
     void requireOpenUrl(const QModelIndex &index);

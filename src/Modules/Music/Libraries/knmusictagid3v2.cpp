@@ -55,13 +55,22 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
     QByteArray content=value;
     quint8 encoding=(quint8)(content.at(0));
     content.remove(0,1);
+    int lastCharIndex=content.size()-1;
     switch(encoding)
     {
     case 0:
         //ISO-8859-1
+        if(lastCharIndex>-1 && content.at(lastCharIndex)==0)
+        {
+            content.remove(lastCharIndex, 1);
+        }
         return m_isoCodec->toUnicode(content).simplified();
     case 1:
         //UTF-16 LE/BE
+        if(lastCharIndex>0 && content.at(lastCharIndex)==0 && content.at(lastCharIndex-1)==0)
+        {
+            content.remove(lastCharIndex-1, 2);
+        }
         if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
         {
             return m_beCodec->toUnicode(content).simplified();
@@ -72,10 +81,18 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         }
         return m_utf16Codec->toUnicode(content).simplified();
     case 2:
+        if(lastCharIndex>0 && content.at(lastCharIndex)==0 && content.at(lastCharIndex-1)==0)
+        {
+            content.remove(lastCharIndex-1, 2);
+        }
         //UTF-16 BE without BOM
         return m_beCodec->toUnicode(content).simplified();
     case 3:
         //UTF-8
+        if(lastCharIndex>-1 && content.at(lastCharIndex)==0)
+        {
+            content.remove(lastCharIndex, 1);
+        }
         return m_utf8Codec->toUnicode(content).simplified();
     default:
         return m_localCodec->toUnicode(content).simplified();

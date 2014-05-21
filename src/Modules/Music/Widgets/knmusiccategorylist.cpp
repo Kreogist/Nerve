@@ -12,6 +12,7 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     QListView(parent)
 {
     viewport()->setContentsMargins(0,0,0,0);
+    viewport()->installEventFilter(this);
     setAutoFillBackground(true);
     setIconSize(QSize(40, 40));
     setLineWidth(0);

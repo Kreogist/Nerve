@@ -28,6 +28,7 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     setContentsMargins(0,0,0,0);
 
     m_largeIcon=new QLabel(this);
+    m_largeIcon->installEventFilter(this);
     m_largeIcon->setScaledContents(true);
     m_largeIcon->setGeometry(width()-256,
                              height()-256,
@@ -157,9 +158,11 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     setPalette(pal);
 
     m_artistList=new KNMusicCategoryList(this);
+    m_artistList->installEventFilter(this);
     addWidget(m_artistList);
 
     m_artistDetails=new KNMusicCategoryDetailsDisplay(this);
+    m_artistDetails->installEventFilter(this);
     addWidget(m_artistDetails);
     setCollapsible(1, false);
     setStretchFactor(1, 1);

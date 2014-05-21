@@ -48,6 +48,7 @@ KNMusicModel::KNMusicModel(QObject *parent) :
 
     setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
     setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
+    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
     setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, 2, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DiscNumber, Qt::Horizontal, 1, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DiscCount, Qt::Horizontal, 1, Qt::UserRole);
@@ -270,6 +271,8 @@ void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
                                        const KNMusicGlobal::MusicDetailsInfo &currentDetails)
 {
     QStandardItem *songItem;
+    songItem=item(currentRow,KNMusicGlobal::TrackNumber);
+    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem=item(currentRow,KNMusicGlobal::Time);
     songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
     songItem->setData(currentDetails.duration, Qt::UserRole);

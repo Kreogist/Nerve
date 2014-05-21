@@ -17,6 +17,8 @@ public:
                      QWidget *widget);
     void setCategoryIndex(const int &index);
     void setFilter(KNLibFilter *searcher);
+    void moveLeft();
+    void moveRight();
 
 signals:
 

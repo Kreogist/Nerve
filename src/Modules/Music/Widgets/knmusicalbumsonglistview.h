@@ -15,6 +15,8 @@ signals:
 
 public slots:
 
+private:
+    int m_widthTweak=5;
 };
 
 #endif // KNMUSICALBUMSONGLISTVIEW_H

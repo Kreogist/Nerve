@@ -2,6 +2,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QEvent>
+#include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMimeData>
 #include <QModelIndex>
@@ -162,6 +163,22 @@ bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
             }
         }
     }*/
+    if(event->type()==QEvent::MouseButtonRelease)
+    {
+        QMouseEvent *releaseMouse=static_cast<QMouseEvent *>(event);
+        //if(releaseMouse)
+        switch(releaseMouse->button())
+        {
+        case Qt::BackButton:
+            moveLeft();
+            return true;
+        case Qt::ForwardButton:
+            moveRight();
+            return true;
+        default:
+            return KNStdLibViewer::eventFilter(watched, event);
+        }
+    }
     return KNStdLibViewer::eventFilter(watched, event);
 }
 
