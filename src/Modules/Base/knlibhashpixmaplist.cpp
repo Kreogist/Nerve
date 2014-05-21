@@ -37,12 +37,7 @@ QString KNLibImageBuffer::hash() const
 
 void KNLibImageBuffer::hashImage(const QImage &image)
 {
-    if(image.isNull())
-    {
-        m_hash.clear();
-        emit hashComplete();
-        return;
-    }
+    m_hash.clear();
     m_imageByteCache.clear();
     m_imageByteCache.append((char *)image.bits(), image.byteCount());
     m_hashResult=QCryptographicHash::hash(m_imageByteCache, QCryptographicHash::Md4);
@@ -150,22 +145,17 @@ QString KNLibHashPixmapList::currentKey() const
 void KNLibHashPixmapList::onActionHashComplete()
 {
     QString currentKey=m_buffer->hash();
-    m_needToSaveImage=false;
-    if(!currentKey.isEmpty())
+    m_needToSaveImage=!m_list.contains(currentKey);
+    if(m_needToSaveImage)
     {
-        QImage pixmap=m_analysisQueue.first().pixmap;
-        m_needToSaveImage=!m_list.contains(currentKey);
-        if(m_needToSaveImage)
-        {
-            m_list[currentKey]=pixmap;
-        }
+        m_list[currentKey]=m_analysisQueue.first().pixmap;
     }
     UpdateQueueItem updateItem;
     updateItem.row=m_analysisQueue.first().row;
     updateItem.key=currentKey;
     m_updateQueue.append(updateItem);
-    m_analysisQueue.removeFirst();
     emit requireUpdatePixmap();
+    m_analysisQueue.removeFirst();
     if(m_needToSaveImage)
     {
         emit requireSaveImage();

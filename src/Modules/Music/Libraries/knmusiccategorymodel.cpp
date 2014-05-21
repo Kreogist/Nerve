@@ -74,6 +74,7 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
     else
     {
         currentItem=new QStandardItem(currentName);
+        currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
         currentItem->setData(1, MusicCount);
         appendRow(currentItem);
     }

@@ -82,6 +82,7 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     else
     {
         currentAlbum=new QStandardItem(currentName);
+        currentAlbum->setData(m_noAlbumArtIcon, Qt::DecorationRole);
         currentAlbum->setData(1, MusicCount);
         currentAlbum->setData(currentArtist, ArtistName);
         currentAlbum->setData(false, VariousArtist);

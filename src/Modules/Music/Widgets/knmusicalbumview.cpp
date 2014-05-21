@@ -223,7 +223,6 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_heightExpand=new QPropertyAnimation(this, "geometry", this);
     m_heightExpand->setDuration(125);
-    m_heightExpand->setEasingCurve(QEasingCurve::OutCubic);
     m_widthExpand=new QPropertyAnimation(this, "geometry", this);
     m_widthExpand->setDuration(125);
     m_widthExpand->setEasingCurve(QEasingCurve::OutCubic);
@@ -408,6 +407,7 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     m_albumShow=new QPropertyAnimation(m_albumDetail,
                                        "geometry",
                                        this);
+    m_albumShow->setDuration(150);
     m_albumShow->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_albumShow, &QPropertyAnimation::finished,
             m_albumDetail, &KNMusicAlbumDetail::expandDetail);
@@ -743,14 +743,14 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      QAbstractItemView::mouseReleaseEvent(e);
      if(m_pressedIndex==indexAt(e->pos()))
      {
-         if(m_pressedIndex==m_detailIndex)
+         if(m_pressedIndex!=m_detailIndex)
          {
-             foldAlbumDetail();
+             selectAlbum(m_pressedIndex);
+             viewport()->update();
              return;
          }
-         selectAlbum(m_pressedIndex);
-         viewport()->update();
      }
+     foldAlbumDetail();
      /*if(m_pressedIndex==indexAt(e->pos()) &&
         m_pressedIndex.isValid())
      {

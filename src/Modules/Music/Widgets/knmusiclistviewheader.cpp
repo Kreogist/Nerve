@@ -27,23 +27,17 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     connect(m_viewerMenu, &KNMusicListViewHeaderMenu::requireChangeVisible,
             this, &KNMusicListViewHeader::requireChangeVisible);
 
-    m_ascPoints << QPointF(0, 0) << QPointF(10, 0) << QPointF(5, 5) << QPointF(0, 0);
-    m_desPoints << QPointF(0, 5) << QPointF(10, 5) << QPointF(5, 0) << QPointF(0, 5);
-
     //Set palette.
-    int minGrey=0x20;
-    m_backgroundColor=QColor(minGrey, minGrey, minGrey);
+    m_backgroundColor=m_lineColor;
     m_palette=palette();
-    m_palette.setColor(QPalette::Base,       QColor(0,0,0,0));
-    m_palette.setColor(QPalette::Window,     QColor(0,0,0,0));
+    m_palette.setColor(QPalette::Base,          QColor(0,0,0,0));
+    m_palette.setColor(QPalette::Window,        QColor(0,0,0,0));
     buttonGradient=QLinearGradient(QPoint(0,0), QPoint(0, height()));
     buttonGradient.setColorAt(0, QColor(0x48,0x48,0x48));
     buttonGradient.setColorAt(1, QColor(0x48,0x48,0x48));
-    m_palette.setBrush(QPalette::Button, QBrush(buttonGradient));
+    m_palette.setBrush(QPalette::Button,        QBrush(buttonGradient));
     m_palette.setColor(QPalette::ButtonText, QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
-
-    m_lineColor=m_backgroundColor;
 
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
@@ -55,7 +49,7 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseOut->setUpdateInterval(5);
-    m_mouseOut->setEndFrame(minGrey);
+    m_mouseOut->setEndFrame(0x20);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicListViewHeader::changeBackground);
 }

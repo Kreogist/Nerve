@@ -35,10 +35,9 @@ private slots:
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;
-    QColor m_backgroundColor, m_lineColor;
+    QColor m_backgroundColor, m_lineColor=QColor(0x20,0x20,0x20);
     QPalette m_palette;
     QLinearGradient buttonGradient;
-    QPolygonF m_ascPoints, m_desPoints;
     KNMusicListViewHeaderMenu *m_viewerMenu;
 };
 

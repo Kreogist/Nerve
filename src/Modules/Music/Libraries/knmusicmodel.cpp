@@ -88,16 +88,13 @@ QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
 QImage KNMusicModel::artwork(const int &row) const
 {
     QString imageKey=itemArtworkKey(row);
-    if(imageKey.isEmpty())
-    {
-        return m_musicGlobal->noAlbumImage();
-    }
-    return m_pixmapList->pixmap(imageKey);
+    return imageKey.isEmpty()?m_musicGlobal->noAlbumImage():artworkFromKey(imageKey);
 }
 
 QImage KNMusicModel::artworkFromKey(const QString &key) const
 {
-    return m_pixmapList->pixmap(key);
+    QImage pixmap=m_pixmapList->pixmap(key);
+    return pixmap.isNull()?m_musicGlobal->noAlbumImage():pixmap;
 }
 
 QString KNMusicModel::itemArtworkKey(const int &row) const
@@ -219,7 +216,10 @@ void KNMusicModel::onActionUpdateRowInfo()
         songItem->setText(currentText.at(i));
     }
     setMusicDetailsInfo(currentRow, currentDetails);
-    m_pixmapList->append(currentRow, currentDetails.coverImage);
+    if(!currentDetails.coverImage.isNull())
+    {
+        m_pixmapList->append(currentRow, currentDetails.coverImage);
+    }
     songItem=item(currentRow,KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, Qt::UserRole);
     if(songItem->data().toInt()==1)
