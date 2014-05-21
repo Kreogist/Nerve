@@ -21,7 +21,7 @@ using namespace MediaInfoNameSpace;
 #ifdef Q_OS_MACX
 #include "MediaInfoDLL.h"
 #define MediaInfoNameSpace MediaInfoDLL;
-using namespace MediaInfoNameSpace;
+using namespace MediaInfoNameSpace
 #endif
 
 #ifdef Q_OS_LINUX
@@ -63,7 +63,7 @@ void KNLibMediaInfo::deepAnalysisFile(const QString &filePath)
 #ifdef Q_OS_WIN32
     MediaInfo MI;
     MI.Open(filePath.toStdWString());
-    MI.Option(__T("Complete"));
+    MI.Option(__T("Complete"), __T("1"));
     m_originalData=QString::fromWCharArray(MI.Inform().c_str());
     MI.Close();
 #endif
