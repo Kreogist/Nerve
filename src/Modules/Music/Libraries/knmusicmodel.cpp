@@ -277,9 +277,9 @@ void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
 {
     QStandardItem *songItem;
     songItem=item(currentRow,KNMusicGlobal::TrackNumber);
-    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
+    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
     songItem=item(currentRow,KNMusicGlobal::Time);
-    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
+    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
     songItem->setData(currentDetails.duration, Qt::UserRole);
     songItem=item(currentRow,KNMusicGlobal::BitRate);
     songItem->setData(QVariant(currentDetails.bitRate), Qt::UserRole);
@@ -291,7 +291,7 @@ void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
     songItem->setData(currentDetails.lastPlayed, Qt::UserRole);
     songItem=item(currentRow,KNMusicGlobal::Size);
     songItem->setData(currentDetails.size, Qt::UserRole);
-    songItem->setData(QVariant(Qt::AlignRight), Qt::TextAlignmentRole);
+    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
     songItem=item(currentRow,KNMusicGlobal::Rating);
     songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
                       0);

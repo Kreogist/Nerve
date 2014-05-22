@@ -78,8 +78,8 @@ private:
     QMap<int, ID3v2Image> m_tagImages;
     QTextCodec *m_beCodec, *m_leCodec, *m_isoCodec, *m_localCodec, *m_utf16Codec,*m_utf8Codec;
     QString m_frames[ID3v2ItemCount][2];
-    char m_header[10];
-    char *m_rawTagData;
+    char m_header[10], m_frameFlags[2], *m_rawTagData;
+    QByteArray m_unsyncRawData, m_unsyncReplaceData;
     bool m_id3v23Later;
     quint32 m_tagSize;
 };

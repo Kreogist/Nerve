@@ -19,6 +19,10 @@ KNMusicTagID3v2::KNMusicTagID3v2(QObject *parent) :
     m_utf8Codec=QTextCodec::codecForName("UTF-8");
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
 
+    m_unsyncRawData.append((char)0xff);
+    m_unsyncRawData.append((char)0);
+    m_unsyncReplaceData.append((char)0xff);
+
     m_frames[Name           ][0]="TIT2";
     m_frames[Artist         ][0]="TPE1";
     m_frames[Album          ][0]="TALB";
@@ -221,7 +225,7 @@ bool KNMusicTagID3v2::parseHeaderData()
 void KNMusicTagID3v2::parseRawData()
 {
     //All process code here.
-    quint32 rawPosition=0, frameSize;
+    quint32 rawPosition=0, frameSize, contentSize;
     char rawFrameID[5];
     if(m_id3v23Later)
     {
@@ -243,13 +247,31 @@ void KNMusicTagID3v2::parseRawData()
                       (((quint32)m_rawTagData[rawPosition+5]<<14)&0b00000000000111111100000000000000)+
                       (((quint32)m_rawTagData[rawPosition+6]<<7 )&0b00000000000000000011111110000000)+
                       ( (quint32)m_rawTagData[rawPosition+7]     &0b00000000000000000000000001111111);
+            m_frameFlags[0]=m_rawTagData[rawPosition+8];
+            m_frameFlags[1]=m_rawTagData[rawPosition+9];
             if(frameSize>m_tagSize)
             {
                 //Reach an unexpect frame.
                 break;
             }
             rawPosition+=10;
-            QByteArray frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
+            QByteArray frameData;
+            if(((quint8)m_frameFlags[1]&0b00000001)==1)
+            {
+                contentSize=(((quint32)m_rawTagData[rawPosition]<<21)&0b00001111111000000000000000000000)+
+                            (((quint32)m_rawTagData[rawPosition+1]<<14)&0b00000000000111111100000000000000)+
+                            (((quint32)m_rawTagData[rawPosition+2]<<7 )&0b00000000000000000011111110000000)+
+                            ( (quint32)m_rawTagData[rawPosition+3]     &0b00000000000000000000000001111111);
+                frameData=QByteArray(m_rawTagData+rawPosition+4, contentSize);
+            }
+            else
+            {
+                frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
+            }
+            if((m_frameFlags[1]&0b00000010)==2 || m_unsynchronisation)
+            {
+                frameData.replace(m_unsyncRawData, m_unsyncReplaceData);
+            }
             m_frameID.append(rawFrameID);
             m_frameData.append(frameData);
             if(QString(rawFrameID)=="PIC")
