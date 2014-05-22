@@ -194,4 +194,5 @@ void KNMusicTagWma::processPicture()
 void KNMusicTagWma::clearCache()
 {
     m_frameDatas.clear();
+    m_albumArt=QImage();
 }
