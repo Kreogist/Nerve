@@ -88,7 +88,9 @@ SOURCES += \
     Modules/Music/Libraries/knmusicfilter.cpp \
     Modules/Music/Libraries/knmusicsearcher.cpp \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.cpp \
-    Modules/Music/Libraries/knmusictagwav.cpp
+    Modules/Music/Libraries/knmusictagwav.cpp \
+    Modules/Public/knlibmediainfoparser.cpp \
+    Modules/Music/Widgets/knmusictageditor.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -165,7 +167,9 @@ HEADERS += \
     Modules/Music/Libraries/knmusicfilter.h \
     Modules/Music/Libraries/knmusicsearcher.h \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.h \
-    Modules/Music/Libraries/knmusictagwav.h
+    Modules/Music/Libraries/knmusictagwav.h \
+    Modules/Public/knlibmediainfoparser.h \
+    Modules/Music/Widgets/knmusictageditor.h
 
 RESOURCES += \
     res.qrc

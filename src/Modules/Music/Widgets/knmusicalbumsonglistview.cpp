@@ -37,5 +37,10 @@ void KNMusicAlbumSongListView::resetHeader()
 
 void KNMusicAlbumSongListView::resizeHeader()
 {
-    ;
+    QString longestTrack=model()->data(model()->index(model()->rowCount()-1,
+                                                      KNMusicGlobal::TrackNumber),
+                                       Qt::DisplayRole).toString();
+    setColumnWidth(KNMusicGlobal::TrackNumber,
+                   longestTrack.length()*m_widthTweak+fontMetrics().width(longestTrack));
+    resizeColumnToContents(KNMusicGlobal::Name);
 }

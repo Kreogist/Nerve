@@ -36,7 +36,6 @@ using namespace ZenLib;
 KNLibMediaInfo::KNLibMediaInfo(QObject *parent) :
     QObject(parent)
 {
-    ;
 }
 
 void KNLibMediaInfo::analysisFile(const QString &filePath)
