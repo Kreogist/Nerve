@@ -90,7 +90,9 @@ SOURCES += \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.cpp \
     Modules/Music/Libraries/knmusictagwav.cpp \
     Modules/Public/knlibmediainfoparser.cpp \
-    Modules/Music/Widgets/knmusictageditor.cpp
+    Modules/Music/Widgets/knmusictageditor.cpp \
+    Modules/Music/Widgets/knmusicid3v1editor.cpp \
+    Modules/Music/Widgets/knmusictageditorbase.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -169,7 +171,9 @@ HEADERS += \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.h \
     Modules/Music/Libraries/knmusictagwav.h \
     Modules/Public/knlibmediainfoparser.h \
-    Modules/Music/Widgets/knmusictageditor.h
+    Modules/Music/Widgets/knmusictageditor.h \
+    Modules/Music/Widgets/knmusicid3v1editor.h \
+    Modules/Music/Widgets/knmusictageditorbase.h
 
 RESOURCES += \
     res.qrc

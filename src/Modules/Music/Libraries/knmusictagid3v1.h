@@ -24,6 +24,7 @@ public:
                  QDataStream &mediaData);
     void clearCache();
     QString textData(const int &key) const;
+    quint8 genreIndex() const;
 
 signals:
 
@@ -31,8 +32,9 @@ public slots:
 
 private:
     QString m_tagData[ID3v1ItemCount];
-    char m_rawTagData[128], m_rawText[30];
+    char m_rawTagData[128];
     QTextCodec *m_localCodec;
+    quint8 m_genreIndex;
 };
 
 #endif // KNMUSICTAGID3V1_H

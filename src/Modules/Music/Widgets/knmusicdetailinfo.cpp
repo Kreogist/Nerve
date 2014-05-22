@@ -162,4 +162,6 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
                        fileInfo.lastModified().toString("yyyy-MMMM-dd, HH:mm AP"));
     m_overall->setText(KNMusicDetailOverview::LastPlayed,
                        fileInfo.lastRead().toString("yyyy-MMMM-dd, HH:mm AP"));
+
+    m_tagEditor->parseFile(filePath);
 }

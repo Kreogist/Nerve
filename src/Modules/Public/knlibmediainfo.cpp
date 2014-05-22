@@ -43,7 +43,8 @@ void KNLibMediaInfo::analysisFile(const QString &filePath)
 #ifdef Q_OS_WIN32
     MediaInfo MI;
     MI.Open(filePath.toStdWString());
-    MI.Option(__T("Complete"));
+    MI.Option(__T("Inform"), __T(""));
+    MI.Option(__T("Complete"), __T("0"));
     m_originalData=QString::fromWCharArray(MI.Inform().c_str());
     MI.Close();
 #endif

@@ -252,6 +252,10 @@ void KNMusicTagID3v2::parseRawData()
             QByteArray frameData=QByteArray(m_rawTagData+rawPosition, frameSize);
             m_frameID.append(rawFrameID);
             m_frameData.append(frameData);
+            if(QString(rawFrameID)=="PIC")
+            {
+                processPIC(frameData);
+            }
             if(QString(rawFrameID)=="APIC")
             {
                 processAPIC(frameData);
@@ -340,7 +344,7 @@ void KNMusicTagID3v2::processAPIC(const QByteArray &value)
         content.remove(0, content.indexOf('\0', zeroCharEnd)+1);
         break;
     }
-    currentImage.image.loadFromData(content, mimeType.toStdString().data());
+    currentImage.image.loadFromData(content);
     m_tagImages[pictureType]=currentImage;
 }
 
@@ -351,18 +355,19 @@ void KNMusicTagID3v2::processPIC(const QByteArray &value)
     quint8 encoding=(quint8)(value.at(0));
     QString imageType(content.mid(1, 3).toLower());
     int descriptionEnd;
+    content.remove(0, 5);
     switch(encoding)
     {
     case 0:
         //ISO
-        descriptionEnd=content.indexOf('\0', 5);
+        descriptionEnd=content.indexOf('\0');
         currentImage.description=
-            QString::fromLocal8Bit(content.mid(5, descriptionEnd-4));
+            QString::fromLocal8Bit(content.left(descriptionEnd));
         content.remove(0, descriptionEnd+1);
         break;
     case 1:
         //UTF-16
-        descriptionEnd=5;
+        descriptionEnd=0;
         while(content.at(descriptionEnd)!=0 &&
               content.at(descriptionEnd+1)!=0)
         {
@@ -371,22 +376,25 @@ void KNMusicTagID3v2::processPIC(const QByteArray &value)
         if((quint8)content.at(5)==0xFE && (quint8)content.at(6)==0xFF)
         {
             content.remove(0,2);
-            currentImage.description=m_beCodec->toUnicode(content.mid(5,
-                                                                      descriptionEnd-4));
+            currentImage.description=m_beCodec->toUnicode(content.left(descriptionEnd-4));
         }
         if((quint8)content.at(5)==0xFF && (quint8)content.at(6)==0xFE)
         {
             content.remove(0,2);
-            currentImage.description=m_leCodec->toUnicode(content.mid(5,
-                                                                      descriptionEnd-4));
+            currentImage.description=m_leCodec->toUnicode(content.left(descriptionEnd-4));
         }
-        content.remove(0, descriptionEnd+2);
+        content.remove(0, descriptionEnd+1);
         break;
     default:
-        content.remove(0, content.indexOf('\0', 5)+1);
+        content.remove(0, content.indexOf('\0')+1);
         break;
     }
-    currentImage.image.loadFromData(content, imageType.toStdString().data());
+    //Tweak;
+    while(!content.isEmpty() && content.at(0)=='\0')
+    {
+        content.remove(0,1);
+    }
+    currentImage.image.loadFromData(content);
     m_tagImages[(quint8)value.at(4)]=currentImage;
 }
 

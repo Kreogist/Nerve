@@ -18,11 +18,11 @@ KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
 bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
                               QDataStream &mediaData)
 {
-    clearCache();
     //Get raw tag data
     int mediaFileSize=mediaFile.size();
     if(mediaFileSize<128)
     {
+        clearCache();
         //If the size is less than 128, it can't contains ID3v1.
         return false;
     }
@@ -33,27 +33,21 @@ bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
     {
         return false;
     }
-    strncpy(m_rawText, m_rawTagData+3, 30);
-    m_tagData[Title]=m_localCodec->toUnicode(m_rawText).simplified();
-    strncpy(m_rawText, m_rawTagData+33, 30);
-    m_tagData[Artist]=m_localCodec->toUnicode(m_rawText).simplified();
-    strncpy(m_rawText, m_rawTagData+63, 30);
-    m_tagData[Album]=m_localCodec->toUnicode(m_rawText).simplified();
-    strncpy(m_rawText, m_rawTagData+93, 4);
-    m_rawText[4]='\0';
-    m_tagData[Year]=m_localCodec->toUnicode(m_rawText).simplified();
+    m_tagData[Title]=m_localCodec->toUnicode(m_rawTagData+3, 30).simplified();
+    m_tagData[Artist]=m_localCodec->toUnicode(m_rawTagData+33, 30).simplified();
+    m_tagData[Album]=m_localCodec->toUnicode(m_rawTagData+63, 30).simplified();
+    m_tagData[Year]=m_localCodec->toUnicode(m_rawTagData+93, 4).simplified();
     if(m_rawTagData[125]==0)
     {
-        m_tagData[Track]=QString::number((int)m_rawTagData[126]);
-        strncpy(m_rawText, m_rawTagData+97, 28);
-        m_tagData[Comment]=m_localCodec->toUnicode(m_rawText).simplified();
+        m_tagData[Track]=QString::number((quint8)m_rawTagData[126]);
+        m_tagData[Comment]=m_localCodec->toUnicode(m_rawTagData+97, 28).simplified();
     }
     else
     {
-        strncpy(m_rawText, m_rawTagData+97, 30);
-        m_tagData[Comment]=m_localCodec->toUnicode(m_rawText).simplified();
+        m_tagData[Comment]=m_localCodec->toUnicode(m_rawTagData+97, 30).simplified();
     }
-    m_tagData[Genre]=KNMusicGlobal::instance()->getGenre((int)m_rawTagData[127]);
+    m_genreIndex=(quint8)m_rawTagData[127];
+    m_tagData[Genre]=KNMusicGlobal::instance()->getGenre(m_genreIndex);
     return true;
 }
 
@@ -71,4 +65,9 @@ void KNMusicTagID3v1::clearCache()
 QString KNMusicTagID3v1::textData(const int &key) const
 {
     return m_tagData[key];
+}
+
+quint8 KNMusicTagID3v1::genreIndex() const
+{
+    return m_genreIndex;
 }

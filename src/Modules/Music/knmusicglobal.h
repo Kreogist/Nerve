@@ -76,6 +76,8 @@ public:
     int getMusicType(const QString &suffix) const;
     QString getDescription(const int &type) const;
     QImage noAlbumImage() const;
+    QStringList genreList() const;
+    int genreListSize() const;
 
 signals:
 

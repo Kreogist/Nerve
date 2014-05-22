@@ -483,3 +483,13 @@ QImage KNMusicGlobal::noAlbumImage() const
 {
     return m_noAlbumImage;
 }
+
+QStringList KNMusicGlobal::genreList() const
+{
+    return m_genreList;
+}
+
+int KNMusicGlobal::genreListSize() const
+{
+    return m_genreList.size();
+}
