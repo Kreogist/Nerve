@@ -92,17 +92,11 @@ bool KNMusicTagWma::readTag(const QFile &mediaFile,
             }
 
             tagPosition+=18;
-            quint16 stringLength;
 
             for(int i=0; i<5; i++)
             {
-                char *stdItemString=new char[stdItemLength[i]];
-                memcpy(stdItemString, rawTagData+tagPosition, stdItemLength[i]);
-                stringLength=stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i];
-                QByteArray frameData;
-                frameData.append(stdItemString, stringLength);
-                delete[] stdItemString;
-                m_frameDatas[m_frames[i]]=frameData;
+                m_frameDatas[m_frames[i]]=QByteArray(rawTagData+tagPosition,
+                                                     stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i]);
                 tagPosition+=stdItemLength[i];
             }
             continue;
@@ -115,29 +109,20 @@ bool KNMusicTagWma::readTag(const QFile &mediaFile,
                               (((quint16)rawTagData[tagPosition+8])   &0b0000000011111111);
             tagPosition+=10;
 
-            quint16 rawNameLength, nameLength, dataLength;
+            quint16 rawNameLength, dataLength;
             QString frameName;
-            char *rawFrameName, *rawFrameData;
 
             while(extFrames--)
             {
                 rawNameLength=(((quint16)rawTagData[tagPosition+1]<<8)&0b1111111100000000)+
                               (((quint16)rawTagData[tagPosition])     &0b0000000011111111);
-                rawFrameName=new char[rawNameLength+1];
-                memcpy(rawFrameName, rawTagData+tagPosition+2, rawNameLength);
-                nameLength=rawNameLength>2?rawNameLength-2:rawNameLength;
-                frameName=m_utf16leCodec->toUnicode(rawFrameName, nameLength);
-                delete[] rawFrameName;
+                frameName=m_utf16leCodec->toUnicode(rawTagData+tagPosition+2,
+                                                    rawNameLength>2?rawNameLength-2:rawNameLength);
                 tagPosition+=rawNameLength;
                 dataLength=(((quint16)rawTagData[tagPosition+5]<<8)&0b1111111100000000)+
                            (((quint16)rawTagData[tagPosition+4])   &0b0000000011111111);
                 tagPosition+=6;
-                rawFrameData=new char[dataLength];
-                memcpy(rawFrameData, rawTagData+tagPosition, dataLength);
-                QByteArray frameData;
-                frameData.append(rawFrameData, dataLength);
-                delete[] rawFrameData;
-                m_frameDatas[frameName]=frameData;
+                m_frameDatas[frameName]=QByteArray(rawTagData+tagPosition, dataLength);
                 tagPosition+=dataLength;
             }
             continue;
