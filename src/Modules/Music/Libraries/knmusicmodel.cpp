@@ -76,6 +76,11 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
     return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
 }
 
+QString KNMusicModel::filePathFromIndex(const int &index)
+{
+    return data(this->index(index, KNMusicGlobal::Name), Qt::UserRole).toString();
+}
+
 QString KNMusicModel::itemText(const int &row, const int &column) const
 {
     return itemRoleData(row, column, Qt::DisplayRole).toString();

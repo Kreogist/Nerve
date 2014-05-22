@@ -24,6 +24,15 @@ QModelIndex KNMusicCategoryModel::indexOf(const QString &text) const
     return items.first()->index();
 }
 
+QModelIndex KNMusicCategoryModel::firstItemIndex() const
+{
+    if(rowCount()==1)
+    {
+        return m_noCategoryItemCount==0?QModelIndex():index(0,0);
+    }
+    return m_noCategoryItemCount==0?index(1,0):index(0,0);
+}
+
 void KNMusicCategoryModel::resetModel()
 {
     //Clear the model
@@ -31,7 +40,9 @@ void KNMusicCategoryModel::resetModel()
 
     //Add initial item
     QStandardItem *currentItem=new QStandardItem();
+    currentItem->setData(noCategoryText(), Qt::DisplayRole);
     currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
+    currentItem->setEditable(false);
     currentItem->setData(0, MusicCount);
     appendRow(currentItem);
 }

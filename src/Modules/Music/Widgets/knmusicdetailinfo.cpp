@@ -77,18 +77,19 @@ KNMusicDetailInfo::KNMusicDetailInfo(QWidget *parent) :
     m_parser=new KNLibMediaInfoParser(this);
 
     m_overall=new KNMusicDetailOverview(this);
-    m_switcher->addCategory(QPixmap(), "Overall", m_overall);
+    m_switcher->addCategory(QPixmap(":/Music/Resources/Music/details/Overall.png"), "Overall", m_overall);
 
     m_tagEditor=new KNMusicTagEditor(this);
-    m_switcher->addCategory(QPixmap(), "Tag", m_tagEditor);
+    m_switcher->addCategory(QPixmap(":/Music/Resources/Music/details/Tag.png"), "Tag", m_tagEditor);
 
     m_detailViewer=new QTreeView(this);
     m_detailViewer->setAnimated(true);
-    m_switcher->addCategory(QPixmap(), "Treeview", m_detailViewer);
+    m_detailViewer->setAllColumnsShowFocus(true);
+    m_switcher->addCategory(QPixmap(":/Music/Resources/Music/details/Treeview.png"), "Details", m_detailViewer);
 
     m_detailText=new QPlainTextEdit(this);
     m_detailText->setWordWrapMode(QTextOption::NoWrap);
-    m_switcher->addCategory(QPixmap(), "Textview", m_detailText);
+    m_switcher->addCategory(QPixmap(":/Music/Resources/Music/details/Textview.png"), "Text", m_detailText);
 }
 
 void KNMusicDetailInfo::setFilePath(const QString &filePath)

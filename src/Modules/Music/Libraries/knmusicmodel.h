@@ -16,6 +16,7 @@ public:
     explicit KNMusicModel(QObject *parent = 0);
     ~KNMusicModel();
     QString filePathFromIndex(const QModelIndex &index);
+    QString filePathFromIndex(const int &index);
     QString itemText(const int &row, const int &column) const;
     QVariant itemRoleData(int row, int column, int role) const;
     QImage artwork(const int &row) const;

@@ -3,6 +3,8 @@
 
 #include <QTreeView>
 
+class QSortFilterProxyModel;
+class KNMusicModel;
 class KNMusicDetailTooltip;
 class KNMusicListViewHeader;
 class KNMusicListViewBase : public QTreeView
@@ -14,6 +16,8 @@ public:
     void moveToFirst(const int &logicalHeaderIndex);
     void setHeaderAlignment(const int &logicalHeaderIndex,
                             Qt::Alignment alignment);
+    void setModel(QAbstractItemModel *model);
+    void setSourceModel(KNMusicModel *musicModel);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -35,11 +39,14 @@ private slots:
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void leaveEvent(QEvent *event);
+    void startDrag(Qt::DropActions supportedActions);
 
 private:
     KNMusicListViewHeader *m_headerWidget;
     QModelIndex m_detailIndex;
     KNMusicDetailTooltip *m_musicDetailTooltip;
+    KNMusicModel *m_musicModel;
+    QSortFilterProxyModel *m_proxyModel;
 };
 
 #endif // KNMUSICLISTVIEWBASE_H

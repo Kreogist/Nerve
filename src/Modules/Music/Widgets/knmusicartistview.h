@@ -9,6 +9,7 @@ class QBoxLayout;
 class QLabel;
 class QStandardItemModel;
 class QResizeEvent;
+class QShowEvent;
 class QGraphicsOpacityEffect;
 class KNMusicCategoryList;
 class KNMusicCategoryModel;
@@ -58,6 +59,9 @@ signals:
 
 public slots:
     void onActionSongCountChange(const int &value);
+
+protected:
+    void showEvent(QShowEvent *event);
 
 private slots:
     void onActionItemActivate(const QModelIndex &current,

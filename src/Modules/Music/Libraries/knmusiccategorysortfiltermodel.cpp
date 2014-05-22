@@ -18,6 +18,16 @@ QVariant KNMusicCategorySortFilterModel::data(const QModelIndex &index, int role
     return QSortFilterProxyModel::data(index, role);
 }
 
+QModelIndex KNMusicCategorySortFilterModel::firstIndex() const
+{
+    if(sourceModel()->data(sourceModel()->index(0,0),
+                           Qt::UserRole+1).toInt()==0)
+    {
+        return index(1,0);
+    }
+    return index(0,0);
+}
+
 bool KNMusicCategorySortFilterModel::lessThan(const QModelIndex &left,
                                               const QModelIndex &right) const
 {

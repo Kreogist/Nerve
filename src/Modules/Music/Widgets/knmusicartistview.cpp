@@ -1,6 +1,7 @@
 #include <QItemSelectionModel>
 #include <QSplitter>
 #include <QLabel>
+#include <QShowEvent>
 #include <QBitmap>
 #include <QGraphicsOpacityEffect>
 #include <QHeaderView>
@@ -217,6 +218,19 @@ void KNMusicArtistView::setSongListView(KNMusicListViewBase *listview)
 void KNMusicArtistView::onActionSongCountChange(const int &value)
 {
     m_artistDetails->setSongNumber(value);
+}
+
+void KNMusicArtistView::showEvent(QShowEvent *event)
+{
+    QSplitter::showEvent(event);
+    if(!m_artistList->selectionModel()->currentIndex().isValid())
+    {
+        if(m_proxyModel->rowCount()!=0)
+        {
+            m_artistList->selectionModel()->setCurrentIndex(m_proxyModel->firstIndex(),
+                                                            QItemSelectionModel::SelectCurrent);
+        }
+    }
 }
 
 void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,

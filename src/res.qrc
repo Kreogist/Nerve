@@ -10,6 +10,10 @@
         <file>Resources/Music/noalbum.png</file>
         <file>Resources/Public/AscendingIndicator.png</file>
         <file>Resources/Public/DescendingIndicator.png</file>
+        <file>Resources/Music/details/Overall.png</file>
+        <file>Resources/Music/details/Tag.png</file>
+        <file>Resources/Music/details/Textview.png</file>
+        <file>Resources/Music/details/Treeview.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

@@ -14,6 +14,7 @@ class KNMusicCategoryModel : public QStandardItemModel
 public:
     explicit KNMusicCategoryModel(QObject *parent = 0);
     QModelIndex indexOf(const QString &text) const;
+    QModelIndex firstItemIndex() const;
     virtual void resetModel();
     virtual QString filterText(const QModelIndex &index) const;
     QString noCategoryText() const;

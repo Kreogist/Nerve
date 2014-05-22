@@ -2,12 +2,20 @@
 
 #include <QScrollBar>
 #include <QMouseEvent>
+#include <QMimeData>
+#include <QList>
+#include <QDrag>
+#include <QSortFilterProxyModel>
+#include <QUrl>
+#include <QModelIndexList>
 #include <QToolTip>
 #include <QHelpEvent>
 
 #include <QDebug>
 
 #include "../../knlocale.h"
+
+#include "../Libraries/knmusicmodel.h"
 
 #include "knmusiclistviewheader.h"
 #include "knmusicratingdelegate.h"
@@ -21,6 +29,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setMouseTracking(true);
     setUniformRowHeights(true);
     setSortingEnabled(true);
+    setDragDropMode(QAbstractItemView::DragOnly);
     setAllColumnsShowFocus(true);
     setAlternatingRowColors(true);
     //setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -88,6 +97,17 @@ void KNMusicListViewBase::setHeaderAlignment(const int &logicalHeaderIndex,
                            Qt::TextAlignmentRole);
 }
 
+void KNMusicListViewBase::setModel(QAbstractItemModel *model)
+{
+    QTreeView::setModel(model);
+    m_proxyModel=static_cast<QSortFilterProxyModel *>(model);
+}
+
+void KNMusicListViewBase::setSourceModel(KNMusicModel *musicModel)
+{
+    m_musicModel=musicModel;
+}
+
 void KNMusicListViewBase::retranslate()
 {
     ;
@@ -127,6 +147,38 @@ void KNMusicListViewBase::leaveEvent(QEvent *event)
 {
     //m_musicDetailTooltip->hide();
     QTreeView::leaveEvent(event);
+}
+
+void KNMusicListViewBase::startDrag(Qt::DropActions supportedActions)
+{
+    QModelIndexList indexes=selectedIndexes();
+    if(indexes.size()>0)
+    {
+        QModelIndex currentIndex;
+        QList<int> rows;
+        for(int i=0, listCount=indexes.size();
+            i<listCount;
+            i++)
+        {
+            currentIndex=m_proxyModel->mapToSource(indexes.at(i));
+            if(!rows.contains(currentIndex.row()))
+            {
+                rows.append(currentIndex.row());
+            }
+        }
+        QMimeData data;
+        QList<QUrl> fileUrlList;
+        for(int i=0, fileCount=rows.size();
+            i<fileCount;
+            i++)
+        {
+            fileUrlList.append(QUrl::fromLocalFile(m_musicModel->filePathFromIndex(rows.at(i))));
+        }
+        data.setUrls(fileUrlList);
+        QDrag *dragAction=new QDrag(this);
+        dragAction->setMimeData(&data);
+        dragAction->exec(Qt::CopyAction);
+    }
 }
 
 void KNMusicListViewBase::onSectionVisibleChanged(const int &index,

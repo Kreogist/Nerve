@@ -23,6 +23,7 @@ void KNMusicAlbumModel::resetModel()
 
     //Initial the first no category text item.
     QStandardItem *currentItem=new QStandardItem();
+    currentItem->setData(noCategoryText(), Qt::DisplayRole);
     currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
     currentItem->setData(0, MusicCount);
     currentItem->setData(false, VariousArtist);
