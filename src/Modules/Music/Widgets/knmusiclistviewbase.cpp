@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QMimeData>
 #include <QList>
+#include <QScopedPointer>
 #include <QDrag>
 #include <QSortFilterProxyModel>
 #include <QUrl>
@@ -46,6 +47,9 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     connect(KNLocale::instance(), &KNLocale::languageChanged,
             this, &KNMusicListViewBase::retranslateAndSet);
 
+    m_mimeData=new QMimeData;
+    m_dragAction=new QDrag(this);
+
     //Set music header.
     m_headerWidget=new KNMusicListViewHeader(this);
     setHeader(m_headerWidget);
@@ -55,6 +59,11 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     m_musicDetailTooltip=new KNMusicDetailTooltip(this);
     connect(this, &KNMusicListViewBase::activated,
             this, &KNMusicListViewBase::onItemActived);
+}
+
+KNMusicListViewBase::~KNMusicListViewBase()
+{
+    m_dragAction->deleteLater();
 }
 
 void KNMusicListViewBase::resetHeader()
@@ -166,7 +175,7 @@ void KNMusicListViewBase::startDrag(Qt::DropActions supportedActions)
                 rows.append(currentIndex.row());
             }
         }
-        QMimeData data;
+        m_mimeData->clear();
         QList<QUrl> fileUrlList;
         for(int i=0, fileCount=rows.size();
             i<fileCount;
@@ -174,10 +183,9 @@ void KNMusicListViewBase::startDrag(Qt::DropActions supportedActions)
         {
             fileUrlList.append(QUrl::fromLocalFile(m_musicModel->filePathFromIndex(rows.at(i))));
         }
-        data.setUrls(fileUrlList);
-        QDrag *dragAction=new QDrag(this);
-        dragAction->setMimeData(&data);
-        dragAction->exec(Qt::CopyAction);
+        m_mimeData->setUrls(fileUrlList);
+        m_dragAction->setMimeData(m_mimeData);
+        m_dragAction->exec(supportedActions, Qt::CopyAction);
     }
 }
 

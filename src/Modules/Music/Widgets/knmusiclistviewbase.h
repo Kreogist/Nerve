@@ -1,8 +1,11 @@
 #ifndef KNMUSICLISTVIEWBASE_H
 #define KNMUSICLISTVIEWBASE_H
 
+#include <QMimeData>
+
 #include <QTreeView>
 
+class QDrag;
 class QSortFilterProxyModel;
 class KNMusicModel;
 class KNMusicDetailTooltip;
@@ -12,6 +15,7 @@ class KNMusicListViewBase : public QTreeView
     Q_OBJECT
 public:
     explicit KNMusicListViewBase(QWidget *parent = 0);
+    ~KNMusicListViewBase();
     virtual void resetHeader();
     void moveToFirst(const int &logicalHeaderIndex);
     void setHeaderAlignment(const int &logicalHeaderIndex,
@@ -47,6 +51,8 @@ private:
     KNMusicDetailTooltip *m_musicDetailTooltip;
     KNMusicModel *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
+    QDrag *m_dragAction;
+    QMimeData *m_mimeData;
 };
 
 #endif // KNMUSICLISTVIEWBASE_H

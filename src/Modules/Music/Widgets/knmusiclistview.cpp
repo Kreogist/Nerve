@@ -9,6 +9,7 @@
 KNMusicListView::KNMusicListView(QWidget *parent) :
     KNMusicListViewBase(parent)
 {
+    setObjectName("KNMusicListView");
     //Set palette.
     int minGrey=0x10;
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);

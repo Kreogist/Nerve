@@ -137,6 +137,8 @@ void KNMusicViewer::setModel(KNMusicModel *model)
     m_genreModel->setSourceModel(model);
     m_genreDetails->setSourceModel(model);
     m_libraryView->setSourceModel(model);
+    m_artistSongView->setSourceModel(model);
+    m_genreSongView->setSourceModel(model);
     m_libraryView->resetHeader();
     m_artistView->resetHeader();
     m_albumView->resetHeader();
