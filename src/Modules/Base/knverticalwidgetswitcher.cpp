@@ -68,8 +68,8 @@ void KNVerticalWidgetSwitcher::setCurrentIndex(int currentIndex)
                            -centerRect.height(),
                            centerRect.width(),
                            centerRect.height()),
-              downRect=QRect(centerRect.height(),
-                             0,
+              downRect=QRect(0,
+                             centerRect.height(),
                              centerRect.width(),
                              centerRect.height());
         m_flyOutAnime->setStartValue(centerRect);

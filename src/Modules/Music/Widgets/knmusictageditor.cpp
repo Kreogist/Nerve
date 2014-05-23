@@ -1,5 +1,6 @@
 #include <QBoxLayout>
 #include <QTabWidget>
+#include <QStandardPaths>
 
 #include "../Libraries/knmusictagapev2.h"
 #include "../Libraries/knmusictagwma.h"

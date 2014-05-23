@@ -1,3 +1,4 @@
+#include <QAction>
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QComboBox>
@@ -17,18 +18,27 @@
 KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     KNMusicTagEditorBase(parent)
 {
+    //Init captions.
     retranslate();
+    //Init tag reader.
     m_tagID3v2=new KNMusicTagID3v2(this);
 
+    //The main layout of the editor, it will contains a toolbar and a switcher.
     QBoxLayout *editorLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    editorLayout->setSpacing(0);
     setLayout(editorLayout);
 
+    /*The toolbar, it contains several tools for text edit and overview/advanced
+      mode switcher.*/
     QToolBar *toolBar=new QToolBar(this);
     editorLayout->addWidget(toolBar);
 
+    //The mode switcher
     m_switcher=new KNVerticalWidgetSwitcher(this);
     editorLayout->addWidget(m_switcher);
 
+    //Overall mode container widget. You can edit some data much quickly.
+    //P.S.: The layout is a little strange, don't mind these details.
     QWidget *overallMode=new QWidget(this);
     overallMode->setContentsMargins(0,0,0,0);
     QGridLayout *overallLayout=new QGridLayout(overallMode);
@@ -99,6 +109,8 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
 
     m_switcher->addWidget(overallMode);
 
+    //Advanced mode container widget.
+    //In advanced mode, you can see all the frames of the ID3v2.
     QWidget *advancedMode=new QWidget(this);
     QBoxLayout *advancedLayout=new QBoxLayout(QBoxLayout::TopToBottom, advancedMode);
     advancedMode->setLayout(advancedLayout);
@@ -108,6 +120,22 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     advancedLayout->addWidget(m_advancedView);
     m_switcher->addWidget(advancedMode);
 
+    //Toolbar actions.
+    //Mode switcher.
+    m_toAdvanced=new QAction(QIcon(":/Music/Resources/Music/tags/ID3v2toAdvanced.png"),
+                             QString("Advanced Mode"),
+                             this);
+    connect(m_toAdvanced, SIGNAL(triggered()),
+            this, SLOT(toAdvancedMode()));
+    toolBar->addAction(m_toAdvanced);
+    m_toOverview=new QAction(QIcon(":/Music/Resources/Music/tags/ID3v2toOverview.png"),
+                             QString("Overview Mode"),
+                             this);
+    connect(m_toOverview, SIGNAL(triggered()),
+            this, SLOT(toOverviewMode()));
+    toolBar->addAction(m_toOverview);
+
+    //Initial the editor. Set the editor to the default mode.
     m_switcher->setCurrentIndex(0);
 }
 
@@ -220,4 +248,14 @@ void KNMusicID3v2Editor::retranslate()
 void KNMusicID3v2Editor::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicID3v2Editor::toAdvancedMode()
+{
+    m_switcher->setCurrentIndex(1);
+}
+
+void KNMusicID3v2Editor::toOverviewMode()
+{
+    m_switcher->setCurrentIndex(0);
 }

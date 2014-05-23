@@ -14,6 +14,8 @@
         <file>Resources/Music/details/Tag.png</file>
         <file>Resources/Music/details/Textview.png</file>
         <file>Resources/Music/details/Treeview.png</file>
+        <file>Resources/Music/tags/ID3v2toAdvanced.png</file>
+        <file>Resources/Music/tags/ID3v2toOverview.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

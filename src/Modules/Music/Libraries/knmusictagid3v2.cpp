@@ -146,7 +146,7 @@ QString KNMusicTagID3v2::rawTextData(const int &key) const
 
 QString KNMusicTagID3v2::frameTextData(const QString &frame) const
 {
-    if(frame=="APIC")
+    if(frame=="APIC" || frame=="PIC")
     {
         return QString("(Binary Data)");
     }

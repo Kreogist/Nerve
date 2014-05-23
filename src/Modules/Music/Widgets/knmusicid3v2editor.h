@@ -47,6 +47,10 @@ public slots:
     void retranslate();
     void retranslateAndSet();
 
+private slots:
+    void toAdvancedMode();
+    void toOverviewMode();
+
 private:
     enum ID3v2CaptionItems
     {
@@ -70,6 +74,7 @@ private:
     QPlainTextEdit *m_commentEditor;
     QTreeView *m_advancedView;
     QScopedPointer<QStandardItemModel> m_advancedModel;
+    QAction *m_toOverview, *m_toAdvanced;
 };
 
 #endif // KNMUSICID3V2EDITOR_H

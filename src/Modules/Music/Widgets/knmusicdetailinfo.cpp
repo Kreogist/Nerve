@@ -132,9 +132,11 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     KNLibMediaInfoParser::MediaInfoBlock currentBlock;
     QString textData;
     QStandardItem *currentItem, *currentParent;
+    //Reset the detail model.
     m_detailModel.reset(new QStandardItemModel);
     for(int i=0; i<blockCount; i++)
     {
+        //Get one block
         currentBlock=m_parser->blockAt(i);
         QList<QStandardItem *> parentRow;
         currentParent=new QStandardItem(currentBlock.name);
@@ -142,15 +144,18 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
         currentItem=new QStandardItem();
         parentRow.append(currentItem);
         m_detailModel->appendRow(parentRow);
+        //Append block name to text data string.
         textData+=currentBlock.name+"\n";
         for(int j=0; j<currentBlock.key.size(); j++)
         {
+            //Append a block row to treeview model.
             QList<QStandardItem *> currentRow;
             currentItem=new QStandardItem(currentBlock.key.at(j));
             currentRow.append(currentItem);
             currentItem=new QStandardItem(currentBlock.data.at(j));
             currentRow.append(currentItem);
             currentParent->appendRow(currentRow);
+            //Append the row data to text string
             textData+=currentBlock.key.at(j)+" : "+
                       currentBlock.data.at(j)+"\n";
         }
@@ -197,6 +202,7 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     m_overall->setText(KNMusicDetailOverview::LastPlayed,
                        fileInfo.lastRead().toString("yyyy-MMMM-dd, HH:mm AP"));
 
+    //Ask tag editor to parse the file, set the file data to overall view.
     m_tagEditor->parseFile(filePath);
     m_overall->setBasicInfo(KNMusicDetailOverview::Name, m_tagEditor->title());
     m_overall->setBasicInfo(KNMusicDetailOverview::Artist, m_tagEditor->artist());
