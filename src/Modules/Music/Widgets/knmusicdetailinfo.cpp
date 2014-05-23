@@ -21,9 +21,17 @@ KNMusicDetailOverview::KNMusicDetailOverview(QWidget *parent) :
     QWidget(parent)
 {
     retranslate();
-    QFormLayout *detailsLayout=new QFormLayout(this);
+    QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    setLayout(mainLayout);
+    for(int i=0; i<MusicBasicCount; i++)
+    {
+        m_basicInfo[i]=new QLabel(this);
+        mainLayout->addWidget(m_basicInfo[i]);
+    }
+
+    QFormLayout *detailsLayout=new QFormLayout(mainLayout->widget());
     detailsLayout->setLabelAlignment(Qt::AlignRight);
-    setLayout(detailsLayout);
+    mainLayout->addLayout(detailsLayout);
 
     for(int i=0; i<MusicDetailCount; i++)
     {
@@ -41,6 +49,17 @@ void KNMusicDetailOverview::setText(const int &index, const QString &text)
     m_labels[index]->setVisible(!text.isEmpty());
     m_datas[index]->setVisible(!text.isEmpty());
     m_datas[index]->setText(text);
+}
+
+void KNMusicDetailOverview::setName(const QString &name)
+{
+    m_datas[Name]->setText(name);
+}
+
+void KNMusicDetailOverview::setBasicInfo(const int &index, const QString &basicData)
+{
+    m_basicInfo[index]->setVisible(!basicData.isEmpty());
+    m_basicInfo[index]->setText(basicData);
 }
 
 void KNMusicDetailOverview::retranslate()
@@ -145,9 +164,9 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
 
     //Set data to overview.
     m_parser->setCurrentBlock("General");
+    m_overall->setBasicInfo(KNMusicDetailOverview::Duration, m_parser->data("Duration"));
     m_overall->setText(KNMusicDetailOverview::Size, m_parser->data("File size"));
     m_overall->setText(KNMusicDetailOverview::Kind, m_parser->data("Format"));
-    m_overall->setText(KNMusicDetailOverview::Duration, m_parser->data("Duration"));
     m_overall->setText(KNMusicDetailOverview::BitRate, m_parser->data("Overall bit rate"));
 
     m_parser->setCurrentBlock("Audio");
@@ -179,4 +198,7 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
                        fileInfo.lastRead().toString("yyyy-MMMM-dd, HH:mm AP"));
 
     m_tagEditor->parseFile(filePath);
+    m_overall->setBasicInfo(KNMusicDetailOverview::Name, m_tagEditor->title());
+    m_overall->setBasicInfo(KNMusicDetailOverview::Artist, m_tagEditor->artist());
+    m_overall->setBasicInfo(KNMusicDetailOverview::Album, m_tagEditor->album());
 }

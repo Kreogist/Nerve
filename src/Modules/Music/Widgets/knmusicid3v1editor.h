@@ -28,6 +28,9 @@ public:
     void readTag(QFile &mediaFile,
                  QDataStream &mediaData);
     void resetEditor();
+    QString title() const;
+    QString album() const;
+    QString artist() const;
     KNMusicTagBase *musicTagReader();
 
 signals:

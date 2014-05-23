@@ -10,6 +10,7 @@ class QTreeView;
 class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
+class KNVerticalWidgetSwitcher;
 class KNMusicTagID3v2;
 class KNMusicID3v2Editor : public KNMusicTagEditorBase
 {
@@ -36,6 +37,9 @@ public:
                  QDataStream &mediaData);
     void resetEditor();
     KNMusicTagBase *musicTagReader();
+    QString title() const;
+    QString album() const;
+    QString artist() const;
 
 signals:
 
@@ -58,6 +62,7 @@ private:
         ID3v2CaptionItemsCount
     };
     KNMusicTagID3v2 *m_tagID3v2;
+    KNVerticalWidgetSwitcher *m_switcher;
     QString m_caption[ID3v2CaptionItemsCount];
     QLabel *m_label[ID3v2CaptionItemsCount];
     QLineEdit *m_textEditor[9];

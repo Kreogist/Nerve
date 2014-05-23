@@ -5,8 +5,10 @@
 #include <QPlainTextEdit>
 #include <QStringList>
 #include <QTreeView>
+#include <QToolBar>
 
 #include "../Libraries/knmusictagid3v2.h"
+#include "../../Base/knverticalwidgetswitcher.h"
 
 #include "../knmusicglobal.h"
 
@@ -18,31 +20,42 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     retranslate();
     m_tagID3v2=new KNMusicTagID3v2(this);
 
-    QGridLayout *mainLayout=new QGridLayout(this);
-    setLayout(mainLayout);
+    QBoxLayout *editorLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    setLayout(editorLayout);
+
+    QToolBar *toolBar=new QToolBar(this);
+    editorLayout->addWidget(toolBar);
+
+    m_switcher=new KNVerticalWidgetSwitcher(this);
+    editorLayout->addWidget(m_switcher);
+
+    QWidget *overallMode=new QWidget(this);
+    overallMode->setContentsMargins(0,0,0,0);
+    QGridLayout *overallLayout=new QGridLayout(overallMode);
+    overallMode->setLayout(overallLayout);
 
     for(int i=0; i<ID3v2CaptionItemsCount; i++)
     {
         m_label[i]=new QLabel(m_caption[i], this);
     }
-    mainLayout->addWidget(m_label[CaptionName], 0, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionName], 0, 0, 1, 1, Qt::AlignRight);
     m_textEditor[Name]=new QLineEdit(this);
-    mainLayout->addWidget(m_textEditor[Name], 0, 1, 1, 3);
-    mainLayout->addWidget(m_label[CaptionArtist], 1, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_textEditor[Name], 0, 1, 1, 3);
+    overallLayout->addWidget(m_label[CaptionArtist], 1, 0, 1, 1, Qt::AlignRight);
     m_textEditor[Artist]=new QLineEdit(this);
-    mainLayout->addWidget(m_textEditor[Artist], 1, 1, 1, 1);
+    overallLayout->addWidget(m_textEditor[Artist], 1, 1, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionYear], 1, 2, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionYear], 1, 2, 1, 1, Qt::AlignRight);
     m_textEditor[Year]=new QLineEdit(this);
     m_textEditor[Year]->setMaximumWidth(50);
     m_textEditor[Year]->setAlignment(Qt::AlignRight);
-    mainLayout->addWidget(m_textEditor[Year], 1, 3, 1, 1);
+    overallLayout->addWidget(m_textEditor[Year], 1, 3, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionAlbum], 2, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionAlbum], 2, 0, 1, 1, Qt::AlignRight);
     m_textEditor[Album]=new QLineEdit(this);
-    mainLayout->addWidget(m_textEditor[Album], 2, 1, 1, 1);
+    overallLayout->addWidget(m_textEditor[Album], 2, 1, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionTrack], 2, 2, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionTrack], 2, 2, 1, 1, Qt::AlignRight);
     m_textEditor[TrackNumber]=new QLineEdit(this);
     m_textEditor[TrackNumber]->setFixedWidth(35);
     m_textEditor[TrackNumber]->setAlignment(Qt::AlignRight);
@@ -50,17 +63,17 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     m_textEditor[TrackCount]=new QLineEdit(this);
     m_textEditor[TrackCount]->setFixedWidth(35);
     m_textEditor[TrackCount]->setAlignment(Qt::AlignRight);
-    QBoxLayout *trackLayout=new QBoxLayout(QBoxLayout::LeftToRight, mainLayout->widget());
+    QBoxLayout *trackLayout=new QBoxLayout(QBoxLayout::LeftToRight, overallLayout->widget());
     trackLayout->addWidget(m_textEditor[TrackNumber]);
     trackLayout->addWidget(trackSlash,1);
     trackLayout->addWidget(m_textEditor[TrackCount]);
-    mainLayout->addLayout(trackLayout, 2, 3, 1, 1);
+    overallLayout->addLayout(trackLayout, 2, 3, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionAlbumArtist], 3, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionAlbumArtist], 3, 0, 1, 1, Qt::AlignRight);
     m_textEditor[AlbumArtist]=new QLineEdit(this);
-    mainLayout->addWidget(m_textEditor[AlbumArtist], 3, 1, 1, 1);
+    overallLayout->addWidget(m_textEditor[AlbumArtist], 3, 1, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionDisc], 3, 2, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionDisc], 3, 2, 1, 1, Qt::AlignRight);
     m_textEditor[DiscNumber]=new QLineEdit(this);
     m_textEditor[DiscNumber]->setFixedWidth(35);
     m_textEditor[DiscNumber]->setAlignment(Qt::AlignRight);
@@ -68,25 +81,34 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     m_textEditor[DiscCount]=new QLineEdit(this);
     m_textEditor[DiscCount]->setFixedWidth(35);
     m_textEditor[DiscCount]->setAlignment(Qt::AlignRight);
-    QBoxLayout *discLayout=new QBoxLayout(QBoxLayout::LeftToRight, mainLayout->widget());
+    QBoxLayout *discLayout=new QBoxLayout(QBoxLayout::LeftToRight, overallLayout->widget());
     discLayout->addWidget(m_textEditor[DiscNumber]);
     discLayout->addWidget(discSlash,1);
     discLayout->addWidget(m_textEditor[DiscCount]);
-    mainLayout->addLayout(discLayout, 3, 3, 1, 1);
+    overallLayout->addLayout(discLayout, 3, 3, 1, 1);
 
-    mainLayout->addWidget(m_label[CaptionGenre], 4, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_label[CaptionGenre], 4, 0, 1, 1, Qt::AlignRight);
     m_genreList=new QComboBox(this);
     m_genreList->setEditable(true);
-    mainLayout->addWidget(m_genreList, 4, 1, 1, 3);
-    mainLayout->addWidget(m_label[CaptionComment], 5, 0, 1, 1, Qt::AlignRight);
+    overallLayout->addWidget(m_genreList, 4, 1, 1, 3);
+    overallLayout->addWidget(m_label[CaptionComment], 5, 0, 1, 1, Qt::AlignRight);
     m_commentEditor=new QPlainTextEdit(this);
-    mainLayout->addWidget(m_commentEditor, 5, 1, 1, 3);
+    overallLayout->addWidget(m_commentEditor, 5, 1, 1, 3);
 
-    mainLayout->setColumnStretch(1, 1);
+    overallLayout->setColumnStretch(1, 1);
+
+    m_switcher->addWidget(overallMode);
+
+    QWidget *advancedMode=new QWidget(this);
+    QBoxLayout *advancedLayout=new QBoxLayout(QBoxLayout::TopToBottom, advancedMode);
+    advancedMode->setLayout(advancedLayout);
 
     m_advancedView=new QTreeView(this);
     m_advancedView->setIndentation(0);
-    m_advancedView->resize(200,200);
+    advancedLayout->addWidget(m_advancedView);
+    m_switcher->addWidget(advancedMode);
+
+    m_switcher->setCurrentIndex(0);
 }
 
 void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
@@ -155,12 +177,31 @@ void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
 
 void KNMusicID3v2Editor::resetEditor()
 {
-    ;
+    for(int i=0; i<9; i++)
+    {
+        m_textEditor[i]->setText("");
+    }
+    m_commentEditor->clear();
 }
 
 KNMusicTagBase *KNMusicID3v2Editor::musicTagReader()
 {
     return m_tagID3v2;
+}
+
+QString KNMusicID3v2Editor::title() const
+{
+    return m_tagID3v2->textData(KNMusicTagID3v2::Name);
+}
+
+QString KNMusicID3v2Editor::album() const
+{
+    return m_tagID3v2->textData(KNMusicTagID3v2::Album);
+}
+
+QString KNMusicID3v2Editor::artist() const
+{
+    return m_tagID3v2->textData(KNMusicTagID3v2::Artist);
 }
 
 void KNMusicID3v2Editor::retranslate()

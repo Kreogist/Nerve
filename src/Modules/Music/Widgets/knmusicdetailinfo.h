@@ -17,11 +17,19 @@ class KNMusicDetailOverview : public QWidget
 {
     Q_OBJECT
 public:
+    enum MusicBasic
+    {
+        Name,
+        Duration,
+        Artist,
+        Album,
+        MusicBasicCount
+    };
+
     enum MusicDetails
     {
         Kind,
         Size,
-        Duration,
         DateModified,
         LastPlayed,
         Format,
@@ -34,13 +42,18 @@ public:
     };
     explicit KNMusicDetailOverview(QWidget *parent = 0);
     void setText(const int &index, const QString &text);
+    void setName(const QString &name);
+    void setArtist(const QString &artist);
+    void setAlbum(const QString &album);
+    void setBasicInfo(const int &index, const QString &basicData);
 
 public slots:
     void retranslate();
     void retranslateAndSet();
 
 private:
-    QLabel *m_labels[MusicDetailCount], *m_datas[MusicDetailCount];
+    QLabel *m_labels[MusicDetailCount], *m_datas[MusicDetailCount],
+           *m_basicInfo[MusicBasicCount];
     QString m_caption[MusicDetailCount];
 };
 

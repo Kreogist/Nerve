@@ -93,7 +93,8 @@ SOURCES += \
     Modules/Music/Widgets/knmusictageditor.cpp \
     Modules/Music/Widgets/knmusicid3v1editor.cpp \
     Modules/Music/Widgets/knmusictageditorbase.cpp \
-    Modules/Music/Widgets/knmusicid3v2editor.cpp
+    Modules/Music/Widgets/knmusicid3v2editor.cpp \
+    Modules/Base/knverticalwidgetswitcher.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -175,7 +176,8 @@ HEADERS += \
     Modules/Music/Widgets/knmusictageditor.h \
     Modules/Music/Widgets/knmusicid3v1editor.h \
     Modules/Music/Widgets/knmusictageditorbase.h \
-    Modules/Music/Widgets/knmusicid3v2editor.h
+    Modules/Music/Widgets/knmusicid3v2editor.h \
+    Modules/Base/knverticalwidgetswitcher.h
 
 RESOURCES += \
     res.qrc

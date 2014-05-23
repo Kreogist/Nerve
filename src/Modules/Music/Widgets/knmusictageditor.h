@@ -5,6 +5,7 @@
 #include <QDataStream>
 #include <QWidget>
 
+class KNMusicTagEditorBase;
 class KNMusicID3v1Editor;
 class KNMusicID3v2Editor;
 class KNMusicTagAPEv2;
@@ -18,12 +19,16 @@ class KNMusicTagEditor : public QWidget
 public:
     explicit KNMusicTagEditor(QWidget *parent = 0);
     void parseFile(const QString &filePath);
+    QString title() const;
+    QString album() const;
+    QString artist() const;
 
 signals:
 
 public slots:
 
 private:
+    void readBasicInfoFromEditor(KNMusicTagEditorBase *editor);
     void readAPEv2Tag(QFile &mediaFile,
                       QDataStream &mediaData);
     void readWMATag(QFile &mediaFile,
@@ -44,7 +49,9 @@ private:
 
     enum BasicInformation
     {
-        Name,
+        Title,
+        Artist,
+        Album,
         BasicInformationCount
     };
 

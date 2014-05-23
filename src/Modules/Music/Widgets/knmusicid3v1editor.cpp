@@ -82,6 +82,21 @@ void KNMusicID3v1Editor::resetEditor()
     m_genreCombo->setCurrentIndex(0);
 }
 
+QString KNMusicID3v1Editor::title() const
+{
+    return m_tagID3v1->textData(KNMusicTagID3v1::Title);
+}
+
+QString KNMusicID3v1Editor::album() const
+{
+    return m_tagID3v1->textData(KNMusicTagID3v1::Album);
+}
+
+QString KNMusicID3v1Editor::artist() const
+{
+    return m_tagID3v1->textData(KNMusicTagID3v1::Artist);
+}
+
 KNMusicTagBase *KNMusicID3v1Editor::musicTagReader()
 {
     return m_tagID3v1;

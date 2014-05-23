@@ -19,3 +19,18 @@ KNMusicTagBase *KNMusicTagEditorBase::musicTagReader()
 {
     return NULL;
 }
+
+QString KNMusicTagEditorBase::title() const
+{
+    return QString();
+}
+
+QString KNMusicTagEditorBase::album() const
+{
+    return QString();
+}
+
+QString KNMusicTagEditorBase::artist() const
+{
+    return QString();
+}

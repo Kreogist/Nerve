@@ -36,7 +36,7 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
                              256,
                              256);
     m_opacityEffect=new QGraphicsOpacityEffect(m_largeIcon);
-    m_opacityEffect->setOpacity(0.7);
+    m_opacityEffect->setOpacity(0.9);
     m_alphaGradient=QRadialGradient(QPointF(256,256),
                                     256,
                                     QPointF(256,256));

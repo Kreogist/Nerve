@@ -7,6 +7,7 @@
 #include "../Libraries/knmusictagflac.h"
 #include "../Libraries/knmusictagwav.h"
 
+#include "knmusictageditorbase.h"
 #include "knmusicid3v1editor.h"
 #include "knmusicid3v2editor.h"
 
@@ -40,13 +41,49 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
     if(mediaFile.open(QIODevice::ReadOnly))
     {
         m_ID3v1Editor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_ID3v1Editor);
         m_ID3v2Editor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_ID3v2Editor);
         readAPEv2Tag(mediaFile, mediaData);
         readWMATag(mediaFile, mediaData);
         readM4ATag(mediaFile, mediaData);
         readFLACTag(mediaFile, mediaData);
         readWAVTag(mediaFile, mediaData);
         mediaFile.close();
+    }
+}
+
+QString KNMusicTagEditor::title() const
+{
+    return m_basicInfo[Title];
+}
+
+QString KNMusicTagEditor::album() const
+{
+    return m_basicInfo[Album];
+}
+
+QString KNMusicTagEditor::artist() const
+{
+    return m_basicInfo[Artist];
+}
+
+void KNMusicTagEditor::readBasicInfoFromEditor(KNMusicTagEditorBase *editor)
+{
+    QString cache=editor->title();
+    if(!cache.isEmpty())
+    {
+        m_basicInfo[Title]=cache;
+    }
+    cache=editor->artist();
+    if(!cache.isEmpty())
+    {
+        m_basicInfo[Artist]=cache;
+    }
+    cache=editor->album();
+    if(!cache.isEmpty())
+    {
+        m_basicInfo[Album]=cache;
     }
 }
 
