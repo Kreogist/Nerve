@@ -3,6 +3,7 @@
 
 #include "knmusiclistviewbase.h"
 
+class QTimeLine;
 class KNMusicArtistSongs : public KNMusicListViewBase
 {
     Q_OBJECT
@@ -14,6 +15,17 @@ signals:
 
 public slots:
 
+protected:
+    void enterEvent(QEvent *e);
+    void leaveEvent(QEvent *e);
+
+private slots:
+    void changeBackground(int frameData);
+
+private:
+    QTimeLine *m_mouseIn, *m_mouseOut;
+    QColor m_alternateColor;
+    QPalette m_palette;
 };
 
 #endif // KNMUSICARTISTSONGS_H

@@ -32,7 +32,7 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     m_palette.setColor(QPalette::Base, m_backgroundColor);
     m_palette.setColor(QPalette::Window, QColor(0x30, 0x30, 0x30));
     m_palette.setColor(QPalette::Button, QColor(0x30, 0x30, 0x30));
-    m_palette.setColor(QPalette::Text, QColor(0x8f, 0x8f, 0x8f));
+    m_palette.setColor(QPalette::Text, QColor(0x8f, 0x8f, 0x8f, 0xaf));
     m_palette.setColor(QPalette::Highlight, QColor(0x60, 0x60, 0x60));
     m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(m_palette);
@@ -90,7 +90,8 @@ void KNMusicCategoryList::changeBackground(int frameData)
     int textParam=(frameData<<1)+95;
     m_palette.setColor(QPalette::Text, QColor(textParam,
                                               textParam,
-                                              textParam));
+                                              textParam,
+                                              0xAF+frameData));
     setPalette(m_palette);
 }
 
