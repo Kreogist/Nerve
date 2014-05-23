@@ -97,11 +97,6 @@ QString KNMusicID3v1Editor::artist() const
     return m_tagID3v1->textData(KNMusicTagID3v1::Artist);
 }
 
-KNMusicTagBase *KNMusicID3v1Editor::musicTagReader()
-{
-    return m_tagID3v1;
-}
-
 void KNMusicID3v1Editor::retranslate()
 {
     m_captionsTitle[Title]=tr("Title:");

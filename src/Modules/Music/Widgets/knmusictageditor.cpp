@@ -2,7 +2,6 @@
 #include <QTabWidget>
 #include <QStandardPaths>
 
-#include "../Libraries/knmusictagapev2.h"
 #include "../Libraries/knmusictagwma.h"
 #include "../Libraries/knmusictagm4a.h"
 #include "../Libraries/knmusictagflac.h"
@@ -11,6 +10,7 @@
 #include "knmusictageditorbase.h"
 #include "knmusicid3v1editor.h"
 #include "knmusicid3v2editor.h"
+#include "knmusicapev2editor.h"
 
 #include "knmusictageditor.h"
 
@@ -28,7 +28,8 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
     tabWidget->addTab(m_ID3v1Editor, "ID3v1");
     m_ID3v2Editor=new KNMusicID3v2Editor(this);
     tabWidget->addTab(m_ID3v2Editor, "ID3v2");
-    m_tagAPEv2=new KNMusicTagAPEv2(this);
+    m_APEv2Editor=new KNMusicAPEv2Editor(this);
+    tabWidget->addTab(m_APEv2Editor, "APEv2");
     m_tagWMA=new KNMusicTagWMA(this);
     m_tagM4A=new KNMusicTagM4A(this);
     m_tagFLAC=new KNMusicTagFLAC(this);
@@ -45,7 +46,8 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
         readBasicInfoFromEditor(m_ID3v1Editor);
         m_ID3v2Editor->readTag(mediaFile, mediaData);
         readBasicInfoFromEditor(m_ID3v2Editor);
-        readAPEv2Tag(mediaFile, mediaData);
+        m_APEv2Editor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_APEv2Editor);
         readWMATag(mediaFile, mediaData);
         readM4ATag(mediaFile, mediaData);
         readFLACTag(mediaFile, mediaData);
@@ -85,24 +87,6 @@ void KNMusicTagEditor::readBasicInfoFromEditor(KNMusicTagEditorBase *editor)
     if(!cache.isEmpty())
     {
         m_basicInfo[Album]=cache;
-    }
-}
-
-void KNMusicTagEditor::readAPEv2Tag(QFile &mediaFile,
-                                        QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagAPEv2->readTag(mediaFile,
-                           mediaData))
-    {
-        /*setMediaData(KNMusicGlobal::Name        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
-        setMediaData(KNMusicGlobal::Artist      ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
-        setMediaData(KNMusicGlobal::Album       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Album));
-        setMediaData(KNMusicGlobal::Comments    ,m_tagAPEv2->textData(KNMusicTagAPEv2::Comments));
-        setMediaData(KNMusicGlobal::Composer    ,m_tagAPEv2->textData(KNMusicTagAPEv2::Composer));
-        setMediaData(KNMusicGlobal::Genre       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Genre));
-        setMediaData(KNMusicGlobal::Year        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Year));
-        setMediaData(KNMusicGlobal::TrackNumber ,m_tagAPEv2->textData(KNMusicTagAPEv2::Track));*/
     }
 }
 

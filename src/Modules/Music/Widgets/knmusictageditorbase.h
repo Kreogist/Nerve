@@ -17,7 +17,6 @@ public:
     virtual void readTag(QFile &mediaFile,
                          QDataStream &mediaData);
     virtual void resetEditor();
-    virtual KNMusicTagBase *musicTagReader();
     virtual QString title() const;
     virtual QString album() const;
     virtual QString artist() const;

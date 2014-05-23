@@ -31,7 +31,6 @@ public:
     QString title() const;
     QString album() const;
     QString artist() const;
-    KNMusicTagBase *musicTagReader();
 
 signals:
 

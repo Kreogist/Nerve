@@ -8,6 +8,7 @@
 class KNMusicTagEditorBase;
 class KNMusicID3v1Editor;
 class KNMusicID3v2Editor;
+class KNMusicAPEv2Editor;
 class KNMusicTagAPEv2;
 class KNMusicTagWMA;
 class KNMusicTagM4A;
@@ -29,8 +30,6 @@ public slots:
 
 private:
     void readBasicInfoFromEditor(KNMusicTagEditorBase *editor);
-    void readAPEv2Tag(QFile &mediaFile,
-                      QDataStream &mediaData);
     void readWMATag(QFile &mediaFile,
                     QDataStream &mediaData);
     void readM4ATag(QFile &mediaFile,
@@ -41,7 +40,7 @@ private:
                     QDataStream &mediaData);
     KNMusicID3v1Editor *m_ID3v1Editor;
     KNMusicID3v2Editor *m_ID3v2Editor;
-    KNMusicTagAPEv2 *m_tagAPEv2;
+    KNMusicAPEv2Editor *m_APEv2Editor;
     KNMusicTagWMA *m_tagWMA;
     KNMusicTagM4A *m_tagM4A;
     KNMusicTagFLAC *m_tagFLAC;

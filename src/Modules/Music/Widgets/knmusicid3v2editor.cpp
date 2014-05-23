@@ -141,56 +141,59 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
 
 void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
+    //Reset current editor and model, clear caches.
     resetEditor();
+
+    //Reset the media file, it might be used by other files.
     mediaFile.reset();
-    m_advancedModel.reset(new QStandardItemModel);
-    QStringList advancedHeader;
-    advancedHeader<<tr("Frame")<<tr("Frame Data");
-    m_advancedModel->setHorizontalHeaderLabels(advancedHeader);
+    //Use tag reader to read the tag. If tag exsist, display the data.
     if(m_tagID3v2->readTag(mediaFile, mediaData))
     {
-        m_textEditor[Name]->setText(m_tagID3v2->textData(KNMusicTagID3v2::Name));
-        m_textEditor[Artist]->setText(m_tagID3v2->textData(KNMusicTagID3v2::Artist));
-        m_textEditor[Album]->setText(m_tagID3v2->textData(KNMusicTagID3v2::Album));
-        m_textEditor[AlbumArtist]->setText(m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
-        m_textEditor[Year]->setText(m_tagID3v2->textData(KNMusicTagID3v2::Year));
+        setEditorText(Name, m_tagID3v2->textData(KNMusicTagID3v2::Name));
+        setEditorText(Artist, m_tagID3v2->textData(KNMusicTagID3v2::Artist));
+        setEditorText(Album, m_tagID3v2->textData(KNMusicTagID3v2::Album));
+        setEditorText(AlbumArtist, m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
+        setEditorText(Year, m_tagID3v2->textData(KNMusicTagID3v2::Year));
         QString trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Track);
         int diagonalPos=trackInfo.indexOf("/");
         if(diagonalPos!=-1)
         {
-            m_textEditor[TrackNumber]->setText(trackInfo.left(diagonalPos));
-            m_textEditor[TrackCount]->setText(trackInfo.mid(diagonalPos+1));
+            setEditorText(TrackNumber, trackInfo.left(diagonalPos));
+            setEditorText(TrackCount, trackInfo.mid(diagonalPos+1));
         }
         else
         {
-            m_textEditor[TrackNumber]->setText(trackInfo);
+            setEditorText(TrackNumber, trackInfo);
         }
         trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Disc);
         diagonalPos=trackInfo.indexOf("/");
         if(diagonalPos!=-1)
         {
-            m_textEditor[DiscNumber]->setText(trackInfo.left(diagonalPos));
-            m_textEditor[DiscCount]->setText(trackInfo.mid(diagonalPos+1));
+            setEditorText(DiscNumber, trackInfo.left(diagonalPos));
+            setEditorText(DiscCount, trackInfo.mid(diagonalPos+1));
         }
         else
         {
-            m_textEditor[DiscNumber]->setText(trackInfo);
+            setEditorText(DiscNumber, trackInfo);
         }
         m_genreList->setEditText(KNMusicGlobal::instance()->getGenre
                                  (m_tagID3v2->textData(KNMusicTagID3v2::Genre)));
         m_commentEditor->setPlainText(m_tagID3v2->rawTextData(KNMusicTagID3v2::Comments));
 
+        //Add all frames to advanced view.
         QStringList keyList=m_tagID3v2->keyList();
         QStandardItem *currentItem;
         for(int i=0, keyListCount=keyList.size();
             i<keyListCount;
             i++)
         {
+            //Create data row
             QList<QStandardItem *> currentRow;
             currentItem=new QStandardItem(keyList.at(i));
             currentRow.append(currentItem);
             currentItem=new QStandardItem(m_tagID3v2->frameTextData(keyList.at(i)));
             currentRow.append(currentItem);
+            //Append to model
             m_advancedModel->appendRow(currentRow);
         }
         m_advancedView->setModel(m_advancedModel.data());
@@ -205,20 +208,23 @@ void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
 
 void KNMusicID3v2Editor::resetEditor()
 {
+    //Clear all the line text data.
     for(int i=0; i<9; i++)
     {
         m_textEditor[i]->setText("");
     }
+    //Clear the comment editor.
     m_commentEditor->clear();
-}
-
-KNMusicTagBase *KNMusicID3v2Editor::musicTagReader()
-{
-    return m_tagID3v2;
+    //Reset the model and add header.
+    m_advancedModel.reset(new QStandardItemModel);
+    QStringList advancedHeader;
+    advancedHeader<<tr("Frame")<<tr("Frame Data");
+    m_advancedModel->setHorizontalHeaderLabels(advancedHeader);
 }
 
 QString KNMusicID3v2Editor::title() const
 {
+    //Return the name of the song.
     return m_tagID3v2->textData(KNMusicTagID3v2::Name);
 }
 
@@ -258,4 +264,10 @@ void KNMusicID3v2Editor::toAdvancedMode()
 void KNMusicID3v2Editor::toOverviewMode()
 {
     m_switcher->setCurrentIndex(0);
+}
+
+void KNMusicID3v2Editor::setEditorText(const int &index, const QString &text)
+{
+    m_textEditor[index]->setText(text);
+    m_textEditor[index]->setCursorPosition(0);
 }

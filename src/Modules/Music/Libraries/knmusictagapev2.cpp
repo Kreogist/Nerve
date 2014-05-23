@@ -22,7 +22,16 @@ KNMusicTagAPEv2::KNMusicTagAPEv2(QObject *parent) :
 
 QString KNMusicTagAPEv2::textData(const int &key) const
 {
-    return QString(m_frameDatas[m_frames[key]]).simplified();
+    int frameIndex=m_keys.indexOf(m_frames[key]);
+    return frameIndex==-1?
+                QString():QString(m_data.at(frameIndex)).simplified();
+}
+
+QString KNMusicTagAPEv2::frameData(const QString &frame) const
+{
+    int frameIndex=m_keys.indexOf(frame);
+    return frameIndex==-1?
+                QString():QString(m_data.at(frameIndex)).simplified();
 }
 
 bool KNMusicTagAPEv2::readTag(const QFile &mediaFile,
@@ -58,7 +67,13 @@ bool KNMusicTagAPEv2::readTag(const QFile &mediaFile,
 void KNMusicTagAPEv2::clearCache()
 {
     memset(m_apeHeader, 0, 32);
-    m_frameDatas.clear();
+    m_keys.clear();
+    m_data.clear();
+}
+
+QStringList KNMusicTagAPEv2::keyList() const
+{
+    return m_keys;
 }
 
 bool KNMusicTagAPEv2::checkAPEHeaderAt(QDataStream &mediaData)
@@ -118,8 +133,8 @@ bool KNMusicTagAPEv2::readTagAt(QDataStream &mediaData)
         {
             labelEnd++;
         }
-        m_frameDatas[QString(rawTagData+labelStart)]=
-                QByteArray(rawTagData+labelEnd+1, currentFrameSize);
+        m_keys.append(QString(rawTagData+labelStart));
+        m_data.append(QByteArray(rawTagData+labelEnd+1, currentFrameSize));
         currentPosition=labelEnd+currentFrameSize+1;
     }
     //All process code above.

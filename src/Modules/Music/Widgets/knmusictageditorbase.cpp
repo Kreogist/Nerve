@@ -15,11 +15,6 @@ void KNMusicTagEditorBase::resetEditor()
     ;
 }
 
-KNMusicTagBase *KNMusicTagEditorBase::musicTagReader()
-{
-    return NULL;
-}
-
 QString KNMusicTagEditorBase::title() const
 {
     return QString();

@@ -1,8 +1,8 @@
 #ifndef KNMUSICTAGAPEV2_H
 #define KNMUSICTAGAPEV2_H
 
-#include <QDataStream>
-#include <QMap>
+#include <QList>
+#include <QStringList>
 
 #include "knmusictagbase.h"
 
@@ -25,9 +25,11 @@ public:
 
     explicit KNMusicTagAPEv2(QObject *parent = 0);
     QString textData(const int &key) const;
+    QString frameData(const QString &frame) const;
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
     void clearCache();
+    QStringList keyList() const;
 
 signals:
 
@@ -45,7 +47,8 @@ private:
             m_tagSize,
             m_itemCount,
             m_tagsFlags;
-    QMap<QString, QByteArray> m_frameDatas;
+    QStringList m_keys;
+    QList<QByteArray> m_data;
     QString m_frames[APEv2ItemsCount];
 };
 

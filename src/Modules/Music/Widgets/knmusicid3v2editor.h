@@ -36,7 +36,6 @@ public:
     void readTag(QFile &mediaFile,
                  QDataStream &mediaData);
     void resetEditor();
-    KNMusicTagBase *musicTagReader();
     QString title() const;
     QString album() const;
     QString artist() const;
@@ -52,6 +51,7 @@ private slots:
     void toOverviewMode();
 
 private:
+    void setEditorText(const int &index, const QString &text);
     enum ID3v2CaptionItems
     {
         CaptionName,
