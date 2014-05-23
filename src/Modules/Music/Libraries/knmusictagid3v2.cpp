@@ -68,7 +68,7 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         {
             content.remove(lastCharIndex, 1);
         }
-        return m_isoCodec->toUnicode(content).simplified();
+        return m_isoCodec->toUnicode(content);
     case 1:
         //UTF-16 LE/BE
         if(lastCharIndex>0 && content.at(lastCharIndex)==0 && content.at(lastCharIndex-1)==0)
@@ -77,29 +77,29 @@ QString KNMusicTagID3v2::id3v2DataToString(const QByteArray &value) const
         }
         if((quint8)content.at(0)==0xFE && (quint8)content.at(1)==0xFF)
         {
-            return m_beCodec->toUnicode(content).simplified();
+            return m_beCodec->toUnicode(content);
         }
         if((quint8)content.at(0)==0xFF && (quint8)content.at(1)==0xFE)
         {
-            return m_leCodec->toUnicode(content).simplified();
+            return m_leCodec->toUnicode(content);
         }
-        return m_utf16Codec->toUnicode(content).simplified();
+        return m_utf16Codec->toUnicode(content);
     case 2:
         if(lastCharIndex>0 && content.at(lastCharIndex)==0 && content.at(lastCharIndex-1)==0)
         {
             content.remove(lastCharIndex-1, 2);
         }
         //UTF-16 BE without BOM
-        return m_beCodec->toUnicode(content).simplified();
+        return m_beCodec->toUnicode(content);
     case 3:
         //UTF-8
         if(lastCharIndex>-1 && content.at(lastCharIndex)==0)
         {
             content.remove(lastCharIndex, 1);
         }
-        return m_utf8Codec->toUnicode(content).simplified();
+        return m_utf8Codec->toUnicode(content);
     default:
-        return m_localCodec->toUnicode(content).simplified();
+        return m_localCodec->toUnicode(content);
     }
 }
 
@@ -128,15 +128,37 @@ int KNMusicTagID3v2::hexToStarRating(const quint8 &hex) const
     return 0;
 }
 
-
 QString KNMusicTagID3v2::textData(const int &key) const
 {
     int frameDataIndex=m_frameID.indexOf(m_frames[key][m_useShortFrames]);
-    if(frameDataIndex==-1)
+    return frameDataIndex==-1?
+                QString():
+                id3v2DataToString(m_frameData.at(frameDataIndex)).simplified();
+}
+
+QString KNMusicTagID3v2::rawTextData(const int &key) const
+{
+    int frameDataIndex=m_frameID.indexOf(m_frames[key][m_useShortFrames]);
+    return frameDataIndex==-1?
+                QString():
+                id3v2DataToString(m_frameData.at(frameDataIndex));
+}
+
+QString KNMusicTagID3v2::frameTextData(const QString &frame) const
+{
+    if(frame=="APIC")
     {
-        return QString();
+        return QString("(Binary Data)");
     }
-    return id3v2DataToString(m_frameData.at(frameDataIndex));
+    int frameDataIndex=m_frameID.indexOf(frame);
+    return frameDataIndex==-1?
+                QString():
+                id3v2DataToString(m_frameData.at(frameDataIndex));
+}
+
+QStringList KNMusicTagID3v2::keyList() const
+{
+    return m_frameID;
 }
 
 int KNMusicTagID3v2::id3v2RatingData() const

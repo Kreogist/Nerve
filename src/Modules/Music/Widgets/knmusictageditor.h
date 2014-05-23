@@ -6,7 +6,7 @@
 #include <QWidget>
 
 class KNMusicID3v1Editor;
-class KNMusicTagID3v2;
+class KNMusicID3v2Editor;
 class KNMusicTagAPEv2;
 class KNMusicTagWMA;
 class KNMusicTagM4A;
@@ -24,10 +24,6 @@ signals:
 public slots:
 
 private:
-    void readID3v1Tag(QFile &mediaFile,
-                      QDataStream &mediaData);
-    void readID3v2Tag(QFile &mediaFile,
-                      QDataStream &mediaData);
     void readAPEv2Tag(QFile &mediaFile,
                       QDataStream &mediaData);
     void readWMATag(QFile &mediaFile,
@@ -39,12 +35,20 @@ private:
     void readWAVTag(QFile &mediaFile,
                     QDataStream &mediaData);
     KNMusicID3v1Editor *m_ID3v1Editor;
-    KNMusicTagID3v2 *m_tagID3v2;
+    KNMusicID3v2Editor *m_ID3v2Editor;
     KNMusicTagAPEv2 *m_tagAPEv2;
     KNMusicTagWMA *m_tagWMA;
     KNMusicTagM4A *m_tagM4A;
     KNMusicTagFLAC *m_tagFLAC;
     KNMusicTagWAV *m_tagWAV;
+
+    enum BasicInformation
+    {
+        Name,
+        BasicInformationCount
+    };
+
+    QString m_basicInfo[BasicInformationCount];
 };
 
 #endif // KNMUSICTAGEDITOR_H

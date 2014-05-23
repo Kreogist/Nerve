@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QList>
 #include <QByteArray>
+#include <QStringList>
 #include <QPixmap>
 
 #include "knmusictagbase.h"
@@ -40,6 +41,9 @@ public:
 
     explicit KNMusicTagID3v2(QObject *parent = 0);
     QString textData(const int &key) const;
+    QString rawTextData(const int &key) const;
+    QString frameTextData(const QString &frame) const;
+    QStringList keyList() const;
     int id3v2RatingData() const;
     void clearCache();
 

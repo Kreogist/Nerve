@@ -51,6 +51,7 @@ KNMusicID3v1Editor::KNMusicID3v1Editor(QWidget *parent) :
 
 void KNMusicID3v1Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
+    resetEditor();
     mediaFile.reset();
     if(m_tagID3v1->readTag(mediaFile, mediaData))
     {
@@ -70,6 +71,20 @@ void KNMusicID3v1Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
             m_genreCombo->setCurrentIndex(0);
         }
     }
+}
+
+void KNMusicID3v1Editor::resetEditor()
+{
+    for(int i=0; i<6; i++)
+    {
+        m_textEditor[i]->clear();
+    }
+    m_genreCombo->setCurrentIndex(0);
+}
+
+KNMusicTagBase *KNMusicID3v1Editor::musicTagReader()
+{
+    return m_tagID3v1;
 }
 
 void KNMusicID3v1Editor::retranslate()

@@ -9,3 +9,13 @@ void KNMusicTagEditorBase::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
     ;
 }
+
+void KNMusicTagEditorBase::resetEditor()
+{
+    ;
+}
+
+KNMusicTagBase *KNMusicTagEditorBase::musicTagReader()
+{
+    return NULL;
+}

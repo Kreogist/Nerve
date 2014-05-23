@@ -1,7 +1,6 @@
 #include <QBoxLayout>
 #include <QTabWidget>
 
-#include "../Libraries/knmusictagid3v2.h"
 #include "../Libraries/knmusictagapev2.h"
 #include "../Libraries/knmusictagwma.h"
 #include "../Libraries/knmusictagm4a.h"
@@ -9,6 +8,7 @@
 #include "../Libraries/knmusictagwav.h"
 
 #include "knmusicid3v1editor.h"
+#include "knmusicid3v2editor.h"
 
 #include "knmusictageditor.h"
 
@@ -24,7 +24,8 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
 
     m_ID3v1Editor=new KNMusicID3v1Editor(this);
     tabWidget->addTab(m_ID3v1Editor, "ID3v1");
-    m_tagID3v2=new KNMusicTagID3v2(this);
+    m_ID3v2Editor=new KNMusicID3v2Editor(this);
+    tabWidget->addTab(m_ID3v2Editor, "ID3v2");
     m_tagAPEv2=new KNMusicTagAPEv2(this);
     m_tagWMA=new KNMusicTagWMA(this);
     m_tagM4A=new KNMusicTagM4A(this);
@@ -38,70 +39,14 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
     QDataStream mediaData(&mediaFile);
     if(mediaFile.open(QIODevice::ReadOnly))
     {
-        readID3v1Tag(mediaFile, mediaData);
+        m_ID3v1Editor->readTag(mediaFile, mediaData);
+        m_ID3v2Editor->readTag(mediaFile, mediaData);
         readAPEv2Tag(mediaFile, mediaData);
-        readID3v2Tag(mediaFile, mediaData);
         readWMATag(mediaFile, mediaData);
         readM4ATag(mediaFile, mediaData);
         readFLACTag(mediaFile, mediaData);
         readWAVTag(mediaFile, mediaData);
         mediaFile.close();
-    }
-}
-
-void KNMusicTagEditor::readID3v1Tag(QFile &mediaFile,
-                                    QDataStream &mediaData)
-{
-    m_ID3v1Editor->readTag(mediaFile, mediaData);
-}
-
-void KNMusicTagEditor::readID3v2Tag(QFile &mediaFile,
-                                        QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagID3v2->readTag(mediaFile,
-                           mediaData))
-    {
-        /*setMediaData(KNMusicGlobal::Name            ,m_tagID3v2->textData(KNMusicTagID3v2::Name));
-        setMediaData(KNMusicGlobal::Artist          ,m_tagID3v2->textData(KNMusicTagID3v2::Artist));
-        setMediaData(KNMusicGlobal::Album           ,m_tagID3v2->textData(KNMusicTagID3v2::Album));
-        setMediaData(KNMusicGlobal::AlbumArtist     ,m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate ,m_tagID3v2->textData(KNMusicTagID3v2::BeatsPerMinuate));
-        setMediaData(KNMusicGlobal::Category        ,m_tagID3v2->textData(KNMusicTagID3v2::Category));
-        setMediaData(KNMusicGlobal::Comments        ,m_tagID3v2->textData(KNMusicTagID3v2::Comments));
-        setMediaData(KNMusicGlobal::Composer        ,m_tagID3v2->textData(KNMusicTagID3v2::Composer));
-        setMediaData(KNMusicGlobal::Description     ,m_tagID3v2->textData(KNMusicTagID3v2::Description));
-        setMediaData(KNMusicGlobal::Year            ,m_tagID3v2->textData(KNMusicTagID3v2::Year));
-        setMediaData(KNMusicGlobal::Genre,
-                     m_musicGlobal->getGenre(m_tagID3v2->textData(KNMusicTagID3v2::Genre)));
-        QString trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Track);
-        int diagonalPos=trackInfo.indexOf("/");
-        if(diagonalPos!=-1)
-        {
-            setMediaData(KNMusicGlobal::TrackNumber,trackInfo.left(diagonalPos));
-            setMediaData(KNMusicGlobal::TrackCount,trackInfo.mid(diagonalPos+1));
-        }
-        else
-        {
-            setMediaData(KNMusicGlobal::TrackNumber,trackInfo);
-        }
-        trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Disc);
-        diagonalPos=trackInfo.indexOf("/");
-        if(diagonalPos!=-1)
-        {
-            setMediaData(KNMusicGlobal::DiscNumber,trackInfo.left(diagonalPos));
-            setMediaData(KNMusicGlobal::DiscCount,trackInfo.mid(diagonalPos+1));
-        }
-        else
-        {
-            setMediaData(KNMusicGlobal::DiscNumber,trackInfo);
-        }
-        m_musicRating=m_tagID3v2->id3v2RatingData();
-        setMusicCover(m_tagID3v2->tagImage(3)); //3 is the Cover front.
-        if(m_musicCover.isNull())
-        {
-            setMusicCover(m_tagID3v2->firstAvaliableImage());
-        }*/
     }
 }
 

@@ -38,6 +38,8 @@ KNMusicDetailOverview::KNMusicDetailOverview(QWidget *parent) :
 
 void KNMusicDetailOverview::setText(const int &index, const QString &text)
 {
+    m_labels[index]->setVisible(!text.isEmpty());
+    m_datas[index]->setVisible(!text.isEmpty());
     m_datas[index]->setText(text);
 }
 
@@ -155,9 +157,22 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     m_overall->setText(KNMusicDetailOverview::SampleRate, m_parser->data("Sampling rate"));
     m_overall->setText(KNMusicDetailOverview::CompressionMode, m_parser->data("Compression mode"));
     m_overall->setText(KNMusicDetailOverview::WritingLibrary, m_parser->data("Writing library"));
-    m_overall->setText(KNMusicDetailOverview::Channels, m_parser->data("Channel(s)")+"("+
-                                                        m_parser->data("Mode")+
-                                                        ")");
+    QString channelCount=m_parser->data("Channel(s)"),
+            channelMode=m_parser->data("Mode"),
+            channelData;
+    if(channelCount.isEmpty())
+    {
+        if(!channelMode.isEmpty())
+        {
+            channelData=channelMode;
+        }
+    }
+    else
+    {
+        channelData=channelMode.isEmpty()?
+                    channelCount:channelCount+"("+channelMode+")";
+    }
+    m_overall->setText(KNMusicDetailOverview::Channels, channelData);
     m_overall->setText(KNMusicDetailOverview::DateModified,
                        fileInfo.lastModified().toString("yyyy-MMMM-dd, HH:mm AP"));
     m_overall->setText(KNMusicDetailOverview::LastPlayed,

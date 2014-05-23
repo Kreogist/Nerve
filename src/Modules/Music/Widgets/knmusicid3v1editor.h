@@ -27,6 +27,8 @@ public:
     explicit KNMusicID3v1Editor(QWidget *parent = 0);
     void readTag(QFile &mediaFile,
                  QDataStream &mediaData);
+    void resetEditor();
+    KNMusicTagBase *musicTagReader();
 
 signals:
 
