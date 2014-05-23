@@ -26,7 +26,7 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
     tabWidget->addTab(m_ID3v1Editor, "ID3v1");
     m_tagID3v2=new KNMusicTagID3v2(this);
     m_tagAPEv2=new KNMusicTagAPEv2(this);
-    m_tagWMA=new KNMusicTagWma(this);
+    m_tagWMA=new KNMusicTagWMA(this);
     m_tagM4A=new KNMusicTagM4A(this);
     m_tagFLAC=new KNMusicTagFLAC(this);
     m_tagWAV=new KNMusicTagWAV(this);

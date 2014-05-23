@@ -8,7 +8,7 @@
 #include "knmusictagbase.h"
 
 class QTextCodec;
-class KNMusicTagWma : public KNMusicTagBase
+class KNMusicTagWMA : public KNMusicTagBase
 {
     Q_OBJECT
 public:
@@ -29,7 +29,7 @@ public:
         TrackNumber,
         WMAItemsCount
     };
-    explicit KNMusicTagWma(QObject *parent = 0);
+    explicit KNMusicTagWMA(QObject *parent = 0);
 
     void clearCache();
     bool readTag(const QFile &mediaFile,
@@ -43,7 +43,6 @@ public slots:
 
 private:
     void processPicture();
-    QString tagStringData(const QString &frameKey) const;
     unsigned char m_headerMark[17]={0x30, 0x26, 0xB2, 0x75,
                                     0x8E, 0x66, 0xCF, 0x11,
                                     0xA6, 0xD9, 0x00, 0xAA,

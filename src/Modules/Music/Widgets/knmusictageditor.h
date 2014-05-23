@@ -8,7 +8,7 @@
 class KNMusicID3v1Editor;
 class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
-class KNMusicTagWma;
+class KNMusicTagWMA;
 class KNMusicTagM4A;
 class KNMusicTagWAV;
 class KNMusicTagFLAC;
@@ -41,7 +41,7 @@ private:
     KNMusicID3v1Editor *m_ID3v1Editor;
     KNMusicTagID3v2 *m_tagID3v2;
     KNMusicTagAPEv2 *m_tagAPEv2;
-    KNMusicTagWma *m_tagWMA;
+    KNMusicTagWMA *m_tagWMA;
     KNMusicTagM4A *m_tagM4A;
     KNMusicTagFLAC *m_tagFLAC;
     KNMusicTagWAV *m_tagWAV;

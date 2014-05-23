@@ -15,7 +15,7 @@ class KNLibMediaInfo;
 class KNMusicTagID3v1;
 class KNMusicTagID3v2;
 class KNMusicTagAPEv2;
-class KNMusicTagWma;
+class KNMusicTagWMA;
 class KNMusicTagM4A;
 class KNMusicTagWAV;
 class KNMusicTagFLAC;
@@ -57,7 +57,7 @@ private:
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;
     KNMusicTagAPEv2 *m_tagAPEv2;
-    KNMusicTagWma *m_tagWMA;
+    KNMusicTagWMA *m_tagWMA;
     KNMusicTagM4A *m_tagM4A;
     KNMusicTagFLAC *m_tagFLAC;
     KNMusicTagWAV *m_tagWAV;

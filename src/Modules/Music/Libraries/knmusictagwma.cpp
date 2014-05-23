@@ -8,7 +8,7 @@
 
 #include "knmusictagwma.h"
 
-KNMusicTagWma::KNMusicTagWma(QObject *parent) :
+KNMusicTagWMA::KNMusicTagWMA(QObject *parent) :
     KNMusicTagBase(parent)
 {
     m_utf16leCodec=QTextCodec::codecForName("UTF-16LE");
@@ -29,7 +29,7 @@ KNMusicTagWma::KNMusicTagWma(QObject *parent) :
     m_frames[TrackNumber    ]="WM/TrackNumber";
 }
 
-bool KNMusicTagWma::readTag(const QFile &mediaFile,
+bool KNMusicTagWMA::readTag(const QFile &mediaFile,
                             QDataStream &mediaData)
 {
     clearCache();
@@ -90,7 +90,6 @@ bool KNMusicTagWma::readTag(const QFile &mediaFile,
                                 (((quint16)rawTagData[tagPosition+i])     &0b0000000011111111);
                 standardItemCounter++;
             }
-
             tagPosition+=18;
 
             for(int i=0; i<5; i++)
@@ -143,26 +142,31 @@ bool KNMusicTagWma::readTag(const QFile &mediaFile,
     {
         processPicture();
     }
-
     return true;
 }
 
-QString KNMusicTagWma::tagStringData(const QString &frameKey) const
+QString KNMusicTagWMA::textData(const int &key) const
 {
-    return m_utf16leCodec->toUnicode(m_frameDatas[frameKey]);
+    QByteArray contents=m_frameDatas[m_frames[key]];
+    int contentsSize=contents.size();
+    if(contentsSize<2)
+    {
+        return QString();
+    }
+    if(contents.at(contentsSize-1)==0 &&
+       contents.at(contentsSize-2)==0)
+    {
+        contents.remove(contentsSize-2, 2);
+    }
+    return m_utf16leCodec->toUnicode(contents);
 }
 
-QString KNMusicTagWma::textData(const int &key) const
-{
-    return tagStringData(m_frames[key]);
-}
-
-QImage KNMusicTagWma::albumArt() const
+QImage KNMusicTagWMA::albumArt() const
 {
     return m_albumArt;
 }
 
-void KNMusicTagWma::processPicture()
+void KNMusicTagWMA::processPicture()
 {
     QByteArray content=m_frameDatas["WM/Picture"],
                dblZero, mimeTypeData;
@@ -176,7 +180,7 @@ void KNMusicTagWma::processPicture()
     m_albumArt.loadFromData(content, "gif");
 }
 
-void KNMusicTagWma::clearCache()
+void KNMusicTagWMA::clearCache()
 {
     m_frameDatas.clear();
     m_albumArt=QImage();
