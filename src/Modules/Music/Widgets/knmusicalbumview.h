@@ -3,17 +3,39 @@
 
 #include <QAbstractItemView>
 
+#include <QLabel>
+
 class QBoxLayout;
-class QLabel;
 class QMouseEvent;
 class QPaintEvent;
 class QPropertyAnimation;
+class QResizeEvent;
 class QParallelAnimationGroup;
 class QTimeLine;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
 class KNMusicCategorySortFilterModel;
+
+class KNMusicAlbumArtwork : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit KNMusicAlbumArtwork(QWidget *parent = 0);
+
+signals:
+    void requireShowArtwork();
+    void requireHideArtwork();
+
+public slots:
+
+protected:
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
+
+private:
+};
+
 class KNMusicAlbumSongDetail : public QWidget
 {
     Q_OBJECT
@@ -42,39 +64,6 @@ private:
     KNMusicAlbumSongListView *m_albumSongs;
     QBoxLayout *m_mainLayout;
     QBoxLayout *m_detailLayout;
-};
-
-class KNMusicAlbumInfoDetail : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNMusicAlbumInfoDetail(QWidget *parent = 0);
-    enum AlbumInfoData
-    {
-        SongCount,
-        Year,
-        AlbumInfoDataCount
-    };
-    int minimalExpandedHeight() const;
-    void setCaption(const int &index, const QString &value);
-
-signals:
-    void changeInfoVisible(const bool &visible);
-
-public slots:
-    void retranslate();
-    void retranslateAndSet();
-    void hideDetailInfo();
-    void showDetailInfo();
-    void onActionSongCountChange(const int &value);
-
-private:
-    void updateSongCount();
-    int m_minimalExpandedHeight;
-    QBoxLayout *m_albumDataLayout;
-    QLabel *m_albumInfo[AlbumInfoDataCount];
-    QString m_songCountText, m_songsCountText;
-    int m_songCount;
 };
 
 class KNMusicAlbumDetail : public QWidget
@@ -107,17 +96,22 @@ public slots:
     void foldDetail();
     void flyAway();
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 private slots:
     void hideDetailContent();
     void showDetailContent();
+    void showArtwork();
+    void hideArtwork();
 
 private:
-    QLabel *m_albumArt;
-    KNMusicAlbumInfoDetail *m_infoPanel;
+    KNMusicAlbumArtwork *m_albumArt;
     KNMusicAlbumSongDetail *m_songPanel;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
-    QPropertyAnimation *m_heightExpand, *m_widthExpand, *m_heightFold, *m_widthFold,
-                       *m_flyOut;
+    QPropertyAnimation *m_showExpand, *m_showShrink, *m_hideExpand, *m_hideShrink,
+                       *m_flyOut, *m_coverExpand, *m_coverShrink;
+    bool m_albumArtExpanding=false;
 };
 
 class KNMusicAlbumView : public QAbstractItemView
