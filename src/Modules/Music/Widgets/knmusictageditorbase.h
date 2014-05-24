@@ -20,6 +20,7 @@ public:
     virtual QString title() const;
     virtual QString album() const;
     virtual QString artist() const;
+    virtual QPixmap albumArt() const;
 
 signals:
 

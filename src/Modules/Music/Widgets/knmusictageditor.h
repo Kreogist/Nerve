@@ -4,14 +4,14 @@
 #include <QFile>
 #include <QDataStream>
 #include <QWidget>
+#include <QPixmap>
 
 class KNMusicTagEditorBase;
 class KNMusicID3v1Editor;
 class KNMusicID3v2Editor;
 class KNMusicAPEv2Editor;
-class KNMusicTagAPEv2;
-class KNMusicTagWMA;
-class KNMusicTagM4A;
+class KNMusicWMAEditor;
+class KNMusicM4AEditor;
 class KNMusicTagWAV;
 class KNMusicTagFLAC;
 class KNMusicTagEditor : public QWidget
@@ -23,17 +23,15 @@ public:
     QString title() const;
     QString album() const;
     QString artist() const;
+    QPixmap albumArt() const;
 
 signals:
 
 public slots:
 
 private:
+    void resetEditor();
     void readBasicInfoFromEditor(KNMusicTagEditorBase *editor);
-    void readWMATag(QFile &mediaFile,
-                    QDataStream &mediaData);
-    void readM4ATag(QFile &mediaFile,
-                    QDataStream &mediaData);
     void readFLACTag(QFile &mediaFile,
                      QDataStream &mediaData);
     void readWAVTag(QFile &mediaFile,
@@ -41,8 +39,8 @@ private:
     KNMusicID3v1Editor *m_ID3v1Editor;
     KNMusicID3v2Editor *m_ID3v2Editor;
     KNMusicAPEv2Editor *m_APEv2Editor;
-    KNMusicTagWMA *m_tagWMA;
-    KNMusicTagM4A *m_tagM4A;
+    KNMusicWMAEditor *m_WMAEditor;
+    KNMusicM4AEditor *m_M4AEditor;
     KNMusicTagFLAC *m_tagFLAC;
     KNMusicTagWAV *m_tagWAV;
 
@@ -55,6 +53,7 @@ private:
     };
 
     QString m_basicInfo[BasicInformationCount];
+    QPixmap m_coverArt;
 };
 
 #endif // KNMUSICTAGEDITOR_H

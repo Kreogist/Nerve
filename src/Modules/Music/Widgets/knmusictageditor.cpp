@@ -2,8 +2,6 @@
 #include <QTabWidget>
 #include <QStandardPaths>
 
-#include "../Libraries/knmusictagwma.h"
-#include "../Libraries/knmusictagm4a.h"
 #include "../Libraries/knmusictagflac.h"
 #include "../Libraries/knmusictagwav.h"
 
@@ -11,6 +9,8 @@
 #include "knmusicid3v1editor.h"
 #include "knmusicid3v2editor.h"
 #include "knmusicapev2editor.h"
+#include "knmusicwmaeditor.h"
+#include "knmusicm4aeditor.h"
 
 #include "knmusictageditor.h"
 
@@ -30,14 +30,17 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
     tabWidget->addTab(m_ID3v2Editor, "ID3v2");
     m_APEv2Editor=new KNMusicAPEv2Editor(this);
     tabWidget->addTab(m_APEv2Editor, "APEv2");
-    m_tagWMA=new KNMusicTagWMA(this);
-    m_tagM4A=new KNMusicTagM4A(this);
+    m_WMAEditor=new KNMusicWMAEditor(this);
+    tabWidget->addTab(m_WMAEditor, "WMA");
+    m_M4AEditor=new KNMusicM4AEditor(this);
+    tabWidget->addTab(m_M4AEditor, "M4A");
     m_tagFLAC=new KNMusicTagFLAC(this);
     m_tagWAV=new KNMusicTagWAV(this);
 }
 
 void KNMusicTagEditor::parseFile(const QString &filePath)
 {
+    resetEditor();
     QFile mediaFile(filePath);
     QDataStream mediaData(&mediaFile);
     if(mediaFile.open(QIODevice::ReadOnly))
@@ -48,8 +51,10 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
         readBasicInfoFromEditor(m_ID3v2Editor);
         m_APEv2Editor->readTag(mediaFile, mediaData);
         readBasicInfoFromEditor(m_APEv2Editor);
-        readWMATag(mediaFile, mediaData);
-        readM4ATag(mediaFile, mediaData);
+        m_WMAEditor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_WMAEditor);
+        m_M4AEditor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_M4AEditor);
         readFLACTag(mediaFile, mediaData);
         readWAVTag(mediaFile, mediaData);
         mediaFile.close();
@@ -71,6 +76,16 @@ QString KNMusicTagEditor::artist() const
     return m_basicInfo[Artist];
 }
 
+QPixmap KNMusicTagEditor::albumArt() const
+{
+    return m_coverArt;
+}
+
+void KNMusicTagEditor::resetEditor()
+{
+    m_coverArt=QPixmap();
+}
+
 void KNMusicTagEditor::readBasicInfoFromEditor(KNMusicTagEditorBase *editor)
 {
     QString cache=editor->title();
@@ -88,56 +103,10 @@ void KNMusicTagEditor::readBasicInfoFromEditor(KNMusicTagEditorBase *editor)
     {
         m_basicInfo[Album]=cache;
     }
-}
-
-void KNMusicTagEditor::readWMATag(QFile &mediaFile,
-                                      QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagWMA->readTag(mediaFile,
-                         mediaData))
+    QPixmap coverCache=editor->albumArt();
+    if(!coverCache.isNull())
     {
-        /*setMediaData(KNMusicGlobal::Name           ,m_tagWMA->textData(KNMusicTagWma::Name));
-        setMediaData(KNMusicGlobal::Artist         ,m_tagWMA->textData(KNMusicTagWma::Artist));
-        setMediaData(KNMusicGlobal::AlbumArtist    ,m_tagWMA->textData(KNMusicTagWma::AlbumArtist));
-        setMediaData(KNMusicGlobal::Album          ,m_tagWMA->textData(KNMusicTagWma::Album));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagWMA->textData(KNMusicTagWma::BeatsPerMinuate));
-        setMediaData(KNMusicGlobal::Comments       ,m_tagWMA->textData(KNMusicTagWma::Comments));
-        setMediaData(KNMusicGlobal::Composer       ,m_tagWMA->textData(KNMusicTagWma::Composer));
-        setMediaData(KNMusicGlobal::Description    ,m_tagWMA->textData(KNMusicTagWma::Description));
-        setMediaData(KNMusicGlobal::Genre          ,m_tagWMA->textData(KNMusicTagWma::Genre));
-        setMediaData(KNMusicGlobal::Year           ,m_tagWMA->textData(KNMusicTagWma::Year));
-        setMediaData(KNMusicGlobal::TrackNumber    ,m_tagWMA->textData(KNMusicTagWma::TrackNumber));
-        setMusicCover(m_tagWMA->albumArt());*/
-    }
-}
-
-void KNMusicTagEditor::readM4ATag(QFile &mediaFile,
-                                      QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagM4A->readTag(mediaFile,
-                         mediaData))
-    {
-        /*setMediaData(KNMusicGlobal::Name,           m_tagM4A->textData(KNMusicTagM4A::Title));
-        setMediaData(KNMusicGlobal::Artist,         m_tagM4A->textData(KNMusicTagM4A::Artist));
-        setMediaData(KNMusicGlobal::Album,          m_tagM4A->textData(KNMusicTagM4A::Album));
-        setMediaData(KNMusicGlobal::AlbumArtist,    m_tagM4A->textData(KNMusicTagM4A::AlbumArtist));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate,m_tagM4A->textData(KNMusicTagM4A::BPM));
-        setMediaData(KNMusicGlobal::Category,       m_tagM4A->textData(KNMusicTagM4A::Category));
-        setMediaData(KNMusicGlobal::Composer,       m_tagM4A->textData(KNMusicTagM4A::Composer));
-        setMediaData(KNMusicGlobal::Comments,       m_tagM4A->textData(KNMusicTagM4A::Comment));
-        setMediaData(KNMusicGlobal::Description,    m_tagM4A->textData(KNMusicTagM4A::Description));
-        setMediaData(KNMusicGlobal::Genre,          m_tagM4A->textData(KNMusicTagM4A::Genre));
-        setMediaData(KNMusicGlobal::Grouping,       m_tagM4A->textData(KNMusicTagM4A::Grouping));
-        setMediaData(KNMusicGlobal::Year,           m_tagM4A->textData(KNMusicTagM4A::Year));
-        QByteArray trackData=m_tagM4A->metaData(KNMusicTagM4A::Tracknumber);
-        if(trackData.size()>6)
-        {
-            setMediaData(KNMusicGlobal::TrackNumber, QString::number(trackData.at(3)));
-            setMediaData(KNMusicGlobal::TrackCount, QString::number(trackData.at(5)));
-        }
-        setMusicCover(m_tagM4A->albumArt());*/
+        m_coverArt=coverCache;
     }
 }
 

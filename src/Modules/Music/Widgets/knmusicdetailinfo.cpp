@@ -13,6 +13,8 @@
 #include "../../Public/knlibmediainfo.h"
 #include "../../Public/knlibmediainfoparser.h"
 #include "../../Base/knstdlibviewer.h"
+#include "../knmusicglobal.h"
+
 #include "knmusictageditor.h"
 
 #include "knmusicdetailinfo.h"
@@ -21,17 +23,41 @@ KNMusicDetailOverview::KNMusicDetailOverview(QWidget *parent) :
     QWidget(parent)
 {
     retranslate();
+
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     setLayout(mainLayout);
-    for(int i=0; i<MusicBasicCount; i++)
-    {
-        m_basicInfo[i]=new QLabel(this);
-        mainLayout->addWidget(m_basicInfo[i]);
-    }
 
-    QFormLayout *detailsLayout=new QFormLayout(mainLayout->widget());
+    QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                              mainLayout->widget());
+    mainLayout->addLayout(albumArtLayout);
+
+    //Album art display.
+    m_albumArt=new QLabel(this);
+    m_albumArt->setScaledContents(true);
+    m_albumArt->setFixedSize(80, 80);
+    albumArtLayout->addWidget(m_albumArt, 0, Qt::AlignTop);
+
+    QBoxLayout *basicInfoLayout=new QBoxLayout(QBoxLayout::TopToBottom,
+                                               albumArtLayout->widget());
+    albumArtLayout->addLayout(basicInfoLayout);
+    m_basicInfo[Name]=new QLabel(this);
+    basicInfoLayout->addWidget(m_basicInfo[Name]);
+    QBoxLayout *artistAlbumLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                                 basicInfoLayout->widget());
+    m_basicInfo[Artist]=new QLabel(this);
+    artistAlbumLayout->addWidget(m_basicInfo[Artist]);
+    m_basicInfo[Album]=new QLabel(this);
+    artistAlbumLayout->addWidget(m_basicInfo[Album]);
+    artistAlbumLayout->addStretch();
+    basicInfoLayout->addLayout(artistAlbumLayout);
+    m_basicInfo[Duration]=new QLabel(this);
+    basicInfoLayout->addWidget(m_basicInfo[Duration]);
+    basicInfoLayout->addStretch();
+
+    QFormLayout *detailsLayout=new QFormLayout(basicInfoLayout->widget());
     detailsLayout->setLabelAlignment(Qt::AlignRight);
     mainLayout->addLayout(detailsLayout);
+    mainLayout->addStretch();
 
     for(int i=0; i<MusicDetailCount; i++)
     {
@@ -56,10 +82,30 @@ void KNMusicDetailOverview::setName(const QString &name)
     m_datas[Name]->setText(name);
 }
 
+void KNMusicDetailOverview::setAlbumArt(const QPixmap &pixmap)
+{
+    m_albumArt->setPixmap(pixmap.isNull()?
+          QPixmap::fromImage(KNMusicGlobal::instance()->noAlbumImage()):pixmap);
+}
+
 void KNMusicDetailOverview::setBasicInfo(const int &index, const QString &basicData)
 {
-    m_basicInfo[index]->setVisible(!basicData.isEmpty());
-    m_basicInfo[index]->setText(basicData);
+    if(!basicData.isEmpty())
+    {
+        m_basicInfo[index]->setText(basicData);
+    }
+}
+
+void KNMusicDetailOverview::reset()
+{
+    for(int i=0; i<MusicBasicCount; i++)
+    {
+        m_basicInfo[i]->setText("");
+    }
+    for(int i=0; i<MusicDetailCount; i++)
+    {
+        m_datas[i]->setText("");
+    }
 }
 
 void KNMusicDetailOverview::retranslate()
@@ -167,6 +213,9 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
     m_detailViewer->expandAll();
     m_detailText->setPlainText(textData);
 
+    //Reset the overview.
+    m_overall->reset();
+
     //Set data to overview.
     m_parser->setCurrentBlock("General");
     m_overall->setBasicInfo(KNMusicDetailOverview::Duration, m_parser->data("Duration"));
@@ -204,7 +253,9 @@ void KNMusicDetailInfo::setFilePath(const QString &filePath)
 
     //Ask tag editor to parse the file, set the file data to overall view.
     m_tagEditor->parseFile(filePath);
+    m_overall->setBasicInfo(KNMusicDetailOverview::Name, fileInfo.fileName());
     m_overall->setBasicInfo(KNMusicDetailOverview::Name, m_tagEditor->title());
     m_overall->setBasicInfo(KNMusicDetailOverview::Artist, m_tagEditor->artist());
     m_overall->setBasicInfo(KNMusicDetailOverview::Album, m_tagEditor->album());
+    m_overall->setAlbumArt(m_tagEditor->albumArt());
 }

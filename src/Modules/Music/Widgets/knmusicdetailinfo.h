@@ -45,7 +45,9 @@ public:
     void setName(const QString &name);
     void setArtist(const QString &artist);
     void setAlbum(const QString &album);
+    void setAlbumArt(const QPixmap &pixmap);
     void setBasicInfo(const int &index, const QString &basicData);
+    void reset();
 
 public slots:
     void retranslate();
@@ -53,7 +55,7 @@ public slots:
 
 private:
     QLabel *m_labels[MusicDetailCount], *m_datas[MusicDetailCount],
-           *m_basicInfo[MusicBasicCount];
+           *m_basicInfo[MusicBasicCount], *m_albumArt;
     QString m_caption[MusicDetailCount];
 };
 

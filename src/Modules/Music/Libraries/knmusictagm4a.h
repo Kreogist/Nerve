@@ -2,6 +2,8 @@
 #define KNMUSICTAGM4A_H
 
 #include <QMap>
+#include <QList>
+#include <QStringList>
 #include <QPixmap>
 #include <QByteArray>
 
@@ -16,6 +18,8 @@ public:
     QString textData(const int &key) const;
     QByteArray metaData(const QString &name) const;
     QByteArray metaData(const int &index) const;
+    QStringList keyList() const;
+    QString frameTextData(const QString &name) const;
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
     QImage albumArt() const;
@@ -81,7 +85,8 @@ private:
                   bool searchDeep=false);
     char m_m4aHeader[4]={'f', 't', 'y', 'p'}, m_idCache[5], *m_rawTagData;
     QMap<QString, tagData> m_tagData;
-    QMap<QString, QByteArray> m_ilstData;
+    QStringList m_keys;
+    QList<QByteArray> m_data;
     QImage m_albumArt;
 };
 

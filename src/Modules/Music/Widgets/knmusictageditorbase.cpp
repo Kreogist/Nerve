@@ -29,3 +29,8 @@ QString KNMusicTagEditorBase::artist() const
 {
     return QString();
 }
+
+QPixmap KNMusicTagEditorBase::albumArt() const
+{
+    return QPixmap();
+}

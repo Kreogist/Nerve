@@ -2,7 +2,8 @@
 #define KNMUSICTAGWMA_H
 
 #include <QByteArray>
-#include <QMap>
+#include <QList>
+#include <QStringList>
 #include <QImage>
 
 #include "knmusictagbase.h"
@@ -35,6 +36,8 @@ public:
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
     QString textData(const int &key) const;
+    QString frameData(const QString &frame) const;
+    QStringList keyList() const;
     QImage albumArt() const;
 
 signals:
@@ -57,7 +60,8 @@ private:
                                        0xC9, 0x5E, 0xA8, 0x50};
 
     QTextCodec *m_utf16leCodec, *m_utf16beCodec;
-    QMap<QString, QByteArray> m_frameDatas;
+    QStringList m_keys;
+    QList<QByteArray> m_data;
     QString m_frames[WMAItemsCount], m_albumArtDescription;
     QImage m_albumArt;
 };

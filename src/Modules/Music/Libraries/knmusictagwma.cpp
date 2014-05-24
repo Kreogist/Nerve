@@ -94,8 +94,9 @@ bool KNMusicTagWMA::readTag(const QFile &mediaFile,
 
             for(int i=0; i<5; i++)
             {
-                m_frameDatas[m_frames[i]]=QByteArray(rawTagData+tagPosition,
-                                                     stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i]);
+                m_keys.append(m_frames[i]);
+                m_data.append(QByteArray(rawTagData+tagPosition,
+                                         stdItemLength[i]>2?stdItemLength[i]-2:stdItemLength[i]));
                 tagPosition+=stdItemLength[i];
             }
             continue;
@@ -109,19 +110,17 @@ bool KNMusicTagWMA::readTag(const QFile &mediaFile,
             tagPosition+=10;
 
             quint16 rawNameLength, dataLength;
-            QString frameName;
-
             while(extFrames--)
             {
                 rawNameLength=(((quint16)rawTagData[tagPosition+1]<<8)&0b1111111100000000)+
                               (((quint16)rawTagData[tagPosition])     &0b0000000011111111);
-                frameName=m_utf16leCodec->toUnicode(rawTagData+tagPosition+2,
-                                                    rawNameLength>2?rawNameLength-2:rawNameLength);
+                m_keys.append(m_utf16leCodec->toUnicode(rawTagData+tagPosition+2,
+                                                        rawNameLength>2?rawNameLength-2:rawNameLength));
                 tagPosition+=rawNameLength;
                 dataLength=(((quint16)rawTagData[tagPosition+5]<<8)&0b1111111100000000)+
                            (((quint16)rawTagData[tagPosition+4])   &0b0000000011111111);
                 tagPosition+=6;
-                m_frameDatas[frameName]=QByteArray(rawTagData+tagPosition, dataLength);
+                m_data.append(QByteArray(rawTagData+tagPosition, dataLength));
                 tagPosition+=dataLength;
             }
             continue;
@@ -138,7 +137,7 @@ bool KNMusicTagWMA::readTag(const QFile &mediaFile,
     }
     delete[] rawTagData;
 
-    if(m_frameDatas.contains("WM/Picture"))
+    if(m_keys.contains("WM/Picture"))
     {
         processPicture();
     }
@@ -147,7 +146,12 @@ bool KNMusicTagWMA::readTag(const QFile &mediaFile,
 
 QString KNMusicTagWMA::textData(const int &key) const
 {
-    QByteArray contents=m_frameDatas[m_frames[key]];
+    int keyIndex=m_keys.indexOf(m_frames[key]);
+    if(keyIndex==-1)
+    {
+        return QString();
+    }
+    QByteArray contents=m_data.at(keyIndex);
     int contentsSize=contents.size();
     if(contentsSize<2)
     {
@@ -161,6 +165,36 @@ QString KNMusicTagWMA::textData(const int &key) const
     return m_utf16leCodec->toUnicode(contents);
 }
 
+QString KNMusicTagWMA::frameData(const QString &frame) const
+{
+    if(frame=="WM/Picture")
+    {
+        return QString("(Binary Data)");
+    }
+    int keyIndex=m_keys.indexOf(frame);
+    if(keyIndex==-1)
+    {
+        return QString();
+    }
+    QByteArray contents=m_data.at(keyIndex);
+    int contentsSize=contents.size();
+    if(contentsSize<2)
+    {
+        return QString();
+    }
+    if(contents.at(contentsSize-1)==0 &&
+       contents.at(contentsSize-2)==0)
+    {
+        contents.remove(contentsSize-2, 2);
+    }
+    return m_utf16leCodec->toUnicode(contents);
+}
+
+QStringList KNMusicTagWMA::keyList() const
+{
+    return m_keys;
+}
+
 QImage KNMusicTagWMA::albumArt() const
 {
     return m_albumArt;
@@ -168,7 +202,7 @@ QImage KNMusicTagWMA::albumArt() const
 
 void KNMusicTagWMA::processPicture()
 {
-    QByteArray content=m_frameDatas["WM/Picture"],
+    QByteArray content=m_data.at(m_keys.indexOf("WM/Picture")),
                dblZero, mimeTypeData;
     dblZero.append('\0');
     dblZero.append('\0');
@@ -182,6 +216,7 @@ void KNMusicTagWMA::processPicture()
 
 void KNMusicTagWMA::clearCache()
 {
-    m_frameDatas.clear();
+    m_keys.clear();
+    m_data.clear();
     m_albumArt=QImage();
 }

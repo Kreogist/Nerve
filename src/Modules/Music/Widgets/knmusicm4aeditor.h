@@ -1,5 +1,5 @@
-#ifndef KNMUSICID3V2EDITOR_H
-#define KNMUSICID3V2EDITOR_H
+#ifndef KNMUSICM4AEDITOR_H
+#define KNMUSICM4AEDITOR_H
 
 #include <QScopedPointer>
 #include <QStandardItemModel>
@@ -11,12 +11,12 @@ class QComboBox;
 class QPlainTextEdit;
 class QLineEdit;
 class KNVerticalWidgetSwitcher;
-class KNMusicTagID3v2;
-class KNMusicID3v2Editor : public KNMusicTagEditorBase
+class KNMusicTagM4A;
+class KNMusicM4AEditor : public KNMusicTagEditorBase
 {
     Q_OBJECT
 public:
-    explicit KNMusicID3v2Editor(QWidget *parent = 0);
+    explicit KNMusicM4AEditor(QWidget *parent = 0);
     void readTag(QFile &mediaFile,
                  QDataStream &mediaData);
     void resetEditor();
@@ -65,7 +65,7 @@ private:
         CaptionComment,
         ID3v2CaptionItemsCount
     };
-    KNMusicTagID3v2 *m_tagID3v2;
+    KNMusicTagM4A *m_tagM4A;
     KNVerticalWidgetSwitcher *m_switcher;
     QString m_caption[ID3v2CaptionItemsCount];
     QLabel *m_label[ID3v2CaptionItemsCount];
@@ -75,6 +75,7 @@ private:
     QTreeView *m_advancedView;
     QScopedPointer<QStandardItemModel> m_advancedModel;
     QAction *m_toOverview, *m_toAdvanced;
+
 };
 
-#endif // KNMUSICID3V2EDITOR_H
+#endif // KNMUSICM4AEDITOR_H

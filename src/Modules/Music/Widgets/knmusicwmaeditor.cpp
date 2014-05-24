@@ -4,19 +4,19 @@
 #include <QAction>
 #include <QFormLayout>
 
-#include "../Libraries/knmusictagapev2.h"
+#include "../Libraries/knmusictagwma.h"
 
 #include "../../Base/knverticalwidgetswitcher.h"
 
-#include "knmusicapev2editor.h"
+#include "knmusicwmaeditor.h"
 
-KNMusicAPEv2Editor::KNMusicAPEv2Editor(QWidget *parent) :
+KNMusicWMAEditor::KNMusicWMAEditor(QWidget *parent) :
     KNMusicTagEditorBase(parent)
 {
     //Init captions.
     retranslate();
     //Init tag reader.
-    m_tagAPEv2=new KNMusicTagAPEv2(this);
+    m_tagWMA=new KNMusicTagWMA(this);
 
     //The main layout of the editor, it will contains a toolbar and a switcher.
     QBoxLayout *editorLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -39,7 +39,7 @@ KNMusicAPEv2Editor::KNMusicAPEv2Editor(QWidget *parent) :
     QFormLayout *overallLayout=new QFormLayout(overallMode);
     overallMode->setLayout(overallLayout);
 
-    for(int i=0; i<APEv2CaptionItemsCount; i++)
+    for(int i=0; i<WMACaptionItemsCount; i++)
     {
         m_label[i]=new QLabel(m_caption[i], this);
         m_textEditor[i]=new QLineEdit(this);
@@ -49,7 +49,7 @@ KNMusicAPEv2Editor::KNMusicAPEv2Editor(QWidget *parent) :
     m_switcher->addWidget(overallMode);
 
     //Advanced mode container widget.
-    //In advanced mode, you can see all the frames of the APEv2.
+    //In advanced mode, you can see all the frames of the WMA.
     QWidget *advancedMode=new QWidget(this);
     QBoxLayout *advancedLayout=new QBoxLayout(QBoxLayout::TopToBottom, advancedMode);
     advancedMode->setLayout(advancedLayout);
@@ -78,7 +78,8 @@ KNMusicAPEv2Editor::KNMusicAPEv2Editor(QWidget *parent) :
     m_switcher->setCurrentIndex(0);
 }
 
-void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
+
+void KNMusicWMAEditor::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
     //Reset current editor and model, clear caches.
     resetEditor();
@@ -90,18 +91,18 @@ void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
     //Reset the media file, it might be used by other files.
     mediaFile.reset();
     //Use tag reader to read the tag. If tag exsist, display the data.
-    if(m_tagAPEv2->readTag(mediaFile, mediaData))
+    if(m_tagWMA->readTag(mediaFile, mediaData))
     {
-        setEditorText(Name        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
-        setEditorText(Artist      ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
-        setEditorText(Album       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Album));
-        setEditorText(Year        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Year));
-        setEditorText(Track       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Track));
-        setEditorText(Genre       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Genre));
-        setEditorText(Comment     ,m_tagAPEv2->textData(KNMusicTagAPEv2::Comments));
+        setEditorText(Name        ,m_tagWMA->textData(KNMusicTagWMA::Name));
+        setEditorText(Artist      ,m_tagWMA->textData(KNMusicTagWMA::Artist));
+        setEditorText(Album       ,m_tagWMA->textData(KNMusicTagWMA::Album));
+        setEditorText(Year        ,m_tagWMA->textData(KNMusicTagWMA::Year));
+        setEditorText(Track       ,m_tagWMA->textData(KNMusicTagWMA::TrackNumber));
+        setEditorText(Genre       ,m_tagWMA->textData(KNMusicTagWMA::Genre));
+        setEditorText(Comment     ,m_tagWMA->textData(KNMusicTagWMA::Comments));
 
         //Add all frames to advanced view.
-        QStringList keyList=m_tagAPEv2->keyList();
+        QStringList keyList=m_tagWMA->keyList();
         QStandardItem *currentItem;
         for(int i=0, keyListCount=keyList.size();
             i<keyListCount;
@@ -111,7 +112,7 @@ void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
             QList<QStandardItem *> currentRow;
             currentItem=new QStandardItem(keyList.at(i));
             currentRow.append(currentItem);
-            currentItem=new QStandardItem(m_tagAPEv2->frameData(keyList.at(i)));
+            currentItem=new QStandardItem(m_tagWMA->frameData(keyList.at(i)));
             currentRow.append(currentItem);
             //Append to model
             m_advancedModel->appendRow(currentRow);
@@ -121,34 +122,40 @@ void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
     }
 }
 
-void KNMusicAPEv2Editor::resetEditor()
+void KNMusicWMAEditor::resetEditor()
 {
     //Reset the line text editor.
-    for(int i=0; i<APEv2CaptionItemsCount; i++)
+    for(int i=0; i<WMACaptionItemsCount; i++)
     {
         m_textEditor[i]->setText("");
     }
 }
 
-QString KNMusicAPEv2Editor::title() const
+QString KNMusicWMAEditor::title() const
 {
     //Return the name of the song.
-    return m_tagAPEv2->textData(KNMusicTagAPEv2::Name);
+    return m_tagWMA->textData(KNMusicTagWMA::Name);
 }
 
-QString KNMusicAPEv2Editor::album() const
+QString KNMusicWMAEditor::album() const
 {
     //Return the album of the song.
-    return m_tagAPEv2->textData(KNMusicTagAPEv2::Album);
+    return m_tagWMA->textData(KNMusicTagWMA::Album);
 }
 
-QString KNMusicAPEv2Editor::artist() const
+QString KNMusicWMAEditor::artist() const
 {
     //Return the artist of the song.
-    return m_tagAPEv2->textData(KNMusicTagAPEv2::Artist);
+    return m_tagWMA->textData(KNMusicTagWMA::Artist);
 }
 
-void KNMusicAPEv2Editor::retranslate()
+QPixmap KNMusicWMAEditor::albumArt() const
+{
+    //Return the album art.
+    return QPixmap::fromImage(m_tagWMA->albumArt());
+}
+
+void KNMusicWMAEditor::retranslate()
 {
     m_caption[Name]=tr("Name:");
     m_caption[Artist]=tr("Artist:");
@@ -159,22 +166,22 @@ void KNMusicAPEv2Editor::retranslate()
     m_caption[Comment]=tr("Comment:");
 }
 
-void KNMusicAPEv2Editor::retranslateAndSet()
+void KNMusicWMAEditor::retranslateAndSet()
 {
     ;
 }
 
-void KNMusicAPEv2Editor::toAdvancedMode()
+void KNMusicWMAEditor::toAdvancedMode()
 {
     m_switcher->setCurrentIndex(1);
 }
 
-void KNMusicAPEv2Editor::toOverviewMode()
+void KNMusicWMAEditor::toOverviewMode()
 {
     m_switcher->setCurrentIndex(0);
 }
 
-void KNMusicAPEv2Editor::setEditorText(const int &index, const QString &data)
+void KNMusicWMAEditor::setEditorText(const int &index, const QString &data)
 {
     m_textEditor[index]->setText(data);
     m_textEditor[index]->setCursorPosition(0);
