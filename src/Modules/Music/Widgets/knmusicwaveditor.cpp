@@ -10,20 +10,20 @@
 
 #include <QDebug>
 
-#include "../Libraries/knmusictagid3v2.h"
+#include "../Libraries/knmusictagwav.h"
 #include "../../Base/knverticalwidgetswitcher.h"
 
 #include "../knmusicglobal.h"
 
-#include "knmusicid3v2editor.h"
+#include "knmusicwaveditor.h"
 
-KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
+KNMusicWAVEditor::KNMusicWAVEditor(QWidget *parent) :
     KNMusicTagEditorBase(parent)
 {
     //Init captions.
     retranslate();
     //Init tag reader.
-    m_tagID3v2=new KNMusicTagID3v2(this);
+    m_tagWAV=new KNMusicTagWAV(this);
 
     //The main layout of the editor, it will contains a toolbar and a switcher.
     QBoxLayout *editorLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -46,7 +46,7 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     QGridLayout *overallLayout=new QGridLayout(overallMode);
     overallMode->setLayout(overallLayout);
 
-    for(int i=0; i<ID3v2CaptionItemsCount; i++)
+    for(int i=0; i<WAVCaptionItemsCount; i++)
     {
         m_label[i]=new QLabel(m_caption[i], this);
     }
@@ -141,7 +141,7 @@ KNMusicID3v2Editor::KNMusicID3v2Editor(QWidget *parent) :
     m_switcher->setCurrentIndex(0);
 }
 
-void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
+void KNMusicWAVEditor::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
     //Reset current editor and model, clear caches.
     resetEditor();
@@ -149,41 +149,19 @@ void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
     //Reset the media file, it might be used by other files.
     mediaFile.reset();
     //Use tag reader to read the tag. If tag exsist, display the data.
-    if(m_tagID3v2->readTag(mediaFile, mediaData))
+    if(m_tagWAV->readTag(mediaFile, mediaData))
     {
-        setEditorText(Name, m_tagID3v2->textData(KNMusicTagID3v2::Name));
-        setEditorText(Artist, m_tagID3v2->textData(KNMusicTagID3v2::Artist));
-        setEditorText(Album, m_tagID3v2->textData(KNMusicTagID3v2::Album));
-        setEditorText(AlbumArtist, m_tagID3v2->textData(KNMusicTagID3v2::AlbumArtist));
-        setEditorText(Year, m_tagID3v2->textData(KNMusicTagID3v2::Year));
-        QString trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Track);
-        int diagonalPos=trackInfo.indexOf("/");
-        if(diagonalPos!=-1)
-        {
-            setEditorText(TrackNumber, trackInfo.left(diagonalPos));
-            setEditorText(TrackCount, trackInfo.mid(diagonalPos+1));
-        }
-        else
-        {
-            setEditorText(TrackNumber, trackInfo);
-        }
-        trackInfo=m_tagID3v2->textData(KNMusicTagID3v2::Disc);
-        diagonalPos=trackInfo.indexOf("/");
-        if(diagonalPos!=-1)
-        {
-            setEditorText(DiscNumber, trackInfo.left(diagonalPos));
-            setEditorText(DiscCount, trackInfo.mid(diagonalPos+1));
-        }
-        else
-        {
-            setEditorText(DiscNumber, trackInfo);
-        }
+        setEditorText(Name            ,m_tagWAV->textData(KNMusicTagWAV::Name));
+        setEditorText(Artist          ,m_tagWAV->textData(KNMusicTagWAV::Artist));
+        setEditorText(Album           ,m_tagWAV->textData(KNMusicTagWAV::Album));
+        setEditorText(AlbumArtist     ,m_tagWAV->textData(KNMusicTagWAV::AlbumArtist));
+        setEditorText(Year            ,m_tagWAV->textData(KNMusicTagWAV::Year));
         m_genreList->setEditText(KNMusicGlobal::instance()->getGenre
-                                 (m_tagID3v2->textData(KNMusicTagID3v2::Genre)));
-        m_commentEditor->setPlainText(m_tagID3v2->rawTextData(KNMusicTagID3v2::Comments));
+                                 (m_tagWAV->textData(KNMusicTagWAV::Genre)));
+        m_commentEditor->setPlainText(m_tagWAV->textData(KNMusicTagWAV::Comments));
 
-        //Add all frames to advanced view.
-        QStringList keyList=m_tagID3v2->keyList();
+        /*//Add all frames to advanced view.
+        QStringList keyList=m_tagWAV->keyList();
         QStandardItem *currentItem;
         for(int i=0, keyListCount=keyList.size();
             i<keyListCount;
@@ -193,17 +171,17 @@ void KNMusicID3v2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
             QList<QStandardItem *> currentRow;
             currentItem=new QStandardItem(keyList.at(i));
             currentRow.append(currentItem);
-            currentItem=new QStandardItem(m_tagID3v2->frameTextData(keyList.at(i)));
+            currentItem=new QStandardItem(m_tagWAV->frameTextData(keyList.at(i)));
             currentRow.append(currentItem);
             //Append to model
             m_advancedModel->appendRow(currentRow);
         }
         m_advancedView->setModel(m_advancedModel.data());
-        m_advancedView->resizeColumnToContents(0);
+        m_advancedView->resizeColumnToContents(0);*/
     }
 }
 
-void KNMusicID3v2Editor::resetEditor()
+void KNMusicWAVEditor::resetEditor()
 {
     //Clear all the line text data.
     for(int i=0; i<9; i++)
@@ -219,31 +197,32 @@ void KNMusicID3v2Editor::resetEditor()
     m_advancedModel->setHorizontalHeaderLabels(advancedHeader);
 }
 
-QString KNMusicID3v2Editor::title() const
+QString KNMusicWAVEditor::title() const
 {
     //Return the name of the song.
-    return m_tagID3v2->textData(KNMusicTagID3v2::Name);
+    return m_tagWAV->textData(KNMusicTagWAV::Name);
 }
 
-QString KNMusicID3v2Editor::album() const
+QString KNMusicWAVEditor::album() const
 {
-    return m_tagID3v2->textData(KNMusicTagID3v2::Album);
+    return m_tagWAV->textData(KNMusicTagWAV::Album);
 }
 
-QString KNMusicID3v2Editor::artist() const
+QString KNMusicWAVEditor::artist() const
 {
-    return m_tagID3v2->textData(KNMusicTagID3v2::Artist);
+    return m_tagWAV->textData(KNMusicTagWAV::Artist);
 }
 
-QPixmap KNMusicID3v2Editor::albumArt() const
+QPixmap KNMusicWAVEditor::albumArt() const
 {
     //3 is the Cover front.
-    QPixmap coverArt=QPixmap::fromImage(m_tagID3v2->tagImage(3));
-    return coverArt.isNull()?QPixmap::fromImage(m_tagID3v2->firstAvaliableImage()):
-                             coverArt;
+    /*QPixmap coverArt=QPixmap::fromImage(m_tagWAV->tagImage(3));
+    return coverArt.isNull()?QPixmap::fromImage(m_tagWAV->firstAvaliableImage()):
+                             coverArt;*/
+    return QPixmap();
 }
 
-void KNMusicID3v2Editor::retranslate()
+void KNMusicWAVEditor::retranslate()
 {
     m_caption[CaptionName]=tr("Title:");
     m_caption[CaptionArtist]=tr("Artist:");
@@ -256,22 +235,22 @@ void KNMusicID3v2Editor::retranslate()
     m_caption[CaptionGenre]=tr("Genre:");
 }
 
-void KNMusicID3v2Editor::retranslateAndSet()
+void KNMusicWAVEditor::retranslateAndSet()
 {
     retranslate();
 }
 
-void KNMusicID3v2Editor::toAdvancedMode()
+void KNMusicWAVEditor::toAdvancedMode()
 {
     m_switcher->setCurrentIndex(1);
 }
 
-void KNMusicID3v2Editor::toOverviewMode()
+void KNMusicWAVEditor::toOverviewMode()
 {
     m_switcher->setCurrentIndex(0);
 }
 
-void KNMusicID3v2Editor::setEditorText(const int &index, const QString &text)
+void KNMusicWAVEditor::setEditorText(const int &index, const QString &text)
 {
     m_textEditor[index]->setText(text);
     m_textEditor[index]->setCursorPosition(0);

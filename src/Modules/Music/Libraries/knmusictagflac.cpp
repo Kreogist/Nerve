@@ -93,6 +93,11 @@ QString KNMusicTagFLAC::rawMetaData(const QString &index)
     return m_metadata[index];
 }
 
+QStringList KNMusicTagFLAC::keyList() const
+{
+    return m_metadata.keys();
+}
+
 QImage KNMusicTagFLAC::tagImage(const int &index) const
 {
     return m_picture[index];

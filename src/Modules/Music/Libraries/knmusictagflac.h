@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QImage>
+#include <QStringList>
 #include "knmusictagbase.h"
 
 class KNMusicTagFLAC : public KNMusicTagBase
@@ -33,6 +34,7 @@ public:
     void clearCache();
     QString textData(const int &key) const;
     QString rawMetaData(const QString &index);
+    QStringList keyList() const;
     QImage tagImage(const int &index) const;
     QImage firstAvaliableImage() const;
 

@@ -12,8 +12,8 @@ class KNMusicID3v2Editor;
 class KNMusicAPEv2Editor;
 class KNMusicWMAEditor;
 class KNMusicM4AEditor;
-class KNMusicTagWAV;
-class KNMusicTagFLAC;
+class KNMusicFLACEditor;
+class KNMusicWAVEditor;
 class KNMusicTagEditor : public QWidget
 {
     Q_OBJECT
@@ -32,17 +32,13 @@ public slots:
 private:
     void resetEditor();
     void readBasicInfoFromEditor(KNMusicTagEditorBase *editor);
-    void readFLACTag(QFile &mediaFile,
-                     QDataStream &mediaData);
-    void readWAVTag(QFile &mediaFile,
-                    QDataStream &mediaData);
     KNMusicID3v1Editor *m_ID3v1Editor;
     KNMusicID3v2Editor *m_ID3v2Editor;
     KNMusicAPEv2Editor *m_APEv2Editor;
     KNMusicWMAEditor *m_WMAEditor;
     KNMusicM4AEditor *m_M4AEditor;
-    KNMusicTagFLAC *m_tagFLAC;
-    KNMusicTagWAV *m_tagWAV;
+    KNMusicFLACEditor *m_FLACEditor;
+    KNMusicWAVEditor *m_WAVEditor;
 
     enum BasicInformation
     {

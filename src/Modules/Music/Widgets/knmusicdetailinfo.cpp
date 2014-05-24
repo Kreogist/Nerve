@@ -112,7 +112,6 @@ void KNMusicDetailOverview::retranslate()
 {
     m_caption[Kind]=tr("Kind:");
     m_caption[Size]=tr("Size:");
-    m_caption[Duration]=tr("Duration:");
     m_caption[Format]=tr("Format:");
     m_caption[BitRate]=tr("Bit Rate:");
     m_caption[SampleRate]=tr("Sample Rate:");

@@ -97,7 +97,9 @@ SOURCES += \
     Modules/Base/knverticalwidgetswitcher.cpp \
     Modules/Music/Widgets/knmusicapev2editor.cpp \
     Modules/Music/Widgets/knmusicwmaeditor.cpp \
-    Modules/Music/Widgets/knmusicm4aeditor.cpp
+    Modules/Music/Widgets/knmusicm4aeditor.cpp \
+    Modules/Music/Widgets/knmusicflaceditor.cpp \
+    Modules/Music/Widgets/knmusicwaveditor.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -183,7 +185,9 @@ HEADERS += \
     Modules/Base/knverticalwidgetswitcher.h \
     Modules/Music/Widgets/knmusicapev2editor.h \
     Modules/Music/Widgets/knmusicwmaeditor.h \
-    Modules/Music/Widgets/knmusicm4aeditor.h
+    Modules/Music/Widgets/knmusicm4aeditor.h \
+    Modules/Music/Widgets/knmusicflaceditor.h \
+    Modules/Music/Widgets/knmusicwaveditor.h
 
 RESOURCES += \
     res.qrc

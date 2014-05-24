@@ -2,15 +2,14 @@
 #include <QTabWidget>
 #include <QStandardPaths>
 
-#include "../Libraries/knmusictagflac.h"
-#include "../Libraries/knmusictagwav.h"
-
 #include "knmusictageditorbase.h"
 #include "knmusicid3v1editor.h"
 #include "knmusicid3v2editor.h"
 #include "knmusicapev2editor.h"
 #include "knmusicwmaeditor.h"
 #include "knmusicm4aeditor.h"
+#include "knmusicflaceditor.h"
+#include "knmusicwaveditor.h"
 
 #include "knmusictageditor.h"
 
@@ -34,8 +33,10 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
     tabWidget->addTab(m_WMAEditor, "WMA");
     m_M4AEditor=new KNMusicM4AEditor(this);
     tabWidget->addTab(m_M4AEditor, "M4A");
-    m_tagFLAC=new KNMusicTagFLAC(this);
-    m_tagWAV=new KNMusicTagWAV(this);
+    m_FLACEditor=new KNMusicFLACEditor(this);
+    tabWidget->addTab(m_FLACEditor, "FLAC");
+    m_WAVEditor=new KNMusicWAVEditor(this);
+    tabWidget->addTab(m_WAVEditor, "WAV");
 }
 
 void KNMusicTagEditor::parseFile(const QString &filePath)
@@ -55,8 +56,10 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
         readBasicInfoFromEditor(m_WMAEditor);
         m_M4AEditor->readTag(mediaFile, mediaData);
         readBasicInfoFromEditor(m_M4AEditor);
-        readFLACTag(mediaFile, mediaData);
-        readWAVTag(mediaFile, mediaData);
+        m_FLACEditor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_FLACEditor);
+        m_WAVEditor->readTag(mediaFile, mediaData);
+        readBasicInfoFromEditor(m_WAVEditor);
         mediaFile.close();
     }
 }
@@ -107,53 +110,5 @@ void KNMusicTagEditor::readBasicInfoFromEditor(KNMusicTagEditorBase *editor)
     if(!coverCache.isNull())
     {
         m_coverArt=coverCache;
-    }
-}
-
-void KNMusicTagEditor::readFLACTag(QFile &mediaFile,
-                                       QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagFLAC->readTag(mediaFile,
-                          mediaData))
-    {
-        /*setMediaData(KNMusicGlobal::Name        ,m_tagFLAC->textData(KNMusicTagFLAC::Name));
-        setMediaData(KNMusicGlobal::Artist      ,m_tagFLAC->textData(KNMusicTagFLAC::Artist));
-        setMediaData(KNMusicGlobal::Album       ,m_tagFLAC->textData(KNMusicTagFLAC::Album));
-        setMediaData(KNMusicGlobal::Genre       ,m_tagFLAC->textData(KNMusicTagFLAC::Genre));
-        setMediaData(KNMusicGlobal::Description ,m_tagFLAC->textData(KNMusicTagFLAC::Description));
-        setMediaData(KNMusicGlobal::Composer    ,m_tagFLAC->textData(KNMusicTagFLAC::Composer));
-        setMediaData(KNMusicGlobal::DiscCount   ,m_tagFLAC->textData(KNMusicTagFLAC::DiscCount));
-        setMediaData(KNMusicGlobal::DiscNumber  ,m_tagFLAC->textData(KNMusicTagFLAC::DiscNumber));
-        setMediaData(KNMusicGlobal::Comments    ,m_tagFLAC->textData(KNMusicTagFLAC::Comments));
-        setMediaData(KNMusicGlobal::AlbumArtist ,m_tagFLAC->textData(KNMusicTagFLAC::AlbumArtist));
-        setMediaData(KNMusicGlobal::TrackCount  ,m_tagFLAC->textData(KNMusicTagFLAC::TrackCount));
-        setMediaData(KNMusicGlobal::Year        ,m_tagFLAC->textData(KNMusicTagFLAC::Year).left(4));
-        setMediaData(KNMusicGlobal::TrackNumber ,m_tagFLAC->textData(KNMusicTagFLAC::TrackNumber));
-        setMusicCover(m_tagFLAC->tagImage(3));
-        if(m_musicCover.isNull())
-        {
-            setMusicCover(m_tagFLAC->firstAvaliableImage());
-        }*/
-    }
-}
-
-void KNMusicTagEditor::readWAVTag(QFile &mediaFile, QDataStream &mediaData)
-{
-    mediaFile.reset();
-    if(m_tagWAV->readTag(mediaFile,
-                         mediaData))
-    {
-        /*setMediaData(KNMusicGlobal::Name            ,m_tagWAV->textData(KNMusicTagWAV::Name));
-        setMediaData(KNMusicGlobal::Artist          ,m_tagWAV->textData(KNMusicTagWAV::Artist));
-        setMediaData(KNMusicGlobal::Album           ,m_tagWAV->textData(KNMusicTagWAV::Album));
-        setMediaData(KNMusicGlobal::AlbumArtist     ,m_tagWAV->textData(KNMusicTagWAV::AlbumArtist));
-        setMediaData(KNMusicGlobal::BeatsPerMinuate ,m_tagWAV->textData(KNMusicTagWAV::BeatsPerMinuate));
-        setMediaData(KNMusicGlobal::Category        ,m_tagWAV->textData(KNMusicTagWAV::Category));
-        setMediaData(KNMusicGlobal::Comments        ,m_tagWAV->textData(KNMusicTagWAV::Comments));
-        setMediaData(KNMusicGlobal::Composer        ,m_tagWAV->textData(KNMusicTagWAV::Composer));
-        setMediaData(KNMusicGlobal::Description     ,m_tagWAV->textData(KNMusicTagWAV::Description));
-        setMediaData(KNMusicGlobal::Genre           ,m_tagWAV->textData(KNMusicTagWAV::Genre));
-        setMediaData(KNMusicGlobal::Year            ,m_tagWAV->textData(KNMusicTagWAV::Year));*/
     }
 }
