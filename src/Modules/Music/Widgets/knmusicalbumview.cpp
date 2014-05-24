@@ -8,7 +8,7 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
-#include <QGraphicsDropShadowEffect>
+#include <QLinearGradient>
 #include <QScrollBar>
 #include <QTimeLine>
 
@@ -20,6 +20,44 @@
 #include "../Libraries/knmusicalbumdetailmodel.h"
 
 #include "knmusicalbumview.h"
+
+KNMusicRightShadow::KNMusicRightShadow(QWidget *parent) :
+    QWidget(parent)
+{
+    ;
+}
+
+void KNMusicRightShadow::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    QLinearGradient shadow(QPoint(0,0), rect().topRight());
+    shadow.setColorAt(0, QColor(0,0,0,130));
+    shadow.setColorAt(1, QColor(0,0,0,0));
+    painter.setBrush(shadow);
+    painter.drawRect(event->rect().x()-1,
+                     event->rect().y()-1,
+                     event->rect().width()+1,
+                     event->rect().height()+1);
+}
+
+KNMusicLeftShadow::KNMusicLeftShadow(QWidget *parent) :
+    QWidget(parent)
+{
+    ;
+}
+
+void KNMusicLeftShadow::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    QLinearGradient shadow(QPoint(0,0), rect().topRight());
+    shadow.setColorAt(0, QColor(0,0,0,0));
+    shadow.setColorAt(1, QColor(0,0,0,130));
+    painter.setBrush(shadow);
+    painter.drawRect(event->rect().x()-1,
+                     event->rect().y()-1,
+                     event->rect().width()+1,
+                     event->rect().height()+1);
+}
 
 KNMusicAlbumArtwork::KNMusicAlbumArtwork(QWidget *parent) :
     QLabel(parent)
@@ -142,6 +180,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     setContentsMargins(0,0,0,0);
 
     m_songPanel=new KNMusicAlbumSongDetail(this);
+    m_leftShadow=new KNMusicLeftShadow(this);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
             this, &KNMusicAlbumDetail::requireOpenUrl);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
@@ -149,6 +188,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_albumArt=new KNMusicAlbumArtwork(this);
     m_albumArt->setScaledContents(true);
+    m_rightShadow=new KNMusicRightShadow(this);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireShowArtwork,
             this, &KNMusicAlbumDetail::showArtwork);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireHideArtwork,
@@ -162,7 +202,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     connect(m_showExpand, SIGNAL(finished()),
             m_showShrink, SLOT(start()));
     connect(m_showExpand, &QPropertyAnimation::finished,
-            m_songPanel, &KNMusicAlbumSongDetail::raise);
+            this, &KNMusicAlbumDetail::raisePanel);
     connect(m_showShrink, &QPropertyAnimation::finished,
             this, &KNMusicAlbumDetail::showDetailContent);
 
@@ -175,7 +215,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     connect(m_hideShrink, SIGNAL(finished()),
             m_hideExpand, SLOT(start()));
     connect(m_hideShrink, &QPropertyAnimation::finished,
-            m_albumArt, &KNMusicAlbumSongDetail::raise);
+            this, &KNMusicAlbumDetail::raiseArtwork);
     connect(m_hideExpand, &QPropertyAnimation::finished,
             this, &KNMusicAlbumDetail::hideDetailWidget);
     connect(m_hideExpand, &QPropertyAnimation::finished,
@@ -321,10 +361,18 @@ void KNMusicAlbumDetail::resizeEvent(QResizeEvent *event)
     int albumArtParam=qMin(event->size().height(),
                            event->size().width());
     m_albumArt->resize(albumArtParam, albumArtParam);
+    m_rightShadow->setGeometry(albumArtParam,
+                               0,
+                               m_shadowWidth,
+                               albumArtParam);
     m_songPanel->setGeometry(event->size().width()-albumArtParam,
                              m_songPanel->y(),
                              albumArtParam,
                              albumArtParam);
+    m_leftShadow->setGeometry(event->size().width()-albumArtParam-m_shadowWidth,
+                              0,
+                              m_shadowWidth,
+                              albumArtParam);
 }
 
 void KNMusicAlbumDetail::hideDetailContent()
@@ -367,6 +415,18 @@ void KNMusicAlbumDetail::hideArtwork()
                                          height()));
         m_coverShrink->start();
     }
+}
+
+void KNMusicAlbumDetail::raiseArtwork()
+{
+    m_albumArt->raise();
+    m_rightShadow->raise();
+}
+
+void KNMusicAlbumDetail::raisePanel()
+{
+    m_songPanel->raise();
+    m_leftShadow->raise();
 }
 
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
