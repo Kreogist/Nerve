@@ -343,9 +343,10 @@ void KNMusicAlbumDetail::foldDetail()
 
 void KNMusicAlbumDetail::flyAway()
 {
-    int sizeEnd=m_albumArt->width(),
+    int sizeEnd=height(),
         topEnd=((parentWidget()->height()-sizeEnd)>>1),
         leftEnd=((parentWidget()->width()-sizeEnd)>>1);
+    raiseArtwork();
     m_flyOut->setStartValue(geometry());
     m_flyOut->setEndValue(QRect(leftEnd,
                                 topEnd,
@@ -651,18 +652,18 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
         currentPaintIndex=m_proxyModel->index(albumIndex, 0);
+        sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
         QRect currentRect=QRect(currentLeft,
                                 currentTop,
                                 m_gridWidth,
                                 m_gridHeight);
-        sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
         if(sourceIndex.row()==0 && m_model->isNoAlbumHidden())
         {
             m_noAlbumHide=true;
             currentPaintIndex=m_proxyModel->index(++albumIndex, 0);
             sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
         }
-        if(currentPaintIndex!=m_detailIndex)
+        if(sourceIndex!=m_detailIndex)
         {
             paintAlbum(&painter,
                        currentRect,
@@ -785,13 +786,13 @@ QRegion KNMusicAlbumView::visualRegionForSelection(const QItemSelection &selecti
 void KNMusicAlbumView::mousePressEvent(QMouseEvent *e)
 {
     QAbstractItemView::mousePressEvent(e);
-    m_pressedIndex=indexAt(e->pos());
+    m_pressedIndex=m_proxyModel->mapToSource(indexAt(e->pos()));
 }
 
 void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 {
      QAbstractItemView::mouseReleaseEvent(e);
-     if(m_pressedIndex==indexAt(e->pos()))
+     if(m_pressedIndex==m_proxyModel->mapToSource(indexAt(e->pos())))
      {
          if(m_pressedIndex!=m_detailIndex)
          {
@@ -811,21 +812,21 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
 {
     m_albumDetail->hide();
-    m_detailIndex=index;
-    QModelIndex dataIndex=m_proxyModel->mapToSource(index);
-    if(!dataIndex.isValid())
+    //QModelIndex dataIndex=m_detailIndex;
+    if(!index.isValid())
     {
         return;
     }
-    QIcon currentIcon=m_model->data(dataIndex, Qt::DecorationRole).value<QIcon>();
+    m_detailIndex=index;
+    QIcon currentIcon=m_model->data(m_detailIndex, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(height(), height()),
                                QSize(height(), height()));
-    m_detailModel->setCategoryIndex(dataIndex);
-    m_albumDetail->setAlbumName(m_model->data(dataIndex).toString());
-    m_albumDetail->setArtistName(m_model->indexArtist(dataIndex));
-    m_albumDetail->setYear(m_model->indexYear(dataIndex));
+    m_detailModel->setCategoryIndex(m_detailIndex);
+    m_albumDetail->setAlbumName(m_model->data(m_detailIndex).toString());
+    m_albumDetail->setArtistName(m_model->indexArtist(m_detailIndex));
+    m_albumDetail->setYear(m_model->indexYear(m_detailIndex));
     m_albumDetail->resetSongState();
-    QRect startPosition=visualRect(index);
+    QRect startPosition=visualRect(m_proxyModel->mapFromSource(m_detailIndex));
     m_albumDetail->setGeometry(startPosition.x()+2,
                                startPosition.y()+2,
                                m_iconSizeParam-2,
@@ -842,7 +843,7 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
 
 void KNMusicAlbumView::onActionHideAlbumDetail()
 {
-    QRect endPosition=visualRect(m_detailIndex);
+    QRect endPosition=visualRect(m_proxyModel->mapFromSource(m_detailIndex));
     m_albumHide->setStartValue(m_albumDetail->geometry());
     m_albumHide->setEndValue(QRect(endPosition.x()+2,
                                    endPosition.y()+2,
@@ -872,10 +873,10 @@ void KNMusicAlbumView::onActionFlyAwayAlbumDetail()
     int param=m_iconSizeParam-2;
     QRect startPosition=m_albumDetail->geometry();
     m_albumThrow->setStartValue(startPosition);
-    m_albumThrow->setEndValue(QRect(startPosition.x(),
+    m_albumThrow->setEndValue(QRect(startPosition.x()+(startPosition.width()>>1),
                                     -param,
-                                    param,
-                                    param));
+                                    0,
+                                    0));
     m_flyawayGroup->start();
 }
 
