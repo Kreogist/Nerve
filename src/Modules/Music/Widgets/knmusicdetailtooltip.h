@@ -43,6 +43,7 @@ private:
     QPoint bestPosition(const QPoint &pos);
     QLabel *m_albumArt, *m_labels[ToolTipItemsCount];
     QString m_caption[ToolTipItemsCount];
+    QBoxLayout *m_mainLayout;
     QTimer *m_tooltipDisapper;
     int m_currentRow;
     KNMusicModel *m_musicModel;

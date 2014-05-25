@@ -23,6 +23,7 @@ public:
         Duration,
         Artist,
         Album,
+        FilePath,
         MusicBasicCount
     };
 
