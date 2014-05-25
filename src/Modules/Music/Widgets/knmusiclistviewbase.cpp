@@ -148,6 +148,7 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
         QModelIndex posTest=indexAt(event->pos());
         if(posTest.isValid())
         {
+            m_musicDetailTooltip->hide();
             emit requireShowContextMenu(event->globalPos(),
                                         m_proxyModel->mapToSource(posTest));
         }

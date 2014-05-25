@@ -73,12 +73,12 @@ KNMusicModel::~KNMusicModel()
 
 QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 {
-    return item(index.row(), KNMusicGlobal::Name)->data(Qt::UserRole).toString();
+    return data(this->index(index.row(), KNMusicGlobal::Name), FilePathRole).toString();
 }
 
 QString KNMusicModel::filePathFromIndex(const int &index)
 {
-    return data(this->index(index, KNMusicGlobal::Name), Qt::UserRole).toString();
+    return data(this->index(index, KNMusicGlobal::Name), FilePathRole).toString();
 }
 
 QString KNMusicModel::itemText(const int &row, const int &column) const
@@ -105,13 +105,13 @@ QImage KNMusicModel::artworkFromKey(const QString &key) const
 
 QString KNMusicModel::itemArtworkKey(const int &row) const
 {
-    return data(index(row, KNMusicGlobal::Time), Qt::UserRole+1).toString();
+    return data(index(row, KNMusicGlobal::Name), ArtworkKeyRole).toString();
 }
 
 void KNMusicModel::addRawFileItem(QString filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),
-                                    Qt::UserRole,
+                                    FilePathRole,
                                     filePath);
     if(fileCheck.size()!=0)
     {
@@ -133,7 +133,7 @@ void KNMusicModel::addRawFileItem(QString filePath)
     songItem->setData(currentTime, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::Name);
     songItem->setText(rawFileInfo.fileName());
-    songItem->setData(filePath, Qt::UserRole);
+    songItem->setData(filePath, FilePathRole);
     songItem->setData(1);
     appendRow(songItemList);
     m_rawFileCount++;
@@ -176,10 +176,9 @@ void KNMusicModel::recoverFile(QStringList textList,
     songItem->setData(currentDetails.dateAdded, Qt::UserRole);
     setMusicDetailsInfo(currentRow,
                         currentDetails);
-    songItem=item(currentRow, KNMusicGlobal::Time);
-    songItem->setData(currentDetails.coverImageHash, Qt::UserRole+1);
     songItem=item(currentRow, KNMusicGlobal::Name);
-    songItem->setData(currentDetails.filePath, Qt::UserRole);
+    songItem->setData(currentDetails.coverImageHash, ArtworkKeyRole);
+    songItem->setData(currentDetails.filePath, FilePathRole);
     emit musicRecover(songItem->index());
 }
 
@@ -227,7 +226,7 @@ void KNMusicModel::onActionUpdateRowInfo()
         m_pixmapList->append(currentRow, currentDetails.coverImage);
     }
     songItem=item(currentRow,KNMusicGlobal::Name);
-    songItem->setData(currentDetails.filePath, Qt::UserRole);
+    songItem->setData(currentDetails.filePath, FilePathRole);
     if(songItem->data().toInt()==1)
     {
         //This is a new file, never add to list.
@@ -265,9 +264,9 @@ void KNMusicModel::onActionImageLoadComplete()
 void KNMusicModel::onActionUpdatePixmap()
 {
     setData(index(m_pixmapList->currentRow(),
-                  KNMusicGlobal::Time),
+                  KNMusicGlobal::Name),
             m_pixmapList->currentKey(),
-            Qt::UserRole+1);
+            ArtworkKeyRole);
     emit musicAlbumArtUpdate(m_pixmapList->currentRow());
     m_pixmapList->removeCurrentUpdate();
 }

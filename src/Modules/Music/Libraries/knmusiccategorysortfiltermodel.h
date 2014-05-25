@@ -17,7 +17,7 @@ public slots:
 
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
-    //bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
 };
 
 #endif // KNMUSICCATEGORYSORTFILTERMODEL_H

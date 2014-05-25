@@ -54,6 +54,13 @@ private slots:
     void onActionUpdatePixmap();
 
 private:
+    enum MusicProperty
+    {
+        FilePathRole=Qt::UserRole,
+        FileNameRole,
+        ArtworkKeyRole,
+    };
+
     void setMusicDetailsInfo(const int &currentRow,
                              const KNMusicGlobal::MusicDetailsInfo &currentDetails);
     KNMusicGlobal *m_musicGlobal;

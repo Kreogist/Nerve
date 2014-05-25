@@ -39,31 +39,31 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setAcceptDrops(true);
 
     m_listViewModel=new KNMusicSortModel;
-    m_listViewModel->moveToThread(&m_listViewModelThread);
+//    m_listViewModel->moveToThread(&m_listViewModelThread);
     m_listViewModel->setFilterKeyColumn(-1);
     m_listViewModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_listViewModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_artistModel=new KNMusicArtistModel;
-    m_artistModel->moveToThread(&m_artistModelThread);
+//    m_artistModel->moveToThread(&m_artistModelThread);
     m_albumModel=new KNMusicAlbumModel;
-    m_albumModel->moveToThread(&m_albumViewModelThread);
+//    m_albumModel->moveToThread(&m_albumViewModelThread);
     m_genreModel=new KNMusicGenreModel;
-    m_genreModel->moveToThread(&m_genreModelThread);
+//    m_genreModel->moveToThread(&m_genreModelThread);
 
     m_artistSortModel=new KNMusicCategorySortFilterModel;
-    m_artistSortModel->moveToThread(&m_artistSortModelThread);
+//    m_artistSortModel->moveToThread(&m_artistSortModelThread);
     m_artistSortModel->setFilterKeyColumn(0);
     m_artistSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_artistSortModel->setSourceModel(m_artistModel);
 
     m_albumSortModel=new KNMusicCategorySortFilterModel;
-    m_albumSortModel->moveToThread(&m_albumSortModelThread);
+//    m_albumSortModel->moveToThread(&m_albumSortModelThread);
     m_albumSortModel->setFilterKeyColumn(0);
     m_albumSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_albumSortModel->setSourceModel(m_albumModel);
 
     m_genreSortModel=new KNMusicCategorySortFilterModel;
-    m_genreSortModel->moveToThread(&m_genreSortModelThread);
+//    m_genreSortModel->moveToThread(&m_genreSortModelThread);
     m_genreSortModel->setFilterKeyColumn(0);
     m_genreSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_genreSortModel->setSourceModel(m_genreModel);
@@ -107,19 +107,19 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionGenreShowContextMenu);
 
     m_artistDetails=new KNMusicCategoryDetailModel;
-    m_artistDetails->moveToThread(&m_artistDetailsThread);
+//    m_artistDetails->moveToThread(&m_artistDetailsThread);
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
 
     m_albumDetails=new KNMusicAlbumDetailModel;
-    m_albumDetails->moveToThread(&m_albumDetailsThread);
+//    m_albumDetails->moveToThread(&m_albumDetailsThread);
     m_albumDetails->setFilterKeyColumn(KNMusicGlobal::Album);
     m_albumDetails->setCategoryModel(m_albumModel);
     m_albumView->setDetailModel(m_albumDetails);
 
     m_genreDetails=new KNMusicCategoryDetailModel;
-    m_genreDetails->moveToThread(&m_genreDetailsThread);
+//    m_genreDetails->moveToThread(&m_genreDetailsThread);
     m_genreDetails->setFilterKeyColumn(KNMusicGlobal::Genre);
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
@@ -137,41 +137,41 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
                 m_categoryCaption[Genres],
                 m_genreView);
 
-    m_listViewModelThread.start();
-    m_artistModelThread.start();
-    m_albumViewModelThread.start();
-    m_genreModelThread.start();
-    m_artistSortModelThread.start();
-    m_albumSortModelThread.start();
-    m_genreSortModelThread.start();
-    m_artistDetailsThread.start();
-    m_albumDetailsThread.start();
-    m_genreDetailsThread.start();
+//    m_listViewModelThread.start();
+//    m_artistModelThread.start();
+//    m_albumViewModelThread.start();
+//    m_genreModelThread.start();
+//    m_artistSortModelThread.start();
+//    m_albumSortModelThread.start();
+//    m_genreSortModelThread.start();
+//    m_artistDetailsThread.start();
+//    m_albumDetailsThread.start();
+//    m_genreDetailsThread.start();
 }
 
 KNMusicViewer::~KNMusicViewer()
 {
-    m_listViewModelThread.quit();
-    m_artistModelThread.quit();
-    m_albumViewModelThread.quit();
-    m_genreModelThread.quit();
-    m_artistSortModelThread.quit();
-    m_albumSortModelThread.quit();
-    m_genreSortModelThread.quit();
-    m_artistDetailsThread.quit();
-    m_albumDetailsThread.quit();
-    m_genreDetailsThread.quit();
+//    m_listViewModelThread.quit();
+//    m_artistModelThread.quit();
+//    m_albumViewModelThread.quit();
+//    m_genreModelThread.quit();
+//    m_artistSortModelThread.quit();
+//    m_albumSortModelThread.quit();
+//    m_genreSortModelThread.quit();
+//    m_artistDetailsThread.quit();
+//    m_albumDetailsThread.quit();
+//    m_genreDetailsThread.quit();
 
-    m_listViewModelThread.wait();
-    m_artistModelThread.wait();
-    m_albumViewModelThread.wait();
-    m_genreModelThread.wait();
-    m_artistSortModelThread.wait();
-    m_albumSortModelThread.wait();
-    m_genreSortModelThread.wait();
-    m_artistDetailsThread.wait();
-    m_albumDetailsThread.wait();
-    m_genreDetailsThread.wait();
+//    m_listViewModelThread.wait();
+//    m_artistModelThread.wait();
+//    m_albumViewModelThread.wait();
+//    m_genreModelThread.wait();
+//    m_artistSortModelThread.wait();
+//    m_albumSortModelThread.wait();
+//    m_genreSortModelThread.wait();
+//    m_artistDetailsThread.wait();
+//    m_albumDetailsThread.wait();
+//    m_genreDetailsThread.wait();
 
     m_listViewModel->deleteLater();
     m_artistModel->deleteLater();

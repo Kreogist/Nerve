@@ -28,9 +28,9 @@ QModelIndex KNMusicCategoryModel::firstItemIndex() const
 {
     if(rowCount()==1)
     {
-        return m_noCategoryItemCount==0?QModelIndex():index(0,0);
+        return data(index(0,0), MusicCount).toInt()==0?QModelIndex():index(0,0);
     }
-    return m_noCategoryItemCount==0?index(1,0):index(0,0);
+    return data(index(0,0), MusicCount).toInt()==0?index(1,0):index(0,0);
 }
 
 void KNMusicCategoryModel::resetModel()
@@ -70,13 +70,15 @@ void KNMusicCategoryModel::retranslateAndSet()
 void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
 {
     QString currentName=categoryName(index.row());
+    QModelIndex searchResult;
     if(currentName.isEmpty())
     {
-        m_noCategoryItemCount++;
+        searchResult=this->index(0,0);
+        setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
         emit requireShowFirstItem();
         return;
     }
-    QModelIndex searchResult=indexOf(currentName);
+    searchResult=indexOf(currentName);
     QStandardItem *currentItem;
     if(searchResult.isValid())
     {
@@ -94,13 +96,15 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
 void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
 {
     QString currentName=categoryName(index.row());
+    QModelIndex searchResult;
     if(currentName.isEmpty())
     {
-        m_noCategoryItemCount++;
+        searchResult=this->index(0,0);
+        setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
         emit requireShowFirstItem();
         return;
     }
-    QModelIndex searchResult=indexOf(currentName);
+    searchResult=indexOf(currentName);
     QStandardItem *currentItem;
     if(searchResult.isValid())
     {
@@ -118,16 +122,18 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
 void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
 {
     QString currentName=categoryName(index.row());
+    QModelIndex searchResult;
     if(currentName.isEmpty())
     {
-        m_noCategoryItemCount--;
-        if(m_noCategoryItemCount==0)
+        searchResult=this->index(0,0);
+        setData(searchResult, data(searchResult, MusicCount).toInt()-1, MusicCount);
+        if(data(searchResult, MusicCount).toInt()==0)
         {
             emit requireHideFirstItem();
         }
         return;
     }
-    QModelIndex searchResult=indexOf(currentName);
+    searchResult=indexOf(currentName);
     if(!searchResult.isValid())
     {
         return;
