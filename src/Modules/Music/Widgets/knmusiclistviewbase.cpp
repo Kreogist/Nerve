@@ -1,16 +1,17 @@
 #include "knmusiclistviewbase.h"
 
-#include <QScrollBar>
-#include <QMouseEvent>
+#include <QCursor>
+#include <QDrag>
+#include <QHelpEvent>
 #include <QMimeData>
+#include <QModelIndexList>
+#include <QMouseEvent>
 #include <QList>
 #include <QScopedPointer>
-#include <QDrag>
+#include <QScrollBar>
 #include <QSortFilterProxyModel>
-#include <QUrl>
-#include <QModelIndexList>
 #include <QToolTip>
-#include <QHelpEvent>
+#include <QUrl>
 
 #include <QDebug>
 
@@ -33,9 +34,9 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setDragDropMode(QAbstractItemView::DragOnly);
     setAllColumnsShowFocus(true);
     setAlternatingRowColors(true);
-    //setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    //setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);
@@ -115,6 +116,7 @@ void KNMusicListViewBase::setModel(QAbstractItemModel *model)
 void KNMusicListViewBase::setSourceModel(KNMusicModel *musicModel)
 {
     m_musicModel=musicModel;
+    m_musicDetailTooltip->setMusicModel(musicModel);
 }
 
 void KNMusicListViewBase::retranslate()
@@ -154,7 +156,10 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
 
 void KNMusicListViewBase::leaveEvent(QEvent *event)
 {
-    //m_musicDetailTooltip->hide();
+    if(!rect().contains(mapFromGlobal(QCursor::pos())))
+    {
+        m_musicDetailTooltip->hide();
+    }
     QTreeView::leaveEvent(event);
 }
 
@@ -187,6 +192,29 @@ void KNMusicListViewBase::startDrag(Qt::DropActions supportedActions)
         m_dragAction->setMimeData(m_mimeData);
         m_dragAction->exec(supportedActions, Qt::CopyAction);
     }
+}
+
+bool KNMusicListViewBase::event(QEvent *event)
+{
+    if(event->type()==QEvent::ToolTip)
+    {
+        QHelpEvent *helpEvent=static_cast<QHelpEvent *>(event);
+        QPoint realPos=helpEvent->pos();
+        realPos.setY(realPos.y()-header()->height());
+        QModelIndex index=realPos.y()<0?QModelIndex():indexAt(realPos);
+        if(index.isValid())
+        {
+            m_musicDetailTooltip->setTooltip(m_proxyModel->mapToSource(index),
+                                             mapToGlobal(helpEvent->pos()));
+            m_musicDetailTooltip->showTooltip();
+        }
+        else
+        {
+            m_musicDetailTooltip->hide();
+        }
+        return true;
+    }
+    return QTreeView::event(event);
 }
 
 void KNMusicListViewBase::onSectionVisibleChanged(const int &index,

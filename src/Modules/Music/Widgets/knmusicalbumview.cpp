@@ -660,8 +660,8 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
         if(sourceIndex.row()==0 && m_model->isNoAlbumHidden())
         {
             m_noAlbumHide=true;
-            currentPaintIndex=m_proxyModel->index(++albumIndex, 0);
-            sourceIndex=m_proxyModel->mapToSource(currentPaintIndex);
+            albumIndex++;
+            continue;
         }
         if(sourceIndex!=m_detailIndex)
         {

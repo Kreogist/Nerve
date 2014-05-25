@@ -32,6 +32,12 @@ public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
 
+protected:
+    void mouseReleaseEvent(QMouseEvent *event);
+    void leaveEvent(QEvent *event);
+    void startDrag(Qt::DropActions supportedActions);
+    bool event(QEvent *event);
+
 protected slots:
     virtual void onActionSort(int logicalIndex, Qt::SortOrder order);
 
@@ -39,11 +45,6 @@ private slots:
     void onSectionVisibleChanged(const int &index,
                                  const bool &visible);
     void onItemActived(const QModelIndex &index);
-
-protected:
-    void mouseReleaseEvent(QMouseEvent *event);
-    void leaveEvent(QEvent *event);
-    void startDrag(Qt::DropActions supportedActions);
 
 private:
     KNMusicListViewHeader *m_headerWidget;
