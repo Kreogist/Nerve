@@ -68,12 +68,12 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     if(mediaFile.open(QIODevice::ReadOnly))
     {
         readID3v1Tag(mediaFile, mediaData);
-        readAPEv2Tag(mediaFile, mediaData);
-        readID3v2Tag(mediaFile, mediaData);
-        readWMATag(mediaFile, mediaData);
-        readM4ATag(mediaFile, mediaData);
-        readFLACTag(mediaFile, mediaData);
-        readWAVTag(mediaFile, mediaData);
+//        readAPEv2Tag(mediaFile, mediaData);
+//        readID3v2Tag(mediaFile, mediaData);
+//        readWMATag(mediaFile, mediaData);
+//        readM4ATag(mediaFile, mediaData);
+//        readFLACTag(mediaFile, mediaData);
+//        readWAVTag(mediaFile, mediaData);
         mediaFile.close();
     }
     parseByMediaInfo(filePathBackup);
