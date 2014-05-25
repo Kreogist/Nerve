@@ -5,6 +5,7 @@
 #include <QUrl>
 #include <QModelIndex>
 #include <QRegExp>
+#include <QThread>
 
 #include "../knmusicglobal.h"
 
@@ -32,6 +33,7 @@ class KNMusicViewer : public KNStdLibViewer
     Q_OBJECT
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
+    ~KNMusicViewer();
     void setDefaultHeader();
     void setModel(KNMusicModel *model);
     bool eventFilter(QObject *watched, QEvent *event);
@@ -102,6 +104,17 @@ private:
     KNMusicGenreSongs *m_genreSongView;
 
     KNMusicModel *m_sourceModel;
+
+    QThread m_listViewModelThread,
+            m_artistModelThread,
+            m_albumViewModelThread,
+            m_albumSortModelThread,
+            m_genreModelThread,
+            m_artistSortModelThread,
+            m_genreSortModelThread,
+            m_artistDetailsThread,
+            m_albumDetailsThread,
+            m_genreDetailsThread;
 };
 
 #endif // KNMUSICVIEWER_H

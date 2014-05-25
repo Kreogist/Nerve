@@ -149,7 +149,7 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
         if(posTest.isValid())
         {
             emit requireShowContextMenu(event->globalPos(),
-                                        posTest);
+                                        m_proxyModel->mapToSource(posTest));
         }
     }
 }

@@ -1,6 +1,9 @@
-#include <QDebug>
-
 #include <QVector>
+#include <QAbstractItemModel>
+#include <QList>
+#include <QPersistentModelIndex>
+
+#include <QDebug>
 
 #include "knmusicglobal.h"
 
@@ -142,6 +145,8 @@ KNMusicGlobal::KNMusicGlobal() :
     //Don't touch this. I don't why, but it works.
     qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
     qRegisterMetaType<QVector<int>>("QVector<int>");
+    qRegisterMetaType<QList<QPersistentModelIndex>>("QList<QPersistentModelIndex>");
+    qRegisterMetaType<QAbstractItemModel::LayoutChangeHint>("QAbstractItemModel::LayoutChangeHint");
     m_genreList<<"Blues"
                <<"Classic Rock"
                <<"Country"
