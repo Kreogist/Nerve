@@ -159,6 +159,11 @@ void KNMusicAlbumSongDetail::resetSongState()
     m_albumSongs->resizeHeader();
 }
 
+void KNMusicAlbumSongDetail::setSourceModel(KNMusicModel *model)
+{
+    m_albumSongs->setSourceModel(model);
+}
+
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
     m_albumName->hide();
@@ -181,6 +186,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_songPanel=new KNMusicAlbumSongDetail(this);
     m_leftShadow=new KNMusicLeftShadow(this);
+    //m_leftShadow->setVisible(false);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
             this, &KNMusicAlbumDetail::requireOpenUrl);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
@@ -189,6 +195,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_albumArt=new KNMusicAlbumArtwork(this);
     m_albumArt->setScaledContents(true);
     m_rightShadow=new KNMusicRightShadow(this);
+    //m_rightShadow->setVisible(false);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireShowArtwork,
             this, &KNMusicAlbumDetail::showArtwork);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireHideArtwork,
@@ -283,6 +290,11 @@ void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
             m_infoPanel, &KNMusicAlbumInfoDetail::onActionSongCountChange);*/
 }
 
+void KNMusicAlbumDetail::setSourceModel(KNMusicModel *model)
+{
+    m_songPanel->setSourceModel(model);
+}
+
 void KNMusicAlbumDetail::selectItem(const QModelIndex &index)
 {
     m_songPanel->selectItem(index);
@@ -297,6 +309,11 @@ void KNMusicAlbumDetail::resetSongState()
 {
     m_songPanel->resetSongState();
     m_albumArt->raise();
+}
+
+void KNMusicAlbumDetail::disableArtworkExpand()
+{
+    m_albumArtExpanding=false;
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -812,6 +829,7 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
 void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
 {
     m_albumDetail->hide();
+    m_albumDetail->disableArtworkExpand();
     //QModelIndex dataIndex=m_detailIndex;
     if(!index.isValid())
     {
@@ -1007,6 +1025,11 @@ void KNMusicAlbumView::setGridMinimumWidth(int gridMinimumWidth)
 void KNMusicAlbumView::resetHeader()
 {
     m_albumDetail->resetHeader();
+}
+
+void KNMusicAlbumView::setSourceModel(KNMusicModel *model)
+{
+    m_albumDetail->setSourceModel(model);
 }
 
 void KNMusicAlbumView::setFilterFixedString(const QString &text)
