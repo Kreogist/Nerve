@@ -134,10 +134,8 @@ void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
         strncpy(m_rawTagData+97, m_tagData[Comment].toStdString().data(), 30);
     }
     int genreTest=KNMusicGlobal::instance()->genreIndex(m_tagData[Genre]);
-    qDebug()<<m_tagData[Genre]<<genreTest;
     if(genreTest==-1)
     {
-        //!TODO: check if no genre is 0xff?
         m_rawTagData[127]=0xff;
     }
     else
