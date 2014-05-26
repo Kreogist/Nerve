@@ -37,12 +37,21 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void writeTag(QFile &mediaFile,
+                  QDataStream &mediaData);
+
+private slots:
+    void updateCount(const int i);
 
 private:
     KNMusicTagID3v1 *m_tagID3v1;
     QFormLayout *m_mainLayout;
-    QLabel *m_captions[ID3v1ItemsCount];
-    QString m_captionsTitle[ID3v1ItemsCount];
+    QLabel *m_captionsLabel[ID3v1ItemsCount],
+           *m_textCountLabel[Track+1], *m_textLimitLabel[Track+1], *m_willSetAs[Track+1];
+    char m_realText[30];
+    int m_textLimit[Track+1];
+    QString m_captions[ID3v1ItemsCount];
+    QString m_realSetText;
     QLineEdit *m_textEditor[6];
     QComboBox *m_genreCombo;
 };

@@ -138,6 +138,7 @@ KNMusicDetailInfo::KNMusicDetailInfo(QWidget *parent) :
     QDialog(parent)
 {
     setContentsMargins(0,0,0,0);
+    setFixedSize(500, 450);
 
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     mainLayout->setContentsMargins(0,0,0,0);
