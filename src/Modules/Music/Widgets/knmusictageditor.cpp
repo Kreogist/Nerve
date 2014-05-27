@@ -78,6 +78,7 @@ void KNMusicTagEditor::writeTag()
     if(mediaFile.open(QIODevice::ReadWrite))
     {
         m_ID3v1Editor->writeTag(mediaFile, mediaData);
+        m_APEv2Editor->writeTag(mediaFile, mediaData);
     }
 }
 

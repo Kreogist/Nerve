@@ -30,6 +30,8 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void writeTag(QFile &mediaFile,
+                  QDataStream &mediaData);
 
 private slots:
     void toAdvancedMode();
