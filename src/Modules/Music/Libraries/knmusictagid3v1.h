@@ -35,7 +35,7 @@ public slots:
 
 private:
     QString m_tagData[ID3v1ItemCount];
-    char m_rawTagData[128], m_rawByteBackup;
+    char m_rawTagData[128], m_rawByteBackup, m_emptyTag[128];
     QTextCodec *m_localCodec;
     quint8 m_genreIndex;
 };

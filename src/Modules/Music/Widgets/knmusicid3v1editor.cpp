@@ -32,7 +32,7 @@ KNMusicID3v1Editor::KNMusicID3v1Editor(QWidget *parent) :
     for(int i=0; i<ID3v1ItemsCount; i++)
     {
         m_captionsLabel[i]=new QLabel(m_captions[i],
-                                 this);
+                                      this);
         //Here's a hack: to let the label fit the margins.
         m_captionsLabel[i]->setContentsMargins(0,5,0,0);
     }
@@ -66,7 +66,7 @@ KNMusicID3v1Editor::KNMusicID3v1Editor(QWidget *parent) :
         editField->addWidget(m_textEditor[i]);
         editField->addSpacing(10);
         //Text counter.
-        m_textCountLabel[i]=new QLabel(this);
+        m_textCountLabel[i]=new QLabel("0", this);
         m_textCountLabel[i]->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         m_textCountLabel[i]->setMinimumWidth(fontMetrics().width("QQ"));
         editField->addWidget(m_textCountLabel[i]);

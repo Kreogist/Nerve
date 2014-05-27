@@ -12,6 +12,9 @@
 KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    memset(m_emptyTag, 0, 128);
+    m_emptyTag[0]='T';m_emptyTag[1]='A';m_emptyTag[2]='G';
+    m_emptyTag[127]=0xff;
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
 }
 
@@ -91,29 +94,6 @@ void KNMusicTagID3v1::setTextData(const int &key, const QString &data)
 
 void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
 {
-    int mediaFileSize=mediaFile.size();
-    if(mediaFileSize>128)
-    {
-        //If the file size is greater than 128, it might contains ID3v1.
-        mediaData.skipRawData(mediaFileSize-128);
-        //Read the header
-        char header[3];
-        mediaData.readRawData(header, 3);
-        //If header is not 'TAG', then set the position to the end of file.
-        if(header[0]!='T' || header[1]!='A' || header[2]!='G')
-        {
-            mediaData.skipRawData(125);
-        }
-        else
-        {
-            mediaFile.reset();
-            mediaData.skipRawData(mediaFileSize-128);
-        }
-    }
-    else
-    {
-        mediaData.skipRawData(mediaFileSize);
-    }
     memset(m_rawTagData, 0, 128);
     m_rawTagData[0]='T';
     m_rawTagData[1]='A';
@@ -141,6 +121,45 @@ void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
     else
     {
         m_rawTagData[127]=genreTest;
+    }
+    bool isTagEmpty=(memcmp(m_rawTagData, m_emptyTag, 127)==0);
+    int mediaFileSize=mediaFile.size();
+    if(mediaFileSize>128)
+    {
+        //If the file size is greater than 128, it might contains ID3v1.
+        mediaData.skipRawData(mediaFileSize-128);
+        //Read the header
+        char header[3];
+        mediaData.readRawData(header, 3);
+        //If header is not 'TAG', then set the position to the end of file.
+        if(header[0]!='T' || header[1]!='A' || header[2]!='G')
+        {
+            if(isTagEmpty)
+            {
+                return;
+            }
+            mediaData.skipRawData(125);
+        }
+        else
+        {
+            //Find ID3v1 file.
+            //If new tag is empty, that means we need to remove the original tag.
+            if(isTagEmpty)
+            {
+                mediaFile.resize(mediaFileSize-128);
+                return;
+            }
+            mediaFile.reset();
+            mediaData.skipRawData(mediaFileSize-128);
+        }
+    }
+    else
+    {
+        if(isTagEmpty)
+        {
+            return;
+        }
+        mediaData.skipRawData(mediaFileSize);
     }
     mediaData.writeRawData(m_rawTagData, 128);
 }
