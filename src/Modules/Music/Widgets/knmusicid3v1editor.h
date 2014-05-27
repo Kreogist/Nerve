@@ -5,6 +5,7 @@
 
 #include "knmusictageditorbase.h"
 
+class QTextCodec;
 class QComboBox;
 class QLineEdit;
 class QFormLayout;
@@ -54,6 +55,7 @@ private:
     QString m_realSetText;
     QLineEdit *m_textEditor[6];
     QComboBox *m_genreCombo;
+    QTextCodec *m_localCodec;
 };
 
 #endif // KNMUSICID3V1EDITOR_H

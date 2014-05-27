@@ -118,20 +118,20 @@ void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
     m_rawTagData[0]='T';
     m_rawTagData[1]='A';
     m_rawTagData[2]='G';
-    strncpy(m_rawTagData+3, m_tagData[Title].toStdString().data(), 30);
-    strncpy(m_rawTagData+33, m_tagData[Artist].toStdString().data(), 30);
-    strncpy(m_rawTagData+63, m_tagData[Album].toStdString().data(), 30);
-    strncpy(m_rawTagData+93, m_tagData[Year].toStdString().data(), 4);
+    strncpy(m_rawTagData+3, m_localCodec->fromUnicode(m_tagData[Title]).data(), 30);
+    strncpy(m_rawTagData+33, m_localCodec->fromUnicode(m_tagData[Artist]).data(), 30);
+    strncpy(m_rawTagData+63, m_localCodec->fromUnicode(m_tagData[Album]).data(), 30);
+    strncpy(m_rawTagData+93, m_localCodec->fromUnicode(m_tagData[Year]).data(), 4);
     int trackTest=m_tagData[Track].toInt();
     if(trackTest>0 && trackTest<255)
     {
         m_rawTagData[125]=0;
         m_rawTagData[126]=trackTest;
-        strncpy(m_rawTagData+97, m_tagData[Comment].toStdString().data(), 28);
+        strncpy(m_rawTagData+97, m_localCodec->fromUnicode(m_tagData[Comment]).data(), 28);
     }
     else
     {
-        strncpy(m_rawTagData+97, m_tagData[Comment].toStdString().data(), 30);
+        strncpy(m_rawTagData+97, m_localCodec->fromUnicode(m_tagData[Comment]).data(), 30);
     }
     int genreTest=KNMusicGlobal::instance()->genreIndex(m_tagData[Genre]);
     if(genreTest==-1)

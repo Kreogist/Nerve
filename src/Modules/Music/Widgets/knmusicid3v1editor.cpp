@@ -4,6 +4,7 @@
 #include <QSignalMapper>
 #include <QFormLayout>
 #include <QToolButton>
+#include <QTextCodec>
 #include <QBoxLayout>
 
 #include <QDebug>
@@ -11,6 +12,7 @@
 #include "../Libraries/knmusictagid3v1.h"
 
 #include "../knmusicglobal.h"
+#include "../../knglobal.h"
 
 #include "knmusicid3v1editor.h"
 
@@ -18,6 +20,7 @@ KNMusicID3v1Editor::KNMusicID3v1Editor(QWidget *parent) :
     KNMusicTagEditorBase(parent)
 {
     retranslate();
+    m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
     //ID3v1 is very simple, so use a single form layout is ok.
     m_mainLayout=new QFormLayout(this);
     m_mainLayout->setLabelAlignment(Qt::AlignRight);
@@ -177,7 +180,7 @@ void KNMusicID3v1Editor::writeTag(QFile &mediaFile,
 
 void KNMusicID3v1Editor::updateCount(const int i)
 {
-    int currentTextSize=m_textEditor[i]->text().toStdString().size();
+    int currentTextSize=m_localCodec->fromUnicode(m_textEditor[i]->text()).size();
     QPalette labelPal=m_textCountLabel[i]->palette();
     if(currentTextSize>m_textLimit[i])
     {
