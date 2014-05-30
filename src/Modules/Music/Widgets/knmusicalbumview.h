@@ -75,6 +75,8 @@ signals:
     void requireOpenUrl(const QModelIndex &index);
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
+    void requireHalfVolume();
+    void requireRestoreHalfVolume();
 
 public slots:
     void hideDetailInfo();
@@ -110,6 +112,8 @@ signals:
     void requireOpenUrl(const QModelIndex &index);
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
+    void requireHalfVolume();
+    void requireRestoreHalfVolume();
     void requireFlyBack();
     void requireFlyOut();
 
@@ -166,6 +170,8 @@ signals:
     void requireOpenUrl(const QModelIndex &index);
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
+    void requireHalfVolume();
+    void requireRestoreHalfVolume();
 
 public slots:
     void selectAlbum(const QModelIndex &index);

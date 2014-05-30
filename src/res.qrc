@@ -16,6 +16,12 @@
         <file>Resources/Music/details/Treeview.png</file>
         <file>Resources/Music/tags/ID3v2toAdvanced.png</file>
         <file>Resources/Music/tags/ID3v2toOverview.png</file>
+        <file>Resources/Music/preivew/pause.png</file>
+        <file>Resources/Music/preivew/play.png</file>
+        <file>Resources/Music/player/next.png</file>
+        <file>Resources/Music/player/pause.png</file>
+        <file>Resources/Music/player/play.png</file>
+        <file>Resources/Music/player/previous.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

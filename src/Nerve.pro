@@ -1,9 +1,14 @@
+TEMPLATE = app
+
 QT += core\
       gui\
-      widgets\
-      multimedia
+      widgets
 
-CONFIG += c++11
+CONFIG += c++11 sse2
+
+win32{
+    LIBS += -lbass
+}
 
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
@@ -12,6 +17,8 @@ macx{
 unix{
     LIBS += -ldl
 }
+
+include(../QtAV/src/libQtAV.pri)
 
 SOURCES += \
     main.cpp \
@@ -99,7 +106,11 @@ SOURCES += \
     Modules/Music/Widgets/knmusicwmaeditor.cpp \
     Modules/Music/Widgets/knmusicm4aeditor.cpp \
     Modules/Music/Widgets/knmusicflaceditor.cpp \
-    Modules/Music/Widgets/knmusicwaveditor.cpp
+    Modules/Music/Widgets/knmusicwaveditor.cpp \
+    Modules/Music/Libraries/knmusicplayer.cpp \
+    Modules/Music/Widgets/knmusicheaderplayer.cpp \
+    Modules/Base/knplayerprogress.cpp \
+    Modules/Public/bass/knlibbass.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -187,7 +198,34 @@ HEADERS += \
     Modules/Music/Widgets/knmusicwmaeditor.h \
     Modules/Music/Widgets/knmusicm4aeditor.h \
     Modules/Music/Widgets/knmusicflaceditor.h \
-    Modules/Music/Widgets/knmusicwaveditor.h
+    Modules/Music/Widgets/knmusicwaveditor.h \
+    Modules/Music/Libraries/knmusicplayer.h \
+    Modules/Music/Widgets/knmusicheaderplayer.h \
+    Modules/Base/knplayerprogress.h \
+    Modules/Public/bass/bass.h \
+    Modules/Public/bass/bass_aac.h \
+    Modules/Public/bass/bass_ac3.h \
+    Modules/Public/bass/bass_aix.h \
+    Modules/Public/bass/bass_alac.h \
+    Modules/Public/bass/bass_ape.h \
+    Modules/Public/bass/bass_fx.h \
+    Modules/Public/bass/bass_mpc.h \
+    Modules/Public/bass/bass_ofr.h \
+    Modules/Public/bass/bass_spx.h \
+    Modules/Public/bass/bass_tta.h \
+    Modules/Public/bass/basscd.h \
+    Modules/Public/bass/bassenc.h \
+    Modules/Public/bass/bassflac.h \
+    Modules/Public/bass/bassmidi.h \
+    Modules/Public/bass/bassmix.h \
+    Modules/Public/bass/bassopus.h \
+    Modules/Public/bass/basswma.h \
+    Modules/Public/bass/basswv.h \
+    Modules/Public/bass/bpm.h \
+    Modules/Public/bass/dsp.h \
+    Modules/Public/bass/knlibbass.h \
+    Modules/Public/bass/reverse.h \
+    Modules/Public/bass/tempo.h
 
 RESOURCES += \
     res.qrc

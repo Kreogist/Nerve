@@ -18,7 +18,7 @@ class KNMusicCategorySortFilterModel;
 class KNLibFilter;
 class KNMusicModel;
 class KNMusicListView;
-class KNMusicArtistView;
+class KNMusicCategoryView;
 class KNMusicAlbumView;
 class KNMusicSortModel;
 class KNMusicArtistModel;
@@ -42,9 +42,11 @@ signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index,
                                 KNMusicGlobal::MusicCategory currentMode);
-    void requireOpenUrl(const QModelIndex &index);
+    void requirePlayMusic(const QModelIndex &index);
     void requireDelete(const QModelIndex &index);
     void requireClearSearch();
+    void requireHalfVolume();
+    void requireRestoreHalfVolume();
 
 public slots:
     void retranslate();
@@ -84,7 +86,7 @@ private:
     };
     QString m_categoryCaption[MusicCategoriesCount];
     KNMusicListView *m_libraryView;
-    KNMusicArtistView *m_artistView,
+    KNMusicCategoryView *m_artistView,
                       *m_genreView;
     KNMusicAlbumView *m_albumView;
 

@@ -75,13 +75,21 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionListviewOpenUrl);
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
+    connect(m_libraryView, &KNMusicListView::requireHalfVolume,
+            this, &KNMusicViewer::requireHalfVolume);
+    connect(m_libraryView, &KNMusicListView::requireRestoreHalfVolume,
+            this, &KNMusicViewer::requireRestoreHalfVolume);
 
-    m_artistView=new KNMusicArtistView(this);
+    m_artistView=new KNMusicCategoryView(this);
     m_artistSongView=new KNMusicArtistSongs(m_artistView);
     m_artistView->installEventFilter(this);
     m_artistSongView->installEventFilter(this);
     m_artistView->setSongListView(m_artistSongView);
     m_artistView->setModel(m_artistSortModel);
+    connect(m_artistSongView, &KNMusicArtistSongs::requireHalfVolume,
+            this, &KNMusicViewer::requireHalfVolume);
+    connect(m_artistSongView, &KNMusicArtistSongs::requireRestoreHalfVolume,
+            this, &KNMusicViewer::requireRestoreHalfVolume);
     connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
             this, &KNMusicViewer::onActionArtistOpenUrl);
     connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
@@ -90,17 +98,25 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_albumView=new KNMusicAlbumView(this);
     m_albumView->setCategoryModel(m_albumSortModel);
     m_albumView->installEventFilter(this);
+    connect(m_albumView, &KNMusicAlbumView::requireHalfVolume,
+            this, &KNMusicViewer::requireHalfVolume);
+    connect(m_albumView, &KNMusicAlbumView::requireRestoreHalfVolume,
+            this, &KNMusicViewer::requireRestoreHalfVolume);
     connect(m_albumView, &KNMusicAlbumView::requireOpenUrl,
             this, &KNMusicViewer::onActionAlbumOpenUrl);
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
             this, &KNMusicViewer::onActionAlbumShowContextMenu);
 
-    m_genreView=new KNMusicArtistView(this);
+    m_genreView=new KNMusicCategoryView(this);
     m_genreSongView=new KNMusicGenreSongs(m_genreView);
     m_genreView->installEventFilter(this);
     m_genreSongView->installEventFilter(this);
     m_genreView->setSongListView(m_genreSongView);
     m_genreView->setModel(m_genreSortModel);
+    connect(m_genreSongView, &KNMusicGenreSongs::requireHalfVolume,
+            this, &KNMusicViewer::requireHalfVolume);
+    connect(m_genreSongView, &KNMusicGenreSongs::requireRestoreHalfVolume,
+            this, &KNMusicViewer::requireRestoreHalfVolume);
     connect(m_genreSongView, &KNMusicGenreSongs::requireOpenUrl,
             this, &KNMusicViewer::onActionGenreOpenUrl);
     connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
@@ -360,20 +376,20 @@ void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
 
 void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_listViewModel->mapToSource(index));
+    emit requirePlayMusic(m_listViewModel->mapToSource(index));
 }
 
 void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_artistDetails->mapToSource(index));
+    emit requirePlayMusic(m_artistDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionAlbumOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_albumDetails->mapToSource(index));
+    emit requirePlayMusic(m_albumDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionGenreOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_genreDetails->mapToSource(index));
+    emit requirePlayMusic(m_genreDetails->mapToSource(index));
 }

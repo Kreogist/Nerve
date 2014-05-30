@@ -7,7 +7,8 @@ KNMusicTagEditorBase::KNMusicTagEditorBase(QWidget *parent) :
 
 void KNMusicTagEditorBase::readTag(QFile &mediaFile, QDataStream &mediaData)
 {
-    ;
+    Q_UNUSED(mediaFile);
+    Q_UNUSED(mediaData);
 }
 
 void KNMusicTagEditorBase::resetEditor()

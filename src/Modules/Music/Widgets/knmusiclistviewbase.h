@@ -27,12 +27,15 @@ signals:
     void requireShowContextMenu(const QPoint &position,
                                 const QModelIndex &index);
     void requireOpenUrl(const QModelIndex &index);
+    void requireHalfVolume();
+    void requireRestoreHalfVolume();
 
 public slots:
     virtual void retranslate();
     virtual void retranslateAndSet();
 
 protected:
+    void closeEvent(QCloseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void leaveEvent(QEvent *event);
     void startDrag(Qt::DropActions supportedActions);
