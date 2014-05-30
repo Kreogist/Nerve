@@ -28,6 +28,7 @@ class KNMusicCategoryDetailModel;
 class KNMusicAlbumDetailModel;
 class KNMusicArtistSongs;
 class KNMusicGenreSongs;
+class KNLibBass;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -36,6 +37,7 @@ public:
     ~KNMusicViewer();
     void setDefaultHeader();
     void setModel(KNMusicModel *model);
+    void setMusicBackend(KNLibBass *backend);
     bool eventFilter(QObject *watched, QEvent *event);
 
 signals:

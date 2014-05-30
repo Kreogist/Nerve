@@ -221,6 +221,14 @@ void KNMusicViewer::setModel(KNMusicModel *model)
     m_sourceModel=model;
 }
 
+void KNMusicViewer::setMusicBackend(KNLibBass *backend)
+{
+    m_libraryView->setMusicBackend(backend);
+    m_artistSongView->setMusicBackend(backend);
+    m_albumView->setMusicBackend(backend);
+    m_genreSongView->setMusicBackend(backend);
+}
+
 bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
 {
     /*if(event->type()==QEvent::KeyRelease)

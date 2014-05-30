@@ -1,5 +1,6 @@
 #include <QEvent>
 #include <QTimeLine>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QDebug>
@@ -9,6 +10,10 @@
 KNPlayerProgress::KNPlayerProgress(QWidget *parent) :
     QAbstractSlider(parent)
 {
+    setMinimumHeight(20);
+    m_buttonGradient.setCenterRadius(8);
+    m_buttonGradient.setColorAt(1, QColor(0,0,0,0));
+
     m_palette=palette();
     m_window=QColor(255,255,255,40);
     m_palette.setColor(QPalette::Window, m_window);
@@ -40,18 +45,18 @@ void KNPlayerProgress::setPalette(const QPalette &pal)
 
 void KNPlayerProgress::enterEvent(QEvent *event)
 {
-    QAbstractSlider::enterEvent(event);
     m_mouseOut->stop();
     m_mouseIn->setStartFrame(m_window.alpha());
     m_mouseIn->start();
+    QAbstractSlider::enterEvent(event);
 }
 
 void KNPlayerProgress::leaveEvent(QEvent *event)
 {
-    QAbstractSlider::leaveEvent(event);
     m_mouseIn->stop();
     m_mouseOut->setStartFrame(m_window.alpha());
     m_mouseOut->start();
+    QAbstractSlider::leaveEvent(event);
 }
 
 void KNPlayerProgress::paintEvent(QPaintEvent *event)
@@ -69,7 +74,7 @@ void KNPlayerProgress::paintEvent(QPaintEvent *event)
     pen.setStyle(Qt::SolidLine);
     painter.setPen(pen);
     painter.setBrush(QBrush(m_window));
-    int top=(height()-m_scrollHeight)>>1;
+    int top=(event->rect().height()-m_scrollHeight)>>1;
     painter.drawRect(0, top, width()-1, m_scrollHeight);
     double percent=
             ((double)value()-(double)minimum())/((double)maximum()-(double)minimum()),
@@ -77,7 +82,45 @@ void KNPlayerProgress::paintEvent(QPaintEvent *event)
     int valueWidth=(int)valueWidthF;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(m_button));
-    painter.drawRect(1, top+1, valueWidth-1, m_scrollHeight-2);
+    painter.drawRect(1, top+1, valueWidth-1, m_scrollHeight-1);
+
+    //Paint the button.
+    int center=top+(m_scrollHeight>>1)+1;
+    m_buttonGradient.setCenter(QPointF(valueWidth, center));
+    m_buttonGradient.setFocalPoint(QPointF(valueWidth, center));
+    m_buttonGradient.setColorAt(0, QColor(255,255,255,105+m_button.alpha()));
+    painter.setBrush(m_buttonGradient);
+    painter.drawRoundRect(QRect(valueWidth-16,
+                                top+1,
+                                16,
+                                m_scrollHeight-1));
+}
+
+void KNPlayerProgress::mousePressEvent(QMouseEvent *event)
+{
+    emit sliderPressed();
+    qreal mouseValue=
+            (qreal)(maximum()-minimum())/(qreal)width()*(qreal)event->pos().x();
+    setValue((int)mouseValue+minimum());
+    m_mouseDown=true;
+    event->accept();
+}
+
+void KNPlayerProgress::mouseMoveEvent(QMouseEvent *event)
+{
+    if(m_mouseDown)
+    {
+        qreal mouseValue=
+                (qreal)(maximum()-minimum())/(qreal)width()*(qreal)event->pos().x();
+        setValue((int)mouseValue+minimum());
+    }
+}
+
+void KNPlayerProgress::mouseReleaseEvent(QMouseEvent *event)
+{
+    emit sliderReleased();
+    m_mouseDown=false;
+    event->accept();
 }
 
 void KNPlayerProgress::onActionChangeColor(const int &time)

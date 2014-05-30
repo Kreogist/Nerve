@@ -1,6 +1,5 @@
 #include <QDir>
 #include <QApplication>
-#include <QTextCodec>
 #include <QFileInfoList>
 #include <QTimer>
 
@@ -11,6 +10,26 @@
 KNLibBass::KNLibBass(QObject *parent) :
     QObject(parent)
 {
+    //Connect the signals.
+    connect(m_main.positionUpdater, &QTimer::timeout,
+            [=]{emit positionChanged(
+                    BASS_ChannelBytes2Seconds(m_main.channel,
+                                              BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE)));
+    });
+    connect(m_preview.positionUpdater, &QTimer::timeout,
+            [=]{emit previewPositionChanged(
+                    BASS_ChannelBytes2Seconds(m_preview.channel,
+                                              BASS_ChannelGetPosition(m_preview.channel,BASS_POS_BYTE)));
+    });
+
+    //Initial Dymantic Link Library suffix
+#ifdef Q_OS_WIN32
+    m_dylinkSuffix="dll";
+#endif
+#ifdef Q_OS_MACX
+    m_dylinkSuffix="dylib";
+#endif
+
     //Initial Bass
     //Check bass version.
     if(HIWORD(BASS_GetVersion())!=BASSVERSION)
@@ -18,7 +37,7 @@ KNLibBass::KNLibBass(QObject *parent) :
         qDebug()<<"Bass version error!";
     }
     //Set Configure, I don't know what's this use.
-    BASS_SetConfig(BASS_CONFIG_FLOATDSP,TRUE);
+    BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     if(!BASS_Init(-1,44100,0,NULL,NULL))
     {
         qDebug()<<"Cannot init bass library.";
@@ -34,55 +53,96 @@ KNLibBass::KNLibBass(QObject *parent) :
     }
     //Load Plugins
     loadPlugins();
-
-    //Initial the position updater
-    m_positionUpdater=new QTimer;
-    m_positionUpdater->setInterval(200);
-    connect(m_positionUpdater, &QTimer::timeout,
-            [=]{emit positionChanged(BASS_ChannelBytes2Seconds(m_channel,
-                                                               BASS_ChannelGetPosition(m_channel,BASS_POS_BYTE)));
-    });
-
-    //Initial UTF-8 Codec
-    m_utf8codec=QTextCodec::codecForName("UTF-8");
 }
 
 KNLibBass::~KNLibBass()
 {
-    m_positionUpdater->deleteLater();
     BASS_PluginFree(0);
     BASS_Free();
 }
 
 void KNLibBass::loadMusic(const QString &filePath)
 {
-    //Free the main stream
-    BASS_MusicFree(m_channel);
-    BASS_StreamFree(m_channel);
-    //Load the file.
-    std::wstring uniPath=filePath.toStdWString();
-    if(!(m_channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|m_floatable))
-       && !(m_channel=BASS_MusicLoad(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|BASS_MUSIC_RAMPS|m_floatable,1)))
-    {
-        qDebug()<<"Can't play the file.";
-        return;
-    }
-    //Get the channel information.
-    BASS_ChannelGetInfo(m_channel,&m_currentChannelInfo);
-    //Get the byte duration.
-    m_byteDuration=BASS_ChannelGetLength(m_channel, BASS_POS_BYTE);
-    m_duration=BASS_ChannelBytes2Seconds(m_channel, m_byteDuration);
+    m_main.filePath=filePath;
+    loadMusicFile(m_main);
+}
+
+void KNLibBass::loadPreview(const QString &filePath)
+{
+    m_preview.filePath=filePath;
+    loadMusicFile(m_preview);
 }
 
 quint32 KNLibBass::duration() const
 {
-    return m_duration;
+    return m_main.duration;
+}
+
+quint32 KNLibBass::previewDuration() const
+{
+    return m_preview.duration;
 }
 
 void KNLibBass::play()
 {
-    m_positionUpdater->start();
-    BASS_ChannelPlay(m_channel, FALSE);
+    m_main.positionUpdater->start();
+    BASS_ChannelPlay(m_main.channel, FALSE);
+}
+
+void KNLibBass::playPreview()
+{
+    float mainVolume;
+    BASS_ChannelGetAttribute(m_main.channel,
+                             BASS_ATTRIB_VOL,
+                             &mainVolume);
+    m_originalVolume=mainVolume;
+    if(m_originalVolume>0.1)
+    {
+        BASS_ChannelSetAttribute(m_preview.channel,
+                                 BASS_ATTRIB_VOL,
+                                 m_originalVolume);
+        BASS_ChannelSetAttribute(m_main.channel,
+                                 BASS_ATTRIB_VOL,
+                                 m_originalVolume/8);
+    }
+    else
+    {
+        m_originalVolume=-1;
+    }
+    m_preview.positionUpdater->start();
+    BASS_ChannelPlay(m_preview.channel, FALSE);
+}
+
+void KNLibBass::stop()
+{
+    BASS_ChannelStop(m_main.channel);
+    m_main.positionUpdater->stop();
+}
+
+void KNLibBass::stopPreview()
+{
+    BASS_ChannelStop(m_preview.channel);
+    if(m_originalVolume>0)
+    {
+        BASS_ChannelSetAttribute(m_main.channel,
+                                 BASS_ATTRIB_VOL,
+                                 m_originalVolume);
+        m_originalVolume=-1;
+    }
+    m_preview.positionUpdater->stop();
+}
+
+void KNLibBass::pausePreview()
+{
+    BASS_ChannelPause(m_preview.channel);
+    if(m_originalVolume>0)
+    {
+        BASS_ChannelSetAttribute(m_main.channel,
+                                 BASS_ATTRIB_VOL,
+                                 m_originalVolume);
+        m_originalVolume=-1;
+    }
+    m_main.positionUpdater->stop();
 }
 
 int KNLibBass::volume() const
@@ -97,9 +157,43 @@ void KNLibBass::setVolume(const int &volumeSize)
 
 void KNLibBass::setPosition(const int &secondPosition)
 {
-    BASS_ChannelSetPosition(m_channel,
-                            BASS_ChannelSeconds2Bytes(m_channel, secondPosition),
+    BASS_ChannelSetPosition(m_main.channel,
+                            BASS_ChannelSeconds2Bytes(m_main.channel, secondPosition),
                             BASS_POS_BYTE);
+}
+
+void KNLibBass::setPreviewPosition(const int &secondPosition)
+{
+    BASS_ChannelSetPosition(m_preview.channel,
+                            BASS_ChannelSeconds2Bytes(m_preview.channel, secondPosition),
+                            BASS_POS_BYTE);
+}
+
+void KNLibBass::loadMusicFile(MusicThread &musicThread)
+{
+    //Free the main stream
+    BASS_MusicFree(musicThread.channel);
+    BASS_StreamFree(musicThread.channel);
+    //Load the file.
+#ifdef Q_OS_WIN32
+    std::wstring uniPath=musicThread.filePath.toStdWString();
+    if(!(musicThread.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|m_floatable))
+       && !(musicThread.channel=BASS_MusicLoad(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|BASS_MUSIC_RAMPS|m_floatable,1)))
+#endif
+#ifdef Q_OS_MACX
+    std::string uniPath=musicThread.filePath.toStdString();
+    if(!(musicThread.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|m_floatable))
+       && !(musicThread.channel=BASS_MusicLoad(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_MUSIC_RAMPS|m_floatable,1)))
+#endif
+    {
+        qDebug()<<"Can't play the file.";
+        return;
+    }
+    //Get the channel information.
+    BASS_ChannelGetInfo(musicThread.channel,&musicThread.channelInfo);
+    //Get the byte duration.
+    musicThread.byteDuration=BASS_ChannelGetLength(musicThread.channel, BASS_POS_BYTE);
+    musicThread.duration=BASS_ChannelBytes2Seconds(musicThread.channel, musicThread.byteDuration);
 }
 
 void KNLibBass::loadPlugins()
@@ -110,16 +204,20 @@ void KNLibBass::loadPlugins()
     while(!pluginList.isEmpty())
     {
         QFileInfo currentInfo=pluginList.takeFirst();
-        //For Windows, the plugin suffix is dll. load all dll files.
-        if(currentInfo.isFile() && currentInfo.suffix().toLower()=="dll")
+        if(currentInfo.isFile() && currentInfo.suffix().toLower()==m_dylinkSuffix)
         {
             HPLUGIN plug;
             //If we can load the plugin, output the data.
+#ifdef Q_OS_WIN32
             if(plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toStdWString().data(), 0))
+#endif
+#ifdef Q_OS_MACX
+            if(plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toLocal8Bit().data(), 0))
+#endif
             {
                 const BASS_PLUGININFO *pinfo=BASS_PluginGetInfo(plug);
                 //formatc -> Format count
-                for(int i=0; i<pinfo->formatc; i++)
+                for(DWORD i=0; i<pinfo->formatc; i++)
                 {
                     qDebug()<<pinfo->formats[i].exts;
                 }

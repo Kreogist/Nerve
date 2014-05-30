@@ -12,13 +12,12 @@ win32{
 
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
+    LIBS += /usr/lib/libbass.dylib
 }
 
 unix{
     LIBS += -ldl
 }
-
-include(../QtAV/src/libQtAV.pri)
 
 SOURCES += \
     main.cpp \

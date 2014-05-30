@@ -1,7 +1,5 @@
 #include <QDebug>
 
-#include "../../Public/bass/knlibbass.h"
-
 #include "knmusicplayer.h"
 
 KNMusicPlayer::KNMusicPlayer(QObject *parent) :
@@ -21,29 +19,17 @@ void KNMusicPlayer::playFile(const QString &fileName)
     m_player->play();
 }
 
-void KNMusicPlayer::setVolume(const int &volume)
+void KNMusicPlayer::setVolume(const float &volume)
 {
     m_player->setVolume(volume);
+}
+
+KNLibBass *KNMusicPlayer::backend()
+{
+    return m_player;
 }
 
 int KNMusicPlayer::volume() const
 {
     return m_player->volume();
-}
-
-void KNMusicPlayer::halfVolume()
-{
-    m_originalVolume=volume();
-    int previewVolume=m_originalVolume>>3;
-    m_player->setVolume(previewVolume==0?1:previewVolume);
-}
-
-void KNMusicPlayer::restoreHalfVolume()
-{
-    if(m_originalVolume==-1)
-    {
-        return;
-    }
-    m_player->setVolume(m_originalVolume);
-    m_originalVolume=-1;
 }

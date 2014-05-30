@@ -163,6 +163,11 @@ void KNMusicAlbumSongDetail::resetSongState()
     m_albumSongs->resizeHeader();
 }
 
+void KNMusicAlbumSongDetail::setMusicBackend(KNLibBass *backend)
+{
+    m_albumSongs->setMusicBackend(backend);
+}
+
 void KNMusicAlbumSongDetail::setSourceModel(KNMusicModel *model)
 {
     m_albumSongs->setSourceModel(model);
@@ -322,6 +327,11 @@ void KNMusicAlbumDetail::resetSongState()
 void KNMusicAlbumDetail::disableArtworkExpand()
 {
     m_albumArtExpanding=false;
+}
+
+void KNMusicAlbumDetail::setMusicBackend(KNLibBass *backend)
+{
+    m_songPanel->setMusicBackend(backend);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -1044,6 +1054,11 @@ void KNMusicAlbumView::resetHeader()
 void KNMusicAlbumView::setSourceModel(KNMusicModel *model)
 {
     m_albumDetail->setSourceModel(model);
+}
+
+void KNMusicAlbumView::setMusicBackend(KNLibBass *backend)
+{
+    m_albumDetail->setMusicBackend(backend);
 }
 
 void KNMusicAlbumView::setFilterFixedString(const QString &text)

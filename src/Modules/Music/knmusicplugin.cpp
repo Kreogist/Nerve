@@ -41,12 +41,9 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
+    m_musicViewer->setMusicBackend(m_musicPlayer->backend());
     connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
             this, &KNMusicPlugin::onActionPlay);
-    connect(m_musicViewer, &KNMusicViewer::requireHalfVolume,
-            m_musicPlayer, &KNMusicPlayer::halfVolume);
-    connect(m_musicViewer, &KNMusicViewer::requireRestoreHalfVolume,
-            m_musicPlayer, &KNMusicPlayer::restoreHalfVolume);
 
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
     m_headerWidget->setMusicModel(m_model);

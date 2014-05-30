@@ -17,13 +17,15 @@ class QMouseEvent;
 class QBoxLayout;
 class KNMusicModel;
 class KNPlayerProgress;
-//class KNLibBass;
+class KNLibBass;
 class KNMusicDetailTooltipPlay : public QLabel
 {
     Q_OBJECT
 public:
     explicit KNMusicDetailTooltipPlay(QWidget *parent = 0);
     void reset();
+    bool isPaused() const;
+    void setState(const bool &shownPlay);
 
 signals:
     void requirePause();
@@ -48,6 +50,7 @@ public:
     void setMusicModel(KNMusicModel *model);
     void showTooltip();
     void forceQuit();
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireHalfVolume();
@@ -87,7 +90,7 @@ private:
     int m_currentRow=-1;
     bool m_sliderPressed=false;
     KNMusicModel *m_musicModel;
-    //KNLibBass *m_preview;
+    KNLibBass *m_preview;
     KNPlayerProgress *m_playerStatus;
     KNMusicDetailTooltipPlay *m_control;
     QTimeLine *m_mouseIn, *m_mouseOut;

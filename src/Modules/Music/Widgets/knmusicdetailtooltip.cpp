@@ -33,6 +33,24 @@ void KNMusicDetailTooltipPlay::reset()
     m_isButtonPlay=true;
 }
 
+bool KNMusicDetailTooltipPlay::isPaused() const
+{
+    return m_isButtonPlay;
+}
+
+void KNMusicDetailTooltipPlay::setState(const bool &shownPlay)
+{
+    if(shownPlay)
+    {
+        reset();
+    }
+    else
+    {
+        setPixmap(m_pause);
+        m_isButtonPlay=false;
+    }
+}
+
 void KNMusicDetailTooltipPlay::mouseReleaseEvent(QMouseEvent *event)
 {
     QLabel::mouseReleaseEvent(event);
@@ -66,9 +84,6 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     connect(m_tooltipDisapper, SIGNAL(timeout()),
             this, SLOT(onActionHide()));
 
-    //m_preview=new KNLibQtAV;
-//    m_preview->moveToThread(&m_playerThread);
-
     m_mainLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                 this);
     m_mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -101,23 +116,15 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     previewPlayer->setContentsMargins(0,0,0,0);
     m_control=new KNMusicDetailTooltipPlay(this);
     previewPlayer->addWidget(m_control);
-//    connect(m_control, SIGNAL(requirePlay()),
-//            m_preview, SLOT(play()));
     connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
             this, &KNMusicDetailTooltip::requireHalfVolume);
-//    connect(m_control, &KNMusicDetailTooltipPlay::requirePause,
-//            m_preview, &KNLibQtAV::pause);
     connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
             this, &KNMusicDetailTooltip::requireRestoreHalfVolume);
     m_playerStatus=new KNPlayerProgress(this);
-//    connect(m_preview, &KNLibQtAV::positionChanged,
-//            this, &KNMusicDetailTooltip::onActionPositionChanged);
-//    connect(m_preview, &KNLibQtAV::stopped,
-//            this, &KNMusicDetailTooltip::requireRestoreHalfVolume);
-    /*connect(m_playerStatus, &QSlider::sliderReleased,
+    connect(m_playerStatus, &KNPlayerProgress::sliderReleased,
             this, &KNMusicDetailTooltip::onActionSliderReleased);
-    connect(m_playerStatus, &QSlider::sliderPressed,
-            this, &KNMusicDetailTooltip::onActionSliderPressed);*/
+    connect(m_playerStatus, &KNPlayerProgress::sliderPressed,
+            this, &KNMusicDetailTooltip::onActionSliderPressed);
     m_playerStatus->setMinimumWidth(400);
     previewPlayer->addWidget(m_playerStatus, 1);
     m_mainLayout->addLayout(previewPlayer);
@@ -189,11 +196,20 @@ void KNMusicDetailTooltip::showTooltip()
 
 void KNMusicDetailTooltip::forceQuit()
 {
-//    m_preview->stop();
+    m_preview->stopPreview();
     m_tooltipDisapper->stop();
-//    disconnect(m_preview, &KNLibQtAV::stopped,
-//               this, &KNMusicDetailTooltip::requireRestoreHalfVolume);
     hide();
+}
+
+void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
+{
+    m_preview=backend;
+    connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
+            m_preview, &KNLibBass::playPreview);
+    connect(m_control, &KNMusicDetailTooltipPlay::requirePause,
+            m_preview, &KNLibBass::pausePreview);
+    connect(m_preview, &KNLibBass::previewPositionChanged,
+            this, &KNMusicDetailTooltip::onActionPositionChanged);
 }
 
 void KNMusicDetailTooltip::retranslate()
@@ -214,9 +230,9 @@ void KNMusicDetailTooltip::enterEvent(QEvent *event)
     m_mouseOut->stop();
     m_mouseIn->setStartFrame(m_background.red());
     m_mouseIn->start();
-//    m_preview->stop();
-//    m_preview->setFilePath(m_filePath);
-//    m_playerStatus->setMaximum(m_preview->duration());
+    m_preview->stopPreview();
+    m_preview->loadPreview(m_filePath);
+    m_playerStatus->setMaximum(m_preview->previewDuration());
 }
 
 void KNMusicDetailTooltip::leaveEvent(QEvent *event)
@@ -231,7 +247,7 @@ void KNMusicDetailTooltip::leaveEvent(QEvent *event)
 void KNMusicDetailTooltip::hideEvent(QHideEvent *event)
 {
     QWidget::hideEvent(event);
-//    m_preview->stop();
+    m_preview->stopPreview();
 }
 
 void KNMusicDetailTooltip::keyPressEvent(QKeyEvent *event)
@@ -261,13 +277,14 @@ void KNMusicDetailTooltip::onActionPositionChanged(qint64 test)
 
 void KNMusicDetailTooltip::onActionSliderReleased()
 {
-//    bool playerPaused=m_preview->isPause();
-//    m_preview->pause();
-//    m_preview->setPosition(m_playerStatus->value());
-//    if(!playerPaused)
-//    {
-//        m_preview->play();
-//    }
+    m_sliderPressed=false;
+    m_preview->pausePreview();
+    m_preview->setPreviewPosition(m_playerStatus->value());
+    if(!m_control->isPaused())
+    {
+        m_preview->playPreview();
+        m_control->setState(false);
+    }
 }
 
 void KNMusicDetailTooltip::onActionSliderPressed()

@@ -12,12 +12,12 @@ class QPropertyAnimation;
 class QResizeEvent;
 class QParallelAnimationGroup;
 class QTimeLine;
+class KNLibBass;
 class KNMusicModel;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
 class KNMusicCategorySortFilterModel;
-
 class KNMusicRightShadow : public QWidget
 {
     Q_OBJECT
@@ -69,6 +69,7 @@ public:
     void selectItem(const QModelIndex &index);
     void resetHeader();
     void resetSongState();
+    void setMusicBackend(KNLibBass *backend);
     void setSourceModel(KNMusicModel *model);
 
 signals:
@@ -107,6 +108,7 @@ public:
     void resetHeader();
     void resetSongState();
     void disableArtworkExpand();
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -164,6 +166,7 @@ public:
     void setGridMinimumWidth(int gridMinimumWidth);
     void resetHeader();
     void setSourceModel(KNMusicModel *model);
+    void setMusicBackend(KNLibBass *backend);
     void setFilterFixedString(const QString &text);
 
 signals:

@@ -127,6 +127,11 @@ void KNMusicListViewBase::setSourceModel(KNMusicModel *musicModel)
     m_musicDetailTooltip->setMusicModel(musicModel);
 }
 
+void KNMusicListViewBase::setMusicBackend(KNLibBass *backend)
+{
+    m_musicDetailTooltip->setMusicBackend(backend);
+}
+
 void KNMusicListViewBase::retranslate()
 {
     ;
