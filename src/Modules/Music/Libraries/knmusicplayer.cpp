@@ -19,6 +19,11 @@ void KNMusicPlayer::playFile(const QString &fileName)
     m_player->play();
 }
 
+void KNMusicPlayer::setPosition(const int &position)
+{
+    m_player->setPosition(position);
+}
+
 void KNMusicPlayer::setVolume(const float &volume)
 {
     m_player->setVolume(volume);
@@ -27,6 +32,11 @@ void KNMusicPlayer::setVolume(const float &volume)
 KNLibBass *KNMusicPlayer::backend()
 {
     return m_player;
+}
+
+void KNMusicPlayer::getGraphicData(float *fftData)
+{
+    m_player->getFFTData(fftData);
 }
 
 int KNMusicPlayer::volume() const

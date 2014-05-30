@@ -53,6 +53,8 @@ KNLibBass::KNLibBass(QObject *parent) :
     }
     //Load Plugins
     loadPlugins();
+    //Load EQ
+    loadEQ();
 }
 
 KNLibBass::~KNLibBass()
@@ -73,6 +75,11 @@ void KNLibBass::loadPreview(const QString &filePath)
     loadMusicFile(m_preview);
 }
 
+QString KNLibBass::eqFrequencyTitle(const int &index)
+{
+    return m_eqTitle[index];
+}
+
 quint32 KNLibBass::duration() const
 {
     return m_main.duration;
@@ -86,6 +93,7 @@ quint32 KNLibBass::previewDuration() const
 void KNLibBass::play()
 {
     m_main.positionUpdater->start();
+    loadEQ();
     BASS_ChannelPlay(m_main.channel, FALSE);
 }
 
@@ -145,6 +153,13 @@ void KNLibBass::pausePreview()
     m_main.positionUpdater->stop();
 }
 
+void KNLibBass::getFFTData(float *fftData)
+{
+    BASS_ChannelGetData(m_main.channel,
+                        fftData,
+                        BASS_DATA_FFT2048);
+}
+
 int KNLibBass::volume() const
 {
     return BASS_GetVolume();
@@ -167,6 +182,14 @@ void KNLibBass::setPreviewPosition(const int &secondPosition)
     BASS_ChannelSetPosition(m_preview.channel,
                             BASS_ChannelSeconds2Bytes(m_preview.channel, secondPosition),
                             BASS_POS_BYTE);
+}
+
+void KNLibBass::setEqualizerParam(const int &index, const int &value)
+{
+    BASS_DX8_PARAMEQ equalizerParam;
+    BASS_FXGetParameters(m_equalizer[index], &equalizerParam);
+    equalizerParam.fGain=value;
+    BASS_FXSetParameters(m_equalizer[index], &equalizerParam);
 }
 
 void KNLibBass::loadMusicFile(MusicThread &musicThread)
@@ -219,9 +242,24 @@ void KNLibBass::loadPlugins()
                 //formatc -> Format count
                 for(DWORD i=0; i<pinfo->formatc; i++)
                 {
-                    qDebug()<<pinfo->formats[i].exts;
+                    //qDebug()<<pinfo->formats[i].exts;
                 }
             }
         }
+    }
+}
+
+void KNLibBass::loadEQ()
+{
+    BASS_DX8_PARAMEQ equalizerParams;
+    equalizerParams.fGain=0;
+    for(int i=0; i<EqualizerCount; i++)
+    {
+        m_equalizer[i]=BASS_ChannelSetFX(m_main.channel,
+                                         BASS_FX_DX8_PARAMEQ,
+                                         0);
+        equalizerParams.fCenter=m_eqFrequency[i];
+        equalizerParams.fBandwidth=m_eqBandWidth[i];
+        BASS_FXSetParameters(m_equalizer[i], &equalizerParams);
     }
 }

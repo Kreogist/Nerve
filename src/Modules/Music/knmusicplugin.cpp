@@ -18,6 +18,7 @@
 #include "Widgets/knmusicheaderwidget.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
+#include "Widgets/knmusiceq.h"
 
 #include "knmusicplugin.h"
 
@@ -26,6 +27,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 {
     m_musicPlayer=new KNMusicPlayer;
     m_musicPlayer->moveToThread(&m_playerThread);
+
+//    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
 
     m_global=KNGlobal::instance();
     m_musicAlbumArt=QDir::toNativeSeparators(m_global->databaseFolder()+"/AlbumArt/");
@@ -119,6 +122,7 @@ void KNMusicPlugin::applyPlugin()
                             QPixmap(),
                             m_musicViewer);
     emit requireAddHeader(m_headerWidget);
+//    m_equalizer->show();
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,

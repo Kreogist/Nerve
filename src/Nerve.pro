@@ -109,7 +109,9 @@ SOURCES += \
     Modules/Music/Libraries/knmusicplayer.cpp \
     Modules/Music/Widgets/knmusicheaderplayer.cpp \
     Modules/Base/knplayerprogress.cpp \
-    Modules/Public/bass/knlibbass.cpp
+    Modules/Public/bass/knlibbass.cpp \
+    Modules/Music/Widgets/knmusiceq.cpp \
+    Modules/Music/Widgets/knmusicvisualeffect.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -224,7 +226,9 @@ HEADERS += \
     Modules/Public/bass/dsp.h \
     Modules/Public/bass/knlibbass.h \
     Modules/Public/bass/reverse.h \
-    Modules/Public/bass/tempo.h
+    Modules/Public/bass/tempo.h \
+    Modules/Music/Widgets/knmusiceq.h \
+    Modules/Music/Widgets/knmusicvisualeffect.h
 
 RESOURCES += \
     res.qrc

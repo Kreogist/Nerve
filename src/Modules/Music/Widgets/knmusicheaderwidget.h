@@ -4,6 +4,7 @@
 #include "../../Base/knstdlibheaderwidget.h"
 
 class QBoxLayout;
+class QResizeEvent;
 class KNMusicModel;
 class KNMusicPlayer;
 class KNSearchBox;
@@ -27,8 +28,12 @@ public slots:
     void clearSearch();
     void onActionPlayMusic(const QModelIndex &index);
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 private:
     QBoxLayout *m_mainLayout;
+    QWidget *m_visualEffect;
     KNSearchBox *m_searchBox;
     KNMusicModel *m_musicModel;
     KNMusicHeaderPlayer *m_headerPlayer;

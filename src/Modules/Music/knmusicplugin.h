@@ -18,6 +18,7 @@ class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
 class KNMusicFilter;
 class KNMusicViewerMenu;
+class KNMusicEQ;
 class KNMusicDetailInfo;
 class KNMusicPlugin : public KNPluginBase
 {
@@ -53,6 +54,7 @@ private:
     KNMusicDetailInfo *m_detailsDialog;
     KNMusicDatabase *m_database;
     KNMusicPlayer *m_musicPlayer;
+    KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
 
     QThread m_searcherThread,

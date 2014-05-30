@@ -3,6 +3,7 @@
 
 #include <QDebug>
 
+#include "knmusicvisualeffect.h"
 #include "../Libraries/knmusicplayer.h"
 #include "../../Base/knplayerprogress.h"
 
@@ -11,7 +12,8 @@
 KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QWidget(parent)
 {
-    setContentsMargins(0,0,0,0);
+    m_visualEffect=new KNMusicVisualEffect;
+    m_visualEffect->resize(368, 70);
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                                 this);
     albumArtLayout->setContentsMargins(0,0,0,0);
@@ -37,8 +39,20 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 
     m_progress=new KNPlayerProgress(this);
     m_progress->setFixedWidth(400);
+    connect(m_progress, &KNPlayerProgress::sliderPressed,
+            [=]{m_sliderPressed=true;});
+    connect(m_progress, &KNPlayerProgress::sliderReleased,
+            [=]{
+                    m_sliderPressed=false;
+                    m_player->setPosition(m_progress->value());
+               });
     detailsArtLayout->addWidget(m_progress);
     albumArtLayout->addLayout(detailsArtLayout);
+}
+
+QWidget *KNMusicHeaderPlayer::visualEffect()
+{
+    return m_visualEffect;
 }
 
 void KNMusicHeaderPlayer::setAlbumArt(const QPixmap &albumArt)
@@ -75,6 +89,12 @@ void KNMusicHeaderPlayer::playFile(const QString &filePath)
 
 void KNMusicHeaderPlayer::onActionPositonChanged(const int &position)
 {
+    m_player->getGraphicData(m_visualEffect->fftData());
+    m_visualEffect->update();
+    if(m_sliderPressed)
+    {
+        return;
+    }
     m_progress->setValue(position);
 }
 
