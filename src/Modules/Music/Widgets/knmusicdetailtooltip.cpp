@@ -78,7 +78,7 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     setPalette(m_palette);
 
     setWindowFlags(Qt::ToolTip);
-    m_tooltipDisapper=new QTimer(this);
+    m_tooltipDisapper=new QTimer;
     m_tooltipDisapper->setSingleShot(true);
     m_tooltipDisapper->setInterval(1500);
     connect(m_tooltipDisapper, SIGNAL(timeout()),
@@ -141,15 +141,11 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     m_mouseOut->setEndFrame(0x28);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicDetailTooltip::onActionChangeBackground);
-
-//    m_playerThread.start();
 }
 
 KNMusicDetailTooltip::~KNMusicDetailTooltip()
 {
-//    m_playerThread.quit();
-//    m_playerThread.wait();
-//    m_preview->deleteLater();
+    m_tooltipDisapper->deleteLater();
 }
 
 void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,

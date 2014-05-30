@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QModelIndex>
-#include <QThread>
 #include <QLabel>
 
 class QHideEvent;
@@ -96,7 +95,6 @@ private:
     QTimeLine *m_mouseIn, *m_mouseOut;
     QColor m_background;
     QPalette m_palette;
-    QThread m_playerThread;
 };
 
 #endif // KNMUSICDETAILTOOLTIP_H

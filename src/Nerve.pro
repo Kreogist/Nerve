@@ -4,7 +4,7 @@ QT += core\
       gui\
       widgets
 
-CONFIG += c++11 sse2
+CONFIG += c++11 sse2 mmx
 
 win32{
     LIBS += -lbass

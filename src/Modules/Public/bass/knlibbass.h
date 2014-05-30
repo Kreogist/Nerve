@@ -34,6 +34,7 @@
 #include "win32/tempo.h"
 #endif
 
+#ifdef Q_OS_MACX
 #include "macosx/bass.h"
 #include "macosx/bass_ac3.h"
 #include "macosx/bass_ape.h"
@@ -47,6 +48,7 @@
 #include "macosx/bassmix.h"
 #include "macosx/bassopus.h"
 #include "macosx/basswv.h"
+#endif
 
 class KNLibBass : public QObject
 {
