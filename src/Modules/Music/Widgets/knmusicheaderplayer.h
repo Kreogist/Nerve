@@ -4,9 +4,11 @@
 #include <QWidget>
 
 class QLabel;
+class QPropertyAnimation;
 class KNPlayerProgress;
 class KNMusicPlayer;
 class KNMusicVisualEffect;
+class KNMusicPlayerControl;
 class KNMusicHeaderPlayer : public QWidget
 {
     Q_OBJECT
@@ -23,10 +25,16 @@ signals:
 
 public slots:
 
+protected:
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
+    void resizeEvent(QResizeEvent *event);
+
 private slots:
     void onActionPositonChanged(const int &position);
     void onActionDurationChanged(const int &duration);
     void onActionReachEndOfMusic();
+    void onActionMouseInOut(const QVariant &controlPos);
 
 private:
     void resetPosition();
@@ -34,6 +42,8 @@ private:
     KNPlayerProgress *m_progress;
     QPalette m_textPalette;
     KNMusicPlayer *m_player;
+    KNMusicPlayerControl *m_playerControl;
+    QPropertyAnimation *m_mouseIn, *m_mouseOut;
     bool m_sliderPressed=false;
     KNMusicVisualEffect *m_visualEffect;
 };

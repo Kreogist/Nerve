@@ -17,8 +17,8 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     setLayout(m_mainLayout);
 
     m_headerPlayer=new KNMusicHeaderPlayer(this);
-    m_visualEffect=m_headerPlayer->visualEffect();
-    m_visualEffect->setParent(this);
+//    m_visualEffect=m_headerPlayer->visualEffect();
+//    m_visualEffect->setParent(this);
     m_mainLayout->addWidget(m_headerPlayer, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     m_searchBox=new KNSearchBox(this);
@@ -30,7 +30,7 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
             this, &KNMusicHeaderWidget::requireLostFocus);
     m_mainLayout->addWidget(m_searchBox, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    m_visualEffect->lower();
+//    m_visualEffect->lower();
 }
 
 void KNMusicHeaderWidget::setMusicModel(KNMusicModel *model)
@@ -75,6 +75,6 @@ void KNMusicHeaderWidget::onActionPlayMusic(const QModelIndex &index)
 void KNMusicHeaderWidget::resizeEvent(QResizeEvent *event)
 {
     KNStdLibHeaderWidget::resizeEvent(event);
-    m_visualEffect->move(m_searchBox->x()-m_visualEffect->width(),
-                         0);
+//    m_visualEffect->move(m_searchBox->x()-m_visualEffect->width(),
+//                         0);
 }

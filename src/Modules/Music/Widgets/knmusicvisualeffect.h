@@ -18,7 +18,10 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
+    float qsqrt(const float &number);
     float m_fft[1024]={0};
+    QColor m_itemColor=QColor(100,100,100);
+    QImage m_cache;
 };
 
 #endif // KNMUSICVISUALEFFECT_H

@@ -140,6 +140,12 @@ void KNLibBass::stopPreview()
     m_preview.positionUpdater->stop();
 }
 
+void KNLibBass::pause()
+{
+    BASS_ChannelPause(m_main.channel);
+    m_main.positionUpdater->stop();
+}
+
 void KNLibBass::pausePreview()
 {
     BASS_ChannelPause(m_preview.channel);
@@ -150,7 +156,7 @@ void KNLibBass::pausePreview()
                                  m_originalVolume);
         m_originalVolume=-1;
     }
-    m_main.positionUpdater->stop();
+    m_preview.positionUpdater->stop();
 }
 
 void KNLibBass::getFFTData(float *fftData)
@@ -184,7 +190,7 @@ void KNLibBass::setPreviewPosition(const int &secondPosition)
                             BASS_POS_BYTE);
 }
 
-void KNLibBass::setEqualizerParam(const int &index, const int &value)
+void KNLibBass::setEqualizerParam(const int &index, const float &value)
 {
     BASS_DX8_PARAMEQ equalizerParam;
     BASS_FXGetParameters(m_equalizer[index], &equalizerParam);

@@ -5,11 +5,11 @@
 
 #include "../../Public/bass/knlibbass.h"
 
-class QSlider;
 class QSignalMapper;
 class QLabel;
 class QLineEdit;
 class KNLibBass;
+class KNMusicEQSlider;
 class KNMusicEQ : public QWidget
 {
     Q_OBJECT
@@ -29,7 +29,8 @@ private:
     KNLibBass *m_bassBackend;
     QSignalMapper *m_tuneRelease, *m_textChange;
     QLineEdit *m_equalizerEdit[KNLibBass::EqualizerCount];
-    QSlider *m_equalizerTune[KNLibBass::EqualizerCount];
+    KNMusicEQSlider *m_equalizerTune[KNLibBass::EqualizerCount];
+            //*m_range;
     QLabel *m_equalizerCaption[KNLibBass::EqualizerCount];
 };
 

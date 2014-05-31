@@ -56,6 +56,7 @@ class KNLibBass : public QObject
 public:
     enum Equalizer31
     {
+        Hz32,
         Hz63,
         Hz125,
         Hz250,
@@ -78,6 +79,7 @@ public:
     void playPreview();
     void stop();
     void stopPreview();
+    void pause();
     void pausePreview();
     void getFFTData(float *fftData);
     int volume() const;
@@ -91,7 +93,7 @@ public slots:
     void setPosition(const int &secondPosition);
     void setPreviewPosition(const int &secondPosition);
     void setEqualizerParam(const int &index,
-                           const int &value);
+                           const float &value);
 
 private:
     struct MusicThread
@@ -115,13 +117,13 @@ private:
 
     HFX m_equalizer[EqualizerCount];
     float m_eqFrequency[EqualizerCount]={
-        63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
+        32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
     };
     float m_eqBandWidth[EqualizerCount]={
-       62, 188, 312, 688, 1312, 2688, 5312, 10688, 21312
+       31, 62, 188, 312, 688, 1312, 2688, 5312, 10688, 21312
     };
     QString m_eqTitle[EqualizerCount]={
-        "63", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"
+       "32", "63", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"
     };
     MusicThread m_main, m_preview;
     void loadMusicFile(MusicThread &musicThread);

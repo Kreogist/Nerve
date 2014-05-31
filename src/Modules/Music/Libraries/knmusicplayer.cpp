@@ -19,6 +19,16 @@ void KNMusicPlayer::playFile(const QString &fileName)
     m_player->play();
 }
 
+void KNMusicPlayer::play()
+{
+    m_player->play();
+}
+
+void KNMusicPlayer::pause()
+{
+    m_player->pause();
+}
+
 void KNMusicPlayer::setPosition(const int &position)
 {
     m_player->setPosition(position);
