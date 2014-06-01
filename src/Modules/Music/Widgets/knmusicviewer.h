@@ -47,8 +47,6 @@ signals:
     void requirePlayMusic(const QModelIndex &index);
     void requireDelete(const QModelIndex &index);
     void requireClearSearch();
-    void requireHalfVolume();
-    void requireRestoreHalfVolume();
 
 public slots:
     void retranslate();

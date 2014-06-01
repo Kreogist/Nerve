@@ -8,6 +8,7 @@
 class QBoxLayout;
 class QPropertyAnimation;
 class QGraphicsOpacityEffect;
+class KNMusicVolumeSlider;
 class KNMusicPlayerControlButton : public QLabel
 {
     Q_OBJECT
@@ -37,12 +38,14 @@ class KNMusicPlayerControl : public QWidget
 public:
     explicit KNMusicPlayerControl(QWidget *parent = 0);
     void showPlaying(bool showned);
+    void setVolume(const float &value);
 
 signals:
     void requirePlay();
     void requirePause();
     void requirePrev();
     void requireNext();
+    void requireChangeVolume(const float &value);
 
 public slots:
 
@@ -51,6 +54,7 @@ private slots:
 
 private:
     KNMusicPlayerControlButton *m_prev, *m_playnpause, *m_next;
+    KNMusicVolumeSlider *m_volume;
     QBoxLayout *m_mainLayout;
     QPixmap m_playButton, m_pauseButton;
     bool m_isShownPlay;

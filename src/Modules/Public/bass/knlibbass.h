@@ -82,14 +82,17 @@ public:
     void pause();
     void pausePreview();
     void getFFTData(float *fftData);
-    int volume() const;
+    float volume() const;
 
 signals:
     void positionChanged(quint32 position);
+    void finished();
+    void stopped();
     void previewPositionChanged(quint32 position);
+    void previewFinished();
 
 public slots:
-    void setVolume(const int &volumeSize);
+    void setVolume(const float &volumeSize);
     void setPosition(const int &secondPosition);
     void setPreviewPosition(const int &secondPosition);
     void setEqualizerParam(const int &index,
@@ -99,6 +102,7 @@ private:
     struct MusicThread
     {
         QString filePath;
+        bool stopped=true;
         DWORD channel;
         DWORD duration;
         BASS_CHANNELINFO channelInfo;

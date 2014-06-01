@@ -28,8 +28,6 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicPlayer=new KNMusicPlayer;
     m_musicPlayer->moveToThread(&m_playerThread);
 
-    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
-
     m_global=KNGlobal::instance();
     m_musicAlbumArt=QDir::toNativeSeparators(m_global->databaseFolder()+"/AlbumArt/");
     m_model=new KNMusicModel;
@@ -59,6 +57,9 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             m_musicViewer, &KNMusicViewer::setContentsFocus);
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,
             m_headerWidget, &KNMusicHeaderWidget::clearSearch);
+
+    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
+    m_equalizer->resize(500, 200);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);

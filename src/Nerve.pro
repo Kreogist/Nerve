@@ -115,7 +115,9 @@ SOURCES += \
     Modules/Music/Widgets/knmusiceqslider.cpp \
     Modules/Music/Widgets/knmusicplayercontrol.cpp \
     Modules/Base/knlabeleditor.cpp \
-    Modules/Base/knabstractslider.cpp
+    Modules/Base/knabstractslider.cpp \
+    Modules/Music/Libraries/knmusicplaylist.cpp \
+    Modules/Music/Widgets/knmusicvolumeslider.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -236,7 +238,9 @@ HEADERS += \
     Modules/Music/Widgets/knmusiceqslider.h \
     Modules/Music/Widgets/knmusicplayercontrol.h \
     Modules/Base/knlabeleditor.h \
-    Modules/Base/knabstractslider.h
+    Modules/Base/knabstractslider.h \
+    Modules/Music/Libraries/knmusicplaylist.h \
+    Modules/Music/Widgets/knmusicvolumeslider.h
 
 RESOURCES += \
     res.qrc

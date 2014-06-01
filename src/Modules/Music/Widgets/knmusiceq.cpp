@@ -11,6 +11,8 @@
 KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
     QWidget(parent)
 {
+    setAutoFillBackground(true);
+
     //Backup the KNLibBass pointer.
     m_bassBackend=backend;
 

@@ -50,10 +50,9 @@ public:
     void showTooltip();
     void forceQuit();
     void setMusicBackend(KNLibBass *backend);
+    void resetPlayStatus();
 
 signals:
-    void requireHalfVolume();
-    void requireRestoreHalfVolume();
 
 public slots:
     void retranslate();
@@ -71,6 +70,7 @@ private slots:
     void onActionSliderReleased();
     void onActionSliderPressed();
     void onActionChangeBackground(const int &colorParam);
+    void onActionPreviewFinished();
 
 private:
     enum ToolTipItems

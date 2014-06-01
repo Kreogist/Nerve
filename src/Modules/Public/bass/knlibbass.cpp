@@ -12,15 +12,28 @@ KNLibBass::KNLibBass(QObject *parent) :
 {
     //Connect the signals.
     connect(m_main.positionUpdater, &QTimer::timeout,
-            [=]{emit positionChanged(
+            [=]{quint32 currentPos=
                     BASS_ChannelBytes2Seconds(m_main.channel,
-                                              BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE)));
-    });
+                                              BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE));
+                emit positionChanged(currentPos);
+                if(currentPos==m_main.duration)
+                {
+                    stop();
+                    m_main.stopped=true;
+                    emit finished();
+                }
+                });
     connect(m_preview.positionUpdater, &QTimer::timeout,
-            [=]{emit previewPositionChanged(
-                    BASS_ChannelBytes2Seconds(m_preview.channel,
-                                              BASS_ChannelGetPosition(m_preview.channel,BASS_POS_BYTE)));
-    });
+            [=]{quint32 currentPos=BASS_ChannelBytes2Seconds(m_preview.channel,
+                                                             BASS_ChannelGetPosition(m_preview.channel,BASS_POS_BYTE));
+                emit previewPositionChanged(currentPos);
+                if(currentPos==m_preview.duration)
+                {
+                    stopPreview();
+                    m_preview.stopped=true;
+                    emit previewFinished();
+                }
+                });
 
     //Initial Dymantic Link Library suffix
 #ifdef Q_OS_WIN32
@@ -65,6 +78,7 @@ void KNLibBass::loadMusic(const QString &filePath)
 {
     m_main.filePath=filePath;
     loadMusicFile(m_main);
+    BASS_ChannelFlags(m_main.channel, 0, BASS_SAMPLE_LOOP);
     loadEQ();
 }
 
@@ -72,6 +86,7 @@ void KNLibBass::loadPreview(const QString &filePath)
 {
     m_preview.filePath=filePath;
     loadMusicFile(m_preview);
+    BASS_ChannelFlags(m_preview.channel, 0, BASS_SAMPLE_LOOP);
 }
 
 QString KNLibBass::eqFrequencyTitle(const int &index)
@@ -92,7 +107,15 @@ quint32 KNLibBass::previewDuration() const
 void KNLibBass::play()
 {
     m_main.positionUpdater->start();
-    BASS_ChannelPlay(m_main.channel, FALSE);
+    if(m_main.stopped)
+    {
+        m_main.stopped=false;
+        BASS_ChannelPlay(m_main.channel, TRUE);
+    }
+    else
+    {
+        BASS_ChannelPlay(m_main.channel, FALSE);
+    }
 }
 
 void KNLibBass::playPreview()
@@ -116,13 +139,22 @@ void KNLibBass::playPreview()
         m_originalVolume=-1;
     }
     m_preview.positionUpdater->start();
-    BASS_ChannelPlay(m_preview.channel, FALSE);
+    if(m_preview.stopped)
+    {
+        m_preview.stopped=false;
+        BASS_ChannelPlay(m_preview.channel, TRUE);
+    }
+    else
+    {
+        BASS_ChannelPlay(m_preview.channel, FALSE);
+    }
 }
 
 void KNLibBass::stop()
 {
     BASS_ChannelStop(m_main.channel);
     m_main.positionUpdater->stop();
+    emit stopped();
 }
 
 void KNLibBass::stopPreview()
@@ -164,12 +196,12 @@ void KNLibBass::getFFTData(float *fftData)
                         BASS_DATA_FFT2048);
 }
 
-int KNLibBass::volume() const
+float KNLibBass::volume() const
 {
-    return BASS_GetVolume();
+    return BASS_GetConfig(BASS_CONFIG_GVOL_STREAM);
 }
 
-void KNLibBass::setVolume(const int &volumeSize)
+void KNLibBass::setVolume(const float &volumeSize)
 {
     BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volumeSize);
 }
@@ -263,7 +295,6 @@ void KNLibBass::loadEQ()
                                          BASS_FX_DX8_PARAMEQ,
                                          0);
         equalizerParams.fGain=m_eqGain[i];
-        qDebug()<<m_eqGain[i];
         equalizerParams.fCenter=m_eqFrequency[i];
         equalizerParams.fBandwidth=m_eqBandWidth[i];
         BASS_FXSetParameters(m_equalizer[i], &equalizerParams);

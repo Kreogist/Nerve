@@ -62,10 +62,6 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
 
     m_musicDetailTooltip=new KNMusicDetailTooltip(this);
     m_musicDetailTooltip->installEventFilter(this);
-    connect(m_musicDetailTooltip, &KNMusicDetailTooltip::requireHalfVolume,
-            this, &KNMusicListViewBase::requireHalfVolume);
-    connect(m_musicDetailTooltip, &KNMusicDetailTooltip::requireRestoreHalfVolume,
-            this, &KNMusicListViewBase::requireRestoreHalfVolume);
     connect(this, &KNMusicListViewBase::activated,
             this, &KNMusicListViewBase::onItemActived);
 }

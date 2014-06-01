@@ -57,6 +57,7 @@ private slots:
     void onActionReachEndOfMusic();
     void onActionMouseInOut(const QVariant &controlPos);
     void onActionTimeEdited(const QString &goTime);
+    void onActionCurrentFinished();
 
 private:
     void resetPosition();

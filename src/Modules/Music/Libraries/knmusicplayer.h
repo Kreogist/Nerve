@@ -11,20 +11,22 @@ class KNMusicPlayer : public QObject
 public:
     explicit KNMusicPlayer(QObject *parent = 0);
     void playFile(const QString &fileName);
-    void setPosition(const int &position);
     void setVolume(const float &volume);
     KNLibBass *backend();
     void getGraphicData(float *fftData);
-    int volume() const;
+    float volume() const;
 
 signals:
     void positionChanged(quint32 position);
     void durationChanged(quint32 duration);
+    void finished();
+    void stopped();
     void reachEndOfMusic();
 
 public slots:
     void play();
     void pause();
+    void setPosition(const int &position);
 
 private:
     KNLibBass *m_player;

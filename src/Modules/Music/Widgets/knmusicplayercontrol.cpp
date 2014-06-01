@@ -5,6 +5,8 @@
 
 #include <QDebug>
 
+#include "knmusicvolumeslider.h"
+
 #include "knmusicplayercontrol.h"
 
 KNMusicPlayerControlButton::KNMusicPlayerControlButton(QWidget *parent) :
@@ -98,7 +100,11 @@ KNMusicPlayerControl::KNMusicPlayerControl(QWidget *parent) :
     m_next->setFixedSize(32,32);
     m_next->setPixmap(QPixmap(":/Music/Resources/Music/player/next.png"));
     m_mainLayout->addWidget(m_next);
-    m_mainLayout->addStretch();
+    m_volume=new KNMusicVolumeSlider(this);
+    m_volume->setRange(0, 10000);
+    connect(m_volume, &KNMusicVolumeSlider::valueChanged,
+            this, &KNMusicPlayerControl::requireChangeVolume);
+    m_mainLayout->addWidget(m_volume, 1);
     connect(m_prev, &KNMusicPlayerControlButton::clicked,
             this, &KNMusicPlayerControl::requirePrev);
     connect(m_playnpause, &KNMusicPlayerControlButton::clicked,
@@ -111,6 +117,11 @@ void KNMusicPlayerControl::showPlaying(bool showned)
 {
     m_isShownPlay=showned;
     m_playnpause->setPixmap(m_isShownPlay?m_playButton:m_pauseButton);
+}
+
+void KNMusicPlayerControl::setVolume(const float &value)
+{
+    m_volume->setValue(value);
 }
 
 void KNMusicPlayerControl::onActionPlaynPauseClick()

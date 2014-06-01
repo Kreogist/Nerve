@@ -26,6 +26,13 @@
         <file>Resources/Music/EQs/sliderbutton.png</file>
         <file>Resources/Music/EQs/sliderbasebottom.png</file>
         <file>Resources/Music/EQs/sliderbasetop.png</file>
+        <file>Resources/Music/EQs/hsliderbase.png</file>
+        <file>Resources/Music/EQs/hsliderbaseleft.png</file>
+        <file>Resources/Music/EQs/hsliderbaseright.png</file>
+        <file>Resources/Music/EQs/hsliderbutton.png</file>
+        <file>Resources/Music/EQs/hsliderLeft.png</file>
+        <file>Resources/Music/EQs/hsliderMid.png</file>
+        <file>Resources/Music/EQs/hsliderRight.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

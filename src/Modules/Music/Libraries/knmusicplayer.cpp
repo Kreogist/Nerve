@@ -8,8 +8,12 @@ KNMusicPlayer::KNMusicPlayer(QObject *parent) :
     m_player=new KNLibBass(this);
     connect(m_player, &KNLibBass::positionChanged,
             this, &KNMusicPlayer::positionChanged);
-    /*connect(m_player, &KNLibQtAV::reachEndOfMedia,
-            this, &KNMusicPlayer::reachEndOfMusic);*/
+    connect(m_player, &KNLibBass::finished,
+            this, &KNMusicPlayer::reachEndOfMusic);
+    connect(m_player, &KNLibBass::stopped,
+            this, &KNMusicPlayer::stopped);
+    connect(m_player, &KNLibBass::finished,
+            this, &KNMusicPlayer::finished);
 }
 
 void KNMusicPlayer::playFile(const QString &fileName)
@@ -49,7 +53,7 @@ void KNMusicPlayer::getGraphicData(float *fftData)
     m_player->getFFTData(fftData);
 }
 
-int KNMusicPlayer::volume() const
+float KNMusicPlayer::volume() const
 {
     return m_player->volume();
 }

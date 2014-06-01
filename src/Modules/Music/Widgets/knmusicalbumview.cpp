@@ -120,10 +120,6 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
             this, &KNMusicAlbumSongDetail::requireOpenUrl);
     connect(m_albumSongs, &KNMusicAlbumSongListView::requireShowContextMenu,
             this, &KNMusicAlbumSongDetail::requireShowContextMenu);
-    connect(m_albumSongs, &KNMusicAlbumSongListView::requireHalfVolume,
-            this, &KNMusicAlbumSongDetail::requireHalfVolume);
-    connect(m_albumSongs, &KNMusicAlbumSongListView::requireRestoreHalfVolume,
-            this, &KNMusicAlbumSongDetail::requireRestoreHalfVolume);
 }
 
 KNMusicAlbumSongDetail::~KNMusicAlbumSongDetail()
@@ -196,10 +192,6 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     m_songPanel=new KNMusicAlbumSongDetail(this);
     m_leftShadow=new KNMusicLeftShadow(this);
     //m_leftShadow->setVisible(false);
-    connect(m_songPanel, &KNMusicAlbumSongDetail::requireHalfVolume,
-            this, &KNMusicAlbumDetail::requireHalfVolume);
-    connect(m_songPanel, &KNMusicAlbumSongDetail::requireRestoreHalfVolume,
-            this, &KNMusicAlbumDetail::requireRestoreHalfVolume);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
             this, &KNMusicAlbumDetail::requireOpenUrl);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
@@ -483,10 +475,6 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
 
     m_albumDetail=new KNMusicAlbumDetail(this);
     m_albumDetail->hide();
-    connect(m_albumDetail, &KNMusicAlbumDetail::requireHalfVolume,
-            this, &KNMusicAlbumView::requireHalfVolume);
-    connect(m_albumDetail, &KNMusicAlbumDetail::requireRestoreHalfVolume,
-            this, &KNMusicAlbumView::requireRestoreHalfVolume);
     connect(m_albumDetail, &KNMusicAlbumDetail::requireOpenUrl,
             this, &KNMusicAlbumView::requireOpenUrl);
     connect(m_albumDetail, &KNMusicAlbumDetail::requireShowContextMenu,

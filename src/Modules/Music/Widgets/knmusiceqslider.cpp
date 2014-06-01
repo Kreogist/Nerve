@@ -17,7 +17,7 @@ KNMusicEQSlider::KNMusicEQSlider(QWidget *parent) :
     setMinimumWidth(m_sliderButton.width());
     m_topRange=m_sliderBase.height();
     m_topMargin=m_sliderBaseTop.height();
-    m_bottomMargin=m_sliderBase.height()+m_sliderBaseTop.height();
+    m_bottomMargin=m_sliderBase.height()+m_topMargin;
     m_mouseRange=m_bottomMargin-m_topMargin;
     connect(this, &KNAbstractSlider::rangeChanged,
             [=]

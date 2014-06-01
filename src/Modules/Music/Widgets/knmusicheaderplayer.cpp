@@ -127,10 +127,15 @@ void KNMusicHeaderPlayer::setPlayer(KNMusicPlayer *player)
             this, &KNMusicHeaderPlayer::onActionPositonChanged);
     connect(m_player, &KNMusicPlayer::durationChanged,
             this, &KNMusicHeaderPlayer::onActionDurationChanged);
+    connect(m_player, &KNMusicPlayer::finished,
+            this, &KNMusicHeaderPlayer::onActionCurrentFinished);
+    m_playerControl->setVolume(m_player->volume());
     connect(m_playerControl, &KNMusicPlayerControl::requirePlay,
             m_player, &KNMusicPlayer::play);
     connect(m_playerControl, &KNMusicPlayerControl::requirePause,
             m_player, &KNMusicPlayer::pause);
+    connect(m_playerControl, &KNMusicPlayerControl::requireChangeVolume,
+            m_player, &KNMusicPlayer::setVolume);
 }
 
 void KNMusicHeaderPlayer::playFile(const QString &filePath)
@@ -222,6 +227,12 @@ void KNMusicHeaderPlayer::onActionTimeEdited(const QString &goTime)
     //If we find colon, set the position to the new time.
     m_player->setPosition(goTime.left(colonPos).toInt()*60+
                           goTime.mid(colonPos+1).toInt());
+}
+
+void KNMusicHeaderPlayer::onActionCurrentFinished()
+{
+    //Should judge the mode of the player.
+    ;
 }
 
 void KNMusicHeaderPlayer::resetPosition()

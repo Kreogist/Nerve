@@ -122,10 +122,6 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     previewPlayer->setContentsMargins(0,0,0,0);
     m_control=new KNMusicDetailTooltipPlay(this);
     previewPlayer->addWidget(m_control);
-    connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
-            this, &KNMusicDetailTooltip::requireHalfVolume);
-    connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
-            this, &KNMusicDetailTooltip::requireRestoreHalfVolume);
     m_playerStatus=new KNPlayerProgress(this);
     connect(m_playerStatus, &KNPlayerProgress::sliderReleased,
             this, &KNMusicDetailTooltip::onActionSliderReleased);
@@ -160,11 +156,9 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
 {
     m_mouseOut->stop();
     m_mouseIn->stop();
-    m_control->reset();
     onActionChangeBackground(0x28);
-    m_playerStatus->setValue(0);
     m_tooltipDisapper->setInterval(1500);
-    m_sliderPressed=false;
+    resetPlayStatus();
     if(m_currentRow==index.row())
     {
         return;
@@ -174,9 +168,17 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
 
     QFileInfo musicFileInfo(m_musicModel->filePathFromIndex(index));
     m_labels[Title]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Name));
+    m_labels[Title]->setToolTip(fontMetrics().width(m_labels[Title]->text())>m_labelContainer->width()?
+                                    m_labels[Title]->text():"");
     m_labels[FileName]->setText(m_inFile.arg(musicFileInfo.fileName()));
+    m_labels[FileName]->setToolTip(fontMetrics().width(m_labels[FileName]->text())>m_labelContainer->width()?
+                                    m_labels[FileName]->text():"");
     m_labels[Time]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Time));
+    m_labels[Time]->setToolTip(fontMetrics().width(m_labels[Time]->text())>m_labelContainer->width()?
+                                    m_labels[Time]->text():"");
     m_labels[Artist]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Artist));
+    m_labels[Artist]->setToolTip(fontMetrics().width(m_labels[Artist]->text())>m_labelContainer->width()?
+                                    m_labels[Artist]->text():"");
 
     m_filePath=m_musicModel->filePathFromIndex(m_currentRow);
     move(bestPosition(point));
@@ -213,6 +215,15 @@ void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
             m_preview, &KNLibBass::pausePreview);
     connect(m_preview, &KNLibBass::previewPositionChanged,
             this, &KNMusicDetailTooltip::onActionPositionChanged);
+    connect(m_preview, &KNLibBass::previewFinished,
+            this, &KNMusicDetailTooltip::onActionPreviewFinished);
+}
+
+void KNMusicDetailTooltip::resetPlayStatus()
+{
+    m_control->reset();
+    m_playerStatus->setValue(0);
+    m_sliderPressed=false;
 }
 
 void KNMusicDetailTooltip::retranslate()
@@ -302,6 +313,11 @@ void KNMusicDetailTooltip::onActionChangeBackground(const int &colorParam)
     int textParam=0x5f+(colorParam<<1);
     m_palette.setColor(QPalette::WindowText, QColor(textParam,textParam,textParam));
     setPalette(m_palette);
+}
+
+void KNMusicDetailTooltip::onActionPreviewFinished()
+{
+    resetPlayStatus();
 }
 
 QPoint KNMusicDetailTooltip::bestPosition(const QPoint &pos)
