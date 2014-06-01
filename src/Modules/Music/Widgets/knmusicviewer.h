@@ -54,8 +54,9 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void resort();
-    void showIn(KNMusicGlobal::MusicCategory category,
+    void showIn(const int &category,
                 const QModelIndex &index);
+    void showInCurrent(const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
     void onActionSearch(const QString &text);
 

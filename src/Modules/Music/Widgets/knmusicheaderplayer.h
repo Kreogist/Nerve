@@ -2,14 +2,33 @@
 #define KNMUSICHEADERPLAYER_H
 
 #include <QWidget>
+#include <QLabel>
 
-class QLabel;
 class QPropertyAnimation;
+class QMouseEvent;
 class KNPlayerProgress;
 class KNLabelEditor;
 class KNMusicPlayer;
 class KNMusicVisualEffect;
 class KNMusicPlayerControl;
+
+class KNMusicHeaderAlbumArt : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit KNMusicHeaderAlbumArt(QWidget *parent = 0);
+
+signals:
+    void requireShowInCurrent();
+
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+
+private:
+    bool m_isPressed;
+};
+
 class KNMusicHeaderPlayer : public QWidget
 {
     Q_OBJECT
@@ -23,6 +42,7 @@ public:
     void playFile(const QString &filePath);
 
 signals:
+    void requireShowInCurrent();
 
 public slots:
 
@@ -40,7 +60,8 @@ private slots:
 
 private:
     void resetPosition();
-    QLabel *m_albumArt, *m_title, *m_artist;
+    KNMusicHeaderAlbumArt *m_albumArt;
+    QLabel *m_title, *m_artist;
     KNPlayerProgress *m_progress;
     QPalette m_textPalette;
     KNMusicPlayer *m_player;

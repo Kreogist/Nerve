@@ -1,6 +1,8 @@
 #ifndef KNMUSICHEADERWIDGET_H
 #define KNMUSICHEADERWIDGET_H
 
+#include <QModelIndex>
+
 #include "../../Base/knstdlibheaderwidget.h"
 
 class QBoxLayout;
@@ -19,6 +21,7 @@ public:
 
 signals:
     void requireSearch(const QString &text);
+    void requireShowInCurrent(const QModelIndex &index);
     void requireLostFocus();
 
 public slots:
@@ -38,6 +41,7 @@ private:
     KNMusicModel *m_musicModel;
     KNMusicHeaderPlayer *m_headerPlayer;
     QString m_searchPlaceHolder;
+    QModelIndex m_currentIndex;
 };
 
 #endif // KNMUSICHEADERWIDGET_H

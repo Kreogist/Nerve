@@ -289,7 +289,7 @@ void KNMusicViewer::resort()
     m_genreSortModel->sort(0);
 }
 
-void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
+void KNMusicViewer::showIn(const int &category,
                            const QModelIndex &index)
 {
     emit requireClearSearch();
@@ -318,6 +318,11 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
         break;
     }
     setCategoryIndex(category);
+}
+
+void KNMusicViewer::showInCurrent(const QModelIndex &index)
+{
+    showIn(categoryIndex(), index);
 }
 
 void KNMusicViewer::deleteMusic(const QModelIndex &index)

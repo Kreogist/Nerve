@@ -2,6 +2,9 @@
 #include <QLineEdit>
 #include <QAction>
 #include <QResizeEvent>
+#include <QKeyEvent>
+
+#include <QDebug>
 
 #include "knlabeleditor.h"
 
@@ -11,13 +14,8 @@ KNLabelEditor::KNLabelEditor(QWidget *parent) :
     m_editor=new QLineEdit(this);
     m_editor->setFrame(false);
     m_editor->setAlignment(Qt::AlignCenter);
+    m_editor->installEventFilter(this);
     m_editor->hide();
-
-    QAction *cancelAction=new QAction(m_editor);
-    cancelAction->setShortcut(QKeySequence(Qt::Key_Escape));
-    connect(cancelAction, SIGNAL(triggered()),
-            this, SLOT(cancelEdited()));
-    m_editor->addAction(cancelAction);
 
     QAction *enterPressed=new QAction(m_editor);
     enterPressed->setShortcut(QKeySequence(Qt::Key_Enter));
@@ -35,6 +33,29 @@ KNLabelEditor::KNLabelEditor(const QString &caption, QWidget *parent) :
     KNLabelEditor(parent)
 {
     setText(caption);
+}
+
+bool KNLabelEditor::eventFilter(QObject *target, QEvent *event)
+{
+    if(target==m_editor)
+    {
+        switch(event->type())
+        {
+        case QEvent::FocusOut:
+            cancelEdited();
+            return true;
+        case QEvent::KeyRelease:
+            QKeyEvent *keyEvent=static_cast<QKeyEvent *>(event);
+            if(keyEvent->key()==Qt::Key_Escape)
+            {
+                cancelEdited();
+                return true;
+            }
+            return QLabel::eventFilter(target, event);
+        }
+        return QLabel::eventFilter(target, event);
+    }
+    return QLabel::eventFilter(target, event);
 }
 
 void KNLabelEditor::mouseReleaseEvent(QMouseEvent *event)

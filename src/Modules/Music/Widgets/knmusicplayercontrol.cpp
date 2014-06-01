@@ -12,7 +12,7 @@ KNMusicPlayerControlButton::KNMusicPlayerControlButton(QWidget *parent) :
 {
     setScaledContents(true);
     m_effect=new QGraphicsOpacityEffect(this);
-    m_effect->setOpacity(0.3);
+    m_effect->setOpacity(0.2);
     setGraphicsEffect(m_effect);
     m_mouseDown=new QPropertyAnimation(m_effect, "opacity", this);
     m_mouseDown->setDuration(100);
@@ -32,7 +32,7 @@ KNMusicPlayerControlButton::KNMusicPlayerControlButton(QWidget *parent) :
     m_mouseOut=new QPropertyAnimation(m_effect, "opacity", this);
     m_mouseOut->setDuration(100);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseOut->setEndValue(0.3);
+    m_mouseOut->setEndValue(0.2);
 }
 
 void KNMusicPlayerControlButton::enterEvent(QEvent *event)

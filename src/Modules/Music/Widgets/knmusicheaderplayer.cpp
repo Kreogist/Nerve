@@ -1,5 +1,4 @@
 #include <QBoxLayout>
-#include <QLabel>
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
@@ -13,6 +12,28 @@
 
 #include "knmusicheaderplayer.h"
 
+KNMusicHeaderAlbumArt::KNMusicHeaderAlbumArt(QWidget *parent) :
+    QLabel(parent)
+{
+    ;
+}
+
+void KNMusicHeaderAlbumArt::mousePressEvent(QMouseEvent *event)
+{
+    QLabel::mousePressEvent(event);
+    m_isPressed=true;
+}
+
+void KNMusicHeaderAlbumArt::mouseReleaseEvent(QMouseEvent *event)
+{
+    QLabel::mouseReleaseEvent(event);
+    if(m_isPressed && rect().contains(event->pos()))
+    {
+        m_isPressed=false;
+        emit requireShowInCurrent();
+    }
+}
+
 KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QWidget(parent)
 {
@@ -23,9 +44,11 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     albumArtLayout->setContentsMargins(0,0,0,0);
     setLayout(albumArtLayout);
 
-    m_albumArt=new QLabel(this);
+    m_albumArt=new KNMusicHeaderAlbumArt(this);
     m_albumArt->setFixedSize(50,50);
     m_albumArt->setScaledContents(true);
+    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireShowInCurrent,
+            this, &KNMusicHeaderPlayer::requireShowInCurrent);
     albumArtLayout->addWidget(m_albumArt);
 
     QBoxLayout *detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,

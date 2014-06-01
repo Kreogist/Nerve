@@ -53,6 +53,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_headerWidget->setMusicPlayer(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::onActionSearch);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireShowInCurrent,
+            m_musicViewer, &KNMusicViewer::showInCurrent);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireLostFocus,
             m_musicViewer, &KNMusicViewer::setContentsFocus);
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,

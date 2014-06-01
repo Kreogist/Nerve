@@ -76,14 +76,16 @@ private:
     enum ToolTipItems
     {
         Title,
+        FileName,
         Time,
         Artist,
+        FilePath,
         ToolTipItemsCount
     };
 
     QPoint bestPosition(const QPoint &pos);
     QLabel *m_albumArt, *m_labels[ToolTipItemsCount];
-    QString m_caption[ToolTipItemsCount], m_filePath;
+    QString m_inFile, m_filePath;
     QBoxLayout *m_mainLayout;
     QTimer *m_tooltipDisapper;
     int m_currentRow=-1, m_fixedWidth=448, m_fixedHeight=176;
@@ -93,6 +95,8 @@ private:
     KNPlayerProgress *m_playerStatus;
     KNMusicDetailTooltipPlay *m_control;
     QTimeLine *m_mouseIn, *m_mouseOut;
+    QWidget *m_labelContainer;
+    QBoxLayout *m_labelLayout;
     QColor m_background;
     QPalette m_palette;
 };

@@ -11,6 +11,7 @@ class KNLabelEditor : public QLabel
 public:
     explicit KNLabelEditor(QWidget *parent = 0);
     KNLabelEditor(const QString &caption, QWidget *parent = 0);
+    bool eventFilter(QObject *target, QEvent *event);
 
 signals:
     void textEdited(const QString &text);

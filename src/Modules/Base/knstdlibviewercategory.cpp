@@ -76,7 +76,7 @@ void KNStdLibViewerCategory::setText(const int &index,
 
 void KNStdLibViewerCategory::setCurrentIndex(const int &index)
 {
-    if(m_moving)
+    if(m_moving || index==m_currentCategory)
     {
         return;
     }
@@ -95,9 +95,14 @@ void KNStdLibViewerCategory::setCurrentIndex(const int &index)
     }
 }
 
+int KNStdLibViewerCategory::currentIndex() const
+{
+    return m_currentCategory;
+}
+
 void KNStdLibViewerCategory::moveLeft()
 {
-    if(m_currentCategory==0)
+    if(0==m_currentCategory)
     {
         setCurrentIndex(m_categories.size()-1);
     }

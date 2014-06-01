@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QToolButton>
 #include <QTimeLine>
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -71,6 +72,7 @@ void KNMusicDetailTooltipPlay::mouseReleaseEvent(QMouseEvent *event)
 KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     QWidget(parent)
 {
+    retranslate();
     setFixedSize(m_fixedWidth, m_fixedHeight);
     m_palette=palette();
     m_background=QColor(0x28,0x28,0x28);
@@ -98,19 +100,22 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     m_albumArt->setScaledContents(true);
     albumLayout->addWidget(m_albumArt);
 
-    QBoxLayout *labelLayout=new QBoxLayout(QBoxLayout::TopToBottom,
-                                           m_mainLayout->widget());
-    albumLayout->addLayout(labelLayout);
-    labelLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    m_labelContainer=new QWidget(this);
+    m_labelContainer->setFixedSize(292, 128);
+    m_labelContainer->setMaximumSize(292, 128);
+    m_labelLayout=new QBoxLayout(QBoxLayout::TopToBottom);
+    m_labelLayout->setContentsMargins(0,0,0,0);
+    m_labelContainer->setLayout(m_labelLayout);
     for(int i=0; i<ToolTipItemsCount; i++)
     {
         m_labels[i]=new QLabel(this);
-        labelLayout->addWidget(m_labels[i]);
+        m_labelLayout->addWidget(m_labels[i]);
     }
     QFont nameFont=m_labels[Title]->font();
     nameFont.setBold(true);
     m_labels[Title]->setFont(nameFont);
-    labelLayout->addStretch();
+    m_labelLayout->addStretch();
+    albumLayout->addWidget(m_labelContainer);
 
     QBoxLayout *previewPlayer=new QBoxLayout(QBoxLayout::LeftToRight,
                                              m_mainLayout->widget());
@@ -147,6 +152,7 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
 KNMusicDetailTooltip::~KNMusicDetailTooltip()
 {
     m_tooltipDisapper->deleteLater();
+    m_labelLayout->deleteLater();
 }
 
 void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
@@ -166,7 +172,9 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
     m_currentRow=index.row();
     m_albumArt->setPixmap(QPixmap::fromImage(m_musicModel->artwork(m_currentRow)));
 
+    QFileInfo musicFileInfo(m_musicModel->filePathFromIndex(index));
     m_labels[Title]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Name));
+    m_labels[FileName]->setText(m_inFile.arg(musicFileInfo.fileName()));
     m_labels[Time]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Time));
     m_labels[Artist]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Artist));
 
@@ -209,7 +217,7 @@ void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
 
 void KNMusicDetailTooltip::retranslate()
 {
-    ;
+    m_inFile=tr("In file: %1");
 }
 
 void KNMusicDetailTooltip::retranslateAndSet()
