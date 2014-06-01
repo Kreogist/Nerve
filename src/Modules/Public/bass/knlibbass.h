@@ -125,10 +125,12 @@ private:
     QString m_eqTitle[EqualizerCount]={
        "32", "63", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"
     };
+    float m_eqGain[EqualizerCount]={0};
     MusicThread m_main, m_preview;
     void loadMusicFile(MusicThread &musicThread);
     void loadPlugins();
     void loadEQ();
+    bool m_firstLoadFile=true;
     DWORD m_floatable;
     QString m_dylinkSuffix;
     float m_originalVolume=-1;

@@ -53,8 +53,6 @@ KNLibBass::KNLibBass(QObject *parent) :
     }
     //Load Plugins
     loadPlugins();
-    //Load EQ
-    loadEQ();
 }
 
 KNLibBass::~KNLibBass()
@@ -67,6 +65,7 @@ void KNLibBass::loadMusic(const QString &filePath)
 {
     m_main.filePath=filePath;
     loadMusicFile(m_main);
+    loadEQ();
 }
 
 void KNLibBass::loadPreview(const QString &filePath)
@@ -93,7 +92,6 @@ quint32 KNLibBass::previewDuration() const
 void KNLibBass::play()
 {
     m_main.positionUpdater->start();
-    loadEQ();
     BASS_ChannelPlay(m_main.channel, FALSE);
 }
 
@@ -192,9 +190,10 @@ void KNLibBass::setPreviewPosition(const int &secondPosition)
 
 void KNLibBass::setEqualizerParam(const int &index, const float &value)
 {
+    m_eqGain[index]=value;
     BASS_DX8_PARAMEQ equalizerParam;
     BASS_FXGetParameters(m_equalizer[index], &equalizerParam);
-    equalizerParam.fGain=value;
+    equalizerParam.fGain=m_eqGain[index];
     BASS_FXSetParameters(m_equalizer[index], &equalizerParam);
 }
 
@@ -257,13 +256,14 @@ void KNLibBass::loadPlugins()
 
 void KNLibBass::loadEQ()
 {
-    BASS_DX8_PARAMEQ equalizerParams;
-    equalizerParams.fGain=0;
     for(int i=0; i<EqualizerCount; i++)
     {
+        BASS_DX8_PARAMEQ equalizerParams;
         m_equalizer[i]=BASS_ChannelSetFX(m_main.channel,
                                          BASS_FX_DX8_PARAMEQ,
                                          0);
+        equalizerParams.fGain=m_eqGain[i];
+        qDebug()<<m_eqGain[i];
         equalizerParams.fCenter=m_eqFrequency[i];
         equalizerParams.fBandwidth=m_eqBandWidth[i];
         BASS_FXSetParameters(m_equalizer[i], &equalizerParams);
