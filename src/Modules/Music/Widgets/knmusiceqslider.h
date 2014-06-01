@@ -20,11 +20,13 @@ protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 private slots:
     void updateButtonPosition();
 
 private:
+    void setValueFromMouseParam(float mouseParam);
     QPixmap m_sliderBase, m_sliderButton, m_sliderBaseTop, m_sliderBaseBottom;
     float m_topRange, m_topMargin, m_bottomMargin, m_buttonTop, m_mouseRange;
 };

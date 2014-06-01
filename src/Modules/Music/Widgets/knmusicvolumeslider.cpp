@@ -84,7 +84,7 @@ void KNMusicVolumeSlider::paintEvent(QPaintEvent *event)
 void KNMusicVolumeSlider::resizeEvent(QResizeEvent *event)
 {
     KNAbstractSlider::resizeEvent(event);
-    m_rightMargin=width()-m_sliderBaseLeft.width()-m_sliderBaseRight.width();
+    m_rightMargin=width()-m_sliderButton.width();
     m_mouseRange=m_rightMargin-m_leftMargin;
     updateButtonPosition();
 }
@@ -93,21 +93,33 @@ void KNMusicVolumeSlider::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_isSliderDown)
     {
-        float mouseParam=(float)event->x(),
-              rawValue;
-        if(mouseParam<m_leftMargin) mouseParam=m_leftMargin;
-        if(mouseParam>m_rightMargin) mouseParam=m_rightMargin;
-        //This is a hack.
-        m_buttonLeft=mouseParam-m_leftMargin;
-        rawValue=(mouseParam-m_leftMargin)/m_mouseRange*m_range;
-        setValue(rawValue);
-        update();
+        setValueFromMouseParam((float)event->x());
         emit sliderMoved(m_value);
     }
+}
+
+void KNMusicVolumeSlider::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(m_isSliderDown)
+    {
+        setValueFromMouseParam((float)event->x());
+        emit sliderMoved(m_value);
+    }
+    KNAbstractSlider::mouseReleaseEvent(event);
 }
 
 void KNMusicVolumeSlider::updateButtonPosition()
 {
     m_buttonLeft=m_value/m_range*m_mouseRange+
             m_leftMargin-(m_sliderButton.width()>>1);
+}
+
+void KNMusicVolumeSlider::setValueFromMouseParam(float mouseParam)
+{
+    if(mouseParam<m_leftMargin) mouseParam=m_leftMargin;
+    if(mouseParam>m_rightMargin) mouseParam=m_rightMargin;
+    //This is a hack.
+    m_buttonLeft=mouseParam-m_leftMargin;
+    setValue((mouseParam-m_leftMargin)/m_mouseRange*m_range);
+    update();
 }

@@ -73,21 +73,33 @@ void KNMusicEQSlider::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_isSliderDown)
     {
-        float mouseParam=(float)event->y(),
-              rawValue;
-        if(mouseParam<m_topMargin) mouseParam=m_topMargin;
-        if(mouseParam>m_bottomMargin) mouseParam=m_bottomMargin;
-        //This is a hack.
-        m_buttonTop=mouseParam-m_topMargin;
-        rawValue=(mouseParam-m_topMargin)/m_mouseRange*m_range;
-        setValue(m_maximum-rawValue);
-        update();
+        setValueFromMouseParam((float)event->y());
         emit sliderMoved(m_value);
     }
+}
+
+void KNMusicEQSlider::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(m_isSliderDown)
+    {
+        setValueFromMouseParam((float)event->y());
+        emit sliderMoved(m_value);
+    }
+    KNAbstractSlider::mouseReleaseEvent(event);
 }
 
 void KNMusicEQSlider::updateButtonPosition()
 {
     m_buttonTop=(m_maximum-m_value)/m_range*m_mouseRange+
             m_topMargin-(m_sliderButton.height()>>1);
+}
+
+void KNMusicEQSlider::setValueFromMouseParam(float mouseParam)
+{
+    if(mouseParam<m_topMargin) mouseParam=m_topMargin;
+    if(mouseParam>m_bottomMargin) mouseParam=m_bottomMargin;
+    //This is a hack.
+    m_buttonTop=mouseParam-m_topMargin;
+    setValue(m_maximum-(mouseParam-m_topMargin)/m_mouseRange*m_range);
+    update();
 }

@@ -87,12 +87,12 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_playerControl=new KNMusicPlayerControl(this);
     m_playerControl->hide();
 
-    m_mouseIn=new QPropertyAnimation(m_playerControl, "geometry", this);
+    m_mouseIn=new QPropertyAnimation(m_playerControl, "pos", this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseIn, SIGNAL(valueChanged(QVariant)),
             this, SLOT(onActionMouseInOut(QVariant)));
 
-    m_mouseOut=new QPropertyAnimation(m_playerControl, "geometry", this);
+    m_mouseOut=new QPropertyAnimation(m_playerControl, "pos", this);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseOut, SIGNAL(finished()),
             m_playerControl, SLOT(hide()));
@@ -149,11 +149,9 @@ void KNMusicHeaderPlayer::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
     m_mouseOut->stop();
-    m_mouseIn->setStartValue(m_playerControl->geometry());
-    m_mouseIn->setEndValue(QRect(m_progress->x(),
-                                 0,
-                                 m_progress->width(),
-                                 m_progress->y()));
+    m_mouseIn->setStartValue(m_playerControl->pos());
+    m_mouseIn->setEndValue(QPoint(m_progress->x(),
+                                  0));
     m_playerControl->show();
     m_mouseIn->start();
 }
@@ -162,24 +160,17 @@ void KNMusicHeaderPlayer::leaveEvent(QEvent *event)
 {
     QWidget::leaveEvent(event);
     m_mouseIn->stop();
-    m_mouseOut->setStartValue(m_playerControl->geometry());
-    m_mouseOut->setEndValue(QRect(m_progress->x(),
-                                  -m_progress->y(),
-                                  m_progress->width(),
-                                  m_progress->y()));
+    m_mouseOut->setStartValue(m_playerControl->pos());
+    m_mouseOut->setEndValue(QPoint(m_progress->x(),
+                                   -m_progress->y()));
     m_mouseOut->start();
 }
 
 void KNMusicHeaderPlayer::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    if(m_playerControl->isVisible())
-    {
-        m_playerControl->setGeometry(m_progress->x(),
-                                     0,
-                                     m_progress->width(),
-                                     m_progress->y());
-    }
+    m_playerControl->resize(width()-m_albumArt->width(),
+                            m_progress->y());
 }
 
 void KNMusicHeaderPlayer::onActionPositonChanged(const int &position)
@@ -208,7 +199,7 @@ void KNMusicHeaderPlayer::onActionReachEndOfMusic()
 
 void KNMusicHeaderPlayer::onActionMouseInOut(const QVariant &controlPos)
 {
-    QRect controlPosition=controlPos.toRect();
+    QPoint controlPosition=controlPos.toPoint();
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255,-controlPosition.y()*6));
     m_title->setPalette(m_textPalette);
     m_artist->setPalette(m_textPalette);
