@@ -60,6 +60,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
+    connect(m_libraryViewMenu, &KNMusicViewerMenu::requirePlayMusic,
+            this, &KNMusicPlugin::onActionPlay);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
             m_musicViewer, &KNMusicViewer::showIn);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,
@@ -159,4 +161,16 @@ void KNMusicPlugin::createShortcuts()
     connect(searchShortcut, SIGNAL(triggered()),
             m_headerWidget, SLOT(setSearchFocus()));
     m_musicViewer->addAction(searchShortcut);
+    QAction *musicPlay=new QAction(this);
+    musicPlay->setShortcut(QKeySequence(Qt::Key_MediaPlay));
+    connect(musicPlay, SIGNAL(triggered()),
+            m_musicPlayer, SLOT(play()));
+    m_musicViewer->addAction(musicPlay);
+    m_headerWidget->addAction(musicPlay);
+    QAction *musicPause=new QAction(this);
+    musicPause->setShortcut(QKeySequence(Qt::Key_MediaPause));
+    connect(musicPause, SIGNAL(triggered()),
+            m_musicPlayer, SLOT(pause()));
+    m_musicViewer->addAction(musicPause);
+    m_headerWidget->addAction(musicPause);
 }

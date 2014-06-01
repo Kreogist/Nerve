@@ -1,68 +1,68 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-#include "knabstractvslider.h"
+#include "knabstractslider.h"
 
-KNAbstractVSlider::KNAbstractVSlider(QWidget *parent) :
+KNAbstractSlider::KNAbstractSlider(QWidget *parent) :
     QWidget(parent)
 {
     ;
 }
 
-float KNAbstractVSlider::minimal() const
+float KNAbstractSlider::minimal() const
 {
     return m_minimal;
 }
 
-void KNAbstractVSlider::setMinimal(float minimal)
+void KNAbstractSlider::setMinimum(float minimal)
 {
     m_minimal = minimal;
     m_range=m_maximum-m_minimal;
     emit rangeChanged(m_minimal, m_maximum);
 }
 
-float KNAbstractVSlider::maximum() const
+float KNAbstractSlider::maximum() const
 {
     return m_maximum;
 }
 
-void KNAbstractVSlider::setMaximum(float maximum)
+void KNAbstractSlider::setMaximum(float maximum)
 {
     m_maximum = maximum;
     m_range=m_maximum-m_minimal;
     emit rangeChanged(m_minimal, m_maximum);
 }
 
-float KNAbstractVSlider::value() const
+float KNAbstractSlider::value() const
 {
     return m_value;
 }
 
-void KNAbstractVSlider::mousePressEvent(QMouseEvent *event)
+void KNAbstractSlider::mousePressEvent(QMouseEvent *event)
 {
     m_isSliderDown=true;
     emit sliderPressed();
     QWidget::mousePressEvent(event);
 }
 
-void KNAbstractVSlider::mouseReleaseEvent(QMouseEvent *event)
+void KNAbstractSlider::mouseReleaseEvent(QMouseEvent *event)
 {
     m_isSliderDown=false;
     emit sliderReleased();
     QWidget::mouseReleaseEvent(event);
 }
 
-bool KNAbstractVSlider::isSliderDown() const
+bool KNAbstractSlider::isSliderDown() const
 {
     return m_isSliderDown;
 }
 
-void KNAbstractVSlider::setIsSliderDown(bool isSliderDown)
+void KNAbstractSlider::setIsSliderDown(bool isSliderDown)
 {
     m_isSliderDown = isSliderDown;
 }
 
-void KNAbstractVSlider::setValue(float value)
+void KNAbstractSlider::setValue(float value)
 {
     m_value=value;
     if(m_value>m_maximum)
@@ -76,7 +76,7 @@ void KNAbstractVSlider::setValue(float value)
     emit valueChanged(m_value);
 }
 
-void KNAbstractVSlider::setRange(float min, float max)
+void KNAbstractSlider::setRange(float min, float max)
 {
     m_minimal=min;
     m_maximum=max;

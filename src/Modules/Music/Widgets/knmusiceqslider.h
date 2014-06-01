@@ -3,9 +3,9 @@
 
 #include <QPixmap>
 
-#include "../../Base/knabstractvslider.h"
+#include "../../Base/knabstractslider.h"
 
-class KNMusicEQSlider : public KNAbstractVSlider
+class KNMusicEQSlider : public KNAbstractSlider
 {
     Q_OBJECT
 public:
@@ -18,13 +18,14 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
 private slots:
     void updateButtonPosition();
 
 private:
-    QPixmap m_sliderBase, m_sliderButton;
+    QPixmap m_sliderBase, m_sliderButton, m_sliderBaseTop, m_sliderBaseBottom;
     float m_topRange, m_topMargin, m_bottomMargin, m_buttonTop, m_mouseRange;
 };
 

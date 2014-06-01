@@ -78,11 +78,11 @@ KNSearchBox::KNSearchBox(QWidget *parent) :
             this, &KNSearchBox::textEdited);
     m_layout->addWidget(m_keyText, 1);
 
-    QAction *escapeAction=new QAction(this);
+    QAction *escapeAction=new QAction(m_keyText);
     escapeAction->setShortcut(QKeySequence(Qt::Key_Escape));
     connect(escapeAction, SIGNAL(triggered()),
             this, SLOT(onFocusLost()));
-    addAction(escapeAction);
+    m_keyText->addAction(escapeAction);
 
     m_mouseEnterAnime=new QTimeLine(100, this);
     m_mouseEnterAnime->setEndFrame(0x60);

@@ -1,18 +1,18 @@
-#ifndef KNABSTRACTVSLIDER_H
-#define KNABSTRACTVSLIDER_H
+#ifndef KNABSTRACTSLIDER_H
+#define KNABSTRACTSLIDER_H
 
 #include <QWidget>
 
 class QMouseEvent;
-class KNAbstractVSlider : public QWidget
+class KNAbstractSlider : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KNAbstractVSlider(QWidget *parent = 0);
+    explicit KNAbstractSlider(QWidget *parent = 0);
     float maximum() const;
     float minimal() const;
     void setMaximum(float maximum);
-    void setMinimal(float minimal);
+    void setMinimum(float minimal);
     virtual void setValue(float value);
     void setRange(float min, float max);
     float value() const;
@@ -40,4 +40,4 @@ protected:
 private:
 };
 
-#endif // KNABSTRACTVSLIDER_H
+#endif // KNABSTRACTSLIDER_H

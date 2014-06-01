@@ -55,6 +55,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     durationLayout->addWidget(m_progress);
     m_time=new KNLabelEditor(this);
     m_time->setPalette(m_textPalette);
+    connect(m_time, SIGNAL(textEdited(QString)),
+            this, SLOT(onActionTimeEdited(QString)));
     durationLayout->addWidget(m_time);
     detailsArtLayout->addLayout(durationLayout);
     albumArtLayout->addLayout(detailsArtLayout);
@@ -182,6 +184,21 @@ void KNMusicHeaderPlayer::onActionMouseInOut(const QVariant &controlPos)
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255,-controlPosition.y()*6));
     m_title->setPalette(m_textPalette);
     m_artist->setPalette(m_textPalette);
+}
+
+void KNMusicHeaderPlayer::onActionTimeEdited(const QString &goTime)
+{
+    //Find the ':' char
+    int colonPos=goTime.indexOf(':');
+    // if no colon, treat it as a number of seconds.
+    if(colonPos==-1)
+    {
+        m_player->setPosition(goTime.toInt());
+        return;
+    }
+    //If we find colon, set the position to the new time.
+    m_player->setPosition(goTime.left(colonPos).toInt()*60+
+                          goTime.mid(colonPos+1).toInt());
 }
 
 void KNMusicHeaderPlayer::resetPosition()

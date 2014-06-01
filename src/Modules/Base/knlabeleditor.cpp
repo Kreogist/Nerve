@@ -1,5 +1,7 @@
 #include <QMouseEvent>
 #include <QLineEdit>
+#include <QAction>
+#include <QResizeEvent>
 
 #include "knlabeleditor.h"
 
@@ -8,11 +10,25 @@ KNLabelEditor::KNLabelEditor(QWidget *parent) :
 {
     m_editor=new QLineEdit(this);
     m_editor->setFrame(false);
+    m_editor->setAlignment(Qt::AlignCenter);
     m_editor->hide();
-    connect(m_editor, SIGNAL(editingFinished()),
+
+    QAction *cancelAction=new QAction(m_editor);
+    cancelAction->setShortcut(QKeySequence(Qt::Key_Escape));
+    connect(cancelAction, SIGNAL(triggered()),
+            this, SLOT(cancelEdited()));
+    m_editor->addAction(cancelAction);
+
+    QAction *enterPressed=new QAction(m_editor);
+    enterPressed->setShortcut(QKeySequence(Qt::Key_Enter));
+    connect(enterPressed, SIGNAL(triggered()),
             this, SLOT(setEdited()));
-    connect(m_editor, SIGNAL(returnPressed()),
+    m_editor->addAction(enterPressed);
+    QAction *returnPressed=new QAction(m_editor);
+    returnPressed->setShortcut(QKeySequence(Qt::Key_Return));
+    connect(returnPressed, SIGNAL(triggered()),
             this, SLOT(setEdited()));
+    m_editor->addAction(returnPressed);
 }
 
 KNLabelEditor::KNLabelEditor(const QString &caption, QWidget *parent) :
@@ -29,7 +45,9 @@ void KNLabelEditor::mouseReleaseEvent(QMouseEvent *event)
         case Qt::LeftButton:
             m_editor->setGeometry(0,0,width(),height());
             m_editor->setText(text());
+            m_editor->selectAll();
             m_editor->show();
+            m_editor->setFocus();
             break;
         default:
             break;
@@ -37,8 +55,21 @@ void KNLabelEditor::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void KNLabelEditor::resizeEvent(QResizeEvent *event)
+{
+    QLabel::resizeEvent(event);
+    m_editor->resize(event->size());
+}
+
 void KNLabelEditor::setEdited()
 {
     setText(m_editor->text());
+    emit textEdited(text());
     m_editor->hide();
+}
+
+void KNLabelEditor::cancelEdited()
+{
+    m_editor->hide();
+    setFocus();
 }

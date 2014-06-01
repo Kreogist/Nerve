@@ -24,6 +24,8 @@
         <file>Resources/Music/player/previous.png</file>
         <file>Resources/Music/EQs/sliderbase.png</file>
         <file>Resources/Music/EQs/sliderbutton.png</file>
+        <file>Resources/Music/EQs/sliderbasebottom.png</file>
+        <file>Resources/Music/EQs/sliderbasetop.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

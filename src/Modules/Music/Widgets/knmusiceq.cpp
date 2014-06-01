@@ -56,7 +56,7 @@ KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
         connect(m_equalizerTune[i], SIGNAL(sliderMoved(float)),
                 m_tuneRelease, SLOT(map()));
         m_tuneRelease->setMapping(m_equalizerTune[i], i);
-        sliderLayout->addWidget(m_equalizerTune[i]);
+        sliderLayout->addWidget(m_equalizerTune[i], 1);
         m_equalizerEdit[i]=new KNLabelEditor("0", this);
         m_equalizerEdit[i]->setAlignment(Qt::AlignCenter);
         //m_equalizerEdit[i]->setFixedWidth(30);

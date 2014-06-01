@@ -4,6 +4,7 @@
 #include <QLabel>
 
 class QLineEdit;
+class QResizeEvent;
 class KNLabelEditor : public QLabel
 {
     Q_OBJECT
@@ -18,9 +19,11 @@ public slots:
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void setEdited();
+    void cancelEdited();
 
 private:
     QLineEdit *m_editor;
