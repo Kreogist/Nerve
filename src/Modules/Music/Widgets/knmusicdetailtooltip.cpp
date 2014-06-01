@@ -71,6 +71,7 @@ void KNMusicDetailTooltipPlay::mouseReleaseEvent(QMouseEvent *event)
 KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     QWidget(parent)
 {
+    setFixedSize(m_fixedWidth, m_fixedHeight);
     m_palette=palette();
     m_background=QColor(0x28,0x28,0x28);
     m_palette.setColor(QPalette::Window, m_background);
@@ -90,6 +91,7 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     setLayout(m_mainLayout);
     QBoxLayout *albumLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                            m_mainLayout->widget());
+    m_mainLayout->setSizeConstraint(QLayout::SetFixedSize);
     m_mainLayout->addLayout(albumLayout);
     m_albumArt=new QLabel(this);
     m_albumArt->setFixedSize(128, 128);
@@ -103,7 +105,6 @@ KNMusicDetailTooltip::KNMusicDetailTooltip(QWidget *parent) :
     for(int i=0; i<ToolTipItemsCount; i++)
     {
         m_labels[i]=new QLabel(this);
-        m_labels[i]->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
         labelLayout->addWidget(m_labels[i]);
     }
     QFont nameFont=m_labels[Title]->font();
@@ -170,8 +171,6 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
     m_labels[Artist]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Artist));
 
     m_filePath=m_musicModel->filePathFromIndex(m_currentRow);
-
-    resize(m_mainLayout->sizeHint());
     move(bestPosition(point));
 }
 
@@ -301,10 +300,11 @@ QPoint KNMusicDetailTooltip::bestPosition(const QPoint &pos)
 {
     int tweakX=pos.x()+14, tweakY=pos.y()-60,
         screenHeight=QApplication::desktop()->height(),
-        screenWidth=QApplication::desktop()->width();
-    if(tweakX+width()>screenWidth)
+        screenWidth=QApplication::desktop()->width(),
+        realWidth=sizeHint().width();
+    if(tweakX+realWidth>screenWidth)
     {
-        tweakX=screenWidth-width()-5;
+        tweakX=screenWidth-realWidth-5;
     }
     if(tweakY+height()>screenHeight)
     {

@@ -24,7 +24,7 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     m_searchBox=new KNSearchBox(this);
     m_searchBox->setFixedWidth(200);
     m_searchBox->setPlaceHolderText(m_searchPlaceHolder);
-    connect(m_searchBox, &KNSearchBox::textChanged,
+    connect(m_searchBox, &KNSearchBox::textEdited,
             this, &KNMusicHeaderWidget::requireSearch);
     connect(m_searchBox, &KNSearchBox::requireLostFocus,
             this, &KNMusicHeaderWidget::requireLostFocus);

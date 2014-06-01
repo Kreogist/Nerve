@@ -9,6 +9,7 @@
 #include "knmusicvisualeffect.h"
 #include "../Libraries/knmusicplayer.h"
 #include "../../Base/knplayerprogress.h"
+#include "../../Base/knlabeleditor.h"
 
 #include "knmusicheaderplayer.h"
 
@@ -40,6 +41,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_artist->setPalette(m_textPalette);
     detailsArtLayout->addWidget(m_artist);
 
+    QBoxLayout *durationLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                              detailsArtLayout->widget());
     m_progress=new KNPlayerProgress(this);
     m_progress->setFixedWidth(200);
     connect(m_progress, &KNPlayerProgress::sliderPressed,
@@ -49,7 +52,11 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
                     m_sliderPressed=false;
                     m_player->setPosition(m_progress->value());
                });
-    detailsArtLayout->addWidget(m_progress);
+    durationLayout->addWidget(m_progress);
+    m_time=new KNLabelEditor(this);
+    m_time->setPalette(m_textPalette);
+    durationLayout->addWidget(m_time);
+    detailsArtLayout->addLayout(durationLayout);
     albumArtLayout->addLayout(detailsArtLayout);
 
     m_playerControl=new KNMusicPlayerControl(this);
@@ -154,6 +161,9 @@ void KNMusicHeaderPlayer::onActionPositonChanged(const int &position)
         return;
     }
     m_progress->setValue(position);
+    QString second=QString::number(position%60);
+    m_time->setText(QString::number(position/60)+":"+
+                    (second.length()==1?"0"+second:second));
 }
 
 void KNMusicHeaderPlayer::onActionDurationChanged(const int &duration)

@@ -86,7 +86,7 @@ private:
     QString m_caption[ToolTipItemsCount], m_filePath;
     QBoxLayout *m_mainLayout;
     QTimer *m_tooltipDisapper;
-    int m_currentRow=-1;
+    int m_currentRow=-1, m_fixedWidth=448, m_fixedHeight=176;
     bool m_sliderPressed=false;
     KNMusicModel *m_musicModel;
     KNLibBass *m_preview;

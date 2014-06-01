@@ -6,6 +6,7 @@
 class QLabel;
 class QPropertyAnimation;
 class KNPlayerProgress;
+class KNLabelEditor;
 class KNMusicPlayer;
 class KNMusicVisualEffect;
 class KNMusicPlayerControl;
@@ -43,6 +44,7 @@ private:
     QPalette m_textPalette;
     KNMusicPlayer *m_player;
     KNMusicPlayerControl *m_playerControl;
+    KNLabelEditor *m_time;
     QPropertyAnimation *m_mouseIn, *m_mouseOut;
     bool m_sliderPressed=false;
     KNMusicVisualEffect *m_visualEffect;

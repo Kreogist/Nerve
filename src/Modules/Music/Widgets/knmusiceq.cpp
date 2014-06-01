@@ -1,9 +1,9 @@
 #include <QLabel>
 #include <QSignalMapper>
 #include <QBoxLayout>
-#include <QLineEdit>
 
 #include "../../Public/bass/knlibbass.h"
+#include "../../Base/knlabeleditor.h"
 #include "knmusiceqslider.h"
 
 #include "knmusiceq.h"
@@ -57,8 +57,8 @@ KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
                 m_tuneRelease, SLOT(map()));
         m_tuneRelease->setMapping(m_equalizerTune[i], i);
         sliderLayout->addWidget(m_equalizerTune[i]);
-        m_equalizerEdit[i]=new QLineEdit("0", this);
-        m_equalizerEdit[i]->setAlignment(Qt::AlignRight);
+        m_equalizerEdit[i]=new KNLabelEditor("0", this);
+        m_equalizerEdit[i]->setAlignment(Qt::AlignCenter);
         //m_equalizerEdit[i]->setFixedWidth(30);
         connect(m_equalizerEdit[i], SIGNAL(textEdited(QString)),
                 m_textChange, SLOT(map()));

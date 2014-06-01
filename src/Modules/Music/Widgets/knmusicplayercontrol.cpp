@@ -12,7 +12,7 @@ KNMusicPlayerControlButton::KNMusicPlayerControlButton(QWidget *parent) :
 {
     setScaledContents(true);
     m_effect=new QGraphicsOpacityEffect(this);
-    m_effect->setOpacity(0.5);
+    m_effect->setOpacity(0.3);
     setGraphicsEffect(m_effect);
     m_mouseDown=new QPropertyAnimation(m_effect, "opacity", this);
     m_mouseDown->setDuration(100);
@@ -22,7 +22,33 @@ KNMusicPlayerControlButton::KNMusicPlayerControlButton(QWidget *parent) :
     m_mouseUp=new QPropertyAnimation(m_effect, "opacity", this);
     m_mouseUp->setDuration(100);
     m_mouseUp->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseUp->setEndValue(0.5);
+    m_mouseUp->setEndValue(0.8);
+
+    m_mouseIn=new QPropertyAnimation(m_effect, "opacity", this);
+    m_mouseIn->setDuration(100);
+    m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
+    m_mouseIn->setEndValue(0.8);
+
+    m_mouseOut=new QPropertyAnimation(m_effect, "opacity", this);
+    m_mouseOut->setDuration(100);
+    m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
+    m_mouseOut->setEndValue(0.3);
+}
+
+void KNMusicPlayerControlButton::enterEvent(QEvent *event)
+{
+    QWidget::enterEvent(event);
+    m_mouseOut->stop();
+    m_mouseIn->setStartValue(m_effect->opacity());
+    m_mouseIn->start();
+}
+
+void KNMusicPlayerControlButton::leaveEvent(QEvent *event)
+{
+    QWidget::leaveEvent(event);
+    m_mouseIn->stop();
+    m_mouseOut->setStartValue(m_effect->opacity());
+    m_mouseOut->start();
 }
 
 void KNMusicPlayerControlButton::mousePressEvent(QMouseEvent *event)

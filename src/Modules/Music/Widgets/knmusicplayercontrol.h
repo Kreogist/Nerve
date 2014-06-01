@@ -20,12 +20,14 @@ signals:
     void mouseReleased();
 
 protected:
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
     QGraphicsOpacityEffect *m_effect;
-    QPropertyAnimation *m_mouseDown, *m_mouseUp;
+    QPropertyAnimation *m_mouseDown, *m_mouseUp, *m_mouseIn, *m_mouseOut;
     bool m_isPressed=false;
 };
 

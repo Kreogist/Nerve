@@ -7,7 +7,7 @@
 
 class QSignalMapper;
 class QLabel;
-class QLineEdit;
+class KNLabelEditor;
 class KNLibBass;
 class KNMusicEQSlider;
 class KNMusicEQ : public QWidget
@@ -28,7 +28,7 @@ private slots:
 private:
     KNLibBass *m_bassBackend;
     QSignalMapper *m_tuneRelease, *m_textChange;
-    QLineEdit *m_equalizerEdit[KNLibBass::EqualizerCount];
+    KNLabelEditor *m_equalizerEdit[KNLibBass::EqualizerCount];
     KNMusicEQSlider *m_equalizerTune[KNLibBass::EqualizerCount];
             //*m_range;
     QLabel *m_equalizerCaption[KNLibBass::EqualizerCount];
