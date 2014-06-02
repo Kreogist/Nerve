@@ -10,7 +10,8 @@ KNConfigure *KNConfigure::instance()
     return m_instance==nullptr?m_instance=new KNConfigure:m_instance;
 }
 
-void KNConfigure::setValue(const QString &key)
+void KNConfigure::setValue(const QString &key,
+                           const QVariant &value)
 {
     ;
 }

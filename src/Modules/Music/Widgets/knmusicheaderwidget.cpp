@@ -17,10 +17,12 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     setLayout(m_mainLayout);
 
     m_headerPlayer=new KNMusicHeaderPlayer(this);
-//    m_visualEffect=m_headerPlayer->visualEffect();
-//    m_visualEffect->setParent(this);
     connect(m_headerPlayer, &KNMusicHeaderPlayer::requireShowMusicPlayer,
-            this, &KNMusicHeaderWidget::requireShowMusicPlayer);
+            [=]{
+                    emit requireSyncData(m_currentIndex);
+                    emit requireShowMusicPlayer();
+               }
+            );
     connect(m_headerPlayer, &KNMusicHeaderPlayer::requireHideMusicPlayer,
             this, &KNMusicHeaderWidget::requireHideMusicPlayer);
     m_mainLayout->addWidget(m_headerPlayer, 1, Qt::AlignLeft | Qt::AlignVCenter);
@@ -42,9 +44,9 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicModel *model)
     m_musicModel=model;
 }
 
-void KNMusicHeaderWidget::setMusicPlayer(KNMusicPlayer *player)
+void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
 {
-    m_headerPlayer->setPlayer(player);
+    m_headerPlayer->setBackend(backend);
 }
 
 void KNMusicHeaderWidget::retranslate()
@@ -75,11 +77,4 @@ void KNMusicHeaderWidget::onActionPlayMusic(const QModelIndex &index)
     m_headerPlayer->setTitle(m_musicModel->itemText(m_currentIndex.row(), KNMusicGlobal::Name));
     m_headerPlayer->setArtist(m_musicModel->itemText(m_currentIndex.row(), KNMusicGlobal::Artist));
     m_headerPlayer->playFile(m_musicModel->filePathFromIndex(m_currentIndex.row()));
-}
-
-void KNMusicHeaderWidget::resizeEvent(QResizeEvent *event)
-{
-    KNStdLibHeaderWidget::resizeEvent(event);
-//    m_visualEffect->move(m_searchBox->x()-m_visualEffect->width(),
-//                         0);
 }

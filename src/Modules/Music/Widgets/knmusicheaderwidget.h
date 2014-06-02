@@ -8,7 +8,7 @@
 class QBoxLayout;
 class QResizeEvent;
 class KNMusicModel;
-class KNMusicPlayer;
+class KNMusicBackend;
 class KNSearchBox;
 class KNMusicHeaderPlayer;
 class KNMusicHeaderWidget : public KNStdLibHeaderWidget
@@ -17,11 +17,12 @@ class KNMusicHeaderWidget : public KNStdLibHeaderWidget
 public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
     void setMusicModel(KNMusicModel *model);
-    void setMusicPlayer(KNMusicPlayer *player);
+    void setBackend(KNMusicBackend *backend);
 
 signals:
     void requireSearch(const QString &text);
     void requireShowInCurrent(const QModelIndex &index);
+    void requireSyncData(const QModelIndex &index);
     void requireLostFocus();
     void requireShowMusicPlayer();
     void requireHideMusicPlayer();
@@ -32,9 +33,6 @@ public slots:
     void setSearchFocus();
     void clearSearch();
     void onActionPlayMusic(const QModelIndex &index);
-
-protected:
-    void resizeEvent(QResizeEvent *event);
 
 private:
     QBoxLayout *m_mainLayout;

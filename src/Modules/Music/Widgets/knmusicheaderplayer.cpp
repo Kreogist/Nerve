@@ -6,7 +6,7 @@
 
 #include "knmusicplayercontrol.h"
 
-#include "../Libraries/knmusicplayer.h"
+#include "../Libraries/knmusicbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
 
@@ -130,22 +130,22 @@ void KNMusicHeaderPlayer::setArtist(const QString &string)
     m_artist->setText(string);
 }
 
-void KNMusicHeaderPlayer::setPlayer(KNMusicPlayer *player)
+void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
 {
     m_player=player;
-    connect(m_player, &KNMusicPlayer::positionChanged,
+    connect(m_player, &KNMusicBackend::positionChanged,
             this, &KNMusicHeaderPlayer::onActionPositonChanged);
-    connect(m_player, &KNMusicPlayer::durationChanged,
+    connect(m_player, &KNMusicBackend::durationChanged,
             this, &KNMusicHeaderPlayer::onActionDurationChanged);
-    connect(m_player, &KNMusicPlayer::finished,
+    connect(m_player, &KNMusicBackend::finished,
             this, &KNMusicHeaderPlayer::onActionCurrentFinished);
     m_playerControl->setVolume(m_player->volume());
     connect(m_playerControl, &KNMusicPlayerControl::requirePlay,
-            m_player, &KNMusicPlayer::play);
+            m_player, &KNMusicBackend::play);
     connect(m_playerControl, &KNMusicPlayerControl::requirePause,
-            m_player, &KNMusicPlayer::pause);
+            m_player, &KNMusicBackend::pause);
     connect(m_playerControl, &KNMusicPlayerControl::requireChangeVolume,
-            m_player, &KNMusicPlayer::setVolume);
+            m_player, &KNMusicBackend::setVolume);
 }
 
 void KNMusicHeaderPlayer::playFile(const QString &filePath)

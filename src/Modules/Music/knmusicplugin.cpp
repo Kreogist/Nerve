@@ -13,7 +13,7 @@
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicfilter.h"
 #include "Libraries/knmusicdatabase.h"
-#include "Libraries/knmusicplayer.h"
+#include "Libraries/knmusicbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
 #include "Widgets/knmusicplayerwidget.h"
@@ -26,7 +26,7 @@
 KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     KNPluginBase(parent)
 {
-    m_musicPlayer=new KNMusicPlayer;
+    m_musicPlayer=new KNMusicBackend;
     m_musicPlayer->moveToThread(&m_playerThread);
 
     m_global=KNGlobal::instance();
@@ -49,7 +49,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
     m_headerWidget->setMusicModel(m_model);
-    m_headerWidget->setMusicPlayer(m_musicPlayer);
+    m_headerWidget->setBackend(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::onActionSearch);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
@@ -86,7 +86,11 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_model->setInfoCollectorManager(m_infoCollectManager);
 
     m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
+    m_musicPlayerWidget->setMusicModel(m_model);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireSyncData,
+            m_musicPlayerWidget, &KNMusicPlayerWidget::syncData);
     m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
+    m_musicPlayerWidget->setEqualizer(m_equalizer);
     m_musicViewer->setPlayWidget(m_musicPlayerWidget);
 
     m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
@@ -131,7 +135,6 @@ void KNMusicPlugin::applyPlugin()
                             QPixmap(),
                             m_musicViewer);
     emit requireAddHeader(m_headerWidget);
-    m_equalizer->show();
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,

@@ -1,15 +1,15 @@
-#ifndef KNMUSICPLAYER_H
-#define KNMUSICPLAYER_H
+#ifndef KNMUSICBACKEND_H
+#define KNMUSICBACKEND_H
 
 #include "../../Public/bass/knlibbass.h"
 
 #include <QObject>
 
-class KNMusicPlayer : public QObject
+class KNMusicBackend : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNMusicPlayer(QObject *parent = 0);
+    explicit KNMusicBackend(QObject *parent = 0);
     void playFile(const QString &fileName);
     void setVolume(const float &volume);
     KNLibBass *backend();
@@ -29,8 +29,8 @@ public slots:
     void setPosition(const int &position);
 
 private:
-    KNLibBass *m_player;
+    KNLibBass *m_backend;
     float m_originalVolume=-1;
 };
 
-#endif // KNMUSICPLAYER_H
+#endif // KNMUSICBACKEND_H
