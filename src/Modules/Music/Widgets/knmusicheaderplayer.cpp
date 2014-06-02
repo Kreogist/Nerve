@@ -141,9 +141,15 @@ void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
             this, &KNMusicHeaderPlayer::onActionCurrentFinished);
     m_playerControl->setVolume(m_player->volume());
     connect(m_playerControl, &KNMusicPlayerControl::requirePlay,
-            m_player, &KNMusicBackend::play);
+            [=]
+            {
+                m_player->play();
+            });
     connect(m_playerControl, &KNMusicPlayerControl::requirePause,
-            m_player, &KNMusicBackend::pause);
+            [=]
+            {
+                m_player->pause();
+            });
     connect(m_playerControl, &KNMusicPlayerControl::requireChangeVolume,
             m_player, &KNMusicBackend::setVolume);
 }

@@ -115,7 +115,10 @@ private:
         }
         ~MusicThread()
         {
-            positionUpdater->deleteLater();
+            if(positionUpdater->parent()==0)
+            {
+                positionUpdater->deleteLater();
+            }
         }
     };
 

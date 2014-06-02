@@ -77,6 +77,7 @@ KNLibBass::~KNLibBass()
 void KNLibBass::loadMusic(const QString &filePath)
 {
     m_main.filePath=filePath;
+    m_main.positionUpdater->stop();
     loadMusicFile(m_main);
     BASS_ChannelFlags(m_main.channel, 0, BASS_SAMPLE_LOOP);
     loadEQ();
@@ -85,6 +86,7 @@ void KNLibBass::loadMusic(const QString &filePath)
 void KNLibBass::loadPreview(const QString &filePath)
 {
     m_preview.filePath=filePath;
+    m_preview.positionUpdater->stop();
     loadMusicFile(m_preview);
     BASS_ChannelFlags(m_preview.channel, 0, BASS_SAMPLE_LOOP);
 }
@@ -106,6 +108,7 @@ quint32 KNLibBass::previewDuration() const
 
 void KNLibBass::play()
 {
+    qDebug()<<"PLAY: "<<thread()<<m_main.positionUpdater->thread();
     m_main.positionUpdater->start();
     if(m_main.stopped)
     {
@@ -173,6 +176,7 @@ void KNLibBass::stopPreview()
 void KNLibBass::pause()
 {
     BASS_ChannelPause(m_main.channel);
+    qDebug()<<"PAUSE: "<<thread()<<m_main.positionUpdater->thread();
     m_main.positionUpdater->stop();
 }
 

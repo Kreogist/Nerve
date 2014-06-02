@@ -210,9 +210,15 @@ void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
 {
     m_preview=backend;
     connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
-            m_preview, &KNLibBass::playPreview);
+            [=]
+            {
+                m_preview->playPreview();
+            });
     connect(m_control, &KNMusicDetailTooltipPlay::requirePause,
-            m_preview, &KNLibBass::pausePreview);
+            [=]
+            {
+                m_preview->pausePreview();
+            });
     connect(m_preview, &KNLibBass::previewPositionChanged,
             this, &KNMusicDetailTooltip::onActionPositionChanged);
     connect(m_preview, &KNLibBass::previewFinished,
