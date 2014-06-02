@@ -9,9 +9,7 @@ class QMouseEvent;
 class KNPlayerProgress;
 class KNLabelEditor;
 class KNMusicPlayer;
-class KNMusicVisualEffect;
 class KNMusicPlayerControl;
-
 class KNMusicHeaderAlbumArt : public QLabel
 {
     Q_OBJECT
@@ -19,7 +17,8 @@ public:
     explicit KNMusicHeaderAlbumArt(QWidget *parent = 0);
 
 signals:
-    void requireShowInCurrent();
+    void requireShowMusicPlayer();
+    void requireHideMusicPlayer();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -27,6 +26,7 @@ protected:
 
 private:
     bool m_isPressed;
+    bool m_isPlayerShown=false;
 };
 
 class KNMusicHeaderPlayer : public QWidget
@@ -43,6 +43,8 @@ public:
 
 signals:
     void requireShowInCurrent();
+    void requireShowMusicPlayer();
+    void requireHideMusicPlayer();
 
 public slots:
 
@@ -70,7 +72,6 @@ private:
     KNLabelEditor *m_time;
     QPropertyAnimation *m_mouseIn, *m_mouseOut;
     bool m_sliderPressed=false;
-    KNMusicVisualEffect *m_visualEffect;
 };
 
 #endif // KNMUSICHEADERPLAYER_H

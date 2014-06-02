@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #include "knmusicplayercontrol.h"
-#include "knmusicvisualeffect.h"
+
 #include "../Libraries/knmusicplayer.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
@@ -30,15 +30,23 @@ void KNMusicHeaderAlbumArt::mouseReleaseEvent(QMouseEvent *event)
     if(m_isPressed && rect().contains(event->pos()))
     {
         m_isPressed=false;
-        emit requireShowInCurrent();
+        if(m_isPlayerShown)
+        {
+            m_isPlayerShown=false;
+            emit requireHideMusicPlayer();
+        }
+        else
+        {
+            m_isPlayerShown=true;
+            emit requireShowMusicPlayer();
+        }
     }
 }
 
 KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QWidget(parent)
 {
-//    m_visualEffect=new KNMusicVisualEffect;
-//    m_visualEffect->resize(368, 70);
+
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                                 this);
     albumArtLayout->setContentsMargins(0,0,0,0);
@@ -47,8 +55,10 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_albumArt=new KNMusicHeaderAlbumArt(this);
     m_albumArt->setFixedSize(50,50);
     m_albumArt->setScaledContents(true);
-    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireShowInCurrent,
-            this, &KNMusicHeaderPlayer::requireShowInCurrent);
+    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireShowMusicPlayer,
+            this, &KNMusicHeaderPlayer::requireShowMusicPlayer);
+    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireHideMusicPlayer,
+            this, &KNMusicHeaderPlayer::requireHideMusicPlayer);
     albumArtLayout->addWidget(m_albumArt);
 
     QBoxLayout *detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,

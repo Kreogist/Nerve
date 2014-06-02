@@ -14,6 +14,7 @@
 class QEvent;
 class QDragEnterEvent;
 class QDropEvent;
+class QPropertyAnimation;
 class KNMusicCategorySortFilterModel;
 class KNLibFilter;
 class KNMusicModel;
@@ -39,6 +40,7 @@ public:
     void setModel(KNMusicModel *model);
     void setMusicBackend(KNLibBass *backend);
     bool eventFilter(QObject *watched, QEvent *event);
+    void setPlayWidget(QWidget *widget);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -57,10 +59,13 @@ public slots:
     void showInCurrent(const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
     void onActionSearch(const QString &text);
+    void onActionShowPlayer();
+    void onActionHidePlayer();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void onActionLibraryViewShowContextMenu(const QPoint &position,
@@ -71,7 +76,6 @@ private slots:
                                       const QModelIndex &index);
     void onActionGenreShowContextMenu(const QPoint &position,
                                       const QModelIndex &index);
-    void onActionListviewOpenUrl(const QModelIndex &index);
     void onActionArtistOpenUrl(const QModelIndex &index);
     void onActionAlbumOpenUrl(const QModelIndex &index);
     void onActionGenreOpenUrl(const QModelIndex &index);
@@ -83,9 +87,12 @@ private:
         Artists,
         Albums,
         Genres,
+        Playlists,
         MusicCategoriesCount
     };
     QString m_categoryCaption[MusicCategoriesCount];
+    QPropertyAnimation *m_playerIn, *m_playerOut;
+    QWidget *m_playerWidget;
     KNMusicListView *m_libraryView;
     KNMusicCategoryView *m_artistView,
                       *m_genreView;

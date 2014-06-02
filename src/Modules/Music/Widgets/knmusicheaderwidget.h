@@ -23,6 +23,8 @@ signals:
     void requireSearch(const QString &text);
     void requireShowInCurrent(const QModelIndex &index);
     void requireLostFocus();
+    void requireShowMusicPlayer();
+    void requireHideMusicPlayer();
 
 public slots:
     void retranslate();

@@ -19,11 +19,10 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     m_headerPlayer=new KNMusicHeaderPlayer(this);
 //    m_visualEffect=m_headerPlayer->visualEffect();
 //    m_visualEffect->setParent(this);
-    connect(m_headerPlayer, &KNMusicHeaderPlayer::requireShowInCurrent,
-            [=]
-            {
-                emit requireShowInCurrent(m_currentIndex);
-            });
+    connect(m_headerPlayer, &KNMusicHeaderPlayer::requireShowMusicPlayer,
+            this, &KNMusicHeaderWidget::requireShowMusicPlayer);
+    connect(m_headerPlayer, &KNMusicHeaderPlayer::requireHideMusicPlayer,
+            this, &KNMusicHeaderWidget::requireHideMusicPlayer);
     m_mainLayout->addWidget(m_headerPlayer, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
     m_searchBox=new KNSearchBox(this);

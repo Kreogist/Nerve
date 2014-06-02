@@ -10,6 +10,7 @@
 class QAction;
 class KNGlobal;
 class KNMusicPlayer;
+class KNMusicPlayerWidget;
 class KNMusicDatabase;
 class KNMusicHeaderWidget;
 class KNMusicModel;
@@ -56,6 +57,7 @@ private:
     KNMusicPlayer *m_musicPlayer;
     KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
+    KNMusicPlayerWidget *m_musicPlayerWidget;
 
     QThread m_searcherThread,
             m_collectThread,

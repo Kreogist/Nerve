@@ -16,6 +16,7 @@
 #include "Libraries/knmusicplayer.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
+#include "Widgets/knmusicplayerwidget.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
 #include "Widgets/knmusiceq.h"
@@ -51,15 +52,14 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_headerWidget->setMusicPlayer(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::onActionSearch);
-    connect(m_headerWidget, &KNMusicHeaderWidget::requireShowInCurrent,
-            m_musicViewer, &KNMusicViewer::showInCurrent);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
+            m_musicViewer, &KNMusicViewer::onActionShowPlayer);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireHideMusicPlayer,
+            m_musicViewer, &KNMusicViewer::onActionHidePlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireLostFocus,
             m_musicViewer, &KNMusicViewer::setContentsFocus);
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,
             m_headerWidget, &KNMusicHeaderWidget::clearSearch);
-
-    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
-    m_equalizer->resize(500, 200);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
@@ -84,6 +84,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
     m_model->setInfoCollectorManager(m_infoCollectManager);
+
+    m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
+    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
+    m_musicViewer->setPlayWidget(m_musicPlayerWidget);
 
     m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
 
