@@ -2,11 +2,13 @@
 #define KNMUSICPLAYERWIDGET_H
 
 #include <QWidget>
+#include <QAbstractItemView>
 
 class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 class KNMusicModel;
+class KNMusicBackend;
 class KNMusicHeaderWidget;
 class KNMusicVisualEffect;
 class KNMusicPlayerWidget : public QWidget
@@ -15,6 +17,7 @@ class KNMusicPlayerWidget : public QWidget
 public:
     explicit KNMusicPlayerWidget(QWidget *parent = 0);
     void setEqualizer(QWidget *equalizer);
+    void setBackend(KNMusicBackend *backend);
     void setMusicModel(KNMusicModel *model);
     void setArtwork(const QPixmap &artwork);
 
@@ -28,6 +31,9 @@ public slots:
 protected:
     void resizeEvent(QResizeEvent *event);
 
+private slots:
+    void onActionPositionChanged(const int &position);
+
 private:
     QLabel *m_albumArtWork, *m_nowPlaying, *m_artistAlbumName, *m_title;
     QFont m_nowPlayingFont, m_titleFont;
@@ -38,6 +44,8 @@ private:
     KNMusicModel *m_musicModel;
     QString m_albumName, m_artistName;
     bool m_noAlbum, m_noAritst;
+    KNMusicBackend *m_backend;
+    KNMusicVisualEffect *m_visualEffect;
 };
 
 #endif // KNMUSICPLAYERWIDGET_H

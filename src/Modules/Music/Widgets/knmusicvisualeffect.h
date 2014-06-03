@@ -19,8 +19,8 @@ protected:
 
 private:
     float qsqrt(const float &number);
-    float m_fft[1024]={0};
-    QColor m_itemColor=QColor(100,100,100);
+    float m_fft[2048]={0};
+    QColor m_itemColor=QColor(255,255,255);
     QImage m_cache;
 };
 

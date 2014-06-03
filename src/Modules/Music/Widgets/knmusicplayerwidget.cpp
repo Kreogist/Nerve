@@ -1,9 +1,11 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QResizeEvent>
-#include <QSpacerItem>
+
+#include <QDebug>
 
 #include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusicbackend.h"
 #include "knmusicvisualeffect.h"
 #include "knmusicheaderplayer.h"
 #include "knmusicplayerwidget.h"
@@ -28,6 +30,9 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
                                     m_mainLayout->widget());
     m_playListLayout->setContentsMargins(0,0,0,0);
     m_playListLayout->setSpacing(0);
+    m_visualEffect=new KNMusicVisualEffect(this);
+    m_visualEffect->resize(1000, 500);
+//    m_playListLayout->addWidget(m_visualEffect);
     m_mainLayout->addLayout(m_playListLayout);
 
     m_artworkLayout=new QBoxLayout(QBoxLayout::LeftToRight,
@@ -63,6 +68,13 @@ void KNMusicPlayerWidget::setEqualizer(QWidget *equalizer)
     m_equalizer=equalizer;
     m_equalizer->setParent(this);
     m_equalizer->hide();
+}
+
+void KNMusicPlayerWidget::setBackend(KNMusicBackend *backend)
+{
+    m_backend=backend;
+    connect(m_backend, &KNMusicBackend::positionChanged,
+            this, &KNMusicPlayerWidget::onActionPositionChanged);
 }
 
 void KNMusicPlayerWidget::setMusicModel(KNMusicModel *model)
@@ -122,4 +134,11 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
     m_artistAlbumName->setFont(m_nowPlayingFont);
     m_titleFont.setPixelSize((int)(artWorkSizeF*0.13));
     m_title->setFont(m_titleFont);
+}
+
+void KNMusicPlayerWidget::onActionPositionChanged(const int &position)
+{
+    Q_UNUSED(position);
+    m_backend->getGraphicData(m_visualEffect->fftData());
+    m_visualEffect->update();
 }

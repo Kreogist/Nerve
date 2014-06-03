@@ -87,6 +87,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
     m_musicPlayerWidget->setMusicModel(m_model);
+    m_musicPlayerWidget->setBackend(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSyncData,
             m_musicPlayerWidget, &KNMusicPlayerWidget::syncData);
     m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
