@@ -18,9 +18,10 @@ float *KNMusicVisualEffect::fftData()
 
 void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     QPainter painter(this);
-    int SPECWIDTH=width(), b0=0,x,y,b1,BANDS=40, bandWidth=SPECWIDTH/BANDS, currentX=0;
-#define SPECHEIGHT 70
+    int SPECWIDTH=width(), SPECHEIGHT=height(),
+            b0=0,x,y,b1, bandWidth=10,BANDS=SPECWIDTH/(bandWidth+1), currentX=0;
     float peak;
     painter.setPen(Qt::NoPen);
     painter.setBrush(m_itemColor);
@@ -36,10 +37,10 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
         y=qsqrt(peak)*3*SPECHEIGHT-4; // scale it (sqrt to make low values more visible)
         if (y>SPECHEIGHT) y=SPECHEIGHT; // cap it
         painter.drawRect(currentX,
-                         71-y,
+                         SPECHEIGHT-y,
                          bandWidth,
                          y);
-        currentX+=bandWidth;
+        currentX+=bandWidth+1;
     }
 }
 
@@ -52,5 +53,5 @@ float KNMusicVisualEffect::qsqrt(const float &number)
     y=*(float*)&i;
     y*=(1.5F-(number*0.5F*y*y)); // 1st iteration
     //y*=(threehalfs-(x2*y*y));// 2nd iteration, this can be removed
-    return 1/y;
+    return qAbs(1/y);
 }

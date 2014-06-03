@@ -12,9 +12,11 @@
 KNMusicTagID3v1::KNMusicTagID3v1(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    //Set the empty tag sample.
     memset(m_emptyTag, 0, 128);
     m_emptyTag[0]='T';m_emptyTag[1]='A';m_emptyTag[2]='G';
     m_emptyTag[127]=0xff;
+    //Initial the locale codec.
     m_localCodec=KNGlobal::instance()->codecForCurrentLocale();
 }
 
@@ -38,6 +40,11 @@ bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
     {
         return false;
     }
+
+    //Read the tag data.
+    //ID3v1's data is stored in order:
+    //30 bytes Title, 30 bytes Artist, 30 bytes Album, 4 bytes Year,
+    //30 bytes Comments(+Track), 1 bytes Genre order. Just read them
     m_rawByteBackup=m_rawTagData[33];
     m_rawTagData[33]=0;
     m_tagData[Title]=m_localCodec->toUnicode(m_rawTagData+3).simplified();
@@ -54,6 +61,8 @@ bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
     m_rawTagData[97]=0;
     m_tagData[Year]=m_localCodec->toUnicode(m_rawTagData+93).simplified();
     m_rawTagData[97]=m_rawByteBackup;
+    //If the No.125's char of tag is 0, then it means the following char is
+    //Track Number.
     if(m_rawTagData[125]==0)
     {
         m_tagData[Track]=QString::number((quint8)m_rawTagData[126]);
@@ -73,13 +82,11 @@ bool KNMusicTagID3v1::readTag(const QFile &mediaFile,
 
 void KNMusicTagID3v1::clearCache()
 {
-    m_tagData[Title].clear();
-    m_tagData[Artist].clear();
-    m_tagData[Album].clear();
-    m_tagData[Year].clear();
-    m_tagData[Comment].clear();
-    m_tagData[Track].clear();
-    m_tagData[Genre].clear();
+    //Clear the QStrings.
+    for(int i=0; i<ID3v1ItemCount; i++)
+    {
+        m_tagData[i].clear();
+    }
 }
 
 QString KNMusicTagID3v1::textData(const int &key) const
@@ -94,10 +101,13 @@ void KNMusicTagID3v1::setTextData(const int &key, const QString &data)
 
 void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
 {
+    //Clear the tag.
     memset(m_rawTagData, 0, 128);
+    //Set the ID3v1's header.
     m_rawTagData[0]='T';
     m_rawTagData[1]='A';
     m_rawTagData[2]='G';
+    //Copy all the values of the ID3v1 to the file.
     strncpy(m_rawTagData+3, m_localCodec->fromUnicode(m_tagData[Title]).data(), 30);
     strncpy(m_rawTagData+33, m_localCodec->fromUnicode(m_tagData[Artist]).data(), 30);
     strncpy(m_rawTagData+63, m_localCodec->fromUnicode(m_tagData[Album]).data(), 30);
@@ -113,6 +123,7 @@ void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
     {
         strncpy(m_rawTagData+97, m_localCodec->fromUnicode(m_tagData[Comment]).data(), 30);
     }
+    //Check the genre index to ensure the index is in the range of 0x00-0xff.
     int genreTest=KNMusicGlobal::instance()->genreIndex(m_tagData[Genre]);
     if(genreTest==-1)
     {
@@ -122,6 +133,8 @@ void KNMusicTagID3v1::writeTag(QFile &mediaFile, QDataStream &mediaData)
     {
         m_rawTagData[127]=genreTest;
     }
+    //Check if the new tag is equal to the empty ID3v1 tag:
+    //It means: No values, no tracks, genre is invaild. We will remove ID3v1 tags.
     bool isTagEmpty=(memcmp(m_rawTagData, m_emptyTag, 127)==0);
     int mediaFileSize=mediaFile.size();
     if(mediaFileSize>128)

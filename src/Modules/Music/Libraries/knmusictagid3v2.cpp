@@ -210,7 +210,6 @@ bool KNMusicTagID3v2::readTag(const QFile &mediaFile,
         //File is smaller than the tag says, failed to get.
         return false;
     }
-
     m_rawTagData=new char[m_tagSize];
     mediaData.readRawData(m_rawTagData, m_tagSize);
     parseRawData();

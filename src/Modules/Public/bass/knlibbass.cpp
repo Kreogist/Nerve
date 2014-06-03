@@ -108,7 +108,6 @@ quint32 KNLibBass::previewDuration() const
 
 void KNLibBass::play()
 {
-    qDebug()<<"PLAY: "<<thread()<<m_main.positionUpdater->thread();
     m_main.positionUpdater->start();
     if(m_main.stopped)
     {
@@ -176,7 +175,6 @@ void KNLibBass::stopPreview()
 void KNLibBass::pause()
 {
     BASS_ChannelPause(m_main.channel);
-    qDebug()<<"PAUSE: "<<thread()<<m_main.positionUpdater->thread();
     m_main.positionUpdater->stop();
 }
 

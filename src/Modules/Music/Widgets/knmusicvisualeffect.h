@@ -1,6 +1,7 @@
 #ifndef KNMUSICVISUALEFFECT_H
 #define KNMUSICVISUALEFFECT_H
 
+#include <QPixmap>
 #include <QWidget>
 
 class KNMusicVisualEffect : public QWidget
@@ -21,7 +22,6 @@ private:
     float qsqrt(const float &number);
     float m_fft[2048]={0};
     QColor m_itemColor=QColor(255,255,255);
-    QImage m_cache;
 };
 
 #endif // KNMUSICVISUALEFFECT_H

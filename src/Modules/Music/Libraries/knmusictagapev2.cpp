@@ -10,6 +10,7 @@
 KNMusicTagAPEv2::KNMusicTagAPEv2(QObject *parent) :
     KNMusicTagBase(parent)
 {
+    //Set the frame of the index.
     m_frames[Name    ]="TITLE";
     m_frames[Artist  ]="ARTIST";
     m_frames[Album   ]="ALBUM";
@@ -139,7 +140,6 @@ void KNMusicTagAPEv2::writeTag(QFile &mediaFile, QDataStream &mediaData)
     //Set tag content sizes.
     //IMPORTANT: This value should + 32 if contains footer.
     quint32 tagContentSize=tagContentData.size()+32;
-    qDebug()<<tagContentSize;
     tagHeader[12]=(quint8)( tagContentSize&0b00000000000000000000000011111111     );
     tagHeader[13]=(quint8)((tagContentSize&0b00000000000000001111111100000000)>>8 );
     tagHeader[14]=(quint8)((tagContentSize&0b00000000111111110000000000000000)>>16);
@@ -157,7 +157,7 @@ void KNMusicTagAPEv2::writeTag(QFile &mediaFile, QDataStream &mediaData)
     tagHeader[21]=0b00000000;
     tagHeader[22]=0b00000000;
     tagHeader[23]=0b00000101;
-    //Reserved, must be zero.
+    //Reserved data, must be zero.
     for(int i=24; i<32; i++)
     {
         tagHeader[i]=0x00;
