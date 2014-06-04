@@ -39,7 +39,7 @@ private:
     QFont m_nowPlayingFont, m_titleFont;
     QWidget *m_equalizer;
     QString m_nowPlayingText, m_noAlbumName, m_noArtistName;
-    QBoxLayout *m_mainLayout, *m_playListLayout, *m_artworkLayout;
+    QBoxLayout *m_mainLayout, *m_playListLayout, *m_artworkLayout, *m_detailsLayout;
     KNMusicHeaderWidget *m_headerPlayer;
     KNMusicModel *m_musicModel;
     QString m_albumName, m_artistName;

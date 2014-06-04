@@ -34,7 +34,6 @@ class KNMusicHeaderPlayer : public QWidget
     Q_OBJECT
 public:
     explicit KNMusicHeaderPlayer(QWidget *parent = 0);
-    QWidget *visualEffect();
     void setAlbumArt(const QPixmap &albumArt);
     void setTitle(const QString &string);
     void setArtist(const QString &string);
@@ -71,7 +70,7 @@ private:
     KNMusicPlayerControl *m_playerControl;
     KNLabelEditor *m_time;
     QPropertyAnimation *m_mouseIn, *m_mouseOut;
-    bool m_sliderPressed=false;
+    bool m_sliderPressed=false, m_animate=true;
 };
 
 #endif // KNMUSICHEADERPLAYER_H

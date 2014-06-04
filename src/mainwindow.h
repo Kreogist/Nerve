@@ -25,8 +25,6 @@ public slots:
 protected:
     void closeEvent(QCloseEvent *event);
 
-private slots:
-
 private:
     KNStdLibCategorySwitcher *m_mainWidget;
     KNStdLibCategoryList *m_categoryList;

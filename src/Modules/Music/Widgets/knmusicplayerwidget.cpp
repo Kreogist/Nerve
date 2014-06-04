@@ -38,26 +38,27 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     m_albumArtWork=new QLabel(this);
     m_albumArtWork->setScaledContents(true);
     m_artworkLayout->addWidget(m_albumArtWork, 0, Qt::AlignBottom | Qt::AlignRight);
-    QBoxLayout *detailsLayout=new QBoxLayout(QBoxLayout::TopToBottom,
-                                             m_mainLayout->widget());
-    detailsLayout->addStretch();
+    m_detailsLayout=new QBoxLayout(QBoxLayout::TopToBottom,
+                                   m_mainLayout->widget());
+    m_detailsLayout->setSpacing(0);
+    m_detailsLayout->addStretch();
     m_nowPlaying=new QLabel(this);
     QPalette textPalette=m_nowPlaying->palette();
     textPalette.setColor(QPalette::WindowText, QColor(0xf1, 0xf1, 0xf1));
     m_nowPlaying->setPalette(textPalette);
     m_nowPlaying->setText(m_nowPlayingText);
     m_nowPlayingFont=m_nowPlaying->font();
-    detailsLayout->addWidget(m_nowPlaying);
+    m_detailsLayout->addWidget(m_nowPlaying);
     m_artistAlbumName=new QLabel(this);
     textPalette.setColor(QPalette::WindowText, QColor(0x99, 0x99, 0x99));
     m_artistAlbumName->setPalette(textPalette);
-    detailsLayout->addWidget(m_artistAlbumName);
+    m_detailsLayout->addWidget(m_artistAlbumName);
     m_title=new QLabel(this);
     m_titleFont=m_title->font();
     textPalette.setColor(QPalette::WindowText, QColor(0xff, 0xa5, 0x00));
     m_title->setPalette(textPalette);
-    detailsLayout->addWidget(m_title);
-    m_artworkLayout->addLayout(detailsLayout, 1);
+    m_detailsLayout->addWidget(m_title);
+    m_artworkLayout->addLayout(m_detailsLayout, 1);
     m_mainLayout->addLayout(m_artworkLayout);
 }
 
@@ -121,18 +122,25 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
     float sizeParamF=(float)sizeParam,
           artWorkSizeF=sizeParamF*0.32;
     int artWorkSize=(int)(artWorkSizeF),
-        normalTextSize=(int)(artWorkSizeF*0.08);
+        normalTextSize=(int)(artWorkSizeF*0.08),
+        bottomMargin=(int)(artWorkSizeF*0.13);
+    if(normalTextSize<10)
+        normalTextSize=10;
     m_artworkLayout->setContentsMargins((int)(artWorkSizeF*0.3),
                                         0,
                                         0,
-                                        0);
+                                        bottomMargin);
+    m_artworkLayout->setSpacing((int)(artWorkSizeF*0.23));
+    m_detailsLayout->setSpacing((int)(artWorkSizeF*0.03));
     m_albumArtWork->setFixedSize(artWorkSize,artWorkSize);
+    m_artistAlbumName->setContentsMargins(bottomMargin,0,0,0);
+    m_title->setContentsMargins(bottomMargin,0,0,0);
     m_nowPlayingFont.setPixelSize(normalTextSize);
     m_nowPlaying->setFont(m_nowPlayingFont);
     m_artistAlbumName->setFont(m_nowPlayingFont);
     m_titleFont.setPixelSize((int)(artWorkSizeF*0.13));
     m_title->setFont(m_titleFont);
-    m_visualEffect->resize(width(), height()-artWorkSize);
+    m_visualEffect->resize(width(), height()-artWorkSize-bottomMargin);
 }
 
 void KNMusicPlayerWidget::onActionPositionChanged(const int &position)

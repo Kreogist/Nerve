@@ -1,4 +1,8 @@
 #include <QBoxLayout>
+#include <QTimeLine>
+#include <QResizeEvent>
+
+#include <QDebug>
 
 #include "knverticalwidgetswitcher.h"
 
@@ -18,6 +22,12 @@ KNStdLibCategorySwitcher::KNStdLibCategorySwitcher(QWidget *parent) :
 
     m_categoryWidgets=new KNVerticalWidgetSwitcher(this);
     m_layout->addWidget(m_categoryWidgets);
+
+    m_dummyShadow=new QWidget(this);
+    m_dummyShadow->setAutoFillBackground(true);
+    m_dummyPalette=m_dummyShadow->palette();
+    changeOpacity(0);
+    m_dummyShadow->hide();
 }
 
 void KNStdLibCategorySwitcher::addCategory(const QString &name,
@@ -31,4 +41,27 @@ void KNStdLibCategorySwitcher::addCategory(const QString &name,
 void KNStdLibCategorySwitcher::setCentralWidgetIndex(const int &index)
 {
     m_categoryWidgets->setCurrentIndex(index);
+}
+
+void KNStdLibCategorySwitcher::changeOpacity(const qreal &opacityParam)
+{
+    m_shadowColor.setAlpha(opacityParam*200.0);
+    m_dummyPalette.setColor(QPalette::Window, m_shadowColor);
+    m_dummyShadow->setPalette(m_dummyPalette);
+}
+
+void KNStdLibCategorySwitcher::enableContent()
+{
+    m_dummyShadow->hide();
+}
+
+void KNStdLibCategorySwitcher::disableContent()
+{
+    m_dummyShadow->show();
+}
+
+void KNStdLibCategorySwitcher::resizeEvent(QResizeEvent *event)
+{
+    KNLibCategorySwitcher::resizeEvent(event);
+    m_dummyShadow->resize(event->size());
 }

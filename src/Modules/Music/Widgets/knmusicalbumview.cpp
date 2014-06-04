@@ -97,8 +97,8 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_albumName=new QLabel(this);
     m_albumName->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
-    artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
     artistFont.setBold(true);
+    artistFont.setPixelSize(artistFont.pixelSize()+(artistFont.pixelSize()>>1));
     m_albumName->setFont(artistFont);
     m_mainLayout->addSpacing(25);
     m_mainLayout->addWidget(m_albumName);

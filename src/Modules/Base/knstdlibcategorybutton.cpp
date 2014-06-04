@@ -1,5 +1,6 @@
 #include <QGraphicsOpacityEffect>
 #include <QLabel>
+#include <QMouseEvent>
 #include <QTimeLine>
 
 #include "knstdlibcategorybutton.h"
@@ -67,20 +68,49 @@ void KNStdLibCategoryButton::setCategoryText(const QString &text)
     resizeButton();
 }
 
+void KNStdLibCategoryButton::mousePressEvent(QMouseEvent *event)
+{
+    QWidget::mousePressEvent(event);
+    m_isPressed=true;
+}
+
+void KNStdLibCategoryButton::mouseReleaseEvent(QMouseEvent *event)
+{
+    QWidget::mousePressEvent(event);
+    if(m_isPressed)
+    {
+        m_isPressed=false;
+        if(m_selectionFolded)
+        {
+            m_selectionFolded=false;
+            emit requireShowCategorySelect();
+            return;
+        }
+        m_selectionFolded=true;
+        emit requireHideCategorySelect();
+    }
+}
+
 void KNStdLibCategoryButton::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
-    m_mouseOut->stop();
-    m_mouseIn->setStartFrame(m_opacityColor.alpha());
-    m_mouseIn->start();
+    if(m_selectionFolded)
+    {
+        m_mouseOut->stop();
+        m_mouseIn->setStartFrame(m_opacityColor.alpha());
+        m_mouseIn->start();
+    }
 }
 
 void KNStdLibCategoryButton::leaveEvent(QEvent *event)
 {
     QWidget::leaveEvent(event);
-    m_mouseIn->stop();
-    m_mouseOut->setStartFrame(m_opacityColor.alpha());
-    m_mouseOut->start();
+    if(m_selectionFolded)
+    {
+        m_mouseIn->stop();
+        m_mouseOut->setStartFrame(m_opacityColor.alpha());
+        m_mouseOut->start();
+    }
 }
 
 void KNStdLibCategoryButton::onActionChangeOpacity(const int &frame)

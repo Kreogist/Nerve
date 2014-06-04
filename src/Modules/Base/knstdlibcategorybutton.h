@@ -17,8 +17,12 @@ public:
 
 signals:
     void requireResetLeftSpace(const int &leftMargin);
+    void requireShowCategorySelect();
+    void requireHideCategorySelect();
 
 protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
 
@@ -35,6 +39,7 @@ private:
     QLinearGradient m_textGradient;
     QColor m_opacityColor=QColor(255,255,255,0);
     QTimeLine *m_mouseIn, *m_mouseOut;
+    bool m_selectionFolded=true, m_isPressed=false;
 };
 
 #endif // KNSTDLIBCATEGORYBUTTON_H

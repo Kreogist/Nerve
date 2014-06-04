@@ -7,6 +7,7 @@
 #include "knlibcategorylist.h"
 
 class QBoxLayout;
+class QTimeLine;
 class KNStdLibCategoryButton;
 class KNStdLibCategoryList : public KNLibCategoryList
 {
@@ -16,9 +17,16 @@ public:
     KNStdLibCategoryButton *listButton();
 
 signals:
+    void requireDisableContent();
+    void requireEnableContent();
+    void requireChangeOpacity(const qreal &opacity);
 
 public slots:
     void addCategory(const QString &title, const QPixmap &icon);
+
+private slots:
+    void showCategory();
+    void hideCategory();
 
 private:
     struct CategoryItem
@@ -28,6 +36,7 @@ private:
     };
     QList<CategoryItem> m_categories;
     QBoxLayout *m_layout;
+    QTimeLine *m_expandCategory, *m_foldCategory;
     KNStdLibCategoryButton *m_button;
 };
 

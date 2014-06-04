@@ -29,7 +29,7 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
     {
         peak=0;
         b1=pow(2,x*10.0/(BANDS-1));
-        if (b1>2047) b1=2047;
+        if (b1>4095) b1=4095;
         if (b1<=b0) b1=b0+1; // make sure it uses at least 1 FFT bin
         for (;b0<b1;b0++)
             if (peak<m_fft[1+b0])

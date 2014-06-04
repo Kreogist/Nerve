@@ -45,6 +45,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mainWidget=new KNStdLibCategorySwitcher(this);
     connect(m_mainWidget, &KNStdLibCategorySwitcher::requireAddCategory,
             m_categoryList, &KNStdLibCategoryList::addCategory);
+    connect(m_categoryList, &KNStdLibCategoryList::requireDisableContent,
+            m_mainWidget, &KNStdLibCategorySwitcher::disableContent);
+    connect(m_categoryList, &KNStdLibCategoryList::requireEnableContent,
+            m_mainWidget, &KNStdLibCategorySwitcher::enableContent);
+    connect(m_categoryList, &KNStdLibCategoryList::requireChangeOpacity,
+            m_mainWidget, &KNStdLibCategorySwitcher::changeOpacity);
+    mainLayout->addWidget(m_categoryList);
     mainLayout->addWidget(m_mainWidget, 1);
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);

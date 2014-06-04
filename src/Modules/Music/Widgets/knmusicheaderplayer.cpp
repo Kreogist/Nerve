@@ -56,9 +56,15 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_albumArt->setFixedSize(50,50);
     m_albumArt->setScaledContents(true);
     connect(m_albumArt, &KNMusicHeaderAlbumArt::requireShowMusicPlayer,
-            this, &KNMusicHeaderPlayer::requireShowMusicPlayer);
+            [=]{
+                    emit requireShowMusicPlayer();
+                    m_animate=false;
+               });
     connect(m_albumArt, &KNMusicHeaderAlbumArt::requireHideMusicPlayer,
-            this, &KNMusicHeaderPlayer::requireHideMusicPlayer);
+            [=]{
+                    emit requireHideMusicPlayer();
+                    m_animate=true;
+               });
     albumArtLayout->addWidget(m_albumArt);
 
     QBoxLayout *detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,
@@ -110,11 +116,6 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
             this, SLOT(onActionMouseInOut(QVariant)));
 }
 
-QWidget *KNMusicHeaderPlayer::visualEffect()
-{
-//    return m_visualEffect;
-}
-
 void KNMusicHeaderPlayer::setAlbumArt(const QPixmap &albumArt)
 {
     m_albumArt->setPixmap(albumArt);
@@ -164,22 +165,28 @@ void KNMusicHeaderPlayer::playFile(const QString &filePath)
 void KNMusicHeaderPlayer::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
-    m_mouseOut->stop();
-    m_mouseIn->setStartValue(m_playerControl->pos());
-    m_mouseIn->setEndValue(QPoint(m_progress->x(),
-                                  0));
-    m_playerControl->show();
-    m_mouseIn->start();
+    if(m_animate)
+    {
+        m_mouseOut->stop();
+        m_mouseIn->setStartValue(m_playerControl->pos());
+        m_mouseIn->setEndValue(QPoint(m_progress->x(),
+                                      0));
+        m_playerControl->show();
+        m_mouseIn->start();
+    }
 }
 
 void KNMusicHeaderPlayer::leaveEvent(QEvent *event)
 {
     QWidget::leaveEvent(event);
-    m_mouseIn->stop();
-    m_mouseOut->setStartValue(m_playerControl->pos());
-    m_mouseOut->setEndValue(QPoint(m_progress->x(),
-                                   -m_progress->y()));
-    m_mouseOut->start();
+    if(m_animate)
+    {
+        m_mouseIn->stop();
+        m_mouseOut->setStartValue(m_playerControl->pos());
+        m_mouseOut->setEndValue(QPoint(m_progress->x(),
+                                       -m_progress->y()));
+        m_mouseOut->start();
+    }
 }
 
 void KNMusicHeaderPlayer::resizeEvent(QResizeEvent *event)
