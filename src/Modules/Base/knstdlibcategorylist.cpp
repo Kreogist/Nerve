@@ -18,14 +18,6 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     setLayout(m_layout);
 }
 
-KNStdLibCategoryList::~KNStdLibCategoryList()
-{
-    if(m_button->parent()==0)
-    {
-        m_button->deleteLater();
-    }
-}
-
 void KNStdLibCategoryList::addCategory(const QString &title,
                                        const QPixmap &icon)
 {
@@ -38,6 +30,7 @@ void KNStdLibCategoryList::addCategory(const QString &title,
         m_button->setCategoryIcon(icon);
         m_button->setCategoryText(title);
     }
+    //Add to list.
     m_categories.append(item);
 }
 

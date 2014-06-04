@@ -111,7 +111,7 @@ private:
         MusicThread()
         {
             positionUpdater=new QTimer;
-            positionUpdater->setInterval(10);
+            positionUpdater->setInterval(30);
         }
         ~MusicThread()
         {

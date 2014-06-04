@@ -13,7 +13,6 @@ class KNStdLibCategoryList : public KNLibCategoryList
     Q_OBJECT
 public:
     explicit KNStdLibCategoryList(QWidget *parent = 0);
-    ~KNStdLibCategoryList();
     KNStdLibCategoryButton *listButton();
 
 signals:
