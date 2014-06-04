@@ -119,7 +119,11 @@ SOURCES += \
     Modules/Music/Widgets/knmusicvolumeslider.cpp \
     Modules/Music/Widgets/knmusicplayerwidget.cpp \
     Modules/Music/Libraries/knmusicplaylistmanager.cpp \
-    Modules/knconfigure.cpp
+    Modules/knconfigure.cpp \
+    Modules/Base/knlibheadercontainer.cpp \
+    Modules/Base/knstdlibheadercontainer.cpp \
+    Modules/Base/knstdlibcategorybutton.cpp \
+    Modules/knfontmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -221,7 +225,11 @@ HEADERS += \
     Modules/Music/Widgets/knmusicvolumeslider.h \
     Modules/Music/Widgets/knmusicplayerwidget.h \
     Modules/Music/Libraries/knmusicplaylistmanager.h \
-    Modules/knconfigure.h
+    Modules/knconfigure.h \
+    Modules/Base/knlibheadercontainer.h \
+    Modules/Base/knstdlibheadercontainer.h \
+    Modules/Base/knstdlibcategorybutton.h \
+    Modules/knfontmanager.h
 
 RESOURCES += \
     res.qrc

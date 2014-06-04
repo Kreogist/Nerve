@@ -5,8 +5,11 @@
 
 class QCloseEvent;
 class KNPluginBase;
+class KNFontManager;
 class KNStdLibCategorySwitcher;
 class KNStdLibHeaderSwitcher;
+class KNStdLibHeaderContainer;
+class KNStdLibCategoryList;
 class KNGlobal;
 class MainWindow : public QMainWindow
 {
@@ -26,8 +29,11 @@ private slots:
 
 private:
     KNStdLibCategorySwitcher *m_mainWidget;
-    KNStdLibHeaderSwitcher *m_headerWidget;
+    KNStdLibCategoryList *m_categoryList;
+    KNStdLibHeaderContainer *m_headerContainer;
+    KNStdLibHeaderSwitcher *m_headerSwitcher;
     KNGlobal *m_global;
+    KNFontManager *m_fontManager;
     QString m_databaseFile;
 };
 

@@ -4,6 +4,10 @@
 #include <QDebug>
 #include <iostream>
 
+#include <QFont>
+#include <QFile>
+#include <QFontDatabase>
+
 #include <QStyleFactory>
 
 #include "mainwindow.h"

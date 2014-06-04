@@ -133,7 +133,7 @@ KNMusicPlugin::~KNMusicPlugin()
 void KNMusicPlugin::applyPlugin()
 {
     emit requireAddCategory("Music",
-                            QPixmap(),
+                            QPixmap(":/Music/Resources/Music/icon.png"),
                             m_musicViewer);
     emit requireAddHeader(m_headerWidget);
 }
@@ -174,14 +174,20 @@ void KNMusicPlugin::createShortcuts()
     m_musicViewer->addAction(searchShortcut);
     QAction *musicPlay=new QAction(this);
     musicPlay->setShortcut(QKeySequence(Qt::Key_MediaPlay));
-    connect(musicPlay, SIGNAL(triggered()),
-            m_musicPlayer, SLOT(play()));
+    connect(musicPlay, &QAction::triggered,
+            [=]
+            {
+                m_musicPlayer->play();
+            });
     m_musicViewer->addAction(musicPlay);
     m_headerWidget->addAction(musicPlay);
     QAction *musicPause=new QAction(this);
     musicPause->setShortcut(QKeySequence(Qt::Key_MediaPause));
-    connect(musicPause, SIGNAL(triggered()),
-            m_musicPlayer, SLOT(pause()));
+    connect(musicPause, &QAction::triggered,
+            [=]
+            {
+                m_musicPlayer->pause();
+            });
     m_musicViewer->addAction(musicPause);
     m_headerWidget->addAction(musicPause);
 }

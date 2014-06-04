@@ -219,7 +219,7 @@ private:
     int m_iconSizeParam=124;
     int m_spacingHeight=154, m_spacingWidth=134;
     int m_minGrey=0x30;
-    bool m_hidingAlbum=false, m_flyingAlbum=false, m_noAlbumHide=false;
+    bool m_hidingAlbum=false, m_flyingAlbum=false;
     QPalette m_palette;
     QColor m_backgroundColor;
     QTimeLine *m_scrollTimeLine;

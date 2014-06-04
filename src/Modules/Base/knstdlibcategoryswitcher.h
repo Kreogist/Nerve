@@ -4,7 +4,7 @@
 #include "knlibcategoryswitcher.h"
 
 class QBoxLayout;
-class KNWidgetSwitcher;
+class KNVerticalWidgetSwitcher;
 class KNStdLibCategorySwitcher : public KNLibCategorySwitcher
 {
     Q_OBJECT
@@ -21,7 +21,7 @@ public slots:
 
 private:
     QBoxLayout *m_layout;
-    KNWidgetSwitcher *m_categoryWidgets;
+    KNVerticalWidgetSwitcher *m_categoryWidgets;
     QColor m_coverColor;
 };
 

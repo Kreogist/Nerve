@@ -1,6 +1,6 @@
 #include <QBoxLayout>
 
-#include "knwidgetswitcher.h"
+#include "knverticalwidgetswitcher.h"
 
 #include "knstdlibcategoryswitcher.h"
 
@@ -16,7 +16,7 @@ KNStdLibCategorySwitcher::KNStdLibCategorySwitcher(QWidget *parent) :
     m_layout->setSpacing(0);
     setLayout(m_layout);
 
-    m_categoryWidgets=new KNWidgetSwitcher(this);
+    m_categoryWidgets=new KNVerticalWidgetSwitcher(this);
     m_layout->addWidget(m_categoryWidgets);
 }
 
@@ -24,6 +24,7 @@ void KNStdLibCategorySwitcher::addCategory(const QString &name,
                                            const QPixmap &icon,
                                            QWidget *centralWidget)
 {
+    emit requireAddCategory(name, icon);
     m_categoryWidgets->addWidget(centralWidget);
 }
 

@@ -2,10 +2,13 @@
 #include <QCloseEvent>
 
 #include "Modules/Base/knpluginbase.h"
+#include "Modules/Base/knstdlibheadercontainer.h"
 #include "Modules/Base/knstdlibcategoryswitcher.h"
 #include "Modules/Base/knstdlibheaderswitcher.h"
+#include "Modules/Base/knstdlibcategorylist.h"
 
 #include "Modules/knglobal.h"
+#include "Modules/knfontmanager.h"
 
 #include "Modules/Music/knmusicplugin.h"
 
@@ -20,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);
 
+    m_fontManager=KNFontManager::instance();
+    m_fontManager->loadCustomFont();
+    m_fontManager->setGlobalFont("WenQuanYi Micro Hei");
+
     QWidget *holder=new QWidget(this);
     holder->setContentsMargins(0,0,0,0);
     setCentralWidget(holder);
@@ -29,9 +36,15 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->setSpacing(0);
     holder->setLayout(mainLayout);
 
-    m_headerWidget=new KNStdLibHeaderSwitcher(this);
-    mainLayout->addWidget(m_headerWidget);
+    m_headerContainer=new KNStdLibHeaderContainer(this);
+    m_categoryList=new KNStdLibCategoryList(this);
+    m_headerSwitcher=new KNStdLibHeaderSwitcher;
+    m_headerContainer->addCategorySwitcher(m_categoryList->listButton());
+    m_headerContainer->addHeaderSwitcher(m_headerSwitcher);
+    mainLayout->addWidget(m_headerContainer);
     m_mainWidget=new KNStdLibCategorySwitcher(this);
+    connect(m_mainWidget, &KNStdLibCategorySwitcher::requireAddCategory,
+            m_categoryList, &KNStdLibCategoryList::addCategory);
     mainLayout->addWidget(m_mainWidget, 1);
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
@@ -43,7 +56,7 @@ void MainWindow::addPlugin(KNPluginBase *plugin)
     connect(plugin, &KNPluginBase::requireAddCategory,
             m_mainWidget, &KNStdLibCategorySwitcher::addCategory);
     connect(plugin, &KNPluginBase::requireAddHeader,
-            m_headerWidget, &KNStdLibHeaderSwitcher::addWidget);
+            m_headerSwitcher, &KNStdLibHeaderSwitcher::addWidget);
     plugin->applyPlugin();
 }
 

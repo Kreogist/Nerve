@@ -529,9 +529,7 @@ QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
         //Clicked on space.
         return QModelIndex();
     }
-    return m_proxyModel->index(m_noAlbumHide?
-                               pointLine*m_maxColumnCount+pointColumn+1:
-                               pointLine*m_maxColumnCount+pointColumn,
+    return m_proxyModel->index(pointLine*m_maxColumnCount+pointColumn,
                                0,
                                rootIndex());
 }
@@ -676,12 +674,6 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentTop+=m_spacingHeight*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
     m_firstVisibleIndex=albumIndex;
-    m_noAlbumHide=m_model->isNoAlbumHidden() && m_proxyModel->filterRegExp().isEmpty();
-    if(m_noAlbumHide)
-    {
-        m_firstVisibleIndex++;
-        albumIndex++;
-    }
     QModelIndex currentPaintIndex, sourceIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
@@ -954,8 +946,7 @@ QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
     {
         return QRect();
     }
-    int itemIndex=m_noAlbumHide?
-                        index.row()-1:index.row(),
+    int itemIndex=index.row(),
         itemLine=itemIndex/m_maxColumnCount,
         itemColumn=itemIndex-itemLine*m_maxColumnCount;
     return QRect(itemColumn*m_spacingWidth+m_spacing,

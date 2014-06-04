@@ -33,6 +33,7 @@
         <file>Resources/Music/EQs/hsliderLeft.png</file>
         <file>Resources/Music/EQs/hsliderMid.png</file>
         <file>Resources/Music/EQs/hsliderRight.png</file>
+        <file>Resources/Music/icon.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

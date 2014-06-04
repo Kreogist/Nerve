@@ -31,8 +31,6 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     m_playListLayout->setContentsMargins(0,0,0,0);
     m_playListLayout->setSpacing(0);
     m_visualEffect=new KNMusicVisualEffect(this);
-    m_visualEffect->resize(1000, 500);
-//    m_playListLayout->addWidget(m_visualEffect);
     m_mainLayout->addLayout(m_playListLayout);
 
     m_artworkLayout=new QBoxLayout(QBoxLayout::LeftToRight,
@@ -134,6 +132,7 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
     m_artistAlbumName->setFont(m_nowPlayingFont);
     m_titleFont.setPixelSize((int)(artWorkSizeF*0.13));
     m_title->setFont(m_titleFont);
+    m_visualEffect->resize(width(), height()-artWorkSize);
 }
 
 void KNMusicPlayerWidget::onActionPositionChanged(const int &position)

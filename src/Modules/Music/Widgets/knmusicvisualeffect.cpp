@@ -20,7 +20,7 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    int SPECWIDTH=width(), SPECHEIGHT=height(),
+    int SPECWIDTH=width(), SPECHEIGHT=(height()>>1),
             b0=0,x,y,b1, bandWidth=10,BANDS=SPECWIDTH/(bandWidth+1), currentX=0;
     float peak;
     painter.setPen(Qt::NoPen);
@@ -34,12 +34,16 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
         for (;b0<b1;b0++)
             if (peak<m_fft[1+b0])
                 peak=m_fft[1+b0];
-        y=qsqrt(peak)*3*SPECHEIGHT-4; // scale it (sqrt to make low values more visible)
-        if (y>SPECHEIGHT) y=SPECHEIGHT; // cap it
+        y=((int)(qsqrt(peak)*SPECHEIGHT)<<1); // scale it (sqrt to make low values more visible)
+//        if (y>SPECHEIGHT) y=SPECHEIGHT; // cap it
         painter.drawRect(currentX,
-                         SPECHEIGHT-y,
+                         height()-y,
                          bandWidth,
                          y);
+        if(2047==b1)
+        {
+            break;
+        }
         currentX+=bandWidth+1;
     }
 }
