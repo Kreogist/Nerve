@@ -1,5 +1,5 @@
 #include <QTimeLine>
-#include <QBoxLayout>
+#include <QResizeEvent>
 
 #include "knlibheaderswitcher.h"
 #include "knstdlibcategorybutton.h"
@@ -10,11 +10,6 @@ KNStdLibHeaderContainer::KNStdLibHeaderContainer(QWidget *parent) :
     KNLibHeaderContainer(parent)
 {
     setAutoFillBackground(true);
-    m_containerLayout=new QBoxLayout(QBoxLayout::LeftToRight,
-                                     this);
-    m_containerLayout->setContentsMargins(0,0,0,0);
-    m_containerLayout->setSpacing(0);
-    setLayout(m_containerLayout);
 
     int minGrey=0x10;
     m_backgroundColor=QColor(minGrey, minGrey, minGrey);
@@ -54,7 +49,6 @@ void KNStdLibHeaderContainer::addCategorySwitcher(KNStdLibCategoryButton *button
 void KNStdLibHeaderContainer::addHeaderSwitcher(KNLibHeaderSwitcher *switcher)
 {
     m_switcher=switcher;
-    m_containerLayout->addWidget(m_switcher, 1);
     m_switcher->setParent(this);
     setFixedHeight(m_switcher->height());
     if(m_button!=NULL)
@@ -81,9 +75,16 @@ void KNStdLibHeaderContainer::leaveEvent(QEvent *e)
     KNLibHeaderContainer::leaveEvent(e);
 }
 
+void KNStdLibHeaderContainer::resizeEvent(QResizeEvent *event)
+{
+    KNLibHeaderContainer::resizeEvent(event);
+    resetSwitcherPosition();
+}
+
 void KNStdLibHeaderContainer::resetLeftSpace(const int &leftMargin)
 {
-    m_containerLayout->setContentsMargins(leftMargin,0,0,0);
+    m_leftMargin=leftMargin;
+    resetSwitcherPosition();
 }
 
 void KNStdLibHeaderContainer::changeBackground(int frameData)
@@ -96,8 +97,16 @@ void KNStdLibHeaderContainer::changeBackground(int frameData)
 void KNStdLibHeaderContainer::linkButtonAndSwitcher()
 {
     connect(m_button, &KNStdLibCategoryButton::requireShowCategorySelect,
-            m_switcher, &KNLibHeaderSwitcher::hide);
+            m_switcher, &KNLibHeaderSwitcher::hideCurrentWidget);
     connect(m_button, &KNStdLibCategoryButton::requireHideCategorySelect,
-            m_switcher, &KNLibHeaderSwitcher::show);
+            m_switcher, &KNLibHeaderSwitcher::showCurrentWidget);
+}
+
+void KNStdLibHeaderContainer::resetSwitcherPosition()
+{
+    m_switcher->setGeometry(m_leftMargin,
+                            0,
+                            width()-m_leftMargin,
+                            m_switcher->height());
 }
 

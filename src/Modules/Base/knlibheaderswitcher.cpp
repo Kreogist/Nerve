@@ -1,4 +1,5 @@
 #include <QResizeEvent>
+#include <QSizePolicy>
 
 #include "knlibheaderswitcher.h"
 
@@ -38,6 +39,21 @@ int KNLibHeaderSwitcher::widgetCount() const
 QWidget *KNLibHeaderSwitcher::widgetAt(const int &index)
 {
     return m_stackedWidgets.at(index);
+}
+
+QWidget *KNLibHeaderSwitcher::currentWidget() const
+{
+    return m_stackedWidgets.at(m_currentIndex);
+}
+
+void KNLibHeaderSwitcher::hideCurrentWidget()
+{
+    ;
+}
+
+void KNLibHeaderSwitcher::showCurrentWidget()
+{
+    ;
 }
 
 void KNLibHeaderSwitcher::resizeEvent(QResizeEvent *event)

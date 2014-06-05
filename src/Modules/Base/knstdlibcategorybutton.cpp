@@ -3,7 +3,10 @@
 #include <QPropertyAnimation>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QFontMetrics>
 #include <QTimeLine>
+
+#include <QDebug>
 
 #include "knstdlibcategorybutton.h"
 
@@ -35,6 +38,7 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     m_textFont.setBold(true);
     m_textFont.setPixelSize(m_textSize);
     m_text->setFont(m_textFont);
+    m_rawFontMetrics=m_text->fontMetrics();
     m_textEffect=new QGraphicsOpacityEffect(m_text);
     m_textEffect->setOpacity(0.5);
     m_textGradient=QLinearGradient(QPointF(0,0),
@@ -76,8 +80,8 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
             [=]
             {
                 // Prepare for the contents.
-                m_icon->setPixmap(m_switchToPixmap);
-                m_text->setText(m_switchToText);
+                setCategoryIcon(m_switchToPixmap);
+                setCategoryText(m_switchToText);
 
                 //Start the in animation.
                 m_inAnime->start();
@@ -195,8 +199,9 @@ void KNStdLibCategoryButton::onActionChangeOpacity(const int &frame)
 
 void KNStdLibCategoryButton::resizeButton()
 {
-    int sizeParam=qMax(m_text->fontMetrics().width(m_text->text())+m_leftMargin,
+    int sizeParam=qMax(m_rawFontMetrics.width(m_text->text())+m_leftMargin,
                        m_iconSize);
+    qDebug()<<sizeParam;
     setFixedWidth(sizeParam);
     emit requireResetLeftSpace(sizeParam-m_offset);
 }

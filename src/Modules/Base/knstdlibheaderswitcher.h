@@ -5,6 +5,7 @@
 
 class QPropertyAnimation;
 class QParallelAnimationGroup;
+class QResizeEvent;
 class KNStdLibHeaderSwitcher : public KNLibHeaderSwitcher
 {
     Q_OBJECT
@@ -14,6 +15,9 @@ public:
 
 private slots:
     void onActionAnimationComplete();
+
+protected:
+    void resizeEvent(QResizeEvent *event);
 
 private:
     int m_aboutToBeCurrentIndex;

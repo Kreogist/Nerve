@@ -1,4 +1,5 @@
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 #include <QParallelAnimationGroup>
 
 #include <QDebug>
@@ -33,9 +34,9 @@ void KNStdLibHeaderSwitcher::setCurrentIndex(const int &index)
     fromWidget->raise();
     m_moveOut->setTargetObject(fromWidget);
     m_moveIn->setTargetObject(toWidget);
-    QRect centerPosition=geometry(),
-          outPostion=QRect(0,
-                           -height(),
+    QRect centerPosition=rect(),
+          outPostion=QRect(-width(),
+                           0,
                            width(),
                            height());
     m_moveOut->setStartValue(centerPosition);
@@ -50,4 +51,16 @@ void KNStdLibHeaderSwitcher::setCurrentIndex(const int &index)
 void KNStdLibHeaderSwitcher::onActionAnimationComplete()
 {
     KNLibHeaderSwitcher::setCurrentIndex(m_aboutToBeCurrentIndex);
+}
+
+void KNStdLibHeaderSwitcher::resizeEvent(QResizeEvent *event)
+{
+    KNLibHeaderSwitcher::resizeEvent(event);
+    if(m_movedGroup->state()==QAbstractAnimation::Running)
+    {
+        m_movedGroup->pause();
+        m_moveOut->setStartValue(rect());
+        m_moveIn->setEndValue(rect());
+        m_movedGroup->start();
+    }
 }

@@ -3,7 +3,7 @@
 
 #include "knlibheadercontainer.h"
 
-class QBoxLayout;
+class QResizeEvent;
 class QTimeLine;
 class KNStdLibCategoryButton;
 class KNStdLibHeaderContainer : public KNLibHeaderContainer
@@ -21,6 +21,7 @@ public slots:
 protected:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void resetLeftSpace(const int &leftMargin);
@@ -28,12 +29,13 @@ private slots:
 
 private:
     void linkButtonAndSwitcher();
+    void resetSwitcherPosition();
+    int m_leftMargin=0;
     QTimeLine *m_mouseIn, *m_mouseOut;
     KNStdLibCategoryButton *m_button=NULL;
     KNLibHeaderSwitcher *m_switcher=NULL;
     QPalette m_palette;
     QColor m_backgroundColor;
-    QBoxLayout *m_containerLayout;
 };
 
 #endif // KNSTDLIBHEADERCONTAINER_H

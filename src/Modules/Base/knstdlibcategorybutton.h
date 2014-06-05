@@ -40,6 +40,7 @@ private:
     QLabel *m_text, *m_icon;
     int m_leftMargin=58, m_iconSize=110, m_offset=10, m_textY=22, m_textSize=50;
     QFont m_textFont;
+    QFontMetrics m_rawFontMetrics=QFontMetrics(m_textFont);
     QGraphicsOpacityEffect *m_iconEffect, *m_textEffect;
     QRadialGradient m_iconGradient;
     QLinearGradient m_textGradient;
