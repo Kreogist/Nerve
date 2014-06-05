@@ -78,6 +78,7 @@ public:
     QImage noAlbumImage() const;
     QStringList genreList() const;
     int genreListSize() const;
+    int genreIndex(const QString &genre) const;
 
 signals:
 

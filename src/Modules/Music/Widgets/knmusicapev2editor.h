@@ -8,6 +8,7 @@
 
 class QLineEdit;
 class QTreeView;
+class QSignalMapper;
 class KNVerticalWidgetSwitcher;
 class KNMusicTagAPEv2;
 class KNMusicAPEv2Editor : public KNMusicTagEditorBase
@@ -27,10 +28,15 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
+    void writeTag(QFile &mediaFile,
+                  QDataStream &mediaData);
 
 private slots:
     void toAdvancedMode();
     void toOverviewMode();
+    void setTagData(const QString &key,
+                    const QString &data);
+    void onActionLineEditFinished(const int &index);
 
 private:
     void setEditorText(const int &index, const QString &data);
@@ -53,6 +59,7 @@ private:
     QScopedPointer<QStandardItemModel> m_advancedModel;
     KNVerticalWidgetSwitcher *m_switcher;
     QAction *m_toOverview, *m_toAdvanced;
+    QSignalMapper *m_editFinish;
 };
 
 #endif // KNMUSICAPEV2EDITOR_H

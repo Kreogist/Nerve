@@ -141,7 +141,7 @@ void KNMusicCategoryDetailsDisplay::resizeEvent(QResizeEvent *event)
     m_opacityEffect->setOpacityMask(m_alphaGradient);
 }
 
-KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
+KNMusicCategoryView::KNMusicCategoryView(QWidget *parent) :
     QSplitter(parent)
 {
     setContentsMargins(0,0,0,0);
@@ -169,29 +169,29 @@ KNMusicArtistView::KNMusicArtistView(QWidget *parent) :
     setStretchFactor(1, 1);
 }
 
-void KNMusicArtistView::resetHeader()
+void KNMusicCategoryView::resetHeader()
 {
     m_artistDetails->resetHeader();
 }
 
-void KNMusicArtistView::setModel(KNMusicCategorySortFilterModel *model)
+void KNMusicCategoryView::setModel(KNMusicCategorySortFilterModel *model)
 {
     m_artistList->setModel(model);
     m_proxyModel=model;
     connect(m_artistList->selectionModel(), &QItemSelectionModel::currentChanged,
-            this, &KNMusicArtistView::onActionItemActivate);
+            this, &KNMusicCategoryView::onActionItemActivate);
     m_artistModel=static_cast<KNMusicCategoryModel *>(m_proxyModel->sourceModel());
 }
 
-void KNMusicArtistView::setDetailModel(KNMusicCategoryDetailModel *model)
+void KNMusicCategoryView::setDetailModel(KNMusicCategoryDetailModel *model)
 {
     m_artistDetails->setDetailModel(model);
     connect(model, &KNMusicCategoryDetailModel::requireSongCountChange,
-            this, &KNMusicArtistView::onActionSongCountChange);
+            this, &KNMusicCategoryView::onActionSongCountChange);
     m_artistDetailModel=model;
 }
 
-void KNMusicArtistView::selectCategoryItem(const QString &value)
+void KNMusicCategoryView::selectCategoryItem(const QString &value)
 {
     QModelIndex artistSearch=m_proxyModel->mapFromSource(m_artistModel->indexOf(value));
     if(artistSearch.isValid())
@@ -201,7 +201,7 @@ void KNMusicArtistView::selectCategoryItem(const QString &value)
     }
 }
 
-void KNMusicArtistView::selectItem(const QModelIndex &index)
+void KNMusicCategoryView::selectItem(const QModelIndex &index)
 {
     QModelIndex testIndex=m_artistDetailModel->mapFromSource(index);
     if(testIndex.isValid())
@@ -210,17 +210,17 @@ void KNMusicArtistView::selectItem(const QModelIndex &index)
     }
 }
 
-void KNMusicArtistView::setSongListView(KNMusicListViewBase *listview)
+void KNMusicCategoryView::setSongListView(KNMusicListViewBase *listview)
 {
     m_artistDetails->setSongListView(listview);
 }
 
-void KNMusicArtistView::onActionSongCountChange(const int &value)
+void KNMusicCategoryView::onActionSongCountChange(const int &value)
 {
     m_artistDetails->setSongNumber(value);
 }
 
-void KNMusicArtistView::showEvent(QShowEvent *event)
+void KNMusicCategoryView::showEvent(QShowEvent *event)
 {
     QSplitter::showEvent(event);
     if(!m_artistList->selectionModel()->currentIndex().isValid())
@@ -233,7 +233,7 @@ void KNMusicArtistView::showEvent(QShowEvent *event)
     }
 }
 
-void KNMusicArtistView::onActionItemActivate(const QModelIndex &current,
+void KNMusicCategoryView::onActionItemActivate(const QModelIndex &current,
                                              const QModelIndex &previous)
 {
     Q_UNUSED(previous);

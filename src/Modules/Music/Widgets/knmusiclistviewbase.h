@@ -7,6 +7,7 @@
 
 class QDrag;
 class QSortFilterProxyModel;
+class KNLibBass;
 class KNMusicModel;
 class KNMusicDetailTooltip;
 class KNMusicListViewHeader;
@@ -22,6 +23,7 @@ public:
                             Qt::Alignment alignment);
     void setModel(QAbstractItemModel *model);
     void setSourceModel(KNMusicModel *musicModel);
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -33,6 +35,7 @@ public slots:
     virtual void retranslateAndSet();
 
 protected:
+    void closeEvent(QCloseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void leaveEvent(QEvent *event);
     void startDrag(Qt::DropActions supportedActions);

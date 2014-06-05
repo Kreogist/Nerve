@@ -16,6 +16,7 @@ public:
                      const QString &category,
                      QWidget *widget);
     void setCategoryIndex(const int &index);
+    int categoryIndex() const;
     void setFilter(KNLibFilter *searcher);
     void moveLeft();
     void moveRight();

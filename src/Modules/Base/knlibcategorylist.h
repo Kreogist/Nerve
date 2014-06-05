@@ -14,8 +14,8 @@ signals:
     void categoryIndexChanged(const int &index);
 
 public slots:
-    virtual void addCategory(const QPixmap &icon,
-                             const QString &title);
+    virtual void addCategory(const QString &title,
+                             const QPixmap &icon);
     virtual void setCurrentIndex(const int &index);
 
 private:

@@ -3,10 +3,12 @@
 #include <QCursor>
 #include <QDrag>
 #include <QHelpEvent>
+#include <QCloseEvent>
 #include <QMimeData>
 #include <QModelIndexList>
 #include <QMouseEvent>
 #include <QList>
+#include <QGraphicsDropShadowEffect>
 #include <QScopedPointer>
 #include <QScrollBar>
 #include <QSortFilterProxyModel>
@@ -53,11 +55,13 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
 
     //Set music header.
     m_headerWidget=new KNMusicListViewHeader(this);
+    m_headerWidget->installEventFilter(this);
     setHeader(m_headerWidget);
     connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
             this, &KNMusicListViewBase::onSectionVisibleChanged);
 
     m_musicDetailTooltip=new KNMusicDetailTooltip(this);
+    m_musicDetailTooltip->installEventFilter(this);
     connect(this, &KNMusicListViewBase::activated,
             this, &KNMusicListViewBase::onItemActived);
 }
@@ -119,6 +123,11 @@ void KNMusicListViewBase::setSourceModel(KNMusicModel *musicModel)
     m_musicDetailTooltip->setMusicModel(musicModel);
 }
 
+void KNMusicListViewBase::setMusicBackend(KNLibBass *backend)
+{
+    m_musicDetailTooltip->setMusicBackend(backend);
+}
+
 void KNMusicListViewBase::retranslate()
 {
     ;
@@ -127,6 +136,12 @@ void KNMusicListViewBase::retranslate()
 void KNMusicListViewBase::retranslateAndSet()
 {
     retranslate();
+}
+
+void KNMusicListViewBase::closeEvent(QCloseEvent *event)
+{
+    m_musicDetailTooltip->forceQuit();
+    QTreeView::closeEvent(event);
 }
 
 void KNMusicListViewBase::onActionSort(int logicalIndex, Qt::SortOrder order)
@@ -208,10 +223,6 @@ bool KNMusicListViewBase::event(QEvent *event)
             m_musicDetailTooltip->setTooltip(m_proxyModel->mapToSource(index),
                                              mapToGlobal(helpEvent->pos()));
             m_musicDetailTooltip->showTooltip();
-        }
-        else
-        {
-            m_musicDetailTooltip->hide();
         }
         return true;
     }

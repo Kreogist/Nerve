@@ -24,7 +24,7 @@ private slots:
 
 private:
     QTimeLine *m_mouseIn, *m_mouseOut;
-    QColor m_backgroundColor;
+    QColor m_alternateColor;
     QPalette m_palette;
 };
 

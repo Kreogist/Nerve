@@ -12,6 +12,7 @@
 
 #include <QDebug>
 
+#include "knconfigure.h"
 #include "knglobal.h"
 
 KNGlobal *KNGlobal::m_instance=nullptr;
@@ -43,6 +44,7 @@ KNGlobal::KNGlobal() :
     m_storageUnit[4]="TB";
     m_clipboard=QApplication::clipboard();
     m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library"));
+    m_configure=KNConfigure::instance();
     QDir libraryCheck(m_libraryPath);
     if(!libraryCheck.exists())
     {

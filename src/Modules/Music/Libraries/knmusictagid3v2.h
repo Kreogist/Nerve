@@ -63,6 +63,7 @@ signals:
 public slots:
 
 private:
+    ;
     QString id3v2DataToString(const QByteArray &value) const;
     int hexToStarRating(const quint8 &hex) const;
     void processAPIC(const QByteArray &value);

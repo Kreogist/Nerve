@@ -4,6 +4,10 @@
 #include <QDebug>
 #include <iostream>
 
+#include <QFont>
+#include <QFile>
+#include <QFontDatabase>
+
 #include <QStyleFactory>
 
 #include "mainwindow.h"
@@ -58,7 +62,7 @@ void KCMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 int main(int argc, char *argv[])
 {
-    //qInstallMessageHandler(KCMessageHandler);
+//    qInstallMessageHandler(KCMessageHandler);
     QApplication app(argc, argv);
     app.setStyle(QStyleFactory::create("fusion"));
     MainWindow mainWindow;

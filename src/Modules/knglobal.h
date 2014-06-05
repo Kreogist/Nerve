@@ -7,6 +7,7 @@
 #include <QTextCodec>
 
 class QClipboard;
+class KNConfigure;
 class KNGlobal : public QObject
 {
     Q_OBJECT
@@ -38,6 +39,7 @@ private:
                                                                                       QString &file);
 #endif
     static KNGlobal *m_instance;
+    KNConfigure *m_configure;
     QString m_storageUnit[5], m_libraryPath;
     QWidget *m_mainWindow;
     QClipboard *m_clipboard;

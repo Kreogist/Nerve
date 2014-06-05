@@ -43,11 +43,11 @@ private:
     QRadialGradient m_alphaGradient;
 };
 
-class KNMusicArtistView : public QSplitter
+class KNMusicCategoryView : public QSplitter
 {
     Q_OBJECT
 public:
-    explicit KNMusicArtistView(QWidget *parent = 0);
+    explicit KNMusicCategoryView(QWidget *parent = 0);
     void resetHeader();
     void setModel(KNMusicCategorySortFilterModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);

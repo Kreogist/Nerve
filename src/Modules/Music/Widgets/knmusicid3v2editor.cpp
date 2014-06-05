@@ -261,6 +261,11 @@ void KNMusicID3v2Editor::retranslateAndSet()
     retranslate();
 }
 
+void KNMusicID3v2Editor::writeTag(QFile &mediaFile, QDataStream &mediaData)
+{
+    ;
+}
+
 void KNMusicID3v2Editor::toAdvancedMode()
 {
     m_switcher->setCurrentIndex(1);
