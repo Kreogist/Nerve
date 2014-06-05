@@ -58,7 +58,7 @@ int KNWidgetSwitcher::size() const
 
 void KNWidgetSwitcher::setCurrentIndex(int currentIndex)
 {
-    if(currentIndex<m_widgets.size())
+    if(currentIndex>=0 && currentIndex<m_widgets.size())
     {
         m_switchAnime->stop();
         m_flyOutAnime->setTargetObject(m_widgets.at(m_currentIndex));

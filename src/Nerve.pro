@@ -125,7 +125,8 @@ SOURCES += \
     Modules/Base/knstdlibcategorybutton.cpp \
     Modules/knfontmanager.cpp \
     Modules/Base/knsideshadows.cpp \
-    Modules/Store/knstoreplugin.cpp
+    Modules/Store/knstoreplugin.cpp \
+    Modules/Base/knstdlibcategorylistbutton.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -233,7 +234,8 @@ HEADERS += \
     Modules/Base/knstdlibcategorybutton.h \
     Modules/knfontmanager.h \
     Modules/Base/knsideshadows.h \
-    Modules/Store/knstoreplugin.h
+    Modules/Store/knstoreplugin.h \
+    Modules/Base/knstdlibcategorylistbutton.h
 
 RESOURCES += \
     res.qrc

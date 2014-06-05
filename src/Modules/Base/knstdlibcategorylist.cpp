@@ -1,9 +1,11 @@
 #include <QBoxLayout>
 #include <QTimeLine>
 #include <QPropertyAnimation>
+#include <QSignalMapper>
 
 #include <QDebug>
 
+#include "knstdlibcategorylistbutton.h"
 #include "knstdlibcategorybutton.h"
 #include "knsideshadows.h"
 
@@ -12,12 +14,15 @@
 KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     KNLibCategoryList(parent)
 {
+    //Initial Properties.
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
     setFixedHeight(0);
     QPalette pal=palette();
     pal.setColor(QPalette::Window, QColor(0x29, 0x2a, 0x2e));
     setPalette(pal);
+
+    //Button for showing category list.
     m_button=new KNStdLibCategoryButton;
     connect(m_button, &KNStdLibCategoryButton::requireShowCategorySelect,
             this, &KNStdLibCategoryList::showCategory);
@@ -29,10 +34,22 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     m_layout->setSpacing(0);
     setLayout(m_layout);
 
+    //Initial select signal mapper.
+    m_selectMapper=new QSignalMapper(this);
+    connect(m_selectMapper, SIGNAL(mapped(int)),
+            this, SLOT(onActionSwitch(int)));
+
     KNTopSideShadow *topShadow=new KNTopSideShadow(this);
     topShadow->setMaximumHeight(15);
     m_layout->addWidget(topShadow, 1);
 
+    m_buttonLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                  m_layout->widget());
+    m_buttonLayout->setContentsMargins(10,0,10,0);
+    m_buttonLayout->setSpacing(10);
+    m_buttonLayout->addStretch();
+    m_layout->addStretch();
+    m_layout->addLayout(m_buttonLayout, 1);
     m_layout->addStretch();
 
     KNBottomSideShadow *bottomShadow=new KNBottomSideShadow(this);
@@ -41,7 +58,7 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
 
     m_expandCategory=new QTimeLine(200, this);
     m_expandCategory->setUpdateInterval(10);
-    m_expandCategory->setEndFrame(100);
+    m_expandCategory->setEndFrame(170);
     connect(m_expandCategory, &QTimeLine::frameChanged,
             this, &KNStdLibCategoryList::setFixedHeight);
     connect(m_expandCategory, &QTimeLine::valueChanged,
@@ -53,7 +70,15 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     connect(m_foldCategory, &QTimeLine::frameChanged,
             this, &KNStdLibCategoryList::setFixedHeight);
     connect(m_foldCategory, &QTimeLine::finished,
-            this, &KNStdLibCategoryList::requireEnableContent);
+            [=]
+            {
+                emit requireEnableContent();
+                if(m_switchToIndex!=-1)
+                {
+                    emit requireSwitchTo(m_switchToIndex);
+                    m_switchToIndex=-1;
+                }
+            });
     connect(m_foldCategory, &QTimeLine::valueChanged,
             [=](const qreal &value)
             {
@@ -73,6 +98,17 @@ void KNStdLibCategoryList::addCategory(const QString &title,
         m_button->setCategoryIcon(icon);
         m_button->setCategoryText(title);
     }
+    //Create category button.
+    KNStdLibCategoryListButton *currentButton
+            =new KNStdLibCategoryListButton(this);
+    currentButton->setPixmap(icon);
+    //Set signal map to category select.
+    connect(currentButton, SIGNAL(clicked()),
+            m_selectMapper, SLOT(map()));
+    m_selectMapper->setMapping(currentButton, m_categories.size());
+    //Insert widget to the layout.
+    m_buttonLayout->insertWidget(m_buttonLayout->count()-1,
+                                 currentButton);
     //Add to list.
     m_categories.append(item);
 }
@@ -80,14 +116,25 @@ void KNStdLibCategoryList::addCategory(const QString &title,
 void KNStdLibCategoryList::showCategory()
 {
     emit requireDisableContent();
+    m_foldCategory->stop();
     m_expandCategory->setStartFrame(height());
     m_expandCategory->start();
 }
 
 void KNStdLibCategoryList::hideCategory()
 {
+    m_expandCategory->stop();
     m_foldCategory->setStartFrame(height());
     m_foldCategory->start();
+}
+
+void KNStdLibCategoryList::onActionSwitch(const int &index)
+{
+    CategoryItem currentCategory=m_categories.at(index);
+    m_button->onActionSwitchTo(currentCategory.icon,
+                               currentCategory.title);
+    m_switchToIndex=index;
+    hideCategory();
 }
 
 KNStdLibCategoryButton *KNStdLibCategoryList::listButton()

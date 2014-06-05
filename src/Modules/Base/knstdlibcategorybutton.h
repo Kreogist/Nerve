@@ -6,6 +6,8 @@
 class QBoxLayout;
 class QLabel;
 class QTimeLine;
+class QPropertyAnimation;
+class QParallelAnimationGroup;
 class QGraphicsOpacityEffect;
 class KNStdLibCategoryButton : public QWidget
 {
@@ -19,6 +21,10 @@ signals:
     void requireResetLeftSpace(const int &leftMargin);
     void requireShowCategorySelect();
     void requireHideCategorySelect();
+
+public slots:
+    void onActionSwitchTo(const QPixmap &pixmap,
+                          const QString &text);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -38,7 +44,11 @@ private:
     QRadialGradient m_iconGradient;
     QLinearGradient m_textGradient;
     QColor m_opacityColor=QColor(255,255,255,0);
+    QPixmap m_switchToPixmap;
+    QString m_switchToText;
     QTimeLine *m_mouseIn, *m_mouseOut;
+    QPropertyAnimation *m_iconOut, *m_textOut, *m_iconIn, *m_textIn;
+    QParallelAnimationGroup *m_outAnime, *m_inAnime;
     bool m_selectionFolded=true, m_isPressed=false;
 };
 

@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-#include "knverticalwidgetswitcher.h"
+#include "knwidgetswitcher.h"
 
 #include "knstdlibcategoryswitcher.h"
 
@@ -21,7 +21,7 @@ KNStdLibCategorySwitcher::KNStdLibCategorySwitcher(QWidget *parent) :
     setLayout(m_layout);
 
     //Set category switcher.
-    m_categoryWidgets=new KNVerticalWidgetSwitcher(this);
+    m_categoryWidgets=new KNWidgetSwitcher(this);
     m_layout->addWidget(m_categoryWidgets);
 
     //Initial the dummy shadow to disable the operate of the contents.

@@ -11,6 +11,7 @@
 #include "Modules/knfontmanager.h"
 
 #include "Modules/Music/knmusicplugin.h"
+#include "Modules/Store/knstoreplugin.h"
 
 #include "mainwindow.h"
 
@@ -51,11 +52,17 @@ MainWindow::MainWindow(QWidget *parent) :
             m_mainWidget, &KNStdLibCategorySwitcher::enableContent);
     connect(m_categoryList, &KNStdLibCategoryList::requireChangeOpacity,
             m_mainWidget, &KNStdLibCategorySwitcher::changeOpacity);
+    connect(m_categoryList, &KNStdLibCategoryList::requireSwitchTo,
+            m_mainWidget, &KNStdLibCategorySwitcher::setCentralWidgetIndex);
+    connect(m_categoryList, &KNStdLibCategoryList::requireSwitchTo,
+            m_headerSwitcher, &KNStdLibHeaderSwitcher::setCurrentIndex);
     mainLayout->addWidget(m_categoryList);
     mainLayout->addWidget(m_mainWidget, 1);
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
     addPlugin(musicPlugin);
+    KNStorePlugin *storePlugin=new KNStorePlugin(this);
+    addPlugin(storePlugin);
 }
 
 void MainWindow::addPlugin(KNPluginBase *plugin)

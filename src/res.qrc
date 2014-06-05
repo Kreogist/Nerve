@@ -78,4 +78,7 @@
     <qresource prefix="/Public">
         <file>Resources/Public/SearchIcon.png</file>
     </qresource>
+    <qresource prefix="/Store">
+        <file>Resources/Store/icon.png</file>
+    </qresource>
 </RCC>

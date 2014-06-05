@@ -1,4 +1,6 @@
 #include <QGraphicsOpacityEffect>
+#include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
 #include <QLabel>
 #include <QMouseEvent>
 #include <QTimeLine>
@@ -55,6 +57,41 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     m_mouseOut->setEndFrame(0);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNStdLibCategoryButton::onActionChangeOpacity);
+
+    //Out moving animation.
+    m_outAnime=new QParallelAnimationGroup(this);
+    m_iconOut=new QPropertyAnimation(m_icon, "geometry", this);
+    m_outAnime->addAnimation(m_iconOut);
+    m_textOut=new QPropertyAnimation(m_text, "geometry", this);
+    m_outAnime->addAnimation(m_textOut);
+
+    //In moving animation.
+    m_inAnime=new QParallelAnimationGroup(this);
+    m_iconIn=new QPropertyAnimation(m_icon, "geometry", this);
+    m_inAnime->addAnimation(m_iconIn);
+    m_textIn=new QPropertyAnimation(m_text, "geometry", this);
+    m_inAnime->addAnimation(m_textIn);
+
+    connect(m_outAnime, &QParallelAnimationGroup::finished,
+            [=]
+            {
+                // Prepare for the contents.
+                m_icon->setPixmap(m_switchToPixmap);
+                m_text->setText(m_switchToText);
+
+                //Start the in animation.
+                m_inAnime->start();
+            });
+
+    connect(m_inAnime, &QParallelAnimationGroup::finished,
+            [=]
+            {
+                m_mouseIn->stop();
+                m_mouseOut->setStartFrame(m_opacityColor.alpha());
+                m_mouseOut->start();
+                m_selectionFolded=true;
+                emit requireHideCategorySelect();
+            });
 }
 
 void KNStdLibCategoryButton::setCategoryIcon(const QPixmap &pixmap)
@@ -66,6 +103,34 @@ void KNStdLibCategoryButton::setCategoryText(const QString &text)
 {
     m_text->setText(text);
     resizeButton();
+}
+
+void KNStdLibCategoryButton::onActionSwitchTo(const QPixmap &pixmap,
+                                              const QString &text)
+{
+    m_switchToPixmap=pixmap;
+    m_switchToText=text;
+    QRect iconCurrentPosition=m_icon->geometry(),
+          textCurrentPosition=m_text->geometry(),
+          iconOutPosition=QRect(m_icon->x(),
+                                -m_icon->height(),
+                                m_icon->width(),
+                                m_icon->height()),
+          textOutPosition=QRect(-m_text->width(),
+                                m_text->y(),
+                                m_text->width(),
+                                m_text->height());
+    //Set the out-animation parameters.
+    m_iconOut->setStartValue(iconCurrentPosition);
+    m_iconOut->setEndValue(iconOutPosition);
+    m_textOut->setStartValue(textCurrentPosition);
+    m_textOut->setEndValue(textOutPosition);
+    //Set the in-animation parameters.
+    m_iconIn->setStartValue(iconOutPosition);
+    m_iconIn->setEndValue(iconCurrentPosition);
+    m_textIn->setStartValue(textOutPosition);
+    m_textIn->setEndValue(textCurrentPosition);
+    m_outAnime->start();
 }
 
 void KNStdLibCategoryButton::mousePressEvent(QMouseEvent *event)

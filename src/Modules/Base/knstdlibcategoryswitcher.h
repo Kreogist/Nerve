@@ -6,7 +6,7 @@
 class QBoxLayout;
 class QResizeEvent;
 class QTimeLine;
-class KNVerticalWidgetSwitcher;
+class KNWidgetSwitcher;
 class KNStdLibCategorySwitcher : public KNLibCategorySwitcher
 {
     Q_OBJECT
@@ -31,7 +31,7 @@ private:
     QBoxLayout *m_layout;
     QWidget *m_dummyShadow;
     QTimeLine *m_disableContent, *m_enableContent;
-    KNVerticalWidgetSwitcher *m_categoryWidgets;
+    KNWidgetSwitcher *m_categoryWidgets;
     QColor m_coverColor;
     QPalette m_dummyPalette;
     QColor m_shadowColor=QColor(0,0,0,0);
