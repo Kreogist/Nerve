@@ -21,13 +21,19 @@ signals:
     void requireResetLeftSpace(const int &leftMargin);
     void requireShowCategorySelect();
     void requireHideCategorySelect();
+    void requireEnableHeader();
+    void requireDisableHeader();
 
 public slots:
     void onActionSwitchTo(const QPixmap &pixmap,
                           const QString &text);
+    void toNormalMode();
+    void toFoldMode();
+    void toNormalModeAndSelectionFolded();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);

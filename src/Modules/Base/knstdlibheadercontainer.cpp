@@ -96,10 +96,10 @@ void KNStdLibHeaderContainer::changeBackground(int frameData)
 
 void KNStdLibHeaderContainer::linkButtonAndSwitcher()
 {
-    connect(m_button, &KNStdLibCategoryButton::requireShowCategorySelect,
-            m_switcher, &KNLibHeaderSwitcher::hideCurrentWidget);
-    connect(m_button, &KNStdLibCategoryButton::requireHideCategorySelect,
-            m_switcher, &KNLibHeaderSwitcher::showCurrentWidget);
+    connect(m_button, &KNStdLibCategoryButton::requireDisableHeader,
+            [=]{m_switcher->setEnabled(false);});
+    connect(m_button, &KNStdLibCategoryButton::requireEnableHeader,
+            [=]{m_switcher->setEnabled(true);});
 }
 
 void KNStdLibHeaderContainer::resetSwitcherPosition()

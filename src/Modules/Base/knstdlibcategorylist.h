@@ -27,8 +27,8 @@ public slots:
     void addCategory(const QString &title, const QPixmap &icon);
 
 private slots:
-    void showCategory();
-    void hideCategory();
+    void showCategorySwitcher();
+    void hideCategorySwitcher();
     void onActionSwitch(const int &index);
 
 private:
@@ -41,7 +41,7 @@ private:
     QBoxLayout *m_layout, *m_buttonLayout;
     QTimeLine *m_expandCategory, *m_foldCategory;
     QSignalMapper *m_selectMapper;
-    int m_switchToIndex=-1;
+    int m_switchToIndex=-1, m_currentIndex=-1;
     KNStdLibCategoryButton *m_button;
 };
 

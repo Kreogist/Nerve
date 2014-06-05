@@ -25,9 +25,9 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     //Button for showing category list.
     m_button=new KNStdLibCategoryButton;
     connect(m_button, &KNStdLibCategoryButton::requireShowCategorySelect,
-            this, &KNStdLibCategoryList::showCategory);
+            this, &KNStdLibCategoryList::showCategorySwitcher);
     connect(m_button, &KNStdLibCategoryButton::requireHideCategorySelect,
-            this, &KNStdLibCategoryList::hideCategory);
+            this, &KNStdLibCategoryList::hideCategorySwitcher);
 
     m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
@@ -95,6 +95,7 @@ void KNStdLibCategoryList::addCategory(const QString &title,
     if(m_categories.isEmpty())
     {
         //This is the first item.
+        m_currentIndex=0;
         m_button->setCategoryIcon(icon);
         m_button->setCategoryText(title);
     }
@@ -113,7 +114,7 @@ void KNStdLibCategoryList::addCategory(const QString &title,
     m_categories.append(item);
 }
 
-void KNStdLibCategoryList::showCategory()
+void KNStdLibCategoryList::showCategorySwitcher()
 {
     emit requireDisableContent();
     m_foldCategory->stop();
@@ -121,7 +122,7 @@ void KNStdLibCategoryList::showCategory()
     m_expandCategory->start();
 }
 
-void KNStdLibCategoryList::hideCategory()
+void KNStdLibCategoryList::hideCategorySwitcher()
 {
     m_expandCategory->stop();
     m_foldCategory->setStartFrame(height());
@@ -130,11 +131,20 @@ void KNStdLibCategoryList::hideCategory()
 
 void KNStdLibCategoryList::onActionSwitch(const int &index)
 {
+    //If the current index is just the user want to switch to,
+    //Just hide the category switcher.
+    if(m_currentIndex==index)
+    {
+        hideCategorySwitcher();
+        m_button->toNormalModeAndSelectionFolded();
+        return;
+    }
     CategoryItem currentCategory=m_categories.at(index);
     m_button->onActionSwitchTo(currentCategory.icon,
                                currentCategory.title);
+    m_currentIndex=index;
     m_switchToIndex=index;
-    hideCategory();
+    hideCategorySwitcher();
 }
 
 KNStdLibCategoryButton *KNStdLibCategoryList::listButton()

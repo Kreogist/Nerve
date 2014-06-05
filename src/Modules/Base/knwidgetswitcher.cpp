@@ -58,6 +58,10 @@ int KNWidgetSwitcher::size() const
 
 void KNWidgetSwitcher::setCurrentIndex(int currentIndex)
 {
+    if(currentIndex==m_currentIndex)
+    {
+        return;
+    }
     if(currentIndex>=0 && currentIndex<m_widgets.size())
     {
         m_switchAnime->stop();

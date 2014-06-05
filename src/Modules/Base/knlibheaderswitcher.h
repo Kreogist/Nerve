@@ -19,10 +19,6 @@ public:
     QWidget *widgetAt(const int &index);
     QWidget *currentWidget() const;
 
-public slots:
-    virtual void hideCurrentWidget();
-    virtual void showCurrentWidget();
-
 protected:
     void resizeEvent(QResizeEvent *event);
 

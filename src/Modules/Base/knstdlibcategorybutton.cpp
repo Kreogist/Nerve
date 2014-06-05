@@ -65,15 +65,19 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     //Out moving animation.
     m_outAnime=new QParallelAnimationGroup(this);
     m_iconOut=new QPropertyAnimation(m_icon, "geometry", this);
+    m_iconOut->setEasingCurve(QEasingCurve::OutCubic);
     m_outAnime->addAnimation(m_iconOut);
     m_textOut=new QPropertyAnimation(m_text, "geometry", this);
+    m_textOut->setEasingCurve(QEasingCurve::OutCubic);
     m_outAnime->addAnimation(m_textOut);
 
     //In moving animation.
     m_inAnime=new QParallelAnimationGroup(this);
     m_iconIn=new QPropertyAnimation(m_icon, "geometry", this);
+    m_iconIn->setEasingCurve(QEasingCurve::InCubic);
     m_inAnime->addAnimation(m_iconIn);
     m_textIn=new QPropertyAnimation(m_text, "geometry", this);
+    m_textIn->setEasingCurve(QEasingCurve::InCubic);
     m_inAnime->addAnimation(m_textIn);
 
     connect(m_outAnime, &QParallelAnimationGroup::finished,
@@ -90,11 +94,12 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     connect(m_inAnime, &QParallelAnimationGroup::finished,
             [=]
             {
-                m_mouseIn->stop();
-                m_mouseOut->setStartFrame(m_opacityColor.alpha());
-                m_mouseOut->start();
                 m_selectionFolded=true;
-                emit requireHideCategorySelect();
+                if(!rect().contains(mapFromGlobal(QCursor::pos())))
+                {
+                    toNormalMode();
+                }
+                emit requireEnableHeader();
             });
 }
 
@@ -137,10 +142,40 @@ void KNStdLibCategoryButton::onActionSwitchTo(const QPixmap &pixmap,
     m_outAnime->start();
 }
 
+void KNStdLibCategoryButton::toNormalMode()
+{
+    m_mouseIn->stop();
+    m_mouseOut->setStartFrame(m_opacityColor.alpha());
+    m_mouseOut->start();
+}
+
+void KNStdLibCategoryButton::toFoldMode()
+{
+    m_mouseOut->stop();
+    m_mouseIn->setStartFrame(m_opacityColor.alpha());
+    m_mouseIn->start();
+}
+
+void KNStdLibCategoryButton::toNormalModeAndSelectionFolded()
+{
+    m_selectionFolded=true;
+    emit requireEnableHeader();
+    toNormalMode();
+}
+
 void KNStdLibCategoryButton::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
     m_isPressed=true;
+}
+
+void KNStdLibCategoryButton::mouseMoveEvent(QMouseEvent *event)
+{
+    QWidget::mouseMoveEvent(event);
+    if(m_mouseOut->state()==QTimeLine::Running)
+    {
+        toFoldMode();
+    }
 }
 
 void KNStdLibCategoryButton::mouseReleaseEvent(QMouseEvent *event)
@@ -153,10 +188,12 @@ void KNStdLibCategoryButton::mouseReleaseEvent(QMouseEvent *event)
         {
             m_selectionFolded=false;
             emit requireShowCategorySelect();
+            emit requireDisableHeader();
             return;
         }
         m_selectionFolded=true;
         emit requireHideCategorySelect();
+        emit requireEnableHeader();
     }
 }
 
@@ -165,9 +202,7 @@ void KNStdLibCategoryButton::enterEvent(QEvent *event)
     QWidget::enterEvent(event);
     if(m_selectionFolded)
     {
-        m_mouseOut->stop();
-        m_mouseIn->setStartFrame(m_opacityColor.alpha());
-        m_mouseIn->start();
+        toFoldMode();
     }
 }
 
@@ -176,9 +211,7 @@ void KNStdLibCategoryButton::leaveEvent(QEvent *event)
     QWidget::leaveEvent(event);
     if(m_selectionFolded)
     {
-        m_mouseIn->stop();
-        m_mouseOut->setStartFrame(m_opacityColor.alpha());
-        m_mouseOut->start();
+        toNormalMode();
     }
 }
 
@@ -201,7 +234,6 @@ void KNStdLibCategoryButton::resizeButton()
 {
     int sizeParam=qMax(m_rawFontMetrics.width(m_text->text())+m_leftMargin,
                        m_iconSize);
-    qDebug()<<sizeParam;
     setFixedWidth(sizeParam);
     emit requireResetLeftSpace(sizeParam-m_offset);
 }

@@ -46,16 +46,6 @@ QWidget *KNLibHeaderSwitcher::currentWidget() const
     return m_stackedWidgets.at(m_currentIndex);
 }
 
-void KNLibHeaderSwitcher::hideCurrentWidget()
-{
-    ;
-}
-
-void KNLibHeaderSwitcher::showCurrentWidget()
-{
-    ;
-}
-
 void KNLibHeaderSwitcher::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
