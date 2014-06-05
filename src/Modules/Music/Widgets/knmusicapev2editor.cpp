@@ -2,7 +2,10 @@
 #include <QToolBar>
 #include <QTreeView>
 #include <QAction>
+#include <QSignalMapper>
 #include <QFormLayout>
+
+#include <QDebug>
 
 #include "../Libraries/knmusictagapev2.h"
 
@@ -39,12 +42,26 @@ KNMusicAPEv2Editor::KNMusicAPEv2Editor(QWidget *parent) :
     QFormLayout *overallLayout=new QFormLayout(overallMode);
     overallMode->setLayout(overallLayout);
 
+    //Line edit finished signal mapper, will tell the model to update data.
+    m_editFinish=new QSignalMapper(this);
+    connect(m_editFinish, SIGNAL(mapped(int)),
+            this, SLOT(onActionLineEditFinished(int)));
+
     for(int i=0; i<APEv2CaptionItemsCount; i++)
     {
         m_label[i]=new QLabel(m_caption[i], this);
         m_textEditor[i]=new QLineEdit(this);
+        connect(m_textEditor[i], SIGNAL(editingFinished()),
+                m_editFinish, SLOT(map()));
         overallLayout->addRow(m_label[i], m_textEditor[i]);
     }
+    m_editFinish->setMapping(m_textEditor[Name   ], KNMusicTagAPEv2::Name);
+    m_editFinish->setMapping(m_textEditor[Artist ], KNMusicTagAPEv2::Artist);
+    m_editFinish->setMapping(m_textEditor[Album  ], KNMusicTagAPEv2::Album);
+    m_editFinish->setMapping(m_textEditor[Year   ], KNMusicTagAPEv2::Year);
+    m_editFinish->setMapping(m_textEditor[Track  ], KNMusicTagAPEv2::Track);
+    m_editFinish->setMapping(m_textEditor[Genre  ], KNMusicTagAPEv2::Genre);
+    m_editFinish->setMapping(m_textEditor[Comment], KNMusicTagAPEv2::Comments);
 
     m_switcher->addWidget(overallMode);
 
@@ -86,19 +103,20 @@ void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
     QStringList advancedHeader;
     advancedHeader<<tr("Frame")<<tr("Frame Data");
     m_advancedModel->setHorizontalHeaderLabels(advancedHeader);
+    m_advancedView->setModel(m_advancedModel.data());
 
     //Reset the media file, it might be used by other files.
     mediaFile.reset();
     //Use tag reader to read the tag. If tag exsist, display the data.
     if(m_tagAPEv2->readTag(mediaFile, mediaData))
     {
-        setEditorText(Name        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
-        setEditorText(Artist      ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
-        setEditorText(Album       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Album));
-        setEditorText(Year        ,m_tagAPEv2->textData(KNMusicTagAPEv2::Year));
-        setEditorText(Track       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Track));
-        setEditorText(Genre       ,m_tagAPEv2->textData(KNMusicTagAPEv2::Genre));
-        setEditorText(Comment     ,m_tagAPEv2->textData(KNMusicTagAPEv2::Comments));
+        setEditorText(Name   ,m_tagAPEv2->textData(KNMusicTagAPEv2::Name));
+        setEditorText(Artist ,m_tagAPEv2->textData(KNMusicTagAPEv2::Artist));
+        setEditorText(Album  ,m_tagAPEv2->textData(KNMusicTagAPEv2::Album));
+        setEditorText(Year   ,m_tagAPEv2->textData(KNMusicTagAPEv2::Year));
+        setEditorText(Track  ,m_tagAPEv2->textData(KNMusicTagAPEv2::Track));
+        setEditorText(Genre  ,m_tagAPEv2->textData(KNMusicTagAPEv2::Genre));
+        setEditorText(Comment,m_tagAPEv2->textData(KNMusicTagAPEv2::Comments));
 
         //Add all frames to advanced view.
         QStringList keyList=m_tagAPEv2->keyList();
@@ -116,7 +134,6 @@ void KNMusicAPEv2Editor::readTag(QFile &mediaFile, QDataStream &mediaData)
             //Append to model
             m_advancedModel->appendRow(currentRow);
         }
-        m_advancedView->setModel(m_advancedModel.data());
         m_advancedView->resizeColumnToContents(0);
     }
 }
@@ -164,6 +181,19 @@ void KNMusicAPEv2Editor::retranslateAndSet()
     ;
 }
 
+void KNMusicAPEv2Editor::writeTag(QFile &mediaFile, QDataStream &mediaData)
+{
+    m_tagAPEv2->clearCache();
+    for(int i=0; i<m_advancedModel->rowCount(); i++)
+    {
+        m_tagAPEv2->setTextData(m_advancedModel->data(m_advancedModel->index(i,0),
+                                                      Qt::DisplayRole).toString(),
+                                m_advancedModel->data(m_advancedModel->index(i,1),
+                                                      Qt::DisplayRole).toString());
+    }
+    m_tagAPEv2->writeTag(mediaFile, mediaData);
+}
+
 void KNMusicAPEv2Editor::toAdvancedMode()
 {
     m_switcher->setCurrentIndex(1);
@@ -172,6 +202,48 @@ void KNMusicAPEv2Editor::toAdvancedMode()
 void KNMusicAPEv2Editor::toOverviewMode()
 {
     m_switcher->setCurrentIndex(0);
+}
+
+void KNMusicAPEv2Editor::setTagData(const QString &key, const QString &data)
+{
+    //Search whether the frame exsists.
+    QList<QStandardItem *> keyList=
+            m_advancedModel->findItems(key, Qt::MatchExactly, 0);
+    QStandardItem *currentItem;
+    if(keyList.isEmpty())
+    {
+        if(data.isEmpty())
+        {
+            return;
+        }
+        //Create data row and extend it.
+        QList<QStandardItem *> currentRow;
+        currentItem=new QStandardItem(key);
+        currentRow.append(currentItem);
+        currentItem=new QStandardItem(data);
+        currentRow.append(currentItem);
+        //Append to model
+        m_advancedModel->appendRow(currentRow);
+    }
+    else
+    {
+        if(data.isEmpty())
+        {
+            m_advancedModel->removeRow(keyList.first()->row());
+            return;
+        }
+        //Replace the data
+        m_advancedModel->setData(m_advancedModel->index(keyList.first()->row(),
+                                                        1),
+                                 data,
+                                 Qt::DisplayRole);
+    }
+}
+
+void KNMusicAPEv2Editor::onActionLineEditFinished(const int &index)
+{
+    QLineEdit *editor=static_cast<QLineEdit *>(m_editFinish->mapping(index));
+    setTagData(m_tagAPEv2->frameAt(index), editor->text());
 }
 
 void KNMusicAPEv2Editor::setEditorText(const int &index, const QString &data)

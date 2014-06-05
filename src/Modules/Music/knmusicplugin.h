@@ -9,6 +9,8 @@
 
 class QAction;
 class KNGlobal;
+class KNMusicBackend;
+class KNMusicPlayerWidget;
 class KNMusicDatabase;
 class KNMusicHeaderWidget;
 class KNMusicModel;
@@ -17,6 +19,7 @@ class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
 class KNMusicFilter;
 class KNMusicViewerMenu;
+class KNMusicEQ;
 class KNMusicDetailInfo;
 class KNMusicPlugin : public KNPluginBase
 {
@@ -25,8 +28,6 @@ public:
     explicit KNMusicPlugin(QObject *parent = 0);
     ~KNMusicPlugin();
     void applyPlugin();
-    void writeDatabase();
-    void readDatabase();
 
 signals:
 
@@ -39,6 +40,7 @@ private slots:
                          const QModelIndex &index,
                          KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
+    void onActionPlay(const QModelIndex &index);
     void onActionGetInfo(const QString &filePath);
 
 private:
@@ -52,12 +54,16 @@ private:
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
     KNMusicDatabase *m_database;
+    KNMusicBackend *m_musicPlayer;
+    KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
+    KNMusicPlayerWidget *m_musicPlayerWidget;
 
     QThread m_searcherThread,
             m_collectThread,
             m_modelThread,
-            m_databaseThread;
+            m_databaseThread,
+            m_playerThread;
     QString m_musicDatabase,
             m_musicAlbumArt;
 };

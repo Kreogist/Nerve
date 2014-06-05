@@ -498,3 +498,8 @@ int KNMusicGlobal::genreListSize() const
 {
     return m_genreList.size();
 }
+
+int KNMusicGlobal::genreIndex(const QString &genre) const
+{
+    return m_genreList.indexOf(genre);
+}

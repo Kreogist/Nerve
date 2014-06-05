@@ -91,7 +91,8 @@ void KNMusicViewerMenu::onActionCopy()
 
 void KNMusicViewerMenu::onActionPlay()
 {
-    m_global->openLocalUrl(m_filePath);
+    emit requirePlayMusic(m_currentIndex);
+//    m_global->openLocalUrl(m_filePath);
 }
 
 void KNMusicViewerMenu::onActionCopyText()

@@ -60,6 +60,11 @@ void KNStdLibViewer::setCategoryIndex(const int &index)
     m_category->setCurrentIndex(index);
 }
 
+int KNStdLibViewer::categoryIndex() const
+{
+    return m_category->currentIndex();
+}
+
 void KNStdLibViewer::setFilter(KNLibFilter *searcher)
 {
     m_filter=searcher;

@@ -21,6 +21,7 @@ public:
     void setModel(QStandardItemModel *model);
 
 signals:
+    void requirePlayMusic(const QModelIndex &index);
     void requireShowIn(KNMusicGlobal::MusicCategory category,
                        const QModelIndex &index);
     void requireGetInfo(const QString &filePath);

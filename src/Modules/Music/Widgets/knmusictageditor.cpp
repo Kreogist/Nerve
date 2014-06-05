@@ -1,6 +1,7 @@
 #include <QBoxLayout>
 #include <QTabWidget>
 #include <QStandardPaths>
+#include <QPushButton>
 
 #include "knmusictageditorbase.h"
 #include "knmusicid3v1editor.h"
@@ -19,6 +20,11 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     mainLayout->setContentsMargins(0,0,0,0);
     setLayout(mainLayout);
+
+    QPushButton *ok=new QPushButton("Write", this);
+    connect(ok, SIGNAL(clicked()),
+            this, SLOT(writeTag()));
+    mainLayout->addWidget(ok);
 
     QTabWidget *tabWidget=new QTabWidget(this);
     mainLayout->addWidget(tabWidget);
@@ -42,6 +48,7 @@ KNMusicTagEditor::KNMusicTagEditor(QWidget *parent) :
 void KNMusicTagEditor::parseFile(const QString &filePath)
 {
     resetEditor();
+    m_filePath=filePath;
     QFile mediaFile(filePath);
     QDataStream mediaData(&mediaFile);
     if(mediaFile.open(QIODevice::ReadOnly))
@@ -61,6 +68,17 @@ void KNMusicTagEditor::parseFile(const QString &filePath)
         m_WAVEditor->readTag(mediaFile, mediaData);
         readBasicInfoFromEditor(m_WAVEditor);
         mediaFile.close();
+    }
+}
+
+void KNMusicTagEditor::writeTag()
+{
+    QFile mediaFile(m_filePath);
+    QDataStream mediaData(&mediaFile);
+    if(mediaFile.open(QIODevice::ReadWrite))
+    {
+        m_ID3v1Editor->writeTag(mediaFile, mediaData);
+        m_APEv2Editor->writeTag(mediaFile, mediaData);
     }
 }
 

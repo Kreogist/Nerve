@@ -1,12 +1,18 @@
+TEMPLATE = app
+
 QT += core\
       gui\
-      widgets\
-      multimedia
+      widgets
 
-CONFIG += c++11
+CONFIG += c++11 sse2 mmx
+
+win32{
+    LIBS += -lbass
+}
 
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
+    LIBS += /usr/lib/libbass.dylib
 }
 
 unix{
@@ -99,7 +105,27 @@ SOURCES += \
     Modules/Music/Widgets/knmusicwmaeditor.cpp \
     Modules/Music/Widgets/knmusicm4aeditor.cpp \
     Modules/Music/Widgets/knmusicflaceditor.cpp \
-    Modules/Music/Widgets/knmusicwaveditor.cpp
+    Modules/Music/Widgets/knmusicwaveditor.cpp \
+    Modules/Music/Libraries/knmusicbackend.cpp \
+    Modules/Music/Widgets/knmusicheaderplayer.cpp \
+    Modules/Base/knplayerprogress.cpp \
+    Modules/Public/bass/knlibbass.cpp \
+    Modules/Music/Widgets/knmusiceq.cpp \
+    Modules/Music/Widgets/knmusicvisualeffect.cpp \
+    Modules/Music/Widgets/knmusiceqslider.cpp \
+    Modules/Music/Widgets/knmusicplayercontrol.cpp \
+    Modules/Base/knlabeleditor.cpp \
+    Modules/Base/knabstractslider.cpp \
+    Modules/Music/Widgets/knmusicvolumeslider.cpp \
+    Modules/Music/Widgets/knmusicplayerwidget.cpp \
+    Modules/Music/Libraries/knmusicplaylistmanager.cpp \
+    Modules/knconfigure.cpp \
+    Modules/Base/knlibheadercontainer.cpp \
+    Modules/Base/knstdlibheadercontainer.cpp \
+    Modules/Base/knstdlibcategorybutton.cpp \
+    Modules/knfontmanager.cpp \
+    Modules/Base/knsideshadows.cpp \
+    Modules/Store/knstoreplugin.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -187,7 +213,27 @@ HEADERS += \
     Modules/Music/Widgets/knmusicwmaeditor.h \
     Modules/Music/Widgets/knmusicm4aeditor.h \
     Modules/Music/Widgets/knmusicflaceditor.h \
-    Modules/Music/Widgets/knmusicwaveditor.h
+    Modules/Music/Widgets/knmusicwaveditor.h \
+    Modules/Music/Libraries/knmusicbackend.h \
+    Modules/Music/Widgets/knmusicheaderplayer.h \
+    Modules/Base/knplayerprogress.h \
+    Modules/Public/bass/knlibbass.h \
+    Modules/Music/Widgets/knmusiceq.h \
+    Modules/Music/Widgets/knmusicvisualeffect.h \
+    Modules/Music/Widgets/knmusiceqslider.h \
+    Modules/Music/Widgets/knmusicplayercontrol.h \
+    Modules/Base/knlabeleditor.h \
+    Modules/Base/knabstractslider.h \
+    Modules/Music/Widgets/knmusicvolumeslider.h \
+    Modules/Music/Widgets/knmusicplayerwidget.h \
+    Modules/Music/Libraries/knmusicplaylistmanager.h \
+    Modules/knconfigure.h \
+    Modules/Base/knlibheadercontainer.h \
+    Modules/Base/knstdlibheadercontainer.h \
+    Modules/Base/knstdlibcategorybutton.h \
+    Modules/knfontmanager.h \
+    Modules/Base/knsideshadows.h \
+    Modules/Store/knstoreplugin.h
 
 RESOURCES += \
     res.qrc

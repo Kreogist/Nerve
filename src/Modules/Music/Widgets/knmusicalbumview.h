@@ -2,7 +2,6 @@
 #define KNMUSICALBUMVIEW_H
 
 #include <QAbstractItemView>
-
 #include <QLabel>
 
 class QBoxLayout;
@@ -12,32 +11,14 @@ class QPropertyAnimation;
 class QResizeEvent;
 class QParallelAnimationGroup;
 class QTimeLine;
+class KNLibBass;
 class KNMusicModel;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
 class KNMusicCategorySortFilterModel;
-
-class KNMusicRightShadow : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNMusicRightShadow(QWidget *parent = 0);
-
-protected:
-    void paintEvent(QPaintEvent *event);
-};
-
-class KNMusicLeftShadow : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNMusicLeftShadow(QWidget *parent = 0);
-
-protected:
-    void paintEvent(QPaintEvent *event);
-};
-
+class KNRightSideShadow;
+class KNLeftSideShadow;
 class KNMusicAlbumArtwork : public QLabel
 {
     Q_OBJECT
@@ -69,6 +50,7 @@ public:
     void selectItem(const QModelIndex &index);
     void resetHeader();
     void resetSongState();
+    void setMusicBackend(KNLibBass *backend);
     void setSourceModel(KNMusicModel *model);
 
 signals:
@@ -105,6 +87,7 @@ public:
     void resetHeader();
     void resetSongState();
     void disableArtworkExpand();
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -134,8 +117,8 @@ private slots:
 private:
     KNMusicAlbumArtwork *m_albumArt;
     KNMusicAlbumSongDetail *m_songPanel;
-    KNMusicRightShadow *m_rightShadow;
-    KNMusicLeftShadow *m_leftShadow;
+    KNRightSideShadow *m_rightShadow;
+    KNLeftSideShadow *m_leftShadow;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
     QPropertyAnimation *m_showExpand, *m_showShrink, *m_hideExpand, *m_hideShrink,
                        *m_flyOut, *m_coverExpand, *m_coverShrink;
@@ -160,6 +143,7 @@ public:
     void setGridMinimumWidth(int gridMinimumWidth);
     void resetHeader();
     void setSourceModel(KNMusicModel *model);
+    void setMusicBackend(KNLibBass *backend);
     void setFilterFixedString(const QString &text);
 
 signals:
@@ -216,7 +200,7 @@ private:
     int m_iconSizeParam=124;
     int m_spacingHeight=154, m_spacingWidth=134;
     int m_minGrey=0x30;
-    bool m_hidingAlbum=false, m_flyingAlbum=false, m_noAlbumHide=false;
+    bool m_hidingAlbum=false, m_flyingAlbum=false;
     QPalette m_palette;
     QColor m_backgroundColor;
     QTimeLine *m_scrollTimeLine;

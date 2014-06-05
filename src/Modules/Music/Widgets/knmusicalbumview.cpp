@@ -8,7 +8,6 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
-#include <QLinearGradient>
 #include <QScrollBar>
 #include <QTimeLine>
 
@@ -18,46 +17,9 @@
 #include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusiccategorysortfiltermodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
+#include "../../Base/knsideshadows.h"
 
 #include "knmusicalbumview.h"
-
-KNMusicRightShadow::KNMusicRightShadow(QWidget *parent) :
-    QWidget(parent)
-{
-    ;
-}
-
-void KNMusicRightShadow::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    QLinearGradient shadow(QPoint(0,0), rect().topRight());
-    shadow.setColorAt(0, QColor(0,0,0,130));
-    shadow.setColorAt(1, QColor(0,0,0,0));
-    painter.setBrush(shadow);
-    painter.drawRect(event->rect().x()-1,
-                     event->rect().y()-1,
-                     event->rect().width()+1,
-                     event->rect().height()+1);
-}
-
-KNMusicLeftShadow::KNMusicLeftShadow(QWidget *parent) :
-    QWidget(parent)
-{
-    ;
-}
-
-void KNMusicLeftShadow::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    QLinearGradient shadow(QPoint(0,0), rect().topRight());
-    shadow.setColorAt(0, QColor(0,0,0,0));
-    shadow.setColorAt(1, QColor(0,0,0,130));
-    painter.setBrush(shadow);
-    painter.drawRect(event->rect().x()-1,
-                     event->rect().y()-1,
-                     event->rect().width()+1,
-                     event->rect().height()+1);
-}
 
 KNMusicAlbumArtwork::KNMusicAlbumArtwork(QWidget *parent) :
     QLabel(parent)
@@ -97,8 +59,8 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_albumName=new QLabel(this);
     m_albumName->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
-    artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
     artistFont.setBold(true);
+    artistFont.setPixelSize(artistFont.pixelSize()+(artistFont.pixelSize()>>1));
     m_albumName->setFont(artistFont);
     m_mainLayout->addSpacing(25);
     m_mainLayout->addWidget(m_albumName);
@@ -159,6 +121,11 @@ void KNMusicAlbumSongDetail::resetSongState()
     m_albumSongs->resizeHeader();
 }
 
+void KNMusicAlbumSongDetail::setMusicBackend(KNLibBass *backend)
+{
+    m_albumSongs->setMusicBackend(backend);
+}
+
 void KNMusicAlbumSongDetail::setSourceModel(KNMusicModel *model)
 {
     m_albumSongs->setSourceModel(model);
@@ -185,8 +152,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     setContentsMargins(0,0,0,0);
 
     m_songPanel=new KNMusicAlbumSongDetail(this);
-    m_leftShadow=new KNMusicLeftShadow(this);
-    //m_leftShadow->setVisible(false);
+    m_leftShadow=new KNLeftSideShadow(this);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
             this, &KNMusicAlbumDetail::requireOpenUrl);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
@@ -194,8 +160,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_albumArt=new KNMusicAlbumArtwork(this);
     m_albumArt->setScaledContents(true);
-    m_rightShadow=new KNMusicRightShadow(this);
-    //m_rightShadow->setVisible(false);
+    m_rightShadow=new KNRightSideShadow(this);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireShowArtwork,
             this, &KNMusicAlbumDetail::showArtwork);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireHideArtwork,
@@ -314,6 +279,11 @@ void KNMusicAlbumDetail::resetSongState()
 void KNMusicAlbumDetail::disableArtworkExpand()
 {
     m_albumArtExpanding=false;
+}
+
+void KNMusicAlbumDetail::setMusicBackend(KNLibBass *backend)
+{
+    m_songPanel->setMusicBackend(backend);
 }
 
 void KNMusicAlbumDetail::expandDetail()
@@ -519,9 +489,7 @@ QModelIndex KNMusicAlbumView::indexAt(const QPoint &point) const
         //Clicked on space.
         return QModelIndex();
     }
-    return m_proxyModel->index(m_noAlbumHide?
-                               pointLine*m_maxColumnCount+pointColumn+1:
-                               pointLine*m_maxColumnCount+pointColumn,
+    return m_proxyModel->index(pointLine*m_maxColumnCount+pointColumn,
                                0,
                                rootIndex());
 }
@@ -666,12 +634,6 @@ void KNMusicAlbumView::paintEvent(QPaintEvent *event)
     currentTop+=m_spacingHeight*skipLineCount;
     albumIndex=skipLineCount*m_maxColumnCount;
     m_firstVisibleIndex=albumIndex;
-    m_noAlbumHide=m_model->isNoAlbumHidden() && m_proxyModel->filterRegExp().isEmpty();
-    if(m_noAlbumHide)
-    {
-        m_firstVisibleIndex++;
-        albumIndex++;
-    }
     QModelIndex currentPaintIndex, sourceIndex;
     while(albumIndex < albumCount && drawnHeight < maxDrawnHeight)
     {
@@ -944,8 +906,7 @@ QRect KNMusicAlbumView::itemRect(const QModelIndex &index) const
     {
         return QRect();
     }
-    int itemIndex=m_noAlbumHide?
-                        index.row()-1:index.row(),
+    int itemIndex=index.row(),
         itemLine=itemIndex/m_maxColumnCount,
         itemColumn=itemIndex-itemLine*m_maxColumnCount;
     return QRect(itemColumn*m_spacingWidth+m_spacing,
@@ -1032,6 +993,11 @@ void KNMusicAlbumView::resetHeader()
 void KNMusicAlbumView::setSourceModel(KNMusicModel *model)
 {
     m_albumDetail->setSourceModel(model);
+}
+
+void KNMusicAlbumView::setMusicBackend(KNLibBass *backend)
+{
+    m_albumDetail->setMusicBackend(backend);
 }
 
 void KNMusicAlbumView::setFilterFixedString(const QString &text)

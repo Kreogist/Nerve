@@ -7,6 +7,8 @@
 #include <QKeyEvent>
 #include <QMimeData>
 #include <QModelIndex>
+#include <QResizeEvent>
+#include <QPropertyAnimation>
 
 #include <QStyleFactory>
 
@@ -39,31 +41,24 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setAcceptDrops(true);
 
     m_listViewModel=new KNMusicSortModel;
-//    m_listViewModel->moveToThread(&m_listViewModelThread);
     m_listViewModel->setFilterKeyColumn(-1);
     m_listViewModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_listViewModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_artistModel=new KNMusicArtistModel;
-//    m_artistModel->moveToThread(&m_artistModelThread);
     m_albumModel=new KNMusicAlbumModel;
-//    m_albumModel->moveToThread(&m_albumViewModelThread);
     m_genreModel=new KNMusicGenreModel;
-//    m_genreModel->moveToThread(&m_genreModelThread);
 
     m_artistSortModel=new KNMusicCategorySortFilterModel;
-//    m_artistSortModel->moveToThread(&m_artistSortModelThread);
     m_artistSortModel->setFilterKeyColumn(0);
     m_artistSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_artistSortModel->setSourceModel(m_artistModel);
 
     m_albumSortModel=new KNMusicCategorySortFilterModel;
-//    m_albumSortModel->moveToThread(&m_albumSortModelThread);
     m_albumSortModel->setFilterKeyColumn(0);
     m_albumSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_albumSortModel->setSourceModel(m_albumModel);
 
     m_genreSortModel=new KNMusicCategorySortFilterModel;
-//    m_genreSortModel->moveToThread(&m_genreSortModelThread);
     m_genreSortModel->setFilterKeyColumn(0);
     m_genreSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_genreSortModel->setSourceModel(m_genreModel);
@@ -72,11 +67,14 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_libraryView->setModel(m_listViewModel);
     m_libraryView->installEventFilter(this);
     connect(m_libraryView, &KNMusicListView::requireOpenUrl,
-            this, &KNMusicViewer::onActionListviewOpenUrl);
+            [=](const QModelIndex &index)
+            {
+                emit requirePlayMusic(m_listViewModel->mapToSource(index));
+            });
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
 
-    m_artistView=new KNMusicArtistView(this);
+    m_artistView=new KNMusicCategoryView(this);
     m_artistSongView=new KNMusicArtistSongs(m_artistView);
     m_artistView->installEventFilter(this);
     m_artistSongView->installEventFilter(this);
@@ -95,7 +93,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
             this, &KNMusicViewer::onActionAlbumShowContextMenu);
 
-    m_genreView=new KNMusicArtistView(this);
+    m_genreView=new KNMusicCategoryView(this);
     m_genreSongView=new KNMusicGenreSongs(m_genreView);
     m_genreView->installEventFilter(this);
     m_genreSongView->installEventFilter(this);
@@ -107,22 +105,21 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             this, &KNMusicViewer::onActionGenreShowContextMenu);
 
     m_artistDetails=new KNMusicCategoryDetailModel;
-//    m_artistDetails->moveToThread(&m_artistDetailsThread);
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
     m_artistView->setDetailModel(m_artistDetails);
 
     m_albumDetails=new KNMusicAlbumDetailModel;
-//    m_albumDetails->moveToThread(&m_albumDetailsThread);
     m_albumDetails->setFilterKeyColumn(KNMusicGlobal::Album);
     m_albumDetails->setCategoryModel(m_albumModel);
     m_albumView->setDetailModel(m_albumDetails);
 
     m_genreDetails=new KNMusicCategoryDetailModel;
-//    m_genreDetails->moveToThread(&m_genreDetailsThread);
     m_genreDetails->setFilterKeyColumn(KNMusicGlobal::Genre);
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
+
+    QWidget *playlist=new QWidget(this);
 
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
@@ -136,43 +133,21 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     addCategory(QPixmap(":/Category/Resources/Category/04_genres.png"),
                 m_categoryCaption[Genres],
                 m_genreView);
+    addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
+                m_categoryCaption[Playlists],
+                playlist);
 
-//    m_listViewModelThread.start();
-//    m_artistModelThread.start();
-//    m_albumViewModelThread.start();
-//    m_genreModelThread.start();
-//    m_artistSortModelThread.start();
-//    m_albumSortModelThread.start();
-//    m_genreSortModelThread.start();
-//    m_artistDetailsThread.start();
-//    m_albumDetailsThread.start();
-//    m_genreDetailsThread.start();
+    m_playerIn=new QPropertyAnimation(this);
+    m_playerIn->setPropertyName("geometry");
+    m_playerIn->setEasingCurve(QEasingCurve::OutCubic);
+
+    m_playerOut=new QPropertyAnimation(this);
+    m_playerOut->setPropertyName("geometry");
+    m_playerOut->setEasingCurve(QEasingCurve::OutCubic);
 }
 
 KNMusicViewer::~KNMusicViewer()
 {
-//    m_listViewModelThread.quit();
-//    m_artistModelThread.quit();
-//    m_albumViewModelThread.quit();
-//    m_genreModelThread.quit();
-//    m_artistSortModelThread.quit();
-//    m_albumSortModelThread.quit();
-//    m_genreSortModelThread.quit();
-//    m_artistDetailsThread.quit();
-//    m_albumDetailsThread.quit();
-//    m_genreDetailsThread.quit();
-
-//    m_listViewModelThread.wait();
-//    m_artistModelThread.wait();
-//    m_albumViewModelThread.wait();
-//    m_genreModelThread.wait();
-//    m_artistSortModelThread.wait();
-//    m_albumSortModelThread.wait();
-//    m_genreSortModelThread.wait();
-//    m_artistDetailsThread.wait();
-//    m_albumDetailsThread.wait();
-//    m_genreDetailsThread.wait();
-
     m_listViewModel->deleteLater();
     m_artistModel->deleteLater();
     m_albumModel->deleteLater();
@@ -203,6 +178,14 @@ void KNMusicViewer::setModel(KNMusicModel *model)
     m_albumView->resetHeader();
     m_genreView->resetHeader();
     m_sourceModel=model;
+}
+
+void KNMusicViewer::setMusicBackend(KNLibBass *backend)
+{
+    m_libraryView->setMusicBackend(backend);
+    m_artistSongView->setMusicBackend(backend);
+    m_albumView->setMusicBackend(backend);
+    m_genreSongView->setMusicBackend(backend);
 }
 
 bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
@@ -244,12 +227,21 @@ bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
     return KNStdLibViewer::eventFilter(watched, event);
 }
 
+void KNMusicViewer::setPlayWidget(QWidget *widget)
+{
+    m_playerWidget=widget;
+    m_playerWidget->setGeometry(QRect(0, -height(), width(), height()));
+    m_playerIn->setTargetObject(m_playerWidget);
+    m_playerOut->setTargetObject(m_playerWidget);
+}
+
 void KNMusicViewer::retranslate()
 {
     m_categoryCaption[Songs]=tr("Songs");
     m_categoryCaption[Artists]=tr("Artists");
     m_categoryCaption[Albums]=tr("Albums");
     m_categoryCaption[Genres]=tr("Genres");
+    m_categoryCaption[Playlists]=tr("Playlists");
 }
 
 void KNMusicViewer::retranslateAndSet()
@@ -265,7 +257,7 @@ void KNMusicViewer::resort()
     m_genreSortModel->sort(0);
 }
 
-void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
+void KNMusicViewer::showIn(const int &category,
                            const QModelIndex &index)
 {
     emit requireClearSearch();
@@ -296,6 +288,11 @@ void KNMusicViewer::showIn(KNMusicGlobal::MusicCategory category,
     setCategoryIndex(category);
 }
 
+void KNMusicViewer::showInCurrent(const QModelIndex &index)
+{
+    showIn(categoryIndex(), index);
+}
+
 void KNMusicViewer::deleteMusic(const QModelIndex &index)
 {
     m_artistModel->onMusicRemoved(index);
@@ -313,6 +310,22 @@ void KNMusicViewer::onActionSearch(const QString &text)
     m_genreSortModel->setFilterFixedString(text);
 }
 
+void KNMusicViewer::onActionShowPlayer()
+{
+    m_playerOut->stop();
+    m_playerIn->setStartValue(m_playerWidget->geometry());
+    m_playerIn->setEndValue(geometry());
+    m_playerIn->start();
+}
+
+void KNMusicViewer::onActionHidePlayer()
+{
+    m_playerIn->stop();
+    m_playerOut->setStartValue(m_playerWidget->geometry());
+    m_playerOut->setEndValue(QRect(0, -height(), width(), height()));
+    m_playerOut->start();
+}
+
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
     if(event->mimeData()->hasUrls())
@@ -324,6 +337,13 @@ void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 void KNMusicViewer::dropEvent(QDropEvent *event)
 {
     m_filter->analysisList(event->mimeData()->urls());
+}
+
+void KNMusicViewer::resizeEvent(QResizeEvent *event)
+{
+    KNStdLibViewer::resizeEvent(event);
+    m_playerWidget->setGeometry(m_playerWidget->y()==0?
+                            geometry():QRect(0, -height(), width(), height()));
 }
 
 void KNMusicViewer::onActionLibraryViewShowContextMenu(const QPoint &position,
@@ -358,22 +378,17 @@ void KNMusicViewer::onActionGenreShowContextMenu(const QPoint &position,
                                 KNMusicGlobal::GenreView);
 }
 
-void KNMusicViewer::onActionListviewOpenUrl(const QModelIndex &index)
-{
-    emit requireOpenUrl(m_listViewModel->mapToSource(index));
-}
-
 void KNMusicViewer::onActionArtistOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_artistDetails->mapToSource(index));
+    emit requirePlayMusic(m_artistDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionAlbumOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_albumDetails->mapToSource(index));
+    emit requirePlayMusic(m_albumDetails->mapToSource(index));
 }
 
 void KNMusicViewer::onActionGenreOpenUrl(const QModelIndex &index)
 {
-    emit requireOpenUrl(m_genreDetails->mapToSource(index));
+    emit requirePlayMusic(m_genreDetails->mapToSource(index));
 }

@@ -9,9 +9,10 @@ KNMusicGenreSongs::KNMusicGenreSongs(QWidget *parent) :
     KNMusicListViewBase(parent)
 {
     setAutoFillBackground(false);
+    m_alternateColor=QColor(0xff, 0xff, 0xff, 0);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, QColor(0,0,0,0));
-    m_palette.setColor(QPalette::AlternateBase, QColor(0x20, 0x20, 0x20, 50));
+    m_palette.setColor(QPalette::AlternateBase, QColor(0xff, 0xff, 0xff, 0));
     m_palette.setColor(QPalette::Window, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Button, QColor(0x20, 0x20, 0x20));
     m_palette.setColor(QPalette::Text, QColor(0x9f, 0x9f, 0x9f));
@@ -22,14 +23,14 @@ KNMusicGenreSongs::KNMusicGenreSongs(QWidget *parent) :
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseIn->setEndFrame(0x30);
+    m_mouseIn->setEndFrame(0x20);
     connect(m_mouseIn, &QTimeLine::frameChanged,
             this, &KNMusicGenreSongs::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
-    m_mouseOut->setEndFrame(0x10);
+    m_mouseOut->setEndFrame(0);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicGenreSongs::changeBackground);
 }
@@ -59,7 +60,7 @@ void KNMusicGenreSongs::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
     m_mouseIn->stop();
-    m_mouseIn->setStartFrame(m_backgroundColor.red());
+    m_mouseIn->setStartFrame(m_alternateColor.alpha());
     m_mouseIn->start();
     KNMusicListViewBase::enterEvent(e);
 }
@@ -68,19 +69,22 @@ void KNMusicGenreSongs::leaveEvent(QEvent *e)
 {
     m_mouseIn->stop();
     m_mouseOut->stop();
-    m_mouseOut->setStartFrame(m_backgroundColor.red());
+    m_mouseOut->setStartFrame(m_alternateColor.alpha());
     m_mouseOut->start();
     KNMusicListViewBase::leaveEvent(e);
 }
 
 void KNMusicGenreSongs::changeBackground(int frameData)
 {
-    m_backgroundColor=QColor(frameData, frameData, frameData);
-    m_palette.setColor(QPalette::AlternateBase, QColor(frameData, frameData, frameData, 50+frameData-0x10));
-    m_palette.setColor(QPalette::Button, m_backgroundColor);
+    m_alternateColor.setAlpha(frameData);
+    m_palette.setColor(QPalette::AlternateBase, m_alternateColor);
+    m_palette.setColor(QPalette::Button, QColor(0x20+frameData,
+                                                0x20+frameData,
+                                                0x20+frameData));
     int textParam=(frameData<<1)+159;
     m_palette.setColor(QPalette::Text, QColor(textParam,
                                               textParam,
-                                              textParam));
+                                              textParam,
+                                              0xDF+frameData));
     setPalette(m_palette);
 }

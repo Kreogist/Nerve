@@ -6,7 +6,7 @@ KNLibHeaderSwitcher::KNLibHeaderSwitcher(QWidget *parent) :
     QWidget(parent)
 {
     setContentsMargins(0,0,0,0);
-    setFixedHeight(60);
+    setFixedHeight(70);
 }
 
 void KNLibHeaderSwitcher::addWidget(QWidget *widget)
@@ -17,7 +17,7 @@ void KNLibHeaderSwitcher::addWidget(QWidget *widget)
     }
     m_stackedWidgets.append(widget);
     widget->setParent(this);
-    widget->resize(size().width(), size().height()+10);
+    widget->setGeometry(0,0,size().width(), size().height());
 }
 
 void KNLibHeaderSwitcher::setCurrentIndex(const int &index)
@@ -44,5 +44,5 @@ void KNLibHeaderSwitcher::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     QWidget *widget=m_stackedWidgets.at(m_currentIndex);
-    widget->resize(event->size().width(), event->size().height()+10);
+    widget->setGeometry(0,0,event->size().width(), event->size().height());
 }

@@ -17,6 +17,7 @@ KNStdLibViewerCategory::KNStdLibViewerCategory(QWidget *parent) :
     //Set layout
     m_layout=new QBoxLayout(QBoxLayout::LeftToRight, this);
     m_layout->setContentsMargins(0,0,0,0);
+    m_layout->setAlignment(Qt::AlignCenter);
     m_layout->setSpacing(0);
     setLayout(m_layout);
 
@@ -60,7 +61,7 @@ void KNStdLibViewerCategory::addCategory(const QPixmap &icon,
         m_currentCategory=0;
         button->setChecked(true);
     }
-    m_layout->addWidget(button);
+    m_layout->addWidget(button, Qt::AlignCenter);
     m_categories.append(button);
 }
 
@@ -76,7 +77,7 @@ void KNStdLibViewerCategory::setText(const int &index,
 
 void KNStdLibViewerCategory::setCurrentIndex(const int &index)
 {
-    if(m_moving)
+    if(m_moving || index==m_currentCategory)
     {
         return;
     }
@@ -95,9 +96,14 @@ void KNStdLibViewerCategory::setCurrentIndex(const int &index)
     }
 }
 
+int KNStdLibViewerCategory::currentIndex() const
+{
+    return m_currentCategory;
+}
+
 void KNStdLibViewerCategory::moveLeft()
 {
-    if(m_currentCategory==0)
+    if(0==m_currentCategory)
     {
         setCurrentIndex(m_categories.size()-1);
     }

@@ -13,16 +13,22 @@
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicfilter.h"
 #include "Libraries/knmusicdatabase.h"
+#include "Libraries/knmusicbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
+#include "Widgets/knmusicplayerwidget.h"
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
+#include "Widgets/knmusiceq.h"
 
 #include "knmusicplugin.h"
 
 KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     KNPluginBase(parent)
 {
+    m_musicPlayer=new KNMusicBackend;
+    m_musicPlayer->moveToThread(&m_playerThread);
+
     m_global=KNGlobal::instance();
     m_musicAlbumArt=QDir::toNativeSeparators(m_global->databaseFolder()+"/AlbumArt/");
     m_model=new KNMusicModel;
@@ -37,12 +43,19 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setModel(m_model);
-    connect(m_musicViewer, &KNMusicViewer::requireOpenUrl,
-            this, &KNMusicPlugin::onActionOpenUrl);
+    m_musicViewer->setMusicBackend(m_musicPlayer->backend());
+    connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
+            this, &KNMusicPlugin::onActionPlay);
 
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
+    m_headerWidget->setMusicModel(m_model);
+    m_headerWidget->setBackend(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::onActionSearch);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
+            m_musicViewer, &KNMusicViewer::onActionShowPlayer);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireHideMusicPlayer,
+            m_musicViewer, &KNMusicViewer::onActionHidePlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireLostFocus,
             m_musicViewer, &KNMusicViewer::setContentsFocus);
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,
@@ -50,6 +63,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
+    connect(m_libraryViewMenu, &KNMusicViewerMenu::requirePlayMusic,
+            this, &KNMusicPlugin::onActionPlay);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
             m_musicViewer, &KNMusicViewer::showIn);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,
@@ -70,6 +85,15 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_infoCollectManager->moveToThread(&m_collectThread);
     m_model->setInfoCollectorManager(m_infoCollectManager);
 
+    m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
+    m_musicPlayerWidget->setMusicModel(m_model);
+    m_musicPlayerWidget->setBackend(m_musicPlayer);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireSyncData,
+            m_musicPlayerWidget, &KNMusicPlayerWidget::syncData);
+    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
+    m_musicPlayerWidget->setEqualizer(m_equalizer);
+    m_musicViewer->setPlayWidget(m_musicPlayerWidget);
+
     m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
 
     createShortcuts();
@@ -78,6 +102,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_collectThread.start();
     m_databaseThread.start();
     m_searcherThread.start();
+    m_playerThread.start();
 
     m_database->load();
 }
@@ -87,16 +112,19 @@ KNMusicPlugin::~KNMusicPlugin()
     m_database->flush();
 
     m_collectThread.quit();
+    m_playerThread.quit();
     m_searcherThread.quit();
     m_modelThread.quit();
     m_databaseThread.quit();
 
     m_collectThread.wait();
+    m_playerThread.wait();
     m_searcherThread.wait();
     m_modelThread.wait();
     m_databaseThread.wait();
 
     m_model->deleteLater();
+    m_musicPlayer->deleteLater();
     m_searcher->deleteLater();
     m_infoCollectManager->deleteLater();
     m_database->deleteLater();
@@ -105,19 +133,9 @@ KNMusicPlugin::~KNMusicPlugin()
 void KNMusicPlugin::applyPlugin()
 {
     emit requireAddCategory("Music",
-                            QPixmap(),
+                            QPixmap(":/Music/Resources/Music/icon.png"),
                             m_musicViewer);
     emit requireAddHeader(m_headerWidget);
-}
-
-void KNMusicPlugin::writeDatabase()
-{
-    ;
-}
-
-void KNMusicPlugin::readDatabase()
-{
-    ;
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
@@ -136,6 +154,11 @@ void KNMusicPlugin::onActionOpenUrl(const QModelIndex &index)
     m_global->openLocalUrl(filePath);
 }
 
+void KNMusicPlugin::onActionPlay(const QModelIndex &index)
+{
+    m_headerWidget->onActionPlayMusic(index);
+}
+
 void KNMusicPlugin::onActionGetInfo(const QString &filePath)
 {
     m_detailsDialog->setFilePath(filePath);
@@ -149,4 +172,22 @@ void KNMusicPlugin::createShortcuts()
     connect(searchShortcut, SIGNAL(triggered()),
             m_headerWidget, SLOT(setSearchFocus()));
     m_musicViewer->addAction(searchShortcut);
+    QAction *musicPlay=new QAction(this);
+    musicPlay->setShortcut(QKeySequence(Qt::Key_MediaPlay));
+    connect(musicPlay, &QAction::triggered,
+            [=]
+            {
+                m_musicPlayer->play();
+            });
+    m_musicViewer->addAction(musicPlay);
+    m_headerWidget->addAction(musicPlay);
+    QAction *musicPause=new QAction(this);
+    musicPause->setShortcut(QKeySequence(Qt::Key_MediaPause));
+    connect(musicPause, &QAction::triggered,
+            [=]
+            {
+                m_musicPlayer->pause();
+            });
+    m_musicViewer->addAction(musicPause);
+    m_headerWidget->addAction(musicPause);
 }

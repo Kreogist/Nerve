@@ -25,7 +25,8 @@ public:
 
     explicit KNMusicTagAPEv2(QObject *parent = 0);
     QString textData(const int &key) const;
-    QString frameData(const QString &frame) const;
+    QString frameAt(const int &key) const;
+    QString frameData(const QString &frameAt) const;
     bool readTag(const QFile &mediaFile,
                  QDataStream &mediaData);
     void clearCache();
@@ -34,14 +35,18 @@ public:
 signals:
 
 public slots:
+    void setTextData(const int &key, const QString &data);
+    void setTextData(const QString &key, const QString &data);
+    void writeTag(QFile &mediaFile,
+                  QDataStream &mediaData);
 
 private:
-    bool checkAPEHeaderAt(QDataStream &mediaData);
+    bool checkHeaderAndParse(QDataStream &mediaData);
+    bool checkHeader(const char *);
     bool readTagAt(QDataStream &mediaData);
     const char m_apePreamble[9]={'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X', '\0'};
 
-    char m_apeHeader[32];
-    char m_preambleCheck[9];
+    char m_apeHeader[32], m_preambleCheck[9];
     int m_headerPosition;
     quint32 m_versionNumber,
             m_tagSize,

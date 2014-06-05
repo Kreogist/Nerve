@@ -24,6 +24,9 @@ public:
                  QDataStream &mediaData);
     void clearCache();
     QString textData(const int &key) const;
+    void setTextData(const int &key, const QString &data);
+    void writeTag(QFile &mediaFile,
+                  QDataStream &mediaData);
     quint8 genreIndex() const;
 
 signals:
@@ -32,7 +35,7 @@ public slots:
 
 private:
     QString m_tagData[ID3v1ItemCount];
-    char m_rawTagData[128];
+    char m_rawTagData[128], m_rawByteBackup, m_emptyTag[128];
     QTextCodec *m_localCodec;
     quint8 m_genreIndex;
 };

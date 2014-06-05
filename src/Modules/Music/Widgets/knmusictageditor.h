@@ -29,6 +29,9 @@ signals:
 
 public slots:
 
+private slots:
+    void writeTag();
+
 private:
     void resetEditor();
     void readBasicInfoFromEditor(KNMusicTagEditorBase *editor);
@@ -50,6 +53,7 @@ private:
 
     QString m_basicInfo[BasicInformationCount];
     QPixmap m_coverArt;
+    QString m_filePath;
 };
 
 #endif // KNMUSICTAGEDITOR_H
