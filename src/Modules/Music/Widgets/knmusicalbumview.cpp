@@ -8,7 +8,6 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
-#include <QLinearGradient>
 #include <QScrollBar>
 #include <QTimeLine>
 
@@ -18,46 +17,9 @@
 #include "../Libraries/knmusicalbummodel.h"
 #include "../Libraries/knmusiccategorysortfiltermodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
+#include "../../Base/knsideshadows.h"
 
 #include "knmusicalbumview.h"
-
-KNMusicRightShadow::KNMusicRightShadow(QWidget *parent) :
-    QWidget(parent)
-{
-    ;
-}
-
-void KNMusicRightShadow::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    QLinearGradient shadow(QPoint(0,0), rect().topRight());
-    shadow.setColorAt(0, QColor(0,0,0,130));
-    shadow.setColorAt(1, QColor(0,0,0,0));
-    painter.setBrush(shadow);
-    painter.drawRect(event->rect().x()-1,
-                     event->rect().y()-1,
-                     event->rect().width()+1,
-                     event->rect().height()+1);
-}
-
-KNMusicLeftShadow::KNMusicLeftShadow(QWidget *parent) :
-    QWidget(parent)
-{
-    ;
-}
-
-void KNMusicLeftShadow::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    QLinearGradient shadow(QPoint(0,0), rect().topRight());
-    shadow.setColorAt(0, QColor(0,0,0,0));
-    shadow.setColorAt(1, QColor(0,0,0,130));
-    painter.setBrush(shadow);
-    painter.drawRect(event->rect().x()-1,
-                     event->rect().y()-1,
-                     event->rect().width()+1,
-                     event->rect().height()+1);
-}
 
 KNMusicAlbumArtwork::KNMusicAlbumArtwork(QWidget *parent) :
     QLabel(parent)
@@ -190,8 +152,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
     setContentsMargins(0,0,0,0);
 
     m_songPanel=new KNMusicAlbumSongDetail(this);
-    m_leftShadow=new KNMusicLeftShadow(this);
-    //m_leftShadow->setVisible(false);
+    m_leftShadow=new KNLeftSideShadow(this);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireOpenUrl,
             this, &KNMusicAlbumDetail::requireOpenUrl);
     connect(m_songPanel, &KNMusicAlbumSongDetail::requireShowContextMenu,
@@ -199,8 +160,7 @@ KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
 
     m_albumArt=new KNMusicAlbumArtwork(this);
     m_albumArt->setScaledContents(true);
-    m_rightShadow=new KNMusicRightShadow(this);
-    //m_rightShadow->setVisible(false);
+    m_rightShadow=new KNRightSideShadow(this);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireShowArtwork,
             this, &KNMusicAlbumDetail::showArtwork);
     connect(m_albumArt, &KNMusicAlbumArtwork::requireHideArtwork,

@@ -5,6 +5,7 @@
 #include <QDebug>
 
 #include "knstdlibcategorybutton.h"
+#include "knsideshadows.h"
 
 #include "knstdlibcategorylist.h"
 
@@ -23,10 +24,20 @@ KNStdLibCategoryList::KNStdLibCategoryList(QWidget *parent) :
     connect(m_button, &KNStdLibCategoryButton::requireHideCategorySelect,
             this, &KNStdLibCategoryList::hideCategory);
 
-    m_layout=new QBoxLayout(QBoxLayout::LeftToRight, this);
+    m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
     m_layout->setSpacing(0);
     setLayout(m_layout);
+
+    KNTopSideShadow *topShadow=new KNTopSideShadow(this);
+    topShadow->setMaximumHeight(15);
+    m_layout->addWidget(topShadow, 1);
+
+    m_layout->addStretch();
+
+    KNBottomSideShadow *bottomShadow=new KNBottomSideShadow(this);
+    bottomShadow->setMaximumHeight(15);
+    m_layout->addWidget(bottomShadow, 1);
 
     m_expandCategory=new QTimeLine(200, this);
     m_expandCategory->setUpdateInterval(10);

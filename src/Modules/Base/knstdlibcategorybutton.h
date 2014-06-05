@@ -32,7 +32,7 @@ private slots:
 private:
     void resizeButton();
     QLabel *m_text, *m_icon;
-    int m_leftMargin=50, m_iconSize=110, m_offset=10, m_textY=22, m_textSize=50;
+    int m_leftMargin=58, m_iconSize=110, m_offset=10, m_textY=22, m_textSize=50;
     QFont m_textFont;
     QGraphicsOpacityEffect *m_iconEffect, *m_textEffect;
     QRadialGradient m_iconGradient;

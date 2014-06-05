@@ -2,7 +2,6 @@
 #define KNMUSICALBUMVIEW_H
 
 #include <QAbstractItemView>
-
 #include <QLabel>
 
 class QBoxLayout;
@@ -18,26 +17,8 @@ class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
 class KNMusicCategorySortFilterModel;
-class KNMusicRightShadow : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNMusicRightShadow(QWidget *parent = 0);
-
-protected:
-    void paintEvent(QPaintEvent *event);
-};
-
-class KNMusicLeftShadow : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNMusicLeftShadow(QWidget *parent = 0);
-
-protected:
-    void paintEvent(QPaintEvent *event);
-};
-
+class KNRightSideShadow;
+class KNLeftSideShadow;
 class KNMusicAlbumArtwork : public QLabel
 {
     Q_OBJECT
@@ -136,8 +117,8 @@ private slots:
 private:
     KNMusicAlbumArtwork *m_albumArt;
     KNMusicAlbumSongDetail *m_songPanel;
-    KNMusicRightShadow *m_rightShadow;
-    KNMusicLeftShadow *m_leftShadow;
+    KNRightSideShadow *m_rightShadow;
+    KNLeftSideShadow *m_leftShadow;
     QBoxLayout *m_infoListLayout, *m_artInfoLayout;
     QPropertyAnimation *m_showExpand, *m_showShrink, *m_hideExpand, *m_hideShrink,
                        *m_flyOut, *m_coverExpand, *m_coverShrink;

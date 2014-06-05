@@ -44,12 +44,23 @@ void KNStdLibHeaderContainer::addCategorySwitcher(KNStdLibCategoryButton *button
     button->move(0,0);
     connect(button, &KNStdLibCategoryButton::requireResetLeftSpace,
             this, &KNStdLibHeaderContainer::resetLeftSpace);
+    m_button=button;
+    if(m_switcher!=NULL)
+    {
+        linkButtonAndSwitcher();
+    }
 }
 
 void KNStdLibHeaderContainer::addHeaderSwitcher(KNLibHeaderSwitcher *switcher)
 {
-    m_containerLayout->addWidget(switcher, 1);
-    switcher->setParent(this);
+    m_switcher=switcher;
+    m_containerLayout->addWidget(m_switcher, 1);
+    m_switcher->setParent(this);
+    setFixedHeight(m_switcher->height());
+    if(m_button!=NULL)
+    {
+        linkButtonAndSwitcher();
+    }
 }
 
 void KNStdLibHeaderContainer::enterEvent(QEvent *e)
@@ -80,5 +91,13 @@ void KNStdLibHeaderContainer::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     m_palette.setColor(QPalette::Window, m_backgroundColor);
     setPalette(m_palette);
+}
+
+void KNStdLibHeaderContainer::linkButtonAndSwitcher()
+{
+    connect(m_button, &KNStdLibCategoryButton::requireShowCategorySelect,
+            m_switcher, &KNLibHeaderSwitcher::hide);
+    connect(m_button, &KNStdLibCategoryButton::requireHideCategorySelect,
+            m_switcher, &KNLibHeaderSwitcher::show);
 }
 

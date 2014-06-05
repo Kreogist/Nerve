@@ -20,9 +20,11 @@ KNStdLibCategorySwitcher::KNStdLibCategorySwitcher(QWidget *parent) :
     m_layout->setSpacing(0);
     setLayout(m_layout);
 
+    //Set category switcher.
     m_categoryWidgets=new KNVerticalWidgetSwitcher(this);
     m_layout->addWidget(m_categoryWidgets);
 
+    //Initial the dummy shadow to disable the operate of the contents.
     m_dummyShadow=new QWidget(this);
     m_dummyShadow->setAutoFillBackground(true);
     m_dummyPalette=m_dummyShadow->palette();

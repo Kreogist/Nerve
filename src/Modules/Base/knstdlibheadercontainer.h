@@ -27,7 +27,10 @@ private slots:
     void changeBackground(int frameData);
 
 private:
+    void linkButtonAndSwitcher();
     QTimeLine *m_mouseIn, *m_mouseOut;
+    KNStdLibCategoryButton *m_button=NULL;
+    KNLibHeaderSwitcher *m_switcher=NULL;
     QPalette m_palette;
     QColor m_backgroundColor;
     QBoxLayout *m_containerLayout;

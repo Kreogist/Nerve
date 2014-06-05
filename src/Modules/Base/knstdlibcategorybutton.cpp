@@ -17,7 +17,7 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     m_icon->setScaledContents(true);
     m_icon->setFixedSize(m_iconSize, m_iconSize);
     m_iconEffect=new QGraphicsOpacityEffect(m_icon);
-    m_iconEffect->setOpacity(0.7);
+    m_iconEffect->setOpacity(1.0);
     m_iconGradient=QRadialGradient(QPointF(0,0),
                                     m_iconSize,
                                     QPointF(0,0));
