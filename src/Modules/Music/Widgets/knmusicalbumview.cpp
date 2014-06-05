@@ -473,6 +473,9 @@ KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     connect(m_scrollTimeLine, SIGNAL(frameChanged(int)),
             verticalScrollBar(), SLOT(setValue(int)));
 
+    connect(verticalScrollBar(), &QScrollBar::valueChanged,
+            this, &KNMusicAlbumView::onActionScrolling);
+
     updateParameters();
 }
 
@@ -556,10 +559,6 @@ void KNMusicAlbumView::setCategoryModel(KNMusicCategorySortFilterModel *model)
     setModel(model);
     m_proxyModel=model;
     m_model=static_cast<KNMusicAlbumModel *>(model->sourceModel());
-    connect(m_model, &KNMusicAlbumModel::requireShowFirstItem,
-            this, &KNMusicAlbumView::showFirstItem);
-    connect(m_model, &KNMusicAlbumModel::requireHideFirstItem,
-            this, &KNMusicAlbumView::hideFirstItem);
     connect(m_model, &KNMusicAlbumModel::albumRemoved,
             this, &KNMusicAlbumView::onActionAlbumRemoved);
 }
@@ -868,14 +867,16 @@ void KNMusicAlbumView::onActionFlyAwayAlbumDetailFinished()
     m_flyingAlbum=false;
 }
 
-void KNMusicAlbumView::showFirstItem()
+void KNMusicAlbumView::onActionScrolling()
 {
-    ;
-}
-
-void KNMusicAlbumView::hideFirstItem()
-{
-    ;
+    if(m_albumHide->state()==QAbstractAnimation::Running)
+    {
+        QRect endPosition=visualRect(m_proxyModel->mapFromSource(m_detailIndex));
+        m_albumHide->setEndValue(QRect(endPosition.x()+2,
+                                       endPosition.y()+2,
+                                       m_iconSizeParam-2,
+                                       m_iconSizeParam-2));
+    }
 }
 
 void KNMusicAlbumView::flyAwayAlbumDetail()

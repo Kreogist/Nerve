@@ -179,8 +179,7 @@ private slots:
     void onActionAlbumRemoved(const QModelIndex &index);
     void onActionFlyAwayAlbumDetail();
     void onActionFlyAwayAlbumDetailFinished();
-    void showFirstItem();
-    void hideFirstItem();
+    void onActionScrolling();
 
 private:
     void flyAwayAlbumDetail();
