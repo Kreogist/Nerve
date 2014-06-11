@@ -5,6 +5,7 @@
 #include <QDateTime>
 #include <QPixmap>
 #include <QMetaType>
+#include <QModelIndexList>
 #include <QStringList>
 #include <QMap>
 
@@ -68,6 +69,14 @@ public:
         GenreView
     };
 
+    enum LoopMode
+    {
+        NoRepeat,
+        RepeatAll,
+        RepeatSong,
+        LoopCount
+    };
+
     QString getGenre(const int &index) const;
     QString getGenre(const QString &value) const;
     QPixmap getGenreImage(const int &index) const;
@@ -78,6 +87,8 @@ public:
     QImage noAlbumImage() const;
     QStringList genreList() const;
     int genreListSize() const;
+    void setSelectedIndexes(const QModelIndexList &indexes);
+    QModelIndexList selectedIndexes() const;
     int genreIndex(const QString &genre) const;
 
 signals:
@@ -95,6 +106,7 @@ private:
     QString m_header[MusicDataCount];
     QImage m_noAlbumImage;
     QMap<QString, QString> m_genreImage;
+    QModelIndexList m_currentIndexes;
 };
 
 #endif // KNMUSICGLOBAL_H

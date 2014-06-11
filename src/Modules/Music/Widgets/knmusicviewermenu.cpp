@@ -20,6 +20,7 @@ KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     setPalette(pal);
 
     m_global=KNGlobal::instance();
+    m_musicGlobal=KNMusicGlobal::instance();
     retranslate();
     createActions();
 }
@@ -33,6 +34,34 @@ void KNMusicViewerMenu::setMode(KNMusicGlobal::MusicCategory category)
         m_action[i]->setVisible(true);
     }
     m_action[ShowInSongs+category]->setVisible(false);
+}
+
+void KNMusicViewerMenu::readIndexesFromGlobal()
+{
+    QModelIndexList indexesList=m_musicGlobal->selectedIndexes();
+    if(indexesList.size()==1)
+    {
+        for(int i=0; i<MusicActionCount; i++)
+        {
+            m_action[i]->setVisible(true);
+        }
+        for(int i=0; i<MusicBatchActionCount; i++)
+        {
+            m_batchAction[i]->setVisible(false);
+        }
+        setItemIndex(indexesList.first());
+    }
+    else
+    {
+        for(int i=0; i<MusicActionCount; i++)
+        {
+            m_action[i]->setVisible(false);
+        }
+        for(int i=0; i<MusicBatchActionCount; i++)
+        {
+            m_batchAction[i]->setVisible(true);
+        }
+    }
 }
 
 void KNMusicViewerMenu::setItemIndex(const QModelIndex &index)
@@ -77,6 +106,8 @@ void KNMusicViewerMenu::retranslate()
     m_actionTitle[Copy]=tr("Copy File");
     m_actionTitle[CopyText]=tr("Copy '%1'");
     m_actionTitle[Delete]=tr("Delete");
+
+    m_batchActionTitle[DeleteSelects]=tr("Delete");
 }
 
 void KNMusicViewerMenu::retranslateAndSet()
@@ -169,6 +200,14 @@ void KNMusicViewerMenu::createActions()
     insertSeparator(m_action[ShowInSongs]);
     insertSeparator(m_action[GetInfo]);
     insertSeparator(m_action[Browse]);
+
+    for(int i=0; i<MusicBatchActionCount; i++)
+    {
+        m_batchAction[i]=new QAction(m_batchActionTitle[i], this);
+        addAction(m_batchAction[i]);
+    }
+    connect(m_batchAction[DeleteSelects], SIGNAL(triggered()),
+            this, SIGNAL(requireDeleteSelection()));
 }
 
 void KNMusicViewerMenu::setModel(QStandardItemModel *model)

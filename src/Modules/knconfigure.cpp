@@ -16,9 +16,32 @@ void KNConfigure::setValue(const QString &key,
     ;
 }
 
-void KNConfigure::setGroup(const QString &groupName)
+void KNConfigure::setValue(const QString &groupName,
+                           const QString &key,
+                           const QVariant &value)
 {
     ;
+}
+
+QVariant KNConfigure::value(const QString &key)
+{
+    return m_settings->value(key);
+}
+
+QVariant KNConfigure::value(const QString &groupName,
+                            const QString &key)
+{
+    ;
+}
+
+void KNConfigure::beginGroup(const QString &groupName)
+{
+    m_settings->beginGroup(groupName);
+}
+
+void KNConfigure::endGroup()
+{
+    m_settings->endGroup();
 }
 
 KNConfigure::KNConfigure() :

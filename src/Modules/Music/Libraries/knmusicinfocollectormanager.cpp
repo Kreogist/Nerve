@@ -12,7 +12,7 @@ KNMusicInfoCollectorManager::KNMusicInfoCollectorManager(QObject *parent) :
     connect(m_collector, &KNMusicInfoCollector::requireAppendMusic,
             this, &KNMusicInfoCollectorManager::currentWorkDone);
     connect(m_collector, &KNMusicInfoCollector::requireSkipCurrent,
-            this, &KNMusicInfoCollectorManager::currentSkip);
+            this, &KNMusicInfoCollectorManager::analysisNext);
     connect(this, &KNMusicInfoCollectorManager::requireAnalysis,
             m_collector, &KNMusicInfoCollector::analysis);
     m_collectThread.start();
@@ -39,7 +39,7 @@ void KNMusicInfoCollectorManager::addAnalysisList(int index,
     }
 }
 
-void KNMusicInfoCollectorManager::currentSkip()
+void KNMusicInfoCollectorManager::analysisNext()
 {
     m_analysisQueue.removeFirst();
     if(m_analysisQueue.size()==0)
@@ -58,12 +58,12 @@ void KNMusicInfoCollectorManager::currentWorkDone(QStringList value,
     resultItem.text=value;
     resultItem.details=datas;
     m_resultQueue.append(resultItem);
-    if(m_noUpdating)
-    {
+    if(m_noUpdating) //Before this item is add, the result queue is empty.
+    {                //Emit a signal to let model know they should update.
         emit requireUpdateRowInfo();
         m_noUpdating=false;
     }
-    currentSkip();
+    analysisNext();
 }
 
 KNMusicGlobal::MusicDetailsInfo KNMusicInfoCollectorManager::currentFileAppendData() const
@@ -88,6 +88,16 @@ void KNMusicInfoCollectorManager::removeFirstUpdateResult()
 bool KNMusicInfoCollectorManager::isUpdateQueueEmpty()
 {
     return m_resultQueue.isEmpty();
+}
+
+bool KNMusicInfoCollectorManager::isWorking()
+{
+    return !m_analysisQueue.isEmpty();
+}
+
+void KNMusicInfoCollectorManager::setMusicBackend(KNLibBass *backend)
+{
+    m_collector->setMusicBackend(backend);
 }
 
 QStringList KNMusicInfoCollectorManager::currentFileData() const

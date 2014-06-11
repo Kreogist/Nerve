@@ -14,6 +14,7 @@ class KNMusicPlayerWidget;
 class KNMusicDatabase;
 class KNMusicHeaderWidget;
 class KNMusicModel;
+class KNMusicPlaylistManager;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
@@ -37,10 +38,8 @@ protected:
 
 private slots:
     void onActionShowContextMenu(const QPoint &position,
-                         const QModelIndex &index,
-                         KNMusicGlobal::MusicCategory currentMode);
+                                 KNMusicGlobal::MusicCategory currentMode);
     void onActionOpenUrl(const QModelIndex &index);
-    void onActionPlay(const QModelIndex &index);
     void onActionGetInfo(const QString &filePath);
 
 private:
@@ -58,6 +57,7 @@ private:
     KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
     KNMusicPlayerWidget *m_musicPlayerWidget;
+    KNMusicPlaylistManager *m_playlistManager;
 
     QThread m_searcherThread,
             m_collectThread,

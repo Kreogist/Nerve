@@ -8,7 +8,7 @@
 #include "knplayerprogress.h"
 
 KNPlayerProgress::KNPlayerProgress(QWidget *parent) :
-    QAbstractSlider(parent)
+    KNAbstractSlider(parent)
 {
     setMinimumHeight(20);
     m_buttonGradient.setCenterRadius(8);
@@ -23,14 +23,16 @@ KNPlayerProgress::KNPlayerProgress(QWidget *parent) :
     m_mouseIn=new QTimeLine(400, this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseIn->setEndFrame(70);
-    connect(m_mouseIn, SIGNAL(frameChanged(int)),
-            this, SLOT(onActionChangeColor(int)));
+    connect(m_mouseIn, &QTimeLine::frameChanged,
+            this, &KNPlayerProgress::onActionChangeColor);
 
     m_mouseOut=new QTimeLine(400, this);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
     m_mouseOut->setEndFrame(40);
-    connect(m_mouseOut, SIGNAL(frameChanged(int)),
-            this, SLOT(onActionChangeColor(int)));
+    connect(m_mouseOut, &QTimeLine::frameChanged,
+            this, &KNPlayerProgress::onActionChangeColor);
+    connect(this, SIGNAL(valueChanged(float)),
+            this, SLOT(update()));
 }
 
 const QPalette &KNPlayerProgress::palette() const
@@ -48,7 +50,7 @@ void KNPlayerProgress::enterEvent(QEvent *event)
     m_mouseOut->stop();
     m_mouseIn->setStartFrame(m_window.alpha());
     m_mouseIn->start();
-    QAbstractSlider::enterEvent(event);
+    KNAbstractSlider::enterEvent(event);
 }
 
 void KNPlayerProgress::leaveEvent(QEvent *event)
@@ -56,7 +58,7 @@ void KNPlayerProgress::leaveEvent(QEvent *event)
     m_mouseIn->stop();
     m_mouseOut->setStartFrame(m_window.alpha());
     m_mouseOut->start();
-    QAbstractSlider::leaveEvent(event);
+    KNAbstractSlider::leaveEvent(event);
 }
 
 void KNPlayerProgress::paintEvent(QPaintEvent *event)
@@ -76,9 +78,8 @@ void KNPlayerProgress::paintEvent(QPaintEvent *event)
     painter.setBrush(QBrush(m_window));
     int top=(event->rect().height()-m_scrollHeight)>>1;
     painter.drawRect(0, top, width()-1, m_scrollHeight);
-    double percent=
-            ((double)value()-(double)minimum())/((double)maximum()-(double)minimum()),
-           valueWidthF=percent*(double)width();
+    float percent=(value()-minimum())/(maximum()-minimum()),
+           valueWidthF=percent*(float)width();
     int valueWidth=(int)valueWidthF;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(m_button));
@@ -99,9 +100,8 @@ void KNPlayerProgress::paintEvent(QPaintEvent *event)
 void KNPlayerProgress::mousePressEvent(QMouseEvent *event)
 {
     emit sliderPressed();
-    qreal mouseValue=
-            (qreal)(maximum()-minimum())/(qreal)width()*(qreal)event->pos().x();
-    setValue((int)mouseValue+minimum());
+    setValue((maximum()-minimum())/(float)width()*(float)event->pos().x()+
+             minimum());
     m_mouseDown=true;
     event->accept();
 }
@@ -110,9 +110,8 @@ void KNPlayerProgress::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_mouseDown)
     {
-        qreal mouseValue=
-                (qreal)(maximum()-minimum())/(qreal)width()*(qreal)event->pos().x();
-        setValue((int)mouseValue+minimum());
+        setValue((maximum()-minimum())/(float)width()*(float)event->pos().x()
+                 +minimum());
     }
 }
 

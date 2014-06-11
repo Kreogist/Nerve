@@ -8,6 +8,7 @@
 
 #include "../knmusicglobal.h"
 #include "../../Public/knlibmediainfo.h"
+#include "../../Public/bass/knlibbass.h"
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"
@@ -34,6 +35,11 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     m_tagM4A=new KNMusicTagM4A(this);
     m_tagFLAC=new KNMusicTagFLAC(this);
     m_tagWAV=new KNMusicTagWAV(this);
+}
+
+void KNMusicInfoCollector::setMusicBackend(KNLibBass *backend)
+{
+    m_backend=backend;
 }
 
 void KNMusicInfoCollector::analysis(const QString &filePath)
@@ -76,7 +82,10 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
         readWAVTag(mediaFile, mediaData);
         mediaFile.close();
     }
-    parseByMediaInfo(filePathBackup);
+    if(!parseByBass(filePathBackup))
+    {
+        parseByMediaInfo(filePathBackup);
+    }
 
     currentFileInfo.rating=m_musicRating;
     currentFileInfo.duration=m_duration;
@@ -108,6 +117,33 @@ void KNMusicInfoCollector::resetInfoCache()
     m_musicCover=QImage();
 }
 
+bool KNMusicInfoCollector::parseByBass(const QString &value)
+{
+    if(m_backend->loadInfoCollect(value))
+    {
+        m_duration=m_backend->collectorDuration();
+        m_bitRate=m_backend->collectorBitrate();
+        m_samplingRate=m_backend->collectorSamplingRate();
+
+        //Parse data.
+        if(m_duration!=0)
+        {
+            int minuate=m_duration/60, second=m_duration-minuate*60;
+            setMediaData(KNMusicGlobal::Time, QString::number(minuate) + ":" + QString::number(second));
+        }
+        if(m_bitRate!=0)
+        {
+            setMediaData(KNMusicGlobal::BitRate, QString::number(m_bitRate)+" Kbps");
+        }
+        if(m_samplingRate!=0)
+        {
+            setMediaData(KNMusicGlobal::SampleRate, QString::number(m_samplingRate)+" Hz");
+        }
+        return true;
+    }
+    return false;
+}
+
 void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
 {
     m_mediaInfo->quickAnalysisFile(value);
@@ -125,10 +161,10 @@ void KNMusicInfoCollector::parseByMediaInfo(const QString &value)
             int minuate=m_duration/60, second=m_duration-minuate*60;
             setMediaData(KNMusicGlobal::Time, QString::number(minuate) + ":" + QString::number(second));
         }
-        m_bitRate=itemLines.at(1).toInt();
+        m_bitRate=itemLines.at(1).toInt()/1000;
         if(m_bitRate!=0)
         {
-            setMediaData(KNMusicGlobal::BitRate, QString::number(m_bitRate/1000)+" Kbps");
+            setMediaData(KNMusicGlobal::BitRate, QString::number(m_bitRate)+" Kbps");
         }
         m_samplingRate=itemLines.at(2).toInt();
         if(m_samplingRate!=0)

@@ -55,8 +55,6 @@ KNMusicDetailOverview::KNMusicDetailOverview(QWidget *parent) :
     basicInfoLayout->addWidget(m_basicInfo[Album]);
     m_basicInfo[Duration]=new QLabel(this);
     basicInfoLayout->addWidget(m_basicInfo[Duration]);
-    m_basicInfo[FilePath]=new QLabel(this);
-    basicInfoLayout->addWidget(m_basicInfo[FilePath]);
     basicInfoLayout->addStretch();
     albumArtLayout->addWidget(basicInfoContainer);
 
@@ -64,6 +62,9 @@ KNMusicDetailOverview::KNMusicDetailOverview(QWidget *parent) :
     QFormLayout *detailsLayout=new QFormLayout(mainLayout->widget());
     detailsLayout->setLabelAlignment(Qt::AlignRight);
     mainLayout->addLayout(detailsLayout);
+    m_basicInfo[FilePath]=new QLabel(this);
+    m_basicInfo[FilePath]->setWordWrap(true);
+    mainLayout->addWidget(m_basicInfo[FilePath]);
     mainLayout->addStretch();
 
     for(int i=0; i<MusicDetailCount; i++)

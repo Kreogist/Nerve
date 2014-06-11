@@ -9,7 +9,6 @@ class KNMusicCategorySortFilterModel : public QSortFilterProxyModel
 public:
     explicit KNMusicCategorySortFilterModel(QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-    QModelIndex firstIndex() const;
 
 signals:
 

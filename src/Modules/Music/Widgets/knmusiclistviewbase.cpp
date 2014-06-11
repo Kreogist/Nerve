@@ -38,7 +38,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setAlternatingRowColors(true);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    //setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);
@@ -60,6 +60,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     connect(m_headerWidget, &KNMusicListViewHeader::requireChangeVisible,
             this, &KNMusicListViewBase::onSectionVisibleChanged);
 
+    //Initial the tooltip widget
     m_musicDetailTooltip=new KNMusicDetailTooltip(this);
     m_musicDetailTooltip->installEventFilter(this);
     connect(this, &KNMusicListViewBase::activated,
@@ -78,17 +79,17 @@ void KNMusicListViewBase::resetHeader()
     setEditTriggers(QAbstractItemView::SelectedClicked);
     connect(header(), &QHeaderView::sortIndicatorChanged,
             this, &KNMusicListViewBase::onActionSort);
-    for(int i=KNMusicGlobal::Name+1;
-        i<KNMusicGlobal::MusicDataCount;
-        i++)
-    {
-        setColumnHidden(i, true);
-    }
-    setColumnHidden(KNMusicGlobal::Time, false);
-    setColumnHidden(KNMusicGlobal::Artist, false);
-    setColumnHidden(KNMusicGlobal::Album, false);
-    setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);
+//    for(int i=KNMusicGlobal::Name+1;
+//        i<KNMusicGlobal::MusicDataCount;
+//        i++)
+//    {
+//        setColumnHidden(i, true);
+//    }
+//    setColumnHidden(KNMusicGlobal::Time, false);
+//    setColumnHidden(KNMusicGlobal::Artist, false);
+//    setColumnHidden(KNMusicGlobal::Album, false);
+//    setColumnHidden(KNMusicGlobal::Genre, false);
+//    setColumnHidden(KNMusicGlobal::Rating, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);
@@ -150,7 +151,7 @@ void KNMusicListViewBase::onActionSort(int logicalIndex, Qt::SortOrder order)
     Q_UNUSED(order);
     if(currentIndex().isValid())
     {
-        scrollTo(currentIndex(), PositionAtCenter);
+        scrollTo(currentIndex());
     }
 }
 
@@ -160,12 +161,10 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
     if(event->button()==Qt::RightButton &&
           rect().contains(event->pos()))
     {
-        QModelIndex posTest=indexAt(event->pos());
-        if(posTest.isValid())
+        if(indexAt(event->pos()).isValid())
         {
-            m_musicDetailTooltip->hide();
-            emit requireShowContextMenu(event->globalPos(),
-                                        m_proxyModel->mapToSource(posTest));
+            setSelectedRows();
+            emit requireShowContextMenu(event->globalPos());
         }
     }
 }
@@ -220,9 +219,17 @@ bool KNMusicListViewBase::event(QEvent *event)
         QModelIndex index=realPos.y()<0?QModelIndex():indexAt(realPos);
         if(index.isValid())
         {
-            m_musicDetailTooltip->setTooltip(m_proxyModel->mapToSource(index),
-                                             mapToGlobal(helpEvent->pos()));
-            m_musicDetailTooltip->showTooltip();
+            if(verticalScrollBar()->isVisible() &&
+                (realPos.x()<(viewport()->rect().right()-verticalScrollBar()->width())))
+            {
+                m_musicDetailTooltip->setTooltip(m_proxyModel->mapToSource(index),
+                                                 mapToGlobal(helpEvent->pos()));
+                m_musicDetailTooltip->showTooltip();
+            }
+            else
+            {
+                m_musicDetailTooltip->hide();
+            }
         }
         return true;
     }
@@ -241,4 +248,24 @@ void KNMusicListViewBase::onItemActived(const QModelIndex &index)
     {
         emit requireOpenUrl(index);
     }
+}
+
+void KNMusicListViewBase::setSelectedRows()
+{
+    QModelIndexList currentSelection=selectedIndexes(),
+                    mappedSelection;
+    QList<int> indexMap;
+    int indexCount=currentSelection.size(),
+        currentRow;
+    while(indexCount--)
+    {
+        QModelIndex currentIndex=currentSelection.takeFirst();
+        currentRow=currentIndex.row();
+        if(indexMap.indexOf(currentRow)==-1)
+        {
+            indexMap.append(currentRow);
+            mappedSelection.append(m_proxyModel->mapToSource(currentIndex));
+        }
+    }
+    KNMusicGlobal::instance()->setSelectedIndexes(mappedSelection);
 }

@@ -10,9 +10,9 @@ class KNAbstractSlider : public QWidget
 public:
     explicit KNAbstractSlider(QWidget *parent = 0);
     float maximum() const;
-    float minimal() const;
+    float minimum() const;
     void setMaximum(float maximum);
-    void setMinimum(float minimal);
+    void setMinimum(float minimum);
     virtual void setValue(float value);
     void setRange(float min, float max);
     float value() const;
@@ -24,7 +24,7 @@ signals:
     void sliderMoved(float value);
     void sliderPressed();
     void sliderReleased();
-    void valueChanged(int value);
+    void valueChanged(float value);
 
 public slots:
 

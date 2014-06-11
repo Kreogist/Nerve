@@ -13,6 +13,7 @@
 
 class QEvent;
 class QDragEnterEvent;
+class QSortFilterProxyModel;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicCategorySortFilterModel;
@@ -28,8 +29,10 @@ class KNMusicGenreModel;
 class KNMusicCategoryDetailModel;
 class KNMusicAlbumDetailModel;
 class KNMusicArtistSongs;
+class KNMusicPlaylistView;
 class KNMusicGenreSongs;
 class KNLibBass;
+class KNMusicPlaylistManager;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -37,6 +40,7 @@ public:
     explicit KNMusicViewer(QWidget *parent = 0);
     ~KNMusicViewer();
     void setDefaultHeader();
+    void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setModel(KNMusicModel *model);
     void setMusicBackend(KNLibBass *backend);
     bool eventFilter(QObject *watched, QEvent *event);
@@ -44,10 +48,10 @@ public:
 
 signals:
     void requireShowContextMenu(const QPoint &position,
-                                const QModelIndex &index,
                                 KNMusicGlobal::MusicCategory currentMode);
     void requirePlayMusic(const QModelIndex &index);
     void requireDelete(const QModelIndex &index);
+    void requireSetProxy(QSortFilterProxyModel *model);
     void requireClearSearch();
 
 public slots:
@@ -58,6 +62,7 @@ public slots:
                 const QModelIndex &index);
     void showInCurrent(const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
+    void deleteSelections();
     void onActionSearch(const QString &text);
     void onActionShowPlayer();
     void onActionHidePlayer();
@@ -68,17 +73,10 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void onActionLibraryViewShowContextMenu(const QPoint &position,
-                                            const QModelIndex &index);
-    void onActionArtistShowContextMenu(const QPoint &position,
-                                       const QModelIndex &index);
-    void onActionAlbumShowContextMenu(const QPoint &position,
-                                      const QModelIndex &index);
-    void onActionGenreShowContextMenu(const QPoint &position,
-                                      const QModelIndex &index);
-    void onActionArtistOpenUrl(const QModelIndex &index);
-    void onActionAlbumOpenUrl(const QModelIndex &index);
-    void onActionGenreOpenUrl(const QModelIndex &index);
+    void onActionLibraryViewShowContextMenu(const QPoint &position);
+    void onActionArtistShowContextMenu(const QPoint &position);
+    void onActionAlbumShowContextMenu(const QPoint &position);
+    void onActionGenreShowContextMenu(const QPoint &position);
 
 private:
     enum MusicCategories
@@ -97,6 +95,7 @@ private:
     KNMusicCategoryView *m_artistView,
                       *m_genreView;
     KNMusicAlbumView *m_albumView;
+    KNMusicPlaylistView *m_playlistView;
 
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;

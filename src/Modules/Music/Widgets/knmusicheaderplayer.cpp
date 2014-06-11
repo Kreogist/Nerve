@@ -5,7 +5,7 @@
 #include <QDebug>
 
 #include "knmusicplayercontrol.h"
-
+#include "knmusicloop.h"
 #include "../Libraries/knmusicbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
@@ -46,7 +46,10 @@ void KNMusicHeaderAlbumArt::mouseReleaseEvent(QMouseEvent *event)
 KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QWidget(parent)
 {
+    //Set properties.
+    setContentsMargins(0,0,0,0);
 
+    //Initial the layouts and widgets.
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                                 this);
     albumArtLayout->setContentsMargins(0,0,0,0);
@@ -76,14 +79,29 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_title->setPalette(m_textPalette);
     detailsArtLayout->addWidget(m_title);
 
-    m_artist=new QLabel(this);
-    m_artist->setPalette(m_textPalette);
-    detailsArtLayout->addWidget(m_artist);
+    m_artistAlbum=new QLabel(this);
+    m_artistAlbum->setPalette(m_textPalette);
+    detailsArtLayout->addWidget(m_artistAlbum);
 
     QBoxLayout *durationLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                               detailsArtLayout->widget());
+    durationLayout->setContentsMargins(0,0,0,0);
+    durationLayout->setSpacing(3);
+    //Add loop controller.
+    m_loopControl=new KNMusicLoop(this);
+    connect(m_loopControl, &KNMusicLoop::requireChangeLoopType,
+            this, &KNMusicHeaderPlayer::requireChangeLoop);
+    durationLayout->addWidget(m_loopControl);
+    //Add duration display.
+    m_time=new KNLabelEditor(this);
+    m_time->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    m_time->setPalette(m_textPalette);
+    connect(m_time, &KNLabelEditor::textEdited,
+            this, &KNMusicHeaderPlayer::onActionTimeEdited);
+    durationLayout->addWidget(m_time);
+    //Add playing progress slider displayer
     m_progress=new KNPlayerProgress(this);
-    m_progress->setFixedWidth(200);
+    m_progress->setMinimumWidth(200);
     connect(m_progress, &KNPlayerProgress::sliderPressed,
             [=]{m_sliderPressed=true;});
     connect(m_progress, &KNPlayerProgress::sliderReleased,
@@ -91,12 +109,7 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
                     m_sliderPressed=false;
                     m_player->setPosition(m_progress->value());
                });
-    durationLayout->addWidget(m_progress);
-    m_time=new KNLabelEditor(this);
-    m_time->setPalette(m_textPalette);
-    connect(m_time, SIGNAL(textEdited(QString)),
-            this, SLOT(onActionTimeEdited(QString)));
-    durationLayout->addWidget(m_time);
+    durationLayout->addWidget(m_progress, 1);
     detailsArtLayout->addLayout(durationLayout);
     albumArtLayout->addLayout(detailsArtLayout);
 
@@ -105,20 +118,31 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 
     m_mouseIn=new QPropertyAnimation(m_playerControl, "pos", this);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseIn, SIGNAL(valueChanged(QVariant)),
-            this, SLOT(onActionMouseInOut(QVariant)));
+    connect(m_mouseIn, &QPropertyAnimation::valueChanged,
+            this, &KNMusicHeaderPlayer::onActionMouseInOut);
 
     m_mouseOut=new QPropertyAnimation(m_playerControl, "pos", this);
     m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseOut, SIGNAL(finished()),
-            m_playerControl, SLOT(hide()));
-    connect(m_mouseOut, SIGNAL(valueChanged(QVariant)),
-            this, SLOT(onActionMouseInOut(QVariant)));
+    connect(m_mouseOut, &QPropertyAnimation::finished,
+            m_playerControl, &KNMusicPlayerControl::hide);
+    connect(m_mouseOut, &QPropertyAnimation::valueChanged,
+            this, &KNMusicHeaderPlayer::onActionMouseInOut);
+}
+
+QPixmap KNMusicHeaderPlayer::albumArt() const
+{
+    return m_albumArtImage;
 }
 
 void KNMusicHeaderPlayer::setAlbumArt(const QPixmap &albumArt)
 {
+    m_albumArtImage=albumArt;
     m_albumArt->setPixmap(albumArt);
+}
+
+QString KNMusicHeaderPlayer::title() const
+{
+    return m_title->text();
 }
 
 void KNMusicHeaderPlayer::setTitle(const QString &string)
@@ -126,9 +150,35 @@ void KNMusicHeaderPlayer::setTitle(const QString &string)
     m_title->setText(string);
 }
 
+QString KNMusicHeaderPlayer::artistAlbum() const
+{
+    return m_artistAlbum->text();
+}
+
 void KNMusicHeaderPlayer::setArtist(const QString &string)
 {
-    m_artist->setText(string);
+    m_artist=string;
+    if(m_album.isEmpty())
+    {
+        m_artistAlbum->setText(m_artist);
+        return;
+    }
+    m_artistAlbum->setText(m_artist + " - " + m_album);
+}
+
+void KNMusicHeaderPlayer::setAlbum(const QString &string)
+{
+    m_album=string;
+    if(m_artist.isEmpty())
+    {
+        m_artistAlbum->setText(m_album);
+    }
+    m_artistAlbum->setText(m_artist + " - " + m_album);
+}
+
+float KNMusicHeaderPlayer::position() const
+{
+    return m_player->position();
 }
 
 void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
@@ -139,8 +189,12 @@ void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
     connect(m_player, &KNMusicBackend::durationChanged,
             this, &KNMusicHeaderPlayer::onActionDurationChanged);
     connect(m_player, &KNMusicBackend::finished,
-            this, &KNMusicHeaderPlayer::onActionCurrentFinished);
+            this, &KNMusicHeaderPlayer::finished);
     m_playerControl->setVolume(m_player->volume());
+    connect(m_playerControl, &KNMusicPlayerControl::requireNext,
+            this, &KNMusicHeaderPlayer::requireNext);
+    connect(m_playerControl, &KNMusicPlayerControl::requirePrev,
+            this, &KNMusicHeaderPlayer::requirePrev);
     connect(m_playerControl, &KNMusicPlayerControl::requirePlay,
             [=]
             {
@@ -162,6 +216,21 @@ void KNMusicHeaderPlayer::playFile(const QString &filePath)
     m_playerControl->showPlaying(false);
 }
 
+void KNMusicHeaderPlayer::play()
+{
+    m_player->play();
+}
+
+void KNMusicHeaderPlayer::stop()
+{
+    m_player->stop();
+}
+
+void KNMusicHeaderPlayer::syncData()
+{
+    emit requireSyncData();
+}
+
 void KNMusicHeaderPlayer::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
@@ -169,7 +238,7 @@ void KNMusicHeaderPlayer::enterEvent(QEvent *event)
     {
         m_mouseOut->stop();
         m_mouseIn->setStartValue(m_playerControl->pos());
-        m_mouseIn->setEndValue(QPoint(m_progress->x(),
+        m_mouseIn->setEndValue(QPoint(m_albumArt->width(),
                                       0));
         m_playerControl->show();
         m_mouseIn->start();
@@ -183,7 +252,7 @@ void KNMusicHeaderPlayer::leaveEvent(QEvent *event)
     {
         m_mouseIn->stop();
         m_mouseOut->setStartValue(m_playerControl->pos());
-        m_mouseOut->setEndValue(QPoint(m_progress->x(),
+        m_mouseOut->setEndValue(QPoint(m_albumArt->width(),
                                        -m_progress->y()));
         m_mouseOut->start();
     }
@@ -225,7 +294,7 @@ void KNMusicHeaderPlayer::onActionMouseInOut(const QVariant &controlPos)
     QPoint controlPosition=controlPos.toPoint();
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255,-controlPosition.y()*6));
     m_title->setPalette(m_textPalette);
-    m_artist->setPalette(m_textPalette);
+    m_artistAlbum->setPalette(m_textPalette);
 }
 
 void KNMusicHeaderPlayer::onActionTimeEdited(const QString &goTime)
@@ -241,12 +310,6 @@ void KNMusicHeaderPlayer::onActionTimeEdited(const QString &goTime)
     //If we find colon, set the position to the new time.
     m_player->setPosition(goTime.left(colonPos).toInt()*60+
                           goTime.mid(colonPos+1).toInt());
-}
-
-void KNMusicHeaderPlayer::onActionCurrentFinished()
-{
-    //Should judge the mode of the player.
-    ;
 }
 
 void KNMusicHeaderPlayer::resetPosition()

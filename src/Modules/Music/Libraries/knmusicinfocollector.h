@@ -10,6 +10,7 @@
 #include "../../Base/knlibinfocollector.h"
 
 class KNGlobal;
+class KNLibBass;
 class KNMusicGlobal;
 class KNLibMediaInfo;
 class KNMusicTagID3v1;
@@ -24,6 +25,7 @@ class KNMusicInfoCollector : public KNLibInfoCollector
     Q_OBJECT
 public:
     explicit KNMusicInfoCollector(QObject *parent = 0);
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireAppendMusic(QStringList value,
@@ -35,6 +37,7 @@ public slots:
 
 private:
     void resetInfoCache();
+    bool parseByBass(const QString &value);
     void parseByMediaInfo(const QString &value);
     void readID3v1Tag(QFile &mediaFile,
                       QDataStream &mediaData);
@@ -53,6 +56,7 @@ private:
     void setMediaData(const int &index,
                       const QString &value);
     void setMusicCover(const QImage &pixmap);
+    KNLibBass *m_backend;
     KNLibMediaInfo *m_mediaInfo;
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;

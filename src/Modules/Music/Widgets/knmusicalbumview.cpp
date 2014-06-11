@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
+#include <QFontMetrics>
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -963,7 +964,9 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      m_model->data(originalIndex).toString());
+                      fontMetrics().elidedText(m_model->data(originalIndex).toString(),
+                                               Qt::ElideRight,
+                                               textWidth));
     textTop+=fontMetrics().height();
     QColor penBackup=painter->pen().color();
     painter->setPen(QColor(128,128,128));
@@ -972,7 +975,9 @@ void KNMusicAlbumView::paintAlbum(QPainter *painter,
                       textWidth,
                       fontMetrics().height(),
                       Qt::TextSingleLine | Qt::AlignLeft | Qt::AlignTop,
-                      m_model->indexArtist(originalIndex));
+                      fontMetrics().elidedText(m_model->indexArtist(originalIndex),
+                                               Qt::ElideRight,
+                                               textWidth));
     painter->setPen(penBackup);
 }
 

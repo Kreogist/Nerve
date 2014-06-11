@@ -1,5 +1,5 @@
-#ifndef KNMUSICARTISTVIEW_H
-#define KNMUSICARTISTVIEW_H
+#ifndef KNMUSICCATEGORYVIEW_H
+#define KNMUSICCATEGORYVIEW_H
 
 #include <QTreeView>
 #include <QSplitter>
@@ -75,4 +75,4 @@ private:
     KNMusicCategorySortFilterModel *m_proxyModel;
 };
 
-#endif // KNMUSICARTISTVIEW_H
+#endif // KNMUSICCATEGORYVIEW_H

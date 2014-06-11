@@ -29,7 +29,7 @@ protected:
 
 private slots:
     void moveCaption(int frame);
-    void setCaptionFontSize(int pointSize);
+    void setCaptionFontSize(int pixelSize);
     void mouseInAnime(qreal value);
     void mouseOutAnime(qreal value);
 

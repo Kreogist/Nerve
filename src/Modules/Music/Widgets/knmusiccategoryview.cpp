@@ -20,7 +20,7 @@
 #include "knmusiccategorylist.h"
 #include "knmusiclistviewbase.h"
 
-#include "knmusicartistview.h"
+#include "knmusiccategoryview.h"
 
 KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     QWidget(parent)
@@ -66,7 +66,7 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     m_artistName=new QLabel(this);
     m_artistName->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
-    artistFont.setPointSize(artistFont.pointSize()+(artistFont.pointSize()>>1));
+    artistFont.setPixelSize(artistFont.pixelSize()+(artistFont.pixelSize()>>1));
     artistFont.setBold(true);
     m_artistName->setFont(artistFont);
     pal=m_artistName->palette();
@@ -227,7 +227,7 @@ void KNMusicCategoryView::showEvent(QShowEvent *event)
     {
         if(m_proxyModel->rowCount()!=0)
         {
-            m_artistList->selectionModel()->setCurrentIndex(m_proxyModel->firstIndex(),
+            m_artistList->selectionModel()->setCurrentIndex(m_proxyModel->index(0,0),
                                                             QItemSelectionModel::SelectCurrent);
         }
     }

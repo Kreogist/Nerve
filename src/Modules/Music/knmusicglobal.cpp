@@ -499,6 +499,16 @@ int KNMusicGlobal::genreListSize() const
     return m_genreList.size();
 }
 
+void KNMusicGlobal::setSelectedIndexes(const QModelIndexList &indexes)
+{
+    m_currentIndexes=indexes;
+}
+
+QModelIndexList KNMusicGlobal::selectedIndexes() const
+{
+    return m_currentIndexes;
+}
+
 int KNMusicGlobal::genreIndex(const QString &genre) const
 {
     return m_genreList.indexOf(genre);

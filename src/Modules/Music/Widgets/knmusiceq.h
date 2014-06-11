@@ -8,6 +8,7 @@
 class QSignalMapper;
 class QLabel;
 class KNLabelEditor;
+class KNMusicVolumeSlider;
 class KNLibBass;
 class KNMusicEQSlider;
 class KNMusicEQ : public QWidget
@@ -20,6 +21,8 @@ public:
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
 
 private slots:
     void setEQParam(const int &index);
@@ -28,10 +31,13 @@ private slots:
 private:
     KNLibBass *m_bassBackend;
     QSignalMapper *m_tuneRelease, *m_textChange;
-    KNLabelEditor *m_equalizerEdit[KNLibBass::EqualizerCount];
-    KNMusicEQSlider *m_equalizerTune[KNLibBass::EqualizerCount];
-            //*m_range;
-    QLabel *m_equalizerCaption[KNLibBass::EqualizerCount];
+    KNLabelEditor *m_equalizerEdit[KNLibBass::EqualizerCount],
+                  *m_rangeEdit;
+    KNMusicEQSlider *m_equalizerTune[KNLibBass::EqualizerCount],
+                    *m_rangeControl;
+    QLabel *m_equalizerCaption[KNLibBass::EqualizerCount],
+           *m_rangeLabel;
+    QString m_rangeCaption;
 };
 
 #endif // KNMUSICEQ_H

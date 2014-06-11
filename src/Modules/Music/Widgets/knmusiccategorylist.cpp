@@ -13,6 +13,8 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
 {
     viewport()->setContentsMargins(0,0,0,0);
     viewport()->installEventFilter(this);
+    setFrameShape(QFrame::NoFrame);
+    setContentsMargins(0,0,0,0);
     setAutoFillBackground(true);
     setIconSize(QSize(40, 40));
     setLineWidth(0);
@@ -50,18 +52,6 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
             this, &KNMusicCategoryList::changeBackground);
 }
 
-void KNMusicCategoryList::setModel(QAbstractItemModel *model)
-{
-    QListView::setModel(model);
-    QSortFilterProxyModel *proxyModel=static_cast<QSortFilterProxyModel *>(model);
-    KNMusicCategoryModel *categoryModel=static_cast<KNMusicCategoryModel *>(proxyModel->sourceModel());
-    connect(categoryModel, &KNMusicCategoryModel::requireShowFirstItem,
-            this, &KNMusicCategoryList::showFirstItem);
-    connect(categoryModel, &KNMusicCategoryModel::requireHideFirstItem,
-            this, &KNMusicCategoryList::hideFirstItem);
-    hideFirstItem();
-}
-
 void KNMusicCategoryList::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
@@ -93,14 +83,4 @@ void KNMusicCategoryList::changeBackground(int frameData)
                                               textParam,
                                               0xAF+frameData));
     setPalette(m_palette);
-}
-
-void KNMusicCategoryList::showFirstItem()
-{
-    setRowHidden(0, false);
-}
-
-void KNMusicCategoryList::hideFirstItem()
-{
-    setRowHidden(0, true);
 }

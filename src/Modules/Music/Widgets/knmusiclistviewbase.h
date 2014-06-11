@@ -26,8 +26,7 @@ public:
     void setMusicBackend(KNLibBass *backend);
 
 signals:
-    void requireShowContextMenu(const QPoint &position,
-                                const QModelIndex &index);
+    void requireShowContextMenu(const QPoint &position);
     void requireOpenUrl(const QModelIndex &index);
 
 public slots:
@@ -50,6 +49,7 @@ private slots:
     void onItemActived(const QModelIndex &index);
 
 private:
+    void setSelectedRows();
     KNMusicListViewHeader *m_headerWidget;
     QModelIndex m_detailIndex;
     KNMusicDetailTooltip *m_musicDetailTooltip;

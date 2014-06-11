@@ -9,11 +9,9 @@ KNMusicBackend::KNMusicBackend(QObject *parent) :
     connect(m_backend, &KNLibBass::positionChanged,
             this, &KNMusicBackend::positionChanged);
     connect(m_backend, &KNLibBass::finished,
-            this, &KNMusicBackend::reachEndOfMusic);
+            this, &KNMusicBackend::finished);
     connect(m_backend, &KNLibBass::stopped,
             this, &KNMusicBackend::stopped);
-    connect(m_backend, &KNLibBass::finished,
-            this, &KNMusicBackend::finished);
 }
 
 void KNMusicBackend::playFile(const QString &fileName)
@@ -33,7 +31,12 @@ void KNMusicBackend::pause()
     m_backend->pause();
 }
 
-void KNMusicBackend::setPosition(const int &position)
+void KNMusicBackend::stop()
+{
+    m_backend->stop();
+}
+
+void KNMusicBackend::setPosition(const float &position)
 {
     m_backend->setPosition(position);
 }
@@ -56,4 +59,9 @@ void KNMusicBackend::getGraphicData(float *fftData)
 float KNMusicBackend::volume() const
 {
     return m_backend->volume();
+}
+
+float KNMusicBackend::position() const
+{
+    return m_backend->position();
 }

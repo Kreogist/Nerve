@@ -47,7 +47,7 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
     m_caption->move(0, -height());
 
     m_captionFont=m_caption->font();
-    m_defaultFontSize=m_captionFont.pointSize();
+    m_defaultFontSize=m_captionFont.pixelSize();
     m_pressedFontSize=m_defaultFontSize-2;
 
     //Init animes.
@@ -70,12 +70,14 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
             this, &KNStdLibViewerCategoryButton::mouseOutAnime);
 
     m_mouseDownAnime=new QTimeLine(textDuration, this);
+    m_mouseDownAnime->setEasingCurve(QEasingCurve::OutBack);
     m_mouseDownAnime->setUpdateInterval(1);
     m_mouseDownAnime->setEndFrame(m_pressedFontSize);
     connect(m_mouseDownAnime, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategoryButton::setCaptionFontSize);
 
     m_mouseUpAnime=new QTimeLine(textDuration, this);
+    m_mouseUpAnime->setEasingCurve(QEasingCurve::OutBack);
     m_mouseUpAnime->setUpdateInterval(1);
     m_mouseUpAnime->setEndFrame(m_defaultFontSize);
     connect(m_mouseUpAnime, &QTimeLine::frameChanged,
@@ -166,9 +168,9 @@ void KNStdLibViewerCategoryButton::moveCaption(int frame)
     m_caption->move(0, frame);
 }
 
-void KNStdLibViewerCategoryButton::setCaptionFontSize(int pointSize)
+void KNStdLibViewerCategoryButton::setCaptionFontSize(int pixelSize)
 {
-    m_captionFont.setPointSize(pointSize);
+    m_captionFont.setPixelSize(pixelSize);
     m_caption->setFont(m_captionFont);
 }
 
@@ -213,7 +215,7 @@ void KNStdLibViewerCategoryButton::startMouseDownAnime()
     m_mouseUpAnime->stop();
     if(m_mouseDownAnime->state()!=QTimeLine::Running)
     {
-        m_mouseDownAnime->setStartFrame(m_caption->font().pointSize());
+        m_mouseDownAnime->setStartFrame(m_caption->font().pixelSize());
         m_mouseDownAnime->start();
     }
 }
@@ -223,7 +225,7 @@ void KNStdLibViewerCategoryButton::startMouseUPAnime()
     m_mouseDownAnime->stop();
     if(m_mouseUpAnime->state()!=QTimeLine::Running)
     {
-        m_mouseUpAnime->setStartFrame(m_caption->font().pointSize());
+        m_mouseUpAnime->setStartFrame(m_caption->font().pixelSize());
         m_mouseUpAnime->start();
     }
 }

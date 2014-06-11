@@ -23,8 +23,6 @@ public:
     QIcon albumArt(const QModelIndex &index) const;
 
 signals:
-    void requireHideFirstItem();
-    void requireShowFirstItem();
 
 public slots:
     virtual void retranslate();

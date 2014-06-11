@@ -12,7 +12,7 @@ KNLibBass::KNLibBass(QObject *parent) :
 {
     //Connect the signals.
     connect(m_main.positionUpdater, &QTimer::timeout,
-            [=]{quint32 currentPos=
+            [=]{DWORD currentPos=
                     BASS_ChannelBytes2Seconds(m_main.channel,
                                               BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE));
                 emit positionChanged(currentPos);
@@ -24,7 +24,7 @@ KNLibBass::KNLibBass(QObject *parent) :
                 }
                 });
     connect(m_preview.positionUpdater, &QTimer::timeout,
-            [=]{quint32 currentPos=BASS_ChannelBytes2Seconds(m_preview.channel,
+            [=]{DWORD currentPos=BASS_ChannelBytes2Seconds(m_preview.channel,
                                                              BASS_ChannelGetPosition(m_preview.channel,BASS_POS_BYTE));
                 emit previewPositionChanged(currentPos);
                 if(currentPos==m_preview.duration)
@@ -91,17 +91,50 @@ void KNLibBass::loadPreview(const QString &filePath)
     BASS_ChannelFlags(m_preview.channel, 0, BASS_SAMPLE_LOOP);
 }
 
+bool KNLibBass::loadInfoCollect(const QString &filePath)
+{
+#ifdef Q_OS_WIN32
+    std::wstring uniPath=filePath.toStdWString();
+    if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE|BASS_UNICODE))
+#endif
+#ifdef Q_OS_MACX
+    std::string uniPath=filePath.toStdString();
+    if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE))
+#endif
+    {
+        QWORD byteLength=
+                BASS_ChannelGetLength(m_infoCollector.channel, BASS_POS_BYTE);
+        m_infoCollector.duration=
+                BASS_ChannelBytes2Seconds(m_infoCollector.channel,
+                                          byteLength);
+        // Bitrate (Kbps)
+        m_infoCollector.bitrate=(DWORD)(BASS_StreamGetFilePosition(m_infoCollector.channel, BASS_FILEPOS_END)/
+                              (125*m_infoCollector.duration)+0.5);
+        //Get channel info(for sampling rate)
+        BASS_ChannelGetInfo(m_infoCollector.channel,&m_infoCollector.channelInfo);
+        BASS_StreamFree(m_infoCollector.channel);
+        return true;
+    }
+    return false;
+}
+
 QString KNLibBass::eqFrequencyTitle(const int &index)
 {
     return m_eqTitle[index];
 }
 
-quint32 KNLibBass::duration() const
+float KNLibBass::duration() const
 {
     return m_main.duration;
 }
 
-quint32 KNLibBass::previewDuration() const
+float KNLibBass::position() const
+{
+    return BASS_ChannelBytes2Seconds(m_main.channel,
+                                     BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE));
+}
+
+float KNLibBass::previewDuration() const
 {
     return m_preview.duration;
 }
@@ -156,6 +189,7 @@ void KNLibBass::stop()
 {
     BASS_ChannelStop(m_main.channel);
     m_main.positionUpdater->stop();
+    setPosition(0);
     emit stopped();
 }
 
@@ -203,19 +237,34 @@ float KNLibBass::volume() const
     return BASS_GetConfig(BASS_CONFIG_GVOL_STREAM);
 }
 
+int KNLibBass::collectorDuration() const
+{
+    return m_infoCollector.duration;
+}
+
+int KNLibBass::collectorBitrate() const
+{
+    return m_infoCollector.bitrate;
+}
+
+int KNLibBass::collectorSamplingRate() const
+{
+    return m_infoCollector.channelInfo.freq;
+}
+
 void KNLibBass::setVolume(const float &volumeSize)
 {
     BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, volumeSize);
 }
 
-void KNLibBass::setPosition(const int &secondPosition)
+void KNLibBass::setPosition(const float &secondPosition)
 {
     BASS_ChannelSetPosition(m_main.channel,
                             BASS_ChannelSeconds2Bytes(m_main.channel, secondPosition),
                             BASS_POS_BYTE);
 }
 
-void KNLibBass::setPreviewPosition(const int &secondPosition)
+void KNLibBass::setPreviewPosition(const float &secondPosition)
 {
     BASS_ChannelSetPosition(m_preview.channel,
                             BASS_ChannelSeconds2Bytes(m_preview.channel, secondPosition),

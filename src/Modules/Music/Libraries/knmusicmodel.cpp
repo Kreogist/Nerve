@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QBuffer>
+#include <QTimer>
 #include <QStringList>
 
 #include <QTime>
@@ -23,29 +24,24 @@
 KNMusicModel::KNMusicModel(QObject *parent) :
     KNModel(parent)
 {
+    //Initial the music global.
     m_musicGlobal=KNMusicGlobal::instance();
 
-    m_pixmapList=new KNLibHashPixmapList;
-    m_pixmapList->moveToThread(&m_pixmapListThread);
-    connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
-            this, &KNMusicModel::onActionUpdatePixmap);
-    connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
-            this, &KNMusicModel::onActionImageLoadComplete);
-    connect(this, &KNMusicModel::requireLoadImage,
-            m_pixmapList, &KNLibHashPixmapList::loadImages);
-
+    //Set the header text.
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
         header<<(m_musicGlobal->getHeader(i));
     }
     setHorizontalHeaderLabels(header);
+    //Set header size hint.
     setHeaderData(0, Qt::Horizontal, QSize(10,23), Qt::SizeHintRole);
+    //Set header alignment
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
     {
         setHeaderData(i, Qt::Horizontal, Qt::AlignVCenter, Qt::TextAlignmentRole);
     }
-
+    //Set special header data, e.g.: Sort flag.
     setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
     setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
     setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
@@ -60,6 +56,18 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::DateModified, Qt::Horizontal, 4, Qt::UserRole);
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
 
+    //The album art process list.
+    //All the album art data will get from here.
+    m_pixmapList=new KNLibHashPixmapList;
+    m_pixmapList->moveToThread(&m_pixmapListThread);
+    connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
+            this, &KNMusicModel::onActionUpdatePixmap);
+    connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
+            this, &KNMusicModel::onActionImageLoadComplete);
+    connect(this, &KNMusicModel::requireLoadImage,
+            m_pixmapList, &KNLibHashPixmapList::loadImages);
+
+    //Start pixmap list thread.
     m_pixmapListThread.start();
 }
 
@@ -79,6 +87,14 @@ QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
 QString KNMusicModel::filePathFromIndex(const int &index)
 {
     return data(this->index(index, KNMusicGlobal::Name), FilePathRole).toString();
+}
+
+QModelIndex KNMusicModel::indexFromFilePath(const QString &filePath)
+{
+    QModelIndexList fileCheck=match(index(0,0),
+                                    FilePathRole,
+                                    filePath);
+    return fileCheck.isEmpty()?QModelIndex():fileCheck.first();
 }
 
 QString KNMusicModel::itemText(const int &row, const int &column) const

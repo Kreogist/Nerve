@@ -2,7 +2,8 @@ TEMPLATE = app
 
 QT += core\
       gui\
-      widgets
+      widgets\
+      network
 
 CONFIG += c++11 sse2 mmx
 
@@ -53,7 +54,6 @@ SOURCES += \
     Modules/Music/Widgets/knmusicviewermenu.cpp \
     Modules/Music/Libraries/knmusicinfocollectormanager.cpp \
     Modules/Music/Libraries/knmusicsortmodel.cpp \
-    Modules/Music/Widgets/knmusicartistview.cpp \
     Modules/Music/Libraries/knmusicartistmodel.cpp \
     Modules/Music/Libraries/knmusictagm4a.cpp \
     Modules/Music/Widgets/knmusiclistviewheadermenu.cpp \
@@ -126,7 +126,19 @@ SOURCES += \
     Modules/knfontmanager.cpp \
     Modules/Base/knsideshadows.cpp \
     Modules/Store/knstoreplugin.cpp \
-    Modules/Base/knstdlibcategorylistbutton.cpp
+    Modules/Base/knstdlibcategorylistbutton.cpp \
+    Modules/Store/Music/knmusiconlinebase.cpp \
+    Modules/Store/Music/knmusiconlinenetease.cpp \
+    Modules/Store/Music/knmusicsearchresult.cpp \
+    Modules/Store/Widgets/knstoreviewer.cpp \
+    Modules/Store/Music/knmusicstore.cpp \
+    Modules/Music/Widgets/knmusicloop.cpp \
+    Modules/Music/Widgets/knmusiccategoryview.cpp \
+    Modules/Music/Widgets/knmusicplaylistviewer.cpp \
+    Modules/Base/knopacitybutton.cpp \
+    Modules/Music/Widgets/knmusicplaylistview.cpp \
+    Modules/Music/Widgets/knmusicplaylistlisteditor.cpp \
+    Modules/Music/Widgets/knmusicplaylistlistview.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -161,7 +173,6 @@ HEADERS += \
     Modules/Music/Widgets/knmusicviewermenu.h \
     Modules/Music/Libraries/knmusicinfocollectormanager.h \
     Modules/Music/Libraries/knmusicsortmodel.h \
-    Modules/Music/Widgets/knmusicartistview.h \
     Modules/Music/Libraries/knmusicartistmodel.h \
     Modules/Music/Libraries/knmusictagm4a.h \
     Modules/Music/Widgets/knmusiclistviewheadermenu.h \
@@ -235,7 +246,19 @@ HEADERS += \
     Modules/knfontmanager.h \
     Modules/Base/knsideshadows.h \
     Modules/Store/knstoreplugin.h \
-    Modules/Base/knstdlibcategorylistbutton.h
+    Modules/Base/knstdlibcategorylistbutton.h \
+    Modules/Store/Music/knmusiconlinebase.h \
+    Modules/Store/Music/knmusiconlinenetease.h \
+    Modules/Store/Music/knmusicsearchresult.h \
+    Modules/Store/Widgets/knstoreviewer.h \
+    Modules/Store/Music/knmusicstore.h \
+    Modules/Music/Widgets/knmusicloop.h \
+    Modules/Music/Widgets/knmusiccategoryview.h \
+    Modules/Music/Widgets/knmusicplaylistviewer.h \
+    Modules/Base/knopacitybutton.h \
+    Modules/Music/Widgets/knmusicplaylistview.h \
+    Modules/Music/Widgets/knmusicplaylistlisteditor.h \
+    Modules/Music/Widgets/knmusicplaylistlistview.h
 
 RESOURCES += \
     res.qrc

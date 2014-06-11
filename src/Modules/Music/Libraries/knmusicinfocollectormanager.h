@@ -10,6 +10,7 @@
 
 #include "../../Base/knlibinfocollectormanager.h"
 
+class KNLibBass;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager : public KNLibInfoCollectorManager
 {
@@ -23,6 +24,8 @@ public:
     int currentIndex() const;
     void removeFirstUpdateResult();
     bool isUpdateQueueEmpty();
+    bool isWorking();
+    void setMusicBackend(KNLibBass *backend);
 
 signals:
     void requireAnalysis(const QString &filePath);
@@ -32,7 +35,7 @@ public slots:
                          QString filePath);
 
 private slots:
-    void currentSkip();
+    void analysisNext();
     void currentWorkDone(QStringList value,
                          KNMusicGlobal::MusicDetailsInfo datas);
 
@@ -52,10 +55,7 @@ private:
     KNMusicInfoCollector *m_collector;
     QThread m_collectThread;
     QList<AnalysisQueueItem> m_analysisQueue;
-    QList<QModelIndex> m_indexList;
     QList<ResultQueueItem> m_resultQueue;
-    QStringList m_fileList, m_currentFileData;
-    KNMusicGlobal::MusicDetailsInfo m_currentFileAppendData;
     bool m_working=false, m_noUpdating=true;
 };
 

@@ -34,6 +34,16 @@
         <file>Resources/Music/EQs/hsliderMid.png</file>
         <file>Resources/Music/EQs/hsliderRight.png</file>
         <file>Resources/Music/icon.png</file>
+        <file>Resources/Music/mode/NoRandom.png</file>
+        <file>Resources/Music/mode/NoRepeat.png</file>
+        <file>Resources/Music/mode/Random.png</file>
+        <file>Resources/Music/mode/Repeat.png</file>
+        <file>Resources/Music/mode/RepeatSingle.png</file>
+        <file>Resources/Music/player/playlist.png</file>
+        <file>Resources/Music/player/equalizer.png</file>
+        <file>Resources/Music/playlists/add.png</file>
+        <file>Resources/Music/playlists/edit.png</file>
+        <file>Resources/Music/playlists/remove.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

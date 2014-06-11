@@ -2,13 +2,14 @@
 #define KNPLAYERPROGRESS_H
 
 #include <QRadialGradient>
-#include <QAbstractSlider>
+
+#include "../Base/knabstractslider.h"
 
 class QTimeLine;
 class QEvent;
 class QMouseEvent;
 class QPaintEvent;
-class KNPlayerProgress : public QAbstractSlider
+class KNPlayerProgress : public KNAbstractSlider
 {
     Q_OBJECT
 public:

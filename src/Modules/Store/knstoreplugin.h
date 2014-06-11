@@ -5,6 +5,7 @@
 
 #include <QWidget>
 
+class KNStoreViewer;
 class KNStorePlugin : public KNPluginBase
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ public slots:
 
 private:
     QWidget *text, *test;
+    KNStoreViewer *m_storeViewer;
 };
 
 #endif // KNSTOREPLUGIN_H

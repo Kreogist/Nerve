@@ -75,7 +75,6 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
     {
         searchResult=this->index(0,0);
         setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
-        emit requireShowFirstItem();
         return;
     }
     searchResult=indexOf(currentName);
@@ -101,7 +100,6 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
     {
         searchResult=this->index(0,0);
         setData(searchResult, data(searchResult, MusicCount).toInt()+1, MusicCount);
-        emit requireShowFirstItem();
         return;
     }
     searchResult=indexOf(currentName);
@@ -127,10 +125,6 @@ void KNMusicCategoryModel::onMusicRemoved(const QModelIndex &index)
     {
         searchResult=this->index(0,0);
         setData(searchResult, data(searchResult, MusicCount).toInt()-1, MusicCount);
-        if(data(searchResult, MusicCount).toInt()==0)
-        {
-            emit requireHideFirstItem();
-        }
         return;
     }
     searchResult=indexOf(currentName);

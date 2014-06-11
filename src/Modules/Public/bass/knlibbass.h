@@ -72,9 +72,11 @@ public:
     ~KNLibBass();
     void loadMusic(const QString &filePath);
     void loadPreview(const QString &filePath);
+    bool loadInfoCollect(const QString &filePath);
     QString eqFrequencyTitle(const int &index);
-    quint32 duration() const;
-    quint32 previewDuration() const;
+    float duration() const;
+    float position() const;
+    float previewDuration() const;
     void play();
     void playPreview();
     void stop();
@@ -84,17 +86,21 @@ public:
     void getFFTData(float *fftData);
     float volume() const;
 
+    int collectorDuration() const;
+    int collectorBitrate() const;
+    int collectorSamplingRate() const;
+
 signals:
-    void positionChanged(quint32 position);
+    void positionChanged(float position);
     void finished();
     void stopped();
-    void previewPositionChanged(quint32 position);
+    void previewPositionChanged(float position);
     void previewFinished();
 
 public slots:
     void setVolume(const float &volumeSize);
-    void setPosition(const int &secondPosition);
-    void setPreviewPosition(const int &secondPosition);
+    void setPosition(const float &secondPosition);
+    void setPreviewPosition(const float &secondPosition);
     void setEqualizerParam(const int &index,
                            const float &value);
 
@@ -122,6 +128,15 @@ private:
         }
     };
 
+    struct InfoCollectThread
+    {
+        DWORD channel;
+        DWORD duration;
+        DWORD bitrate;
+        BASS_CHANNELINFO channelInfo;
+        QByteArray fingerPrint;
+    };
+
     HFX m_equalizer[EqualizerCount];
     float m_eqFrequency[EqualizerCount]={
         32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
@@ -134,6 +149,7 @@ private:
     };
     float m_eqGain[EqualizerCount]={0};
     MusicThread m_main, m_preview;
+    InfoCollectThread m_infoCollector;
     void loadMusicFile(MusicThread &musicThread);
     void loadPlugins();
     void loadEQ();

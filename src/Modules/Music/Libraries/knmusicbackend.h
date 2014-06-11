@@ -15,18 +15,19 @@ public:
     KNLibBass *backend();
     void getGraphicData(float *fftData);
     float volume() const;
+    float position() const;
 
 signals:
     void positionChanged(quint32 position);
     void durationChanged(quint32 duration);
-    void finished();
     void stopped();
-    void reachEndOfMusic();
+    void finished();
 
 public slots:
     void play();
     void pause();
-    void setPosition(const int &position);
+    void stop();
+    void setPosition(const float &position);
 
 private:
     KNLibBass *m_backend;

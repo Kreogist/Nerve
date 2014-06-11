@@ -5,8 +5,11 @@
 
 #include "../../Base/knstdlibheaderwidget.h"
 
+class QAbstractItemModel;
 class QBoxLayout;
 class QResizeEvent;
+class QSortFilterProxyModel;
+class KNMusicPlaylistManager;
 class KNMusicModel;
 class KNMusicBackend;
 class KNSearchBox;
@@ -16,13 +19,20 @@ class KNMusicHeaderWidget : public KNStdLibHeaderWidget
     Q_OBJECT
 public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
+    void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicModel *model);
+    void setProxyModel(QSortFilterProxyModel *model);
     void setBackend(KNMusicBackend *backend);
+    void setAlbumArt(const QPixmap &albumArt);
+    void setTitle(const QString &string);
+    void setArtist(const QString &string);
+    void setAlbum(const QString &string);
+    KNMusicHeaderPlayer *player();
 
 signals:
     void requireSearch(const QString &text);
     void requireShowInCurrent(const QModelIndex &index);
-    void requireSyncData(const QModelIndex &index);
+    void requireUpdatePlaylistModel(QAbstractItemModel *playlistModel);
     void requireLostFocus();
     void requireShowMusicPlayer();
     void requireHideMusicPlayer();
@@ -32,16 +42,23 @@ public slots:
     void retranslateAndSet();
     void setSearchFocus();
     void clearSearch();
-    void onActionPlayMusic(const QModelIndex &index);
+    void onActionPlayInLibrary(const QModelIndex &index);
+
+private slots:
+    void onActionPlayListPrev();
+    void onActionPlayListNext();
+    void onActionCurrentFinished();
 
 private:
+    void playCurrent();
+    void resetPlayer();
     QBoxLayout *m_mainLayout;
     QWidget *m_visualEffect;
     KNSearchBox *m_searchBox;
     KNMusicModel *m_musicModel;
+    KNMusicPlaylistManager *m_playlistManager;
     KNMusicHeaderPlayer *m_headerPlayer;
-    QString m_searchPlaceHolder;
-    QModelIndex m_currentIndex;
+    QString m_searchPlaceHolder, m_currentPath;
 };
 
 #endif // KNMUSICHEADERWIDGET_H

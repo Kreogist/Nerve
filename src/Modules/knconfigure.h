@@ -9,9 +9,16 @@ class KNConfigure : public QObject
     Q_OBJECT
 public:
     static KNConfigure *instance();
-    void setValue(const QString &key, const QVariant &value);
+    void setValue(const QString &key,
+                  const QVariant &value);
+    void setValue(const QString &groupName,
+                  const QString &key,
+                  const QVariant &value);
     QVariant value(const QString &key);
-    void setGroup(const QString &groupName);
+    QVariant value(const QString &groupName,
+                   const QString &key);
+    void beginGroup(const QString &groupName);
+    void endGroup();
 
 signals:
 
