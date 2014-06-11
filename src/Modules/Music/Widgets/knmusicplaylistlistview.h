@@ -41,8 +41,6 @@ public:
     void select();
     void unselect();
     QVariant data() const;
-    int headerIndex() const;
-    void setHeaderIndex(int headerIndex);
 
 signals:
     void requireDelete();
@@ -72,7 +70,7 @@ private:
     QColor m_originalTextColor;
     QPropertyAnimation *m_editorInAnime;
     QTimeLine *m_createAnime, *m_deleteAnime;
-    int m_itemHeight=30, m_headerIndex=-1;
+    int m_itemHeight=30;
     bool m_isPressed=false, m_createMode=false, m_unselected=true;
 };
 
@@ -85,10 +83,16 @@ public:
     int addItem(KNMusicPlaylistListviewItem *item);
     void removeItem(const int &index);
     void clear();
+    void selectItem(const int &index);
+    void unselectItem(const int &index);
     void setStartParam(const int &param);
     void setItemLayout(QBoxLayout *itemLayout);
     int headerIndex() const;
     void setHeaderIndex(int headerIndex);
+
+signals:
+    void itemClicked(const int &header,
+                     const int &item);
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -112,7 +116,7 @@ public:
     ~KNMusicPlaylistListviewContent();
     int addHeader(const QString &text);
     int addItem(const QString &text);
-    void addCreatePlaylist();
+    void createItem();
     void clear();
     void clearHeader();
     bool setCurrentHeader(const int &index);
@@ -121,19 +125,22 @@ signals:
     void requireSetHeaderColorParam(const int &param);
     void requireSetTextColorParam(const int &param);
     void requireAddPlaylist(const QString &title);
+    void itemClicked(const int &header, const int &item);
 
 public slots:
     void setHeaderColorParam(const int &param);
     void setTextColorParam(const int &param);
+    void setCurrentItem(const int &header, const int &item);
 
 private slots:
     void createCancel();
     void createApply(const QString &caption);
+    void onActionItemClicked(const int &header, const int &item);
 
 private:
     void disconnectCreatedItem();
-    int m_createdIndex=-1;
-    KNMusicPlaylistListviewHeader *m_currentHeader;
+    int m_createdIndex=-1, m_currentHeader=-1, m_currentItem=-1;
+    KNMusicPlaylistListviewHeader *m_opertateHeader;
     KNMusicPlaylistListviewItem *m_createdItem=nullptr;
     QList<KNMusicPlaylistListviewHeader *> m_headers;
     QBoxLayout *m_mainLayout;
@@ -152,9 +159,10 @@ public:
 
 signals:
     void requireAddPlaylist(const QString &title);
+    void itemClicked(const int &header, const int &item);
 
 public slots:
-    void createPlaylist();
+    void createItem();
 
 protected:
     void enterEvent(QEvent *event);

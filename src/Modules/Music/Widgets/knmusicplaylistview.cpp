@@ -33,7 +33,11 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     m_listEditor=new KNMusicPlaylistListEditor(this);
     categoryLayout->addWidget(m_listEditor);
     connect(m_listEditor, &KNMusicPlaylistListEditor::requireCreatePlaylist,
-            m_categories, &KNMusicPlaylistListview::createPlaylist);
+            [=]
+            {
+                m_categories->setCurrentHeader(Playlist);
+                m_categories->createItem();
+            });
     addWidget(categoryList);
 
     //Initial playlist displayer.

@@ -62,6 +62,7 @@ KNMusicPlaylistListviewItem::KNMusicPlaylistListviewItem(QWidget *parent) :
 
     //Set layout.
     m_layout=new QBoxLayout(QBoxLayout::LeftToRight, this);
+    m_layout->setContentsMargins(0,0,0,0);
     setLayout(m_layout);
     m_icon=new QLabel(this);
     m_layout->addWidget(m_icon);
@@ -215,15 +216,6 @@ void KNMusicPlaylistListviewItem::onActionAnimeDelete()
     m_editor->hide();
     m_deleteAnime->start();
 }
-int KNMusicPlaylistListviewItem::headerIndex() const
-{
-    return m_headerIndex;
-}
-
-void KNMusicPlaylistListviewItem::setHeaderIndex(int headerIndex)
-{
-    m_headerIndex = headerIndex;
-}
 
 KNMusicPlaylistListviewHeader::KNMusicPlaylistListviewHeader(QWidget *parent) :
     QLabel(parent)
@@ -273,6 +265,16 @@ void KNMusicPlaylistListviewHeader::clear()
     }
 }
 
+void KNMusicPlaylistListviewHeader::selectItem(const int &index)
+{
+    m_items.at(index)->select();
+}
+
+void KNMusicPlaylistListviewHeader::unselectItem(const int &index)
+{
+    m_items.at(index)->unselect();
+}
+
 void KNMusicPlaylistListviewHeader::setStartParam(const int &param)
 {
     int colorParam=0x2d+param;
@@ -300,18 +302,8 @@ void KNMusicPlaylistListviewHeader::onActionItemClicked()
 {
     KNMusicPlaylistListviewItem *clickedItem=
             static_cast<KNMusicPlaylistListviewItem *>(sender());
-    int clickedIndex=m_items.indexOf(clickedItem);
-    if(m_currentIndex!=-1)
-    {
-        if(m_currentIndex==clickedIndex)
-        {
-            return;
-        }
-        KNMusicPlaylistListviewItem *lastItem=m_items.at(m_currentIndex);
-        lastItem->unselect();
-    }
-    m_currentIndex=clickedIndex;
-    clickedItem->select();
+    emit itemClicked(m_headerIndex,
+                     m_items.indexOf(clickedItem));
 }
 int KNMusicPlaylistListviewHeader::headerIndex() const
 {
@@ -320,7 +312,7 @@ int KNMusicPlaylistListviewHeader::headerIndex() const
 
 void KNMusicPlaylistListviewHeader::setHeaderIndex(int headerIndex)
 {
-    m_headerIndex = headerIndex;
+    m_headerIndex=headerIndex;
 }
 
 
@@ -359,29 +351,29 @@ int KNMusicPlaylistListviewContent::addHeader(const QString &text)
     currentHeader->setText(text);
     connect(this, &KNMusicPlaylistListviewContent::requireSetHeaderColorParam,
             currentHeader, &KNMusicPlaylistListviewHeader::setStartParam);
+    connect(currentHeader, &KNMusicPlaylistListviewHeader::itemClicked,
+            this, &KNMusicPlaylistListviewContent::onActionItemClicked);
     m_mainLayout->addWidget(currentHeader);
     QBoxLayout *headerItemLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                                 m_mainLayout->widget());
     m_mainLayout->addLayout(headerItemLayout);
     currentHeader->setItemLayout(headerItemLayout);
     m_headers.append(currentHeader);
-    m_currentHeader=currentHeader;
+    m_opertateHeader=currentHeader;
     return headerIndex;
 }
 
 int KNMusicPlaylistListviewContent::addItem(const QString &text)
 {
     KNMusicPlaylistListviewItem *currentItem=new KNMusicPlaylistListviewItem();
-    currentItem->setHeaderIndex(m_currentHeader->headerIndex());
     currentItem->setText(text);
     connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
             currentItem, &KNMusicPlaylistListviewItem::setTextColorParam);
-    return m_currentHeader->addItem(currentItem);
+    return m_opertateHeader->addItem(currentItem);
 }
 
-void KNMusicPlaylistListviewContent::addCreatePlaylist()
+void KNMusicPlaylistListviewContent::createItem()
 {
-    setCurrentHeader(0);
     if(m_createdIndex==-1)
     {
         m_createdItem=new KNMusicPlaylistListviewItem();
@@ -390,13 +382,16 @@ void KNMusicPlaylistListviewContent::addCreatePlaylist()
                 this, &KNMusicPlaylistListviewContent::createCancel);
         connect(m_createdItem, &KNMusicPlaylistListviewItem::requireAdd,
                 this, &KNMusicPlaylistListviewContent::createApply);
-        m_createdIndex=m_currentHeader->addItem(m_createdItem);
+        connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
+                m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
+        m_createdIndex=m_opertateHeader->addItem(m_createdItem);
         m_createdItem->startCreateMode();
     }
 }
 
 void KNMusicPlaylistListviewContent::clear()
 {
+    //Delete all the header widget.
     int itemSize=m_headers.size();
     while(itemSize--)
     {
@@ -406,14 +401,14 @@ void KNMusicPlaylistListviewContent::clear()
 
 void KNMusicPlaylistListviewContent::clearHeader()
 {
-    m_currentHeader->clear();
+    m_opertateHeader->clear();
 }
 
 bool KNMusicPlaylistListviewContent::setCurrentHeader(const int &index)
 {
     if(index>-1 && index<m_headers.size())
     {
-        m_currentHeader=m_headers.at(index);
+        m_opertateHeader=m_headers.at(index);
         return true;
     }
     return false;
@@ -429,10 +424,23 @@ void KNMusicPlaylistListviewContent::setTextColorParam(const int &param)
     emit requireSetTextColorParam(param);
 }
 
+void KNMusicPlaylistListviewContent::setCurrentItem(const int &header,
+                                                    const int &item)
+{
+    if(m_currentItem!=-1)
+    {
+        //An item has been selected, unselected it.
+        m_headers.at(m_currentHeader)->unselectItem(m_currentItem);
+    }
+    m_currentHeader=header;
+    m_currentItem=item;
+    m_headers.at(m_currentHeader)->selectItem(m_currentItem);
+}
+
 void KNMusicPlaylistListviewContent::createCancel()
 {
     disconnectCreatedItem();
-    m_currentHeader->removeItem(m_createdIndex);
+    m_opertateHeader->removeItem(m_createdIndex);
     m_createdItem=nullptr;
     m_createdIndex=-1;
 }
@@ -447,12 +455,21 @@ void KNMusicPlaylistListviewContent::createApply(const QString &caption)
     emit requireAddPlaylist(caption);
 }
 
+void KNMusicPlaylistListviewContent::onActionItemClicked(const int &header,
+                                                         const int &item)
+{
+    setCurrentItem(header, item);
+    emit itemClicked(header, item);
+}
+
 void KNMusicPlaylistListviewContent::disconnectCreatedItem()
 {
     disconnect(m_createdItem, &KNMusicPlaylistListviewItem::requireDelete,
                this, &KNMusicPlaylistListviewContent::createCancel);
     disconnect(m_createdItem, &KNMusicPlaylistListviewItem::requireAdd,
                this, &KNMusicPlaylistListviewContent::createApply);
+    disconnect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
+               m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
 }
 
 KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
@@ -476,6 +493,8 @@ KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
     m_content=new KNMusicPlaylistListviewContent(this);
     connect(m_content, &KNMusicPlaylistListviewContent::requireAddPlaylist,
             this, &KNMusicPlaylistListview::requireAddPlaylist);
+    connect(m_content, &KNMusicPlaylistListviewContent::itemClicked,
+            this, &KNMusicPlaylistListview::itemClicked);
     setWidget(m_content);
 
     //Mouse enter animation.
@@ -490,7 +509,7 @@ KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEndFrame(0x0);
-    m_mouseOut->setEasingCurve(QEasingCurve::InCubic);
+    m_mouseOut->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicPlaylistListview::onActionChangeBackground);
 }
@@ -515,9 +534,9 @@ bool KNMusicPlaylistListview::setCurrentHeader(const int &index)
     return m_content->setCurrentHeader(index);
 }
 
-void KNMusicPlaylistListview::createPlaylist()
+void KNMusicPlaylistListview::createItem()
 {
-    m_content->addCreatePlaylist();
+    m_content->createItem();
 }
 
 void KNMusicPlaylistListview::enterEvent(QEvent *event)
