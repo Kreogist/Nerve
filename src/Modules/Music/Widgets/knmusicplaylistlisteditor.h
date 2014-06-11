@@ -14,6 +14,7 @@ public:
 
 signals:
     void requireCreatePlaylist();
+    void requireOpen();
     void requireRemoveCurrent();
 
 public slots:
@@ -24,6 +25,7 @@ private:
     enum ActionsAdd
     {
         AddPlaylist,
+        OpenPlaylist,
         ActionAddCount
     };
     void createActions();

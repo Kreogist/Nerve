@@ -256,6 +256,11 @@ void KNMusicPlaylistListviewHeader::removeItem(const int &index)
     item->deleteLater();
 }
 
+void KNMusicPlaylistListviewHeader::animateRemoveItem(const int &index)
+{
+    m_items.at(index)->onActionAnimeDelete();
+}
+
 void KNMusicPlaylistListviewHeader::clear()
 {
     int itemSize=m_items.size();
@@ -408,22 +413,24 @@ void KNMusicPlaylistListviewContent::removeCurrentItem()
     if(m_currentHeader!=-1 && m_currentItem!=-1)
     {
         KNMusicPlaylistListviewHeader *header=m_headers.at(m_currentHeader);
-        header->removeItem(m_currentItem);
-        if(m_currentItem<header->itemCount())
+        int nextSelectedItem=m_currentItem+1,
+            currentBackup=m_currentItem;
+        if(nextSelectedItem<header->itemCount())
         {
-            setCurrentItem(m_currentHeader, m_currentItem);
+            setCurrentItem(m_currentHeader, nextSelectedItem);
         }
         else
         {
-            if(header->itemCount()==0)
+            if(header->itemCount()==1)
             {
                 m_currentItem=-1;
             }
             else
             {
-                setCurrentItem(m_currentHeader, header->itemCount()-1);
+                setCurrentItem(m_currentHeader, header->itemCount()-2);
             }
         }
+        header->animateRemoveItem(currentBackup);
     }
 }
 

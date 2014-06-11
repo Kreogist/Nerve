@@ -38,6 +38,7 @@ KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
 void KNMusicPlaylistListEditor::retranslate()
 {
     m_itemAddCaption[AddPlaylist]=tr("New Playlist");
+    m_itemAddCaption[OpenPlaylist]=tr("Open a Playlist");
 }
 
 void KNMusicPlaylistListEditor::retranslateAndSet()

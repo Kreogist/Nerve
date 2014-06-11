@@ -38,7 +38,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setAlternatingRowColors(true);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setSelectionMode(QAbstractItemView::ContiguousSelection);
 
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);

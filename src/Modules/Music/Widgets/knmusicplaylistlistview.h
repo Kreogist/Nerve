@@ -49,6 +49,7 @@ signals:
 
 public slots:
     void setTextColorParam(const int &frame);
+    void onActionAnimeDelete();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -59,7 +60,6 @@ private slots:
     void onActionCancelEdit();
     void onActionEnsureEdit();
     void onActionCreateFinished();
-    void onActionAnimeDelete();
 
 private:
     QBoxLayout *m_layout;
@@ -82,6 +82,7 @@ public:
     ~KNMusicPlaylistListviewHeader();
     int addItem(KNMusicPlaylistListviewItem *item);
     void removeItem(const int &index);
+    void animateRemoveItem(const int &index);
     void clear();
     int itemCount();
     void selectItem(const int &index);
