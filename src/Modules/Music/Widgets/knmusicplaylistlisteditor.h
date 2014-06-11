@@ -14,6 +14,7 @@ public:
 
 signals:
     void requireCreatePlaylist();
+    void requireRemoveCurrent();
 
 public slots:
     void retranslate();

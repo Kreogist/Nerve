@@ -50,6 +50,7 @@ public slots:
     void retranslateAndSet();
     void setLoopMode(const int &index);
     void addPlaylist(const QString &title);
+    void removePlaylist(const int &index);
 
 private:
     QString currentIndexPath();

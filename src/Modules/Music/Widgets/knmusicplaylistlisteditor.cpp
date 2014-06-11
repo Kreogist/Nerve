@@ -59,4 +59,6 @@ void KNMusicPlaylistListEditor::createActions()
             {
                 m_itemAdd->exec(mapToGlobal(m_createList->pos()));
             });
+    connect(m_removeList, &KNOpacityButton::clicked,
+            this, &KNMusicPlaylistListEditor::requireRemoveCurrent);
 }

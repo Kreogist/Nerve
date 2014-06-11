@@ -124,6 +124,7 @@ void KNMusicPlaylistManager::addPlaylist(const QString &title)
 {
     //Prepare the playlist data.
     KNPlayList playlist;
+    //Prepare the file name.
     QString baseName=QDateTime::currentDateTime().toString("yyyyMMddhhmmsszzz"),
             playlistPath=m_playlistPath+
                          baseName+".json";
@@ -138,9 +139,18 @@ void KNMusicPlaylistManager::addPlaylist(const QString &title)
     }
     m_playlists.append(playlistPath);
     playlist.path=playlistPath;
+    //Add to playlist list.
     m_playlistNameList.append(title);
     m_playlistList.append(playlist);
+    //Save to file.
     savePlayList(m_playlistList.size()-1);
+}
+
+void KNMusicPlaylistManager::removePlaylist(const int &index)
+{
+    m_playlistNameList.removeAt(index);
+    m_playlistList.removeAt(index);
+    m_playlists.removeAt(index);
 }
 
 QString KNMusicPlaylistManager::currentIndexPath()

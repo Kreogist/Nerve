@@ -265,6 +265,11 @@ void KNMusicPlaylistListviewHeader::clear()
     }
 }
 
+int KNMusicPlaylistListviewHeader::itemCount()
+{
+    return m_items.size();
+}
+
 void KNMusicPlaylistListviewHeader::selectItem(const int &index)
 {
     m_items.at(index)->select();
@@ -314,7 +319,6 @@ void KNMusicPlaylistListviewHeader::setHeaderIndex(int headerIndex)
 {
     m_headerIndex=headerIndex;
 }
-
 
 KNMusicPlaylistListviewContent::KNMusicPlaylistListviewContent(QWidget *parent) :
     QWidget(parent)
@@ -372,6 +376,16 @@ int KNMusicPlaylistListviewContent::addItem(const QString &text)
     return m_opertateHeader->addItem(currentItem);
 }
 
+int KNMusicPlaylistListviewContent::currentHeader() const
+{
+    return m_currentHeader;
+}
+
+int KNMusicPlaylistListviewContent::currentItem() const
+{
+    return m_currentItem;
+}
+
 void KNMusicPlaylistListviewContent::createItem()
 {
     if(m_createdIndex==-1)
@@ -386,6 +400,30 @@ void KNMusicPlaylistListviewContent::createItem()
                 m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
         m_createdIndex=m_opertateHeader->addItem(m_createdItem);
         m_createdItem->startCreateMode();
+    }
+}
+
+void KNMusicPlaylistListviewContent::removeCurrentItem()
+{
+    if(m_currentHeader!=-1 && m_currentItem!=-1)
+    {
+        KNMusicPlaylistListviewHeader *header=m_headers.at(m_currentHeader);
+        header->removeItem(m_currentItem);
+        if(m_currentItem<header->itemCount())
+        {
+            setCurrentItem(m_currentHeader, m_currentItem);
+        }
+        else
+        {
+            if(header->itemCount()==0)
+            {
+                m_currentItem=-1;
+            }
+            else
+            {
+                setCurrentItem(m_currentHeader, header->itemCount()-1);
+            }
+        }
     }
 }
 
@@ -429,8 +467,12 @@ void KNMusicPlaylistListviewContent::setCurrentItem(const int &header,
 {
     if(m_currentItem!=-1)
     {
+        KNMusicPlaylistListviewHeader *lastHeader=m_headers.at(m_currentHeader);
         //An item has been selected, unselected it.
-        m_headers.at(m_currentHeader)->unselectItem(m_currentItem);
+        if(m_currentItem<lastHeader->itemCount())
+        {
+            lastHeader->unselectItem(m_currentItem);
+        }
     }
     m_currentHeader=header;
     m_currentItem=item;
@@ -524,9 +566,24 @@ int KNMusicPlaylistListview::addItem(const QString &text)
     return m_content->addItem(text);
 }
 
+int KNMusicPlaylistListview::currentHeader() const
+{
+    return m_content->currentHeader();
+}
+
+int KNMusicPlaylistListview::currentItem() const
+{
+    return m_content->currentItem();
+}
+
 void KNMusicPlaylistListview::clearHeader()
 {
     m_content->clearHeader();
+}
+
+void KNMusicPlaylistListview::removeCurrentItem()
+{
+    m_content->removeCurrentItem();
 }
 
 bool KNMusicPlaylistListview::setCurrentHeader(const int &index)

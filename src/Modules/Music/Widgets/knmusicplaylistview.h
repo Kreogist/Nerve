@@ -21,6 +21,8 @@ public slots:
 
 private slots:
     void onActionUpdatePlaylists();
+    void onActionCreatePlaylist();
+    void onActionRemoveCurrent();
 
 private:
     enum Headers

@@ -33,16 +33,18 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     m_listEditor=new KNMusicPlaylistListEditor(this);
     categoryLayout->addWidget(m_listEditor);
     connect(m_listEditor, &KNMusicPlaylistListEditor::requireCreatePlaylist,
-            [=]
-            {
-                m_categories->setCurrentHeader(Playlist);
-                m_categories->createItem();
-            });
+            this, &KNMusicPlaylistView::onActionCreatePlaylist);
+    connect(m_listEditor, &KNMusicPlaylistListEditor::requireRemoveCurrent,
+            this, &KNMusicPlaylistView::onActionRemoveCurrent);
     addWidget(categoryList);
 
     //Initial playlist displayer.
     QWidget *test=new QWidget(this);
     addWidget(test);
+
+    //Set properties after initial all the widgets.
+    setCollapsible(1, false);
+    setStretchFactor(1, 1);
 }
 
 void KNMusicPlaylistView::setPlaylistManager(KNMusicPlaylistManager *manager)
@@ -75,4 +77,29 @@ void KNMusicPlaylistView::onActionUpdatePlaylists()
     {
         m_categories->addItem(playlistNames.takeFirst());
     }
+}
+
+void KNMusicPlaylistView::onActionCreatePlaylist()
+{
+    //Set to playlist header.
+    m_categories->setCurrentHeader(Playlist);
+    //Add an item.
+    m_categories->createItem();
+}
+
+void KNMusicPlaylistView::onActionRemoveCurrent()
+{
+    //Should ask the user first.
+    switch(m_categories->currentHeader())
+    {
+    case Playlist:
+        m_playlistManager->removePlaylist(m_categories->currentItem());
+        break;
+    case Dirs:
+        break;
+    default:
+        //Here should never comes.
+        return;
+    }
+    m_categories->removeCurrentItem();
 }

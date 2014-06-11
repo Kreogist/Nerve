@@ -83,6 +83,7 @@ public:
     int addItem(KNMusicPlaylistListviewItem *item);
     void removeItem(const int &index);
     void clear();
+    int itemCount();
     void selectItem(const int &index);
     void unselectItem(const int &index);
     void setStartParam(const int &param);
@@ -116,7 +117,10 @@ public:
     ~KNMusicPlaylistListviewContent();
     int addHeader(const QString &text);
     int addItem(const QString &text);
+    int currentHeader() const;
+    int currentItem() const;
     void createItem();
+    void removeCurrentItem();
     void clear();
     void clearHeader();
     bool setCurrentHeader(const int &index);
@@ -154,7 +158,10 @@ public:
     explicit KNMusicPlaylistListview(QWidget *parent = 0);
     int addHeader(const QString &text);
     int addItem(const QString &text);
+    int currentHeader() const;
+    int currentItem() const;
     void clearHeader();
+    void removeCurrentItem();
     bool setCurrentHeader(const int &index);
 
 signals:
