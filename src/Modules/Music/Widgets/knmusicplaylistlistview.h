@@ -41,6 +41,8 @@ public:
     void select();
     void unselect();
     QVariant data() const;
+    int headerIndex() const;
+    void setHeaderIndex(int headerIndex);
 
 signals:
     void requireDelete();
@@ -70,7 +72,7 @@ private:
     QColor m_originalTextColor;
     QPropertyAnimation *m_editorInAnime;
     QTimeLine *m_createAnime, *m_deleteAnime;
-    int m_itemHeight=30;
+    int m_itemHeight=30, m_headerIndex=-1;
     bool m_isPressed=false, m_createMode=false, m_unselected=true;
 };
 
@@ -85,6 +87,8 @@ public:
     void clear();
     void setStartParam(const int &param);
     void setItemLayout(QBoxLayout *itemLayout);
+    int headerIndex() const;
+    void setHeaderIndex(int headerIndex);
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -96,7 +100,7 @@ private:
     QPalette m_palette;
     QBoxLayout *m_itemLayout;
     QLinearGradient m_background;
-    int m_currentIndex=-1;
+    int m_currentIndex=-1, m_headerIndex=-1;
     QList<KNMusicPlaylistListviewItem *> m_items;
 };
 

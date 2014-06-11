@@ -215,6 +215,15 @@ void KNMusicPlaylistListviewItem::onActionAnimeDelete()
     m_editor->hide();
     m_deleteAnime->start();
 }
+int KNMusicPlaylistListviewItem::headerIndex() const
+{
+    return m_headerIndex;
+}
+
+void KNMusicPlaylistListviewItem::setHeaderIndex(int headerIndex)
+{
+    m_headerIndex = headerIndex;
+}
 
 KNMusicPlaylistListviewHeader::KNMusicPlaylistListviewHeader(QWidget *parent) :
     QLabel(parent)
@@ -304,6 +313,16 @@ void KNMusicPlaylistListviewHeader::onActionItemClicked()
     m_currentIndex=clickedIndex;
     clickedItem->select();
 }
+int KNMusicPlaylistListviewHeader::headerIndex() const
+{
+    return m_headerIndex;
+}
+
+void KNMusicPlaylistListviewHeader::setHeaderIndex(int headerIndex)
+{
+    m_headerIndex = headerIndex;
+}
+
 
 KNMusicPlaylistListviewContent::KNMusicPlaylistListviewContent(QWidget *parent) :
     QWidget(parent)
@@ -335,6 +354,8 @@ KNMusicPlaylistListviewContent::~KNMusicPlaylistListviewContent()
 int KNMusicPlaylistListviewContent::addHeader(const QString &text)
 {
     KNMusicPlaylistListviewHeader *currentHeader=new KNMusicPlaylistListviewHeader();
+    int headerIndex=m_headers.size();
+    currentHeader->setHeaderIndex(headerIndex);
     currentHeader->setText(text);
     connect(this, &KNMusicPlaylistListviewContent::requireSetHeaderColorParam,
             currentHeader, &KNMusicPlaylistListviewHeader::setStartParam);
@@ -343,7 +364,6 @@ int KNMusicPlaylistListviewContent::addHeader(const QString &text)
                                                 m_mainLayout->widget());
     m_mainLayout->addLayout(headerItemLayout);
     currentHeader->setItemLayout(headerItemLayout);
-    int headerIndex=m_headers.size();
     m_headers.append(currentHeader);
     m_currentHeader=currentHeader;
     return headerIndex;
@@ -352,6 +372,7 @@ int KNMusicPlaylistListviewContent::addHeader(const QString &text)
 int KNMusicPlaylistListviewContent::addItem(const QString &text)
 {
     KNMusicPlaylistListviewItem *currentItem=new KNMusicPlaylistListviewItem();
+    currentItem->setHeaderIndex(m_currentHeader->headerIndex());
     currentItem->setText(text);
     connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
             currentItem, &KNMusicPlaylistListviewItem::setTextColorParam);
@@ -360,6 +381,7 @@ int KNMusicPlaylistListviewContent::addItem(const QString &text)
 
 void KNMusicPlaylistListviewContent::addCreatePlaylist()
 {
+    setCurrentHeader(0);
     if(m_createdIndex==-1)
     {
         m_createdItem=new KNMusicPlaylistListviewItem();
