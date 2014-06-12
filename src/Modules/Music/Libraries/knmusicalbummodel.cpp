@@ -100,6 +100,10 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
     {
         searchResult=this->index(0,0);
         setData(searchResult, data(searchResult, MusicCount).toInt()-1, MusicCount);
+        if(data(searchResult, MusicCount).toInt()==0)
+        {
+            emit requireFlyAway();
+        }
         return;
     }
     searchResult=indexOf(currentName);

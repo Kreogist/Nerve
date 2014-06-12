@@ -562,6 +562,8 @@ void KNMusicAlbumView::setCategoryModel(KNMusicCategorySortFilterModel *model)
     m_model=static_cast<KNMusicAlbumModel *>(model->sourceModel());
     connect(m_model, &KNMusicAlbumModel::albumRemoved,
             this, &KNMusicAlbumView::onActionAlbumRemoved);
+    connect(m_model, &KNMusicAlbumModel::requireFlyAway,
+            this, &KNMusicAlbumView::flyAwayAlbumDetail);
 }
 
 void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)

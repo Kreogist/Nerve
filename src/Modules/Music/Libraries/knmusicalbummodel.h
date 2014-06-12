@@ -14,6 +14,7 @@ public:
     QString indexYear(const QModelIndex &index) const;
 
 signals:
+    void requireFlyAway();
     void albumRemoved(const QModelIndex &index);
 
 public slots:
