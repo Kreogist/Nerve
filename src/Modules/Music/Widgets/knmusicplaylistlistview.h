@@ -67,7 +67,7 @@ private:
     KNMusicPlaylistItemEditor *m_editor;
     QVariant m_data;
     QLabel *m_icon, *m_text;
-    QColor m_originalTextColor;
+    QColor m_textColor=QColor(0x70, 0x70, 0x70);
     QPropertyAnimation *m_editorInAnime;
     QTimeLine *m_createAnime, *m_deleteAnime;
     int m_itemHeight=30;
@@ -96,6 +96,9 @@ signals:
     void itemClicked(const int &header,
                      const int &item);
 
+public slots:
+    void onActionDeleteAnimeFinished();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
@@ -106,7 +109,7 @@ private:
     QPalette m_palette;
     QBoxLayout *m_itemLayout;
     QLinearGradient m_background;
-    int m_currentIndex=-1, m_headerIndex=-1;
+    int m_currentIndex=-1, m_headerIndex=-1, m_animeRemovedIndex=-1;
     QList<KNMusicPlaylistListviewItem *> m_items;
 };
 

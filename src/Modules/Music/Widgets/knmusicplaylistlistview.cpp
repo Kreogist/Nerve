@@ -56,7 +56,7 @@ KNMusicPlaylistListviewItem::KNMusicPlaylistListviewItem(QWidget *parent) :
     //Set palette.
     m_palette=palette();
     m_palette.setColor(QPalette::Window, QColor(0,0,0,0));
-    m_palette.setColor(QPalette::WindowText, QColor(0x70, 0x70, 0x70));
+    m_palette.setColor(QPalette::WindowText, m_textColor);
     m_textPalette=m_palette;
     setPalette(m_palette);
 
@@ -129,7 +129,6 @@ void KNMusicPlaylistListviewItem::select()
     m_unselected=false;
     m_palette.setColor(QPalette::Window, QColor(0x60, 0x60, 0x60));
     setPalette(m_palette);
-    m_originalTextColor=m_textPalette.color(QPalette::WindowText);
     m_textPalette.setColor(QPalette::WindowText, QColor(0xf7, 0xcf, 0x3d));
     m_text->setPalette(m_textPalette);
 }
@@ -139,7 +138,7 @@ void KNMusicPlaylistListviewItem::unselect()
     m_unselected=true;
     m_palette.setColor(QPalette::Window, QColor(0,0,0,0));
     setPalette(m_palette);
-    m_textPalette.setColor(QPalette::WindowText, m_originalTextColor);
+    m_textPalette.setColor(QPalette::WindowText, m_textColor);
     m_text->setPalette(m_textPalette);
 }
 
@@ -150,9 +149,10 @@ QVariant KNMusicPlaylistListviewItem::data() const
 
 void KNMusicPlaylistListviewItem::setTextColorParam(const int &frame)
 {
+    m_textColor=QColor(frame, frame, frame);
     if(m_unselected)
     {
-        m_textPalette.setColor(QPalette::WindowText, QColor(frame, frame, frame));
+        m_textPalette.setColor(QPalette::WindowText, m_textColor);
         m_text->setPalette(m_textPalette);
     }
 }
@@ -258,7 +258,8 @@ void KNMusicPlaylistListviewHeader::removeItem(const int &index)
 
 void KNMusicPlaylistListviewHeader::animateRemoveItem(const int &index)
 {
-    m_items.at(index)->onActionAnimeDelete();
+    m_animeRemovedIndex=index;
+    m_items.at(m_animeRemovedIndex)->onActionAnimeDelete();
 }
 
 void KNMusicPlaylistListviewHeader::clear()
@@ -325,6 +326,11 @@ void KNMusicPlaylistListviewHeader::setHeaderIndex(int headerIndex)
     m_headerIndex=headerIndex;
 }
 
+void KNMusicPlaylistListviewHeader::onActionDeleteAnimeFinished()
+{
+    removeItem(m_animeRemovedIndex);
+}
+
 KNMusicPlaylistListviewContent::KNMusicPlaylistListviewContent(QWidget *parent) :
     QWidget(parent)
 {
@@ -376,6 +382,8 @@ int KNMusicPlaylistListviewContent::addItem(const QString &text)
 {
     KNMusicPlaylistListviewItem *currentItem=new KNMusicPlaylistListviewItem();
     currentItem->setText(text);
+    connect(currentItem, &KNMusicPlaylistListviewItem::requireDelete,
+            m_opertateHeader, &KNMusicPlaylistListviewHeader::onActionDeleteAnimeFinished);
     connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
             currentItem, &KNMusicPlaylistListviewItem::setTextColorParam);
     return m_opertateHeader->addItem(currentItem);
@@ -397,12 +405,12 @@ void KNMusicPlaylistListviewContent::createItem()
     {
         m_createdItem=new KNMusicPlaylistListviewItem();
         m_createdItem->setCreateMode();
+        connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
+                m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
         connect(m_createdItem, &KNMusicPlaylistListviewItem::requireDelete,
                 this, &KNMusicPlaylistListviewContent::createCancel);
         connect(m_createdItem, &KNMusicPlaylistListviewItem::requireAdd,
                 this, &KNMusicPlaylistListviewContent::createApply);
-        connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
-                m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
         m_createdIndex=m_opertateHeader->addItem(m_createdItem);
         m_createdItem->startCreateMode();
     }
@@ -413,22 +421,15 @@ void KNMusicPlaylistListviewContent::removeCurrentItem()
     if(m_currentHeader!=-1 && m_currentItem!=-1)
     {
         KNMusicPlaylistListviewHeader *header=m_headers.at(m_currentHeader);
-        int nextSelectedItem=m_currentItem+1,
+        int nextSelectedItem=m_currentItem-1,
             currentBackup=m_currentItem;
-        if(nextSelectedItem<header->itemCount())
+        if(nextSelectedItem>-1)
         {
             setCurrentItem(m_currentHeader, nextSelectedItem);
         }
         else
         {
-            if(header->itemCount()==1)
-            {
-                m_currentItem=-1;
-            }
-            else
-            {
-                setCurrentItem(m_currentHeader, header->itemCount()-2);
-            }
+            m_currentItem=-1;
         }
         header->animateRemoveItem(currentBackup);
     }
@@ -453,6 +454,7 @@ bool KNMusicPlaylistListviewContent::setCurrentHeader(const int &index)
 {
     if(index>-1 && index<m_headers.size())
     {
+        m_currentHeader=index;
         m_opertateHeader=m_headers.at(index);
         return true;
     }
@@ -497,11 +499,16 @@ void KNMusicPlaylistListviewContent::createCancel()
 void KNMusicPlaylistListviewContent::createApply(const QString &caption)
 {
     disconnectCreatedItem();
+    //UI text color change signal.
     connect(this, &KNMusicPlaylistListviewContent::requireSetTextColorParam,
             m_createdItem, &KNMusicPlaylistListviewItem::setTextColorParam);
+    //Redirect the delete signal.
+    connect(m_createdItem, &KNMusicPlaylistListviewItem::requireDelete,
+            m_opertateHeader, &KNMusicPlaylistListviewHeader::onActionDeleteAnimeFinished);
     m_createdItem=nullptr;
-    m_createdIndex=-1;
     emit requireAddPlaylist(caption);
+    setCurrentItem(m_currentHeader, m_createdIndex);
+    m_createdIndex=-1;
 }
 
 void KNMusicPlaylistListviewContent::onActionItemClicked(const int &header,
