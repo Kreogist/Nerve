@@ -48,6 +48,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 {
     //Set properties.
     setContentsMargins(0,0,0,0);
+    setSizePolicy(QSizePolicy::MinimumExpanding,
+                  QSizePolicy::MinimumExpanding);
 
     //Initial the layouts and widgets.
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,

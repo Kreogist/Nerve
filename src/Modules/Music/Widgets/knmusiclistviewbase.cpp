@@ -220,15 +220,15 @@ bool KNMusicListViewBase::event(QEvent *event)
         if(index.isValid())
         {
             if(verticalScrollBar()->isVisible() &&
-                (realPos.x()<(viewport()->rect().right()-verticalScrollBar()->width())))
+                (realPos.x()>(viewport()->rect().right()-verticalScrollBar()->width())))
+            {
+                m_musicDetailTooltip->hide();
+            }
+            else
             {
                 m_musicDetailTooltip->setTooltip(m_proxyModel->mapToSource(index),
                                                  mapToGlobal(helpEvent->pos()));
                 m_musicDetailTooltip->showTooltip();
-            }
-            else
-            {
-                m_musicDetailTooltip->hide();
             }
         }
         return true;
