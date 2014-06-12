@@ -78,7 +78,7 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
         }
         if(currentAlbum->data(Year).toString().isEmpty())
         {
-            currentAlbum->setData(yearFromSource(index.row()));
+            currentAlbum->setData(yearFromSource(index.row()), Year);
         }
     }
     else
@@ -149,7 +149,7 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
         }
         if(currentAlbum->data(Year).toString().isEmpty())
         {
-            currentAlbum->setData(yearFromSource(index.row()));
+            currentAlbum->setData(yearFromSource(index.row()), Year);
         }
     }
     else
