@@ -109,7 +109,7 @@ private:
     QPalette m_palette;
     QBoxLayout *m_itemLayout;
     QLinearGradient m_background;
-    int m_currentIndex=-1, m_headerIndex=-1, m_animeRemovedIndex=-1;
+    int m_headerIndex=-1,m_animeRemovedIndex=-1;
     QList<KNMusicPlaylistListviewItem *> m_items;
 };
 
@@ -130,6 +130,7 @@ public:
     bool setCurrentHeader(const int &index);
 
 signals:
+    void currentItemChanged(int header, int item);
     void requireSetHeaderColorParam(const int &param);
     void requireSetTextColorParam(const int &param);
     void requireAddPlaylist(const QString &title);
@@ -169,6 +170,7 @@ public:
     bool setCurrentHeader(const int &index);
 
 signals:
+    void currentItemChanged(int header, int item);
     void requireAddPlaylist(const QString &title);
     void itemClicked(const int &header, const int &item);
 

@@ -1,4 +1,3 @@
-#include <QDirModel>
 #include <QBoxLayout>
 #include <QTreeView>
 

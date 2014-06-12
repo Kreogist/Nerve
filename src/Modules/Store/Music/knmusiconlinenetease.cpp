@@ -65,7 +65,6 @@ void KNMusicOnlineNetease::handleReplyData(QNetworkReply *replyData)
         qDebug()<<"Error! No JSON data!";
         return;
     }
-    qDebug()<<response.toJson();
     //Get the result object.
     QJsonObject replyObject=response.object(),
                 songListObject=replyObject["result"].toObject();

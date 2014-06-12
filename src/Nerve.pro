@@ -143,7 +143,10 @@ SOURCES += \
     Modules/Base/knstdlibfileexplorer.cpp \
     Modules/Music/Widgets/knmusicfileexplorer.cpp \
     Modules/Base/knlibfileexplorerpath.cpp \
-    Modules/Base/knstdlibfileexplorerpath.cpp
+    Modules/Base/knstdlibfileexplorerpath.cpp \
+    Modules/Base/knlibdirmodel.cpp \
+    Modules/Base/knstdlibdirmodel.cpp \
+    Modules/Music/Libraries/knmusicplaylistmodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -268,7 +271,10 @@ HEADERS += \
     Modules/Base/knstdlibfileexplorer.h \
     Modules/Music/Widgets/knmusicfileexplorer.h \
     Modules/Base/knlibfileexplorerpath.h \
-    Modules/Base/knstdlibfileexplorerpath.h
+    Modules/Base/knstdlibfileexplorerpath.h \
+    Modules/Base/knlibdirmodel.h \
+    Modules/Base/knstdlibdirmodel.h \
+    Modules/Music/Libraries/knmusicplaylistmodel.h
 
 RESOURCES += \
     res.qrc

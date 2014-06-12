@@ -427,6 +427,14 @@ void KNMusicPlaylistListviewContent::removeCurrentItem()
         {
             setCurrentItem(m_currentHeader, nextSelectedItem);
         }
+        else if(header->itemCount()>1)
+        {
+            //If comes here means: user delete the first item.
+            //So if we can select one, means there must be at least two items
+            //in this header.
+            setCurrentItem(m_currentHeader, 1);
+            m_currentItem=0;
+        }
         else
         {
             m_currentItem=-1;
@@ -474,6 +482,10 @@ void KNMusicPlaylistListviewContent::setTextColorParam(const int &param)
 void KNMusicPlaylistListviewContent::setCurrentItem(const int &header,
                                                     const int &item)
 {
+    if(m_currentHeader==header && m_currentItem==item)
+    {
+        return;
+    }
     if(m_currentItem!=-1)
     {
         KNMusicPlaylistListviewHeader *lastHeader=m_headers.at(m_currentHeader);
@@ -486,6 +498,7 @@ void KNMusicPlaylistListviewContent::setCurrentItem(const int &header,
     m_currentHeader=header;
     m_currentItem=item;
     m_headers.at(m_currentHeader)->selectItem(m_currentItem);
+    emit currentItemChanged(m_currentHeader, m_currentItem);
 }
 
 void KNMusicPlaylistListviewContent::createCancel()
@@ -551,6 +564,8 @@ KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
             this, &KNMusicPlaylistListview::requireAddPlaylist);
     connect(m_content, &KNMusicPlaylistListviewContent::itemClicked,
             this, &KNMusicPlaylistListview::itemClicked);
+    connect(m_content, &KNMusicPlaylistListviewContent::currentItemChanged,
+            this, &KNMusicPlaylistListview::currentItemChanged);
     setWidget(m_content);
 
     //Mouse enter animation.

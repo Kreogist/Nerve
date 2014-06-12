@@ -74,10 +74,10 @@ KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     //In moving animation.
     m_inAnime=new QParallelAnimationGroup(this);
     m_iconIn=new QPropertyAnimation(m_icon, "geometry", this);
-    m_iconIn->setEasingCurve(QEasingCurve::InCubic);
+    m_iconIn->setEasingCurve(QEasingCurve::OutCubic);
     m_inAnime->addAnimation(m_iconIn);
     m_textIn=new QPropertyAnimation(m_text, "geometry", this);
-    m_textIn->setEasingCurve(QEasingCurve::InCubic);
+    m_textIn->setEasingCurve(QEasingCurve::OutCubic);
     m_inAnime->addAnimation(m_textIn);
 
     connect(m_outAnime, &QParallelAnimationGroup::finished,
