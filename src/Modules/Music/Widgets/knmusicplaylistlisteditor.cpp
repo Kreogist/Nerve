@@ -38,7 +38,7 @@ KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
 void KNMusicPlaylistListEditor::retranslate()
 {
     m_itemAddCaption[AddPlaylist]=tr("New Playlist");
-    m_itemAddCaption[OpenPlaylist]=tr("Open a Playlist");
+    m_itemAddCaption[OpenPlaylist]=tr("Open Playlists");
 }
 
 void KNMusicPlaylistListEditor::retranslateAndSet()
@@ -55,6 +55,8 @@ void KNMusicPlaylistListEditor::createActions()
     }
     connect(m_itemAddAction[AddPlaylist], SIGNAL(triggered()),
             this, SIGNAL(requireCreatePlaylist()));
+    connect(m_itemAddAction[OpenPlaylist], SIGNAL(triggered()),
+            this, SIGNAL(requireOpen()));
     connect(m_createList, &KNOpacityButton::clicked,
             [=]
             {

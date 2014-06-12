@@ -98,7 +98,6 @@ bool KNMusicPlaylistManager::loadPlayList(const QString &filePath)
     QJsonObject playlistObject=playlistContent.object();
     //Append data to list.
     KNPlayList playlist;
-    playlist.path=filePath;
     QJsonArray songList=playlistObject["Songs"].toArray();
     for(int i=0, songCount=songList.size(); i<songCount; i++)
     {
@@ -120,7 +119,7 @@ void KNMusicPlaylistManager::setLoopMode(const int &index)
     m_loopMode=index;
 }
 
-void KNMusicPlaylistManager::addPlaylist(const QString &title)
+void KNMusicPlaylistManager::createPlaylist(const QString &title)
 {
     //Prepare the playlist data.
     KNPlayList playlist;
@@ -137,19 +136,42 @@ void KNMusicPlaylistManager::addPlaylist(const QString &title)
                      QString::number(count++)+".json";
         playlistFile.setFile(playlistPath);
     }
-    m_playlists.append(playlistPath);
-    playlist.path=playlistPath;
     //Add to playlist list.
+    m_playlists.append(playlistPath);
     m_playlistNameList.append(title);
     m_playlistList.append(playlist);
     //Save to file.
     savePlayList(m_playlistList.size()-1);
 }
 
+void KNMusicPlaylistManager::importPlaylist(QStringList filePaths)
+{
+    for(int i=0; i<filePaths.size(); i++)
+    {
+        QString currentPath=filePaths.at(i);
+        if(m_playlists.contains(currentPath))
+        {
+            continue;
+        }
+        if(loadPlayList(currentPath))
+        {
+            m_playlists.append(currentPath);
+        }
+    }
+    emit playlistListUpdated();
+}
+
 void KNMusicPlaylistManager::removePlaylist(const int &index)
 {
     m_playlistNameList.removeAt(index);
     m_playlistList.removeAt(index);
+    QString removedPath=m_playlists.at(index).toString();
+    if(removedPath.contains(m_playlistPath))
+    {
+        //It's a path in playlist menu, delete it.
+        QFile currentFile(removedPath);
+        currentFile.remove();
+    }
     m_playlists.removeAt(index);
 }
 
@@ -174,7 +196,7 @@ void KNMusicPlaylistManager::saveAllChanged()
 void KNMusicPlaylistManager::savePlayList(const int &index)
 {
     KNPlayList saveList=m_playlistList.at(index);
-    QFile playlistFile(saveList.path);
+    QFile playlistFile(m_playlists.at(index).toString());
     if(playlistFile.open(QIODevice::WriteOnly))
     {
         QJsonObject playlistObject;

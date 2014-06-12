@@ -49,7 +49,9 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void setLoopMode(const int &index);
-    void addPlaylist(const QString &title);
+    //Create playlist
+    void createPlaylist(const QString &title);
+    void importPlaylist(QStringList filePaths);
     void removePlaylist(const int &index);
 
 private:
@@ -61,7 +63,6 @@ private:
     struct KNPlayList
     {
         QStringList songs;
-        QString path;
         //The last playing index is only for reference.
         int lastPlayingIndex=-1;
         bool changed=false;

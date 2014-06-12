@@ -38,7 +38,7 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setAlternatingRowColors(true);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setSelectionMode(QAbstractItemView::ContiguousSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);
@@ -79,17 +79,17 @@ void KNMusicListViewBase::resetHeader()
     setEditTriggers(QAbstractItemView::SelectedClicked);
     connect(header(), &QHeaderView::sortIndicatorChanged,
             this, &KNMusicListViewBase::onActionSort);
-//    for(int i=KNMusicGlobal::Name+1;
-//        i<KNMusicGlobal::MusicDataCount;
-//        i++)
-//    {
-//        setColumnHidden(i, true);
-//    }
-//    setColumnHidden(KNMusicGlobal::Time, false);
-//    setColumnHidden(KNMusicGlobal::Artist, false);
-//    setColumnHidden(KNMusicGlobal::Album, false);
-//    setColumnHidden(KNMusicGlobal::Genre, false);
-//    setColumnHidden(KNMusicGlobal::Rating, false);
+    for(int i=KNMusicGlobal::Name+1;
+        i<KNMusicGlobal::MusicDataCount;
+        i++)
+    {
+        setColumnHidden(i, true);
+    }
+    setColumnHidden(KNMusicGlobal::Time, false);
+    setColumnHidden(KNMusicGlobal::Artist, false);
+    setColumnHidden(KNMusicGlobal::Album, false);
+    setColumnHidden(KNMusicGlobal::Genre, false);
+    setColumnHidden(KNMusicGlobal::Rating, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);

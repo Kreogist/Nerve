@@ -3,6 +3,7 @@
 
 #include <QSplitter>
 
+class KNMusicFileExplorer;
 class KNMusicPlaylistListEditor;
 class KNMusicPlaylistManager;
 class KNMusicPlaylistListview;
@@ -22,6 +23,7 @@ public slots:
 private slots:
     void onActionUpdatePlaylists();
     void onActionCreatePlaylist();
+    void onActionOpenPlaylist();
     void onActionRemoveCurrent();
 
 private:
@@ -35,7 +37,9 @@ private:
     int m_headerIndex[HeaderCount];
     KNMusicPlaylistManager *m_playlistManager;
     KNMusicPlaylistListEditor *m_listEditor;
-    KNMusicPlaylistListview *m_categories;
+    KNMusicPlaylistListview *m_categoryList;
+    QWidget *m_playlistViewer;
+    KNMusicFileExplorer *m_dirViewer;
 };
 
 #endif // KNMUSICPLAYLISTVIEW_H

@@ -1,8 +1,11 @@
 #include <QStringList>
+#include <QFileDialog>
 #include <QBoxLayout>
 
-#include "knmusicplaylistlistview.h"
+#include "../../Base/knverticalwidgetswitcher.h"
 #include "../Libraries/knmusicplaylistmanager.h"
+#include "knmusicfileexplorer.h"
+#include "knmusicplaylistlistview.h"
 #include "knmusicplaylistlisteditor.h"
 
 #include "knmusicplaylistview.h"
@@ -24,23 +27,29 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     categoryLayout->setContentsMargins(0,0,0,0);
     categoryLayout->setSpacing(0);
     categoryList->setLayout(categoryLayout);
-    m_categories=new KNMusicPlaylistListview(this);
+    m_categoryList=new KNMusicPlaylistListview(this);
     for(int i=0; i<HeaderCount; i++)
     {
-        m_headerIndex[i]=m_categories->addHeader(m_headerCaption[i]);
+        m_headerIndex[i]=m_categoryList->addHeader(m_headerCaption[i]);
     }
-    categoryLayout->addWidget(m_categories, 1);
+    categoryLayout->addWidget(m_categoryList, 1);
     m_listEditor=new KNMusicPlaylistListEditor(this);
     categoryLayout->addWidget(m_listEditor);
     connect(m_listEditor, &KNMusicPlaylistListEditor::requireCreatePlaylist,
             this, &KNMusicPlaylistView::onActionCreatePlaylist);
+    connect(m_listEditor, &KNMusicPlaylistListEditor::requireOpen,
+            this, &KNMusicPlaylistView::onActionOpenPlaylist);
     connect(m_listEditor, &KNMusicPlaylistListEditor::requireRemoveCurrent,
             this, &KNMusicPlaylistView::onActionRemoveCurrent);
     addWidget(categoryList);
 
     //Initial playlist displayer.
-    QWidget *test=new QWidget(this);
-    addWidget(test);
+    KNVerticalWidgetSwitcher *viewer=new KNVerticalWidgetSwitcher(this);
+    m_playlistViewer=new QWidget(this);
+    m_dirViewer=new KNMusicFileExplorer(this);
+    viewer->addWidget(m_dirViewer);
+    viewer->addWidget(m_playlistViewer);
+    addWidget(viewer);
 
     //Set properties after initial all the widgets.
     setCollapsible(1, false);
@@ -52,8 +61,8 @@ void KNMusicPlaylistView::setPlaylistManager(KNMusicPlaylistManager *manager)
     m_playlistManager=manager;
     connect(m_playlistManager, &KNMusicPlaylistManager::playlistListUpdated,
             this, &KNMusicPlaylistView::onActionUpdatePlaylists);
-    connect(m_categories, &KNMusicPlaylistListview::requireAddPlaylist,
-            m_playlistManager, &KNMusicPlaylistManager::addPlaylist);
+    connect(m_categoryList, &KNMusicPlaylistListview::requireAddPlaylist,
+            m_playlistManager, &KNMusicPlaylistManager::createPlaylist);
 }
 
 void KNMusicPlaylistView::retranslate()
@@ -69,31 +78,40 @@ void KNMusicPlaylistView::retranslateAndSet()
 
 void KNMusicPlaylistView::onActionUpdatePlaylists()
 {
-    m_categories->setCurrentHeader(m_headerIndex[Playlist]);
-    m_categories->clearHeader();
+    m_categoryList->setCurrentHeader(m_headerIndex[Playlist]);
+    m_categoryList->clearHeader();
     QStringList playlistNames=m_playlistManager->playlistNameList();
     int playlistSize=playlistNames.size();
     while(playlistSize--)
     {
-        m_categories->addItem(playlistNames.takeFirst());
+        m_categoryList->addItem(playlistNames.takeFirst());
     }
 }
 
 void KNMusicPlaylistView::onActionCreatePlaylist()
 {
     //Set to playlist header.
-    m_categories->setCurrentHeader(Playlist);
+    m_categoryList->setCurrentHeader(Playlist);
     //Add an item.
-    m_categories->createItem();
+    m_categoryList->createItem();
+}
+
+void KNMusicPlaylistView::onActionOpenPlaylist()
+{
+    m_playlistManager->importPlaylist(
+                QFileDialog::getOpenFileNames(this,
+                                              tr("Open playlist"),
+                                              "",
+                                              tr("Nerve Playlist (*.json)")));
 }
 
 void KNMusicPlaylistView::onActionRemoveCurrent()
 {
     //Should ask the user first.
-    switch(m_categories->currentHeader())
+    switch(m_categoryList->currentHeader())
     {
     case Playlist:
-        m_playlistManager->removePlaylist(m_categories->currentItem());
+        m_playlistManager->removePlaylist(m_categoryList->currentItem());
         break;
     case Dirs:
         break;
@@ -101,5 +119,5 @@ void KNMusicPlaylistView::onActionRemoveCurrent()
         //Here should never comes.
         return;
     }
-    m_categories->removeCurrentItem();
+    m_categoryList->removeCurrentItem();
 }

@@ -138,7 +138,12 @@ SOURCES += \
     Modules/Base/knopacitybutton.cpp \
     Modules/Music/Widgets/knmusicplaylistview.cpp \
     Modules/Music/Widgets/knmusicplaylistlisteditor.cpp \
-    Modules/Music/Widgets/knmusicplaylistlistview.cpp
+    Modules/Music/Widgets/knmusicplaylistlistview.cpp \
+    Modules/Base/knlibfileexplorer.cpp \
+    Modules/Base/knstdlibfileexplorer.cpp \
+    Modules/Music/Widgets/knmusicfileexplorer.cpp \
+    Modules/Base/knlibfileexplorerpath.cpp \
+    Modules/Base/knstdlibfileexplorerpath.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -258,7 +263,12 @@ HEADERS += \
     Modules/Base/knopacitybutton.h \
     Modules/Music/Widgets/knmusicplaylistview.h \
     Modules/Music/Widgets/knmusicplaylistlisteditor.h \
-    Modules/Music/Widgets/knmusicplaylistlistview.h
+    Modules/Music/Widgets/knmusicplaylistlistview.h \
+    Modules/Base/knlibfileexplorer.h \
+    Modules/Base/knstdlibfileexplorer.h \
+    Modules/Music/Widgets/knmusicfileexplorer.h \
+    Modules/Base/knlibfileexplorerpath.h \
+    Modules/Base/knstdlibfileexplorerpath.h
 
 RESOURCES += \
     res.qrc
