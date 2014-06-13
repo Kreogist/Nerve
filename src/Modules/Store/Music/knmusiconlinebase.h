@@ -5,12 +5,11 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QNetworkCookie>
+#include <QScopedPointer>
 #include <QUrl>
 #include <QThread>
 #include <QByteArray>
 #include <QMap>
-#include <QScopedPointer>
-#include <QList>
 
 #include <QObject>
 

@@ -146,7 +146,11 @@ SOURCES += \
     Modules/Base/knstdlibfileexplorerpath.cpp \
     Modules/Base/knlibdirmodel.cpp \
     Modules/Base/knstdlibdirmodel.cpp \
-    Modules/Music/Libraries/knmusicplaylistmodel.cpp
+    Modules/Music/Libraries/knmusicplaylistmodel.cpp \
+    Modules/Base/knlibonlinesession.cpp \
+    Modules/Base/knstdlibonlinesession.cpp \
+    Modules/Base/knlibonlinesessionmanager.cpp \
+    Modules/Base/knstdlibonlinesessionmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -274,7 +278,11 @@ HEADERS += \
     Modules/Base/knstdlibfileexplorerpath.h \
     Modules/Base/knlibdirmodel.h \
     Modules/Base/knstdlibdirmodel.h \
-    Modules/Music/Libraries/knmusicplaylistmodel.h
+    Modules/Music/Libraries/knmusicplaylistmodel.h \
+    Modules/Base/knlibonlinesession.h \
+    Modules/Base/knstdlibonlinesession.h \
+    Modules/Base/knlibonlinesessionmanager.h \
+    Modules/Base/knstdlibonlinesessionmanager.h
 
 RESOURCES += \
     res.qrc

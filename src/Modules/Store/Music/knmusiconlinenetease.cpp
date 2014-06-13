@@ -1,8 +1,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QCryptographicHash>
 #include <QTime>
 
+#include "../../Base/knstdlibonlinesessionmanager.h"
 #include "knmusicsearchresult.h"
 
 #include "knmusiconlinenetease.h"
@@ -10,6 +12,9 @@
 KNMusicOnlineNetease::KNMusicOnlineNetease(QObject *parent) :
     KNMusicOnlineBase(parent)
 {
+    m_accessManager=new KNStdLibOnlineSessionManager(this);
+    connect(m_accessManager, &KNStdLibOnlineSessionManager::postDataUpdate,
+            this, &KNMusicOnlineNetease::handlePostData);
 }
 
 void KNMusicOnlineNetease::searchMusic(const QString &title)
@@ -38,17 +43,7 @@ void KNMusicOnlineNetease::searchMusic(const QString &title)
     searchParams.append("limit=10&type=1&offset=0&sub=false&s=" + title);
     searchRequest.setHeader(QNetworkRequest::ContentLengthHeader,
                             searchParams.length());
-    if(!m_searchManager.isNull())
-    {
-        disconnect(m_searchManager.data(), SIGNAL(finished(QNetworkReply*)),
-                   this, SLOT(handleReplyData(QNetworkReply*)));
-    }
-    m_searchManager.reset(new QNetworkAccessManager);
-    connect(m_searchManager.data(), SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(handleReplyData(QNetworkReply*)));
-    //Do post.
-    m_searchManager->clearAccessCache();
-    m_searchManager->post(searchRequest, searchParams);
+    m_accessManager->post(searchRequest, searchParams);
 }
 
 QStandardItemModel *KNMusicOnlineNetease::model() const
@@ -56,10 +51,10 @@ QStandardItemModel *KNMusicOnlineNetease::model() const
     return m_model.data();
 }
 
-void KNMusicOnlineNetease::handleReplyData(QNetworkReply *replyData)
+void KNMusicOnlineNetease::handlePostData()
 {
     //Translate reply data to json document.
-    QJsonDocument response=QJsonDocument::fromJson(replyData->readAll());
+    QJsonDocument response=QJsonDocument::fromJson(m_accessManager->takeReplyData());
     if(response.isNull())
     {
         qDebug()<<"Error! No JSON data!";
@@ -107,4 +102,19 @@ void KNMusicOnlineNetease::handleReplyData(QNetworkReply *replyData)
                                               currentSongData.albumName);
         m_model->appendRow(item);
     }
+}
+
+QByteArray encrypted_id(QByteArray id)
+{
+    QByteArray byte1=QByteArray("3go8&$8*3*3h0k(2)2");
+    QByteArray byte2=id;
+    QByteArray result;
+    int byte1_len = byte1.length();
+    for(int i=0; i<byte2.length(); i++)
+        result.append(byte2.at(i)^byte1.at(i%byte1_len));
+    result=QCryptographicHash::hash(result, QCryptographicHash::Md5);
+    result=result.toBase64();
+    result = result.replace('/', '_');
+    result = result.replace('+', '-');
+    return result;
 }

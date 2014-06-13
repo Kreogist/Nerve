@@ -4,6 +4,7 @@
 #include <QStandardItemModel>
 #include "knmusiconlinebase.h"
 
+class KNStdLibOnlineSessionManager;
 class KNMusicOnlineNetease : public KNMusicOnlineBase
 {
     Q_OBJECT
@@ -16,7 +17,7 @@ public slots:
     void searchMusic(const QString &title);
 
 private slots:
-    void handleReplyData(QNetworkReply *replyData);
+    void handlePostData();
 
 private:
     struct NeteaseSong
@@ -33,11 +34,11 @@ private:
     };
     QList<NeteaseSong> m_resultList;
 
-    //Network access:
-    QScopedPointer<QNetworkAccessManager> m_searchManager;
-
     //The search result widget.
     QScopedPointer<QStandardItemModel> m_model;
+
+    //The network access manager.
+    KNStdLibOnlineSessionManager *m_accessManager;
 };
 
 #endif // KNMUSICONLINENETEASE_H
