@@ -20,6 +20,7 @@ public:
     explicit KNMusicOnlineBase(QObject *parent = 0);
 
 signals:
+    void modelUpdate();
 
 public slots:
 

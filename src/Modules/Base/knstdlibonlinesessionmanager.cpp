@@ -41,12 +41,17 @@ void KNStdLibOnlineSessionManager::post(const QNetworkRequest &request,
 void KNStdLibOnlineSessionManager::onActionDataReplied(const QByteArray &data)
 {
     m_replyList.append(data);
-    switch(m_requestList.first().type)
+    int requestType=m_requestList.first().type;
+    m_requestList.removeFirst();
+    switch(requestType)
     {
     case Post:
         emit postDataUpdate();
     }
-
+    if(!m_requestList.isEmpty())
+    {
+        processRequest();
+    }
 }
 
 void KNStdLibOnlineSessionManager::processRequest()

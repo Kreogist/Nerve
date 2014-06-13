@@ -5,8 +5,6 @@
 #include <QTime>
 
 #include "../../Base/knstdlibonlinesessionmanager.h"
-#include "knmusicsearchresult.h"
-
 #include "knmusiconlinenetease.h"
 
 KNMusicOnlineNetease::KNMusicOnlineNetease(QObject *parent) :
@@ -19,8 +17,6 @@ KNMusicOnlineNetease::KNMusicOnlineNetease(QObject *parent) :
 
 void KNMusicOnlineNetease::searchMusic(const QString &title)
 {
-    //Clear the model
-    m_model.reset(new QStandardItemModel);
     //Initial request
     QNetworkRequest searchRequest;
     //Netease will use this cookie to certify your identity.
@@ -53,6 +49,8 @@ QStandardItemModel *KNMusicOnlineNetease::model() const
 
 void KNMusicOnlineNetease::handlePostData()
 {
+    //Clear the model
+    m_model.reset(new QStandardItemModel);
     //Translate reply data to json document.
     QJsonDocument response=QJsonDocument::fromJson(m_accessManager->takeReplyData());
     if(response.isNull())
@@ -60,6 +58,7 @@ void KNMusicOnlineNetease::handlePostData()
         qDebug()<<"Error! No JSON data!";
         return;
     }
+//    qDebug()<<response.toJson();
     //Get the result object.
     QJsonObject replyObject=response.object(),
                 songListObject=replyObject["result"].toObject();
@@ -96,12 +95,22 @@ void KNMusicOnlineNetease::handlePostData()
             currentSongData.artistName.append(artistName);
             currentSongData.artistTotal.append(j==0?artistName:" / "+artistName);
         }
-        QStandardItem *item=new QStandardItem(currentSongData.name + "<br />"+
-                                              currentSongData.time + "<br />" +
-                                              currentSongData.artistTotal + "<br />" +
-                                              currentSongData.albumName);
-        m_model->appendRow(item);
+        QList<QStandardItem *> rowData;
+        QStandardItem *item=new QStandardItem(currentSongData.name);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.artistTotal);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.albumName);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.time);
+        item->setEditable(false);
+        rowData.append(item);
+        m_model->appendRow(rowData);
     }
+    emit modelUpdate();
 }
 
 QByteArray encrypted_id(QByteArray id)

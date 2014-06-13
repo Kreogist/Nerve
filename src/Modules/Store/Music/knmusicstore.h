@@ -5,7 +5,9 @@
 
 class QBoxLayout;
 class QLineEdit;
-class KNMusicSearchResult;
+class KNWidgetSwitcher;
+class KNMusicResultView;
+class KNMusicOnlineNetease;
 class KNMusicStore : public QWidget
 {
     Q_OBJECT
@@ -16,9 +18,14 @@ signals:
 
 public slots:
 
+private slots:
+    void onActionModelUpdate();
+
 private:
+    KNMusicOnlineNetease *neteaseBackend;
     QLineEdit *m_keywords;
-    KNMusicSearchResult *m_result;
+    KNMusicResultView *m_result;
+    KNWidgetSwitcher *m_resultSwitcher;
     QBoxLayout *m_layout;
 };
 
