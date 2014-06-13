@@ -44,12 +44,14 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     addWidget(categoryList);
 
     //Initial playlist displayer.
-    KNVerticalWidgetSwitcher *viewer=new KNVerticalWidgetSwitcher(this);
+    m_viewerSwitcher=new KNVerticalWidgetSwitcher(this);
     m_playlistViewer=new QWidget(this);
     m_dirViewer=new KNMusicFileExplorer(this);
-    viewer->addWidget(m_dirViewer);
-    viewer->addWidget(m_playlistViewer);
-    addWidget(viewer);
+    m_viewerSwitcher->addWidget(m_dirViewer);
+    m_viewerSwitcher->addWidget(m_playlistViewer);
+    addWidget(m_viewerSwitcher);
+    connect(m_categoryList, &KNMusicPlaylistListview::currentItemChanged,
+            this, &KNMusicPlaylistView::onActionShowPlaylist);
 
     //Set properties after initial all the widgets.
     setCollapsible(1, false);
@@ -120,4 +122,10 @@ void KNMusicPlaylistView::onActionRemoveCurrent()
         return;
     }
     m_categoryList->removeCurrentItem();
+}
+
+void KNMusicPlaylistView::onActionShowPlaylist(const int &header,
+                                               const int &item)
+{
+    ;
 }

@@ -150,7 +150,8 @@ SOURCES += \
     Modules/Base/knstdlibonlinesession.cpp \
     Modules/Base/knlibonlinesessionmanager.cpp \
     Modules/Base/knstdlibonlinesessionmanager.cpp \
-    Modules/Store/Music/knmusicresultview.cpp
+    Modules/Store/Music/knmusicresultview.cpp \
+    Modules/Music/Widgets/knmusicplaylistdisplay.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -283,7 +284,8 @@ HEADERS += \
     Modules/Base/knstdlibonlinesession.h \
     Modules/Base/knlibonlinesessionmanager.h \
     Modules/Base/knstdlibonlinesessionmanager.h \
-    Modules/Store/Music/knmusicresultview.h
+    Modules/Store/Music/knmusicresultview.h \
+    Modules/Music/Widgets/knmusicplaylistdisplay.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

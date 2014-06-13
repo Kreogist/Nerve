@@ -4,6 +4,7 @@
 #include <QSplitter>
 
 class KNMusicFileExplorer;
+class KNVerticalWidgetSwitcher;
 class KNMusicPlaylistListEditor;
 class KNMusicPlaylistManager;
 class KNMusicPlaylistListview;
@@ -25,6 +26,7 @@ private slots:
     void onActionCreatePlaylist();
     void onActionOpenPlaylist();
     void onActionRemoveCurrent();
+    void onActionShowPlaylist(const int &header, const int &item);
 
 private:
     enum Headers
@@ -38,6 +40,7 @@ private:
     KNMusicPlaylistManager *m_playlistManager;
     KNMusicPlaylistListEditor *m_listEditor;
     KNMusicPlaylistListview *m_categoryList;
+    KNVerticalWidgetSwitcher *m_viewerSwitcher;
     QWidget *m_playlistViewer;
     KNMusicFileExplorer *m_dirViewer;
 };

@@ -545,6 +545,7 @@ KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
     QScrollArea(parent)
 {
     //Set properties.
+    setMinimumWidth(200);
     setWidgetResizable(true);
     setFrameShape(QFrame::NoFrame);
     viewport()->setContentsMargins(0,0,0,0);
