@@ -3,8 +3,6 @@
 #include <QJsonArray>
 #include <QTime>
 
-#include "knmusicsearchresult.h"
-
 #include "knmusiconlinenetease.h"
 
 KNMusicOnlineNetease::KNMusicOnlineNetease(QObject *parent) :
@@ -65,6 +63,7 @@ void KNMusicOnlineNetease::handleReplyData(QNetworkReply *replyData)
         qDebug()<<"Error! No JSON data!";
         return;
     }
+    qDebug()<<response.toJson();
     //Get the result object.
     QJsonObject replyObject=response.object(),
                 songListObject=replyObject["result"].toObject();
@@ -101,10 +100,19 @@ void KNMusicOnlineNetease::handleReplyData(QNetworkReply *replyData)
             currentSongData.artistName.append(artistName);
             currentSongData.artistTotal.append(j==0?artistName:" / "+artistName);
         }
-        QStandardItem *item=new QStandardItem(currentSongData.name + "<br />"+
-                                              currentSongData.time + "<br />" +
-                                              currentSongData.artistTotal + "<br />" +
-                                              currentSongData.albumName);
-        m_model->appendRow(item);
+        QList<QStandardItem *> rowData;
+        QStandardItem *item=new QStandardItem(currentSongData.name);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.artistTotal);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.albumName);
+        item->setEditable(false);
+        rowData.append(item);
+        item=new QStandardItem(currentSongData.time);
+        item->setEditable(false);
+        rowData.append(item);
+        m_model->appendRow(rowData);
     }
 }

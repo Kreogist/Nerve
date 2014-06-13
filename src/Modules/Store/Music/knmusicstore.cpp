@@ -2,7 +2,8 @@
 #include <QLineEdit>
 
 #include "knmusiconlinenetease.h"
-#include "knmusicsearchresult.h"
+#include "../../Base/knwidgetswitcher.h"
+#include "knmusicresultview.h"
 
 #include "knmusicstore.h"
 
@@ -13,8 +14,10 @@ KNMusicStore::KNMusicStore(QWidget *parent) :
     setLayout(m_layout);
     m_keywords=new QLineEdit(this);
     m_layout->addWidget(m_keywords);
-    m_result=new KNMusicSearchResult(this);
-    m_layout->addWidget(m_result, 1);
+    m_resultSwitcher=new KNWidgetSwitcher(this);
+    m_layout->addWidget(m_resultSwitcher, 1);
+    m_result=new KNMusicResultView(this);
+    m_resultSwitcher->addWidget(m_result);
 
     KNMusicOnlineNetease *neteaseBackend=new KNMusicOnlineNetease(this);
     connect(m_keywords, &QLineEdit::editingFinished,

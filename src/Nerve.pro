@@ -129,7 +129,6 @@ SOURCES += \
     Modules/Base/knstdlibcategorylistbutton.cpp \
     Modules/Store/Music/knmusiconlinebase.cpp \
     Modules/Store/Music/knmusiconlinenetease.cpp \
-    Modules/Store/Music/knmusicsearchresult.cpp \
     Modules/Store/Widgets/knstoreviewer.cpp \
     Modules/Store/Music/knmusicstore.cpp \
     Modules/Music/Widgets/knmusicloop.cpp \
@@ -146,7 +145,8 @@ SOURCES += \
     Modules/Base/knstdlibfileexplorerpath.cpp \
     Modules/Base/knlibdirmodel.cpp \
     Modules/Base/knstdlibdirmodel.cpp \
-    Modules/Music/Libraries/knmusicplaylistmodel.cpp
+    Modules/Music/Libraries/knmusicplaylistmodel.cpp \
+    Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -257,7 +257,6 @@ HEADERS += \
     Modules/Base/knstdlibcategorylistbutton.h \
     Modules/Store/Music/knmusiconlinebase.h \
     Modules/Store/Music/knmusiconlinenetease.h \
-    Modules/Store/Music/knmusicsearchresult.h \
     Modules/Store/Widgets/knstoreviewer.h \
     Modules/Store/Music/knmusicstore.h \
     Modules/Music/Widgets/knmusicloop.h \
@@ -274,7 +273,8 @@ HEADERS += \
     Modules/Base/knstdlibfileexplorerpath.h \
     Modules/Base/knlibdirmodel.h \
     Modules/Base/knstdlibdirmodel.h \
-    Modules/Music/Libraries/knmusicplaylistmodel.h
+    Modules/Music/Libraries/knmusicplaylistmodel.h \
+    Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \
     res.qrc

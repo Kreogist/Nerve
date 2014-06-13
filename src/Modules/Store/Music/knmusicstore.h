@@ -5,7 +5,8 @@
 
 class QBoxLayout;
 class QLineEdit;
-class KNMusicSearchResult;
+class KNWidgetSwitcher;
+class KNMusicResultView;
 class KNMusicStore : public QWidget
 {
     Q_OBJECT
@@ -18,7 +19,8 @@ public slots:
 
 private:
     QLineEdit *m_keywords;
-    KNMusicSearchResult *m_result;
+    KNMusicResultView *m_result;
+    KNWidgetSwitcher *m_resultSwitcher;
     QBoxLayout *m_layout;
 };
 
