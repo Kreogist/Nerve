@@ -44,6 +44,7 @@ public:
     void setPlaceHolderText(const QString &text);
     void setSearchFocus();
     void clear();
+    QString text() const;
 
 signals:
     void requireLostFocus();

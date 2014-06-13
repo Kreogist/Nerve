@@ -9,6 +9,8 @@ KNStdLibOnlineSessionManager::KNStdLibOnlineSessionManager(QObject *parent) :
     m_session->moveToThread(&m_sessionThread);
     connect(this, &KNStdLibOnlineSessionManager::doPost,
             m_session, &KNStdLibOnlineSession::post);
+    connect(this, &KNStdLibOnlineSessionManager::doGet,
+            m_session, &KNStdLibOnlineSession::get);
     connect(m_session, &KNStdLibOnlineSession::dataReplied,
             this, &KNStdLibOnlineSessionManager::onActionDataReplied);
 
@@ -22,31 +24,50 @@ KNStdLibOnlineSessionManager::~KNStdLibOnlineSessionManager()
     m_session->deleteLater();
 }
 
-QByteArray KNStdLibOnlineSessionManager::takeReplyData()
+KNLibOnlineSessionManager::NetworkReply KNStdLibOnlineSessionManager::takeReplyData()
 {
     return m_replyList.takeFirst();
 }
 
 void KNStdLibOnlineSessionManager::post(const QNetworkRequest &request,
-                                        const QByteArray &data)
+                                        const QByteArray &data,
+                                        const QVariant &id)
 {
     NetworkRequest currentRequest;
     currentRequest.type=Post;
     currentRequest.request=request;
     currentRequest.data=data;
+    currentRequest.id=id;
+    m_requestList.append(currentRequest);
+    processRequest();
+}
+
+void KNStdLibOnlineSessionManager::get(const QNetworkRequest &request,
+                                       const QVariant &id)
+{
+    NetworkRequest currentRequest;
+    currentRequest.type=Get;
+    currentRequest.request=request;
+    currentRequest.id=id;
     m_requestList.append(currentRequest);
     processRequest();
 }
 
 void KNStdLibOnlineSessionManager::onActionDataReplied(const QByteArray &data)
 {
-    m_replyList.append(data);
-    int requestType=m_requestList.first().type;
-    m_requestList.removeFirst();
-    switch(requestType)
+    NetworkReply currentReply;
+    NetworkRequest currentRequest=m_requestList.takeFirst();
+    currentReply.id=currentRequest.id;
+    currentReply.data=data;
+    m_replyList.append(currentReply);
+    switch(currentRequest.type)
     {
     case Post:
         emit postDataUpdate();
+        break;
+    case Get:
+        emit getDataUpdate();
+        break;
     }
     if(!m_requestList.isEmpty())
     {
@@ -64,7 +85,10 @@ void KNStdLibOnlineSessionManager::processRequest()
     switch(currentRequest.type)
     {
     case Post:
-        emit doPost(currentRequest.request, currentRequest.data);
+        emit doPost(currentRequest.request, currentRequest.data, currentRequest.id);
+        return;
+    case Get:
+        emit doGet(currentRequest.request, currentRequest.id);
         return;
     }
 }

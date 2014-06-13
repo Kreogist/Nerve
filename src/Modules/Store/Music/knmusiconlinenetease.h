@@ -17,20 +17,25 @@ public slots:
     void searchMusic(const QString &title);
 
 private slots:
-    void handlePostData();
+    void handleListData();
+    void handleMusicData();
 
 private:
+    void fetchSongData(const QString &songID, const int &songIndex);
+    QByteArray encrypted_id(QByteArray id);
     struct NeteaseSong
     {
-        double id;
-        double duration;
+        int id;
+        int duration;
         QString time;
-        double album;
+        int album;
         QString albumName;
         QString name;
-        QList<double> artist;
+        QList<int> artist;
         QStringList artistName;
         QString artistTotal;
+        QString dfsId;
+        QString url;
     };
     QList<NeteaseSong> m_resultList;
 

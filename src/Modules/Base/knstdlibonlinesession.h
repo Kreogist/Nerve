@@ -21,6 +21,7 @@ signals:
 
 public slots:
     void post(const QNetworkRequest &request, const QByteArray &data);
+    void get(const QNetworkRequest &request);
 
 private slots:
     void handleReplyData(QNetworkReply *replyData);

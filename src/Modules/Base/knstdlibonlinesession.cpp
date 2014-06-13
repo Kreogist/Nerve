@@ -17,6 +17,13 @@ void KNStdLibOnlineSession::post(const QNetworkRequest &request, const QByteArra
     m_working=true;
 }
 
+void KNStdLibOnlineSession::get(const QNetworkRequest &request)
+{
+    resetSearchManager();
+    m_searchManager->get(request);
+    m_working=true;
+}
+
 void KNStdLibOnlineSession::handleReplyData(QNetworkReply *replyData)
 {
     m_working=false;

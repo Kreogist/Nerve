@@ -15,12 +15,21 @@ class KNStdLibOnlineSessionManager : public KNLibOnlineSessionManager
 public:
     explicit KNStdLibOnlineSessionManager(QObject *parent = 0);
     ~KNStdLibOnlineSessionManager();
-    QByteArray takeReplyData();
-    void post(const QNetworkRequest &request, const QByteArray &data);
+    NetworkReply takeReplyData();
+    void post(const QNetworkRequest &request,
+              const QByteArray &data,
+              const QVariant &id=QVariant());
+    void get(const QNetworkRequest &request,
+             const QVariant &id=QVariant());
 
 signals:
     void postDataUpdate();
-    void doPost(const QNetworkRequest &request, const QByteArray &data);
+    void getDataUpdate();
+    void doPost(const QNetworkRequest &request,
+                const QByteArray &data,
+                const QVariant &id);
+    void doGet(const QNetworkRequest &request,
+               const QVariant &id);
 
 public slots:
 
@@ -31,7 +40,8 @@ private:
     void processRequest();
     enum NetworkRequestType
     {
-        Post
+        Post,
+        Get
     };
 
     struct NetworkRequest
@@ -39,9 +49,11 @@ private:
         int type;
         QNetworkRequest request;
         QByteArray data;
+        QVariant id;
     };
+
     QList<NetworkRequest> m_requestList;
-    QList<QByteArray> m_replyList;
+    QList<NetworkReply> m_replyList;
     KNStdLibOnlineSession *m_session;
     QThread m_sessionThread;
 };

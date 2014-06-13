@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class QBoxLayout;
-class QLineEdit;
+class KNSearchBox;
 class KNWidgetSwitcher;
 class KNMusicResultView;
 class KNMusicOnlineNetease;
@@ -23,7 +23,7 @@ private slots:
 
 private:
     KNMusicOnlineNetease *neteaseBackend;
-    QLineEdit *m_keywords;
+    KNSearchBox *m_keywords;
     KNMusicResultView *m_result;
     KNWidgetSwitcher *m_resultSwitcher;
     QBoxLayout *m_layout;

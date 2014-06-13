@@ -121,6 +121,11 @@ void KNSearchBox::clear()
     m_keyText->clear();
 }
 
+QString KNSearchBox::text() const
+{
+    return m_keyText->text();
+}
+
 void KNSearchBox::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
