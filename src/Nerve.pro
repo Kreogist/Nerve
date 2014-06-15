@@ -150,7 +150,8 @@ SOURCES += \
     Modules/Music/Libraries/knmusicnowplaying.cpp \
     Modules/Music/Libraries/knmusicabstractplaylist.cpp \
     Modules/Music/Libraries/knmusicplaylistitem.cpp \
-    Modules/Music/Widgets/knmusicplaylistview.cpp
+    Modules/Music/Widgets/knmusicplaylistview.cpp \
+    Modules/Music/Widgets/knmusicplaylistlistview.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -283,7 +284,8 @@ HEADERS += \
     Modules/Music/Libraries/knmusicnowplaying.h \
     Modules/Music/Libraries/knmusicabstractplaylist.h \
     Modules/Music/Libraries/knmusicplaylistitem.h \
-    Modules/Music/Widgets/knmusicplaylistview.h
+    Modules/Music/Widgets/knmusicplaylistview.h \
+    Modules/Music/Widgets/knmusicplaylistlistview.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

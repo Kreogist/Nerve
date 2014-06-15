@@ -68,7 +68,6 @@ void KNMusicPlaylistManager::loadPlayLists()
         playlistItem->loadPlaylist();
         m_playlistModel->appendRow(playlistItem);
     }
-    emit requireUpdatePlaylistModel(m_playlistModel);
 }
 
 void KNMusicPlaylistManager::savePlayLists()
@@ -185,6 +184,11 @@ QString KNMusicPlaylistManager::nextSong()
 QString KNMusicPlaylistManager::prevSong()
 {
     return m_nowPlaying->prevSong();
+}
+
+QAbstractItemModel *KNMusicPlaylistManager::playlistModel()
+{
+    return m_playlistModel;
 }
 
 void KNMusicPlaylistManager::retranslate()

@@ -42,11 +42,11 @@ public:
     QString prevSong();
 
     //Datas ports.
-    QStringList playlistNameList() const;
+    QAbstractItemModel *playlistModel();
 
 signals:
+    void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
     void playlistListUpdated();
-    void requireUpdatePlaylistModel(QAbstractItemModel *playlistModel);
 
 public slots:
     void retranslate();

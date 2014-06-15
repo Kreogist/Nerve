@@ -3,8 +3,8 @@
 
 #include <QSplitter>
 
-class QTreeView;
 class QAbstractItemModel;
+class KNMusicPlaylistListview;
 class KNMusicPlaylistManager;
 class KNMusicPlaylistView : public QSplitter
 {
@@ -17,10 +17,12 @@ signals:
 
 public slots:
 
+private slots:
+    void onActionShowPlaylist(const QModelIndex &index);
+
 private:
-    void setPlaylistList(QAbstractItemModel *model);
     KNMusicPlaylistManager *m_manager;
-    QTreeView *m_playlistListView;
+    KNMusicPlaylistListview *m_playlistListView;
 };
 
 #endif // KNMUSICPLAYLISTVIEW_H
