@@ -11,7 +11,7 @@ KNLibFilter::KNLibFilter(QObject *parent) :
 {
 }
 
-void KNLibFilter::analysisList(const QList<QUrl> &urls)
+void KNLibFilter::analysisUrls(const QList<QUrl> &urls)
 {
     m_rawFileList.clear();
     QFileInfo currentParser;
@@ -37,7 +37,7 @@ void KNLibFilter::analysisList(const QList<QUrl> &urls)
                          currentPath);
         }
     }
-    m_model->addRawFileItems(m_rawFileList);
+    emit requireAddRawFiles(m_rawFileList);
     m_rawFileList.clear();
 }
 

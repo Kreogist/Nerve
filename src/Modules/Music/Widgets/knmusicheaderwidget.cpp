@@ -123,7 +123,7 @@ void KNMusicHeaderWidget::clearSearch()
 void KNMusicHeaderWidget::onActionPlayInLibrary(const QModelIndex &index)
 {
     m_currentPath=m_musicModel->filePathFromIndex(index);
-    m_playlistManager->playNow(m_currentPath);
+    m_playlistManager->setCurrentPlaying(m_currentPath);
     playCurrent();
 }
 
@@ -135,7 +135,7 @@ void KNMusicHeaderWidget::onActionPlayListPrev()
 //        m_headerPlayer->play();
 //        return;
 //    }
-    QString pathTest=m_playlistManager->prevListSong();
+    QString pathTest=m_playlistManager->prevSong();
     if(pathTest.isEmpty())
     {
         resetPlayer();
@@ -149,7 +149,7 @@ void KNMusicHeaderWidget::onActionPlayListPrev()
 
 void KNMusicHeaderWidget::onActionPlayListNext()
 {
-    QString pathTest=m_playlistManager->nextListSong();
+    QString pathTest=m_playlistManager->nextSong();
     if(pathTest.isEmpty())
     {
         resetPlayer();
@@ -163,7 +163,7 @@ void KNMusicHeaderWidget::onActionPlayListNext()
 
 void KNMusicHeaderWidget::onActionCurrentFinished()
 {
-    QString pathTest=m_playlistManager->nextSong();
+    QString pathTest=m_playlistManager->nextPlayingSong();
     if(pathTest.isEmpty())
     {
         resetPlayer();

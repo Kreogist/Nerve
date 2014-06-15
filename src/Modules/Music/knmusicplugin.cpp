@@ -41,6 +41,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_model=new KNMusicModel;
     m_model->moveToThread(&m_modelThread);
     m_model->setAlbumArtPath(m_musicAlbumArt);
+    connect(this, &KNMusicPlugin::requireAddRawFiles,
+            m_model, &KNMusicModel::addRawFileItems);
 
     //Initial music data base for storage.
     m_database=new KNMusicDatabase;
@@ -56,6 +58,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicViewer->setPlaylistManager(m_playlistManager);
     m_musicViewer->setModel(m_model);
     m_musicViewer->setMusicBackend(m_musicPlayer->backend());
+    connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
+            this, &KNMusicPlugin::requireAnalysisUrls);
+    connect(m_model, &KNMusicModel::requireResort,
+            m_musicViewer, &KNMusicViewer::resort);
 
     //Initial header widget
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
@@ -94,10 +100,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_searcher=new KNMusicFilter;
     m_searcher->moveToThread(&m_searcherThread);
-    m_searcher->setModel(m_model);
-    m_musicViewer->setFilter(m_searcher);
-    connect(m_model, &KNMusicModel::requireResort,
-            m_musicViewer, &KNMusicViewer::resort);
+    setFileFilter(m_searcher);
 
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
@@ -109,6 +112,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicPlayerWidget->setBackend(m_musicPlayer);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireUpdatePlaylistModel,
             m_musicPlayerWidget, &KNMusicPlayerWidget::setPlayListModel);
+
     m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
     m_musicPlayerWidget->setEqualizer(m_equalizer);
     m_musicViewer->setPlayWidget(m_musicPlayerWidget);
@@ -156,6 +160,14 @@ void KNMusicPlugin::applyPlugin()
                             QPixmap(":/Music/Resources/Music/icon.png"),
                             m_musicViewer);
     emit requireAddHeader(m_headerWidget);
+}
+
+void KNMusicPlugin::setFileFilter(KNLibFilter *filter)
+{
+    connect(this, &KNMusicPlugin::requireAnalysisUrls,
+            filter, &KNLibFilter::analysisUrls);
+    connect(filter, &KNLibFilter::requireAddRawFiles,
+            this, &KNMusicPlugin::requireAddRawFiles);
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,

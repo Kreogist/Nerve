@@ -1,4 +1,5 @@
 #include <QVector>
+#include <QUrl>
 #include <QAbstractItemModel>
 #include <QList>
 #include <QPersistentModelIndex>
@@ -144,6 +145,7 @@ KNMusicGlobal::KNMusicGlobal() :
     m_noAlbumImage=QImage(":/Music/Resources/Music/noalbum.png");
     //Don't touch this. I don't why, but it works.
     qRegisterMetaType<KNMusicGlobal::MusicDetailsInfo>("KNMusicGlobal::MusicDetailsInfo");
+    qRegisterMetaType<QList<QUrl>>("QList<QUrl>");
     qRegisterMetaType<QVector<int>>("QVector<int>");
     qRegisterMetaType<QList<QPersistentModelIndex>>("QList<QPersistentModelIndex>");
     qRegisterMetaType<QAbstractItemModel::LayoutChangeHint>("QAbstractItemModel::LayoutChangeHint");

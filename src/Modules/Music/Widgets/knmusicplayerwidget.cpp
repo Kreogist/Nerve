@@ -9,7 +9,6 @@
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusicbackend.h"
 #include "knmusicvisualeffect.h"
-#include "knmusicplaylistviewer.h"
 #include "knmusicheaderplayer.h"
 #include "knmusicplayerwidget.h"
 
@@ -70,8 +69,6 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     m_detailsLayout->addWidget(m_title);
     m_artworkLayout->addLayout(m_detailsLayout, 1);
     m_mainLayout->addLayout(m_artworkLayout);
-    m_playlistViewer=new KNMusicPlaylistViewer(this);
-    m_playlistViewer->hide();
 
     m_equalizerShow=new QPropertyAnimation(this);
     m_equalizerShow->setPropertyName("size");
@@ -102,8 +99,7 @@ void KNMusicPlayerWidget::setBackend(KNMusicBackend *backend)
 
 void KNMusicPlayerWidget::setPlayListModel(QAbstractItemModel *model)
 {
-    m_playlistViewer->setModel(model);
-    m_playlistViewer->resetHeader();
+    ;
 }
 
 void KNMusicPlayerWidget::setHeaderPlayer(KNMusicHeaderPlayer *headerPlayer)

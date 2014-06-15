@@ -2,6 +2,8 @@
 #define KNMUSICPLUIN_H
 
 #include <QThread>
+#include <QList>
+#include <QUrl>
 
 #include "knmusicglobal.h"
 
@@ -9,6 +11,7 @@
 
 class QAction;
 class KNGlobal;
+class KNLibFilter;
 class KNMusicBackend;
 class KNMusicPlayerWidget;
 class KNMusicDatabase;
@@ -29,8 +32,11 @@ public:
     explicit KNMusicPlugin(QObject *parent = 0);
     ~KNMusicPlugin();
     void applyPlugin();
+    void setFileFilter(KNLibFilter *filter);
 
 signals:
+    void requireAnalysisUrls(const QList<QUrl> urls);
+    void requireAddRawFiles(const QStringList &fileList);
 
 public slots:
 

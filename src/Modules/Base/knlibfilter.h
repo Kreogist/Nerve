@@ -18,9 +18,10 @@ public:
     void setModel(KNModel *model);
 
 signals:
+    void requireAddRawFiles(QStringList fileList);
 
 public slots:
-    void analysisList(const QList<QUrl> &urls);
+    void analysisUrls(const QList<QUrl> &urls);
 
 protected:
     virtual int getType(const QString &suffix);

@@ -95,7 +95,6 @@ private:
     KNMusicCategoryView *m_artistView,
                       *m_genreView;
     KNMusicAlbumView *m_albumView;
-    KNMusicPlaylistView *m_playlistView;
 
     KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;

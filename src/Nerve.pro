@@ -133,11 +133,7 @@ SOURCES += \
     Modules/Store/Music/knmusicstore.cpp \
     Modules/Music/Widgets/knmusicloop.cpp \
     Modules/Music/Widgets/knmusiccategoryview.cpp \
-    Modules/Music/Widgets/knmusicplaylistviewer.cpp \
     Modules/Base/knopacitybutton.cpp \
-    Modules/Music/Widgets/knmusicplaylistview.cpp \
-    Modules/Music/Widgets/knmusicplaylistlisteditor.cpp \
-    Modules/Music/Widgets/knmusicplaylistlistview.cpp \
     Modules/Base/knlibfileexplorer.cpp \
     Modules/Base/knstdlibfileexplorer.cpp \
     Modules/Music/Widgets/knmusicfileexplorer.cpp \
@@ -151,7 +147,8 @@ SOURCES += \
     Modules/Base/knlibonlinesessionmanager.cpp \
     Modules/Base/knstdlibonlinesessionmanager.cpp \
     Modules/Store/Music/knmusicresultview.cpp \
-    Modules/Music/Widgets/knmusicplaylistdisplay.cpp
+    Modules/Music/Libraries/knmusicnowplaying.cpp \
+    Modules/Music/Libraries/knmusicabstractplaylist.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -267,11 +264,7 @@ HEADERS += \
     Modules/Store/Music/knmusicstore.h \
     Modules/Music/Widgets/knmusicloop.h \
     Modules/Music/Widgets/knmusiccategoryview.h \
-    Modules/Music/Widgets/knmusicplaylistviewer.h \
     Modules/Base/knopacitybutton.h \
-    Modules/Music/Widgets/knmusicplaylistview.h \
-    Modules/Music/Widgets/knmusicplaylistlisteditor.h \
-    Modules/Music/Widgets/knmusicplaylistlistview.h \
     Modules/Base/knlibfileexplorer.h \
     Modules/Base/knstdlibfileexplorer.h \
     Modules/Music/Widgets/knmusicfileexplorer.h \
@@ -285,7 +278,8 @@ HEADERS += \
     Modules/Base/knlibonlinesessionmanager.h \
     Modules/Base/knstdlibonlinesessionmanager.h \
     Modules/Store/Music/knmusicresultview.h \
-    Modules/Music/Widgets/knmusicplaylistdisplay.h
+    Modules/Music/Libraries/knmusicnowplaying.h \
+    Modules/Music/Libraries/knmusicabstractplaylist.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

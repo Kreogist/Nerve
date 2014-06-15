@@ -17,7 +17,6 @@ public:
                      QWidget *widget);
     void setCategoryIndex(const int &index);
     int categoryIndex() const;
-    void setFilter(KNLibFilter *searcher);
     void moveLeft();
     void moveRight();
 
@@ -27,7 +26,6 @@ public slots:
     void setContentsFocus();
 
 protected:
-    KNLibFilter *m_filter;
 
 private:
     QBoxLayout *m_layout;

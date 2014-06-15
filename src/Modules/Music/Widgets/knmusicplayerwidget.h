@@ -13,7 +13,6 @@ class KNOpacityButton;
 class KNMusicBackend;
 class KNMusicHeaderPlayer;
 class KNMusicVisualEffect;
-class KNMusicPlaylistViewer;
 class KNMusicPlayerWidget : public QWidget
 {
     Q_OBJECT
@@ -50,7 +49,6 @@ private:
     KNMusicHeaderPlayer *m_headerPlayer;
     KNMusicBackend *m_backend;
     KNMusicVisualEffect *m_visualEffect;
-    KNMusicPlaylistViewer *m_playlistViewer;
     KNOpacityButton *m_equalizerControl, *m_playlistControl;
 };
 

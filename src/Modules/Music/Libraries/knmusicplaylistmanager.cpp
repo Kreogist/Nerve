@@ -6,8 +6,7 @@
 
 #include <QDebug>
 
-#include "../Libraries/knmusicmodel.h"
-#include "../Libraries/knmusiccategorydetailmodel.h"
+#include "knmusicnowplaying.h"
 #include "../../knglobal.h"
 
 #include "knmusicplaylistmanager.h"
@@ -29,7 +28,7 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
     }
     m_configureFile=new QFile(m_playlistPath+"Playlists.db", this);
     //Initial category filter model.
-    m_categoryProxyModel=new KNMusicCategoryDetailModel(this);
+    m_nowPlaying=new KNMusicNowPlaying(this);
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
@@ -55,17 +54,6 @@ void KNMusicPlaylistManager::loadPlayLists()
     }
     m_configure=m_configureContent.object();
     m_playlists=m_configure["Playlists"].toArray();
-    //Load all playlists.
-    for(int i=0; i<m_playlists.size(); i++)
-    {
-        if(!loadPlayList(m_playlists.at(i).toString()))
-        {
-            m_playlists.removeAt(i);
-            i--;
-        }
-    }
-    //Emit data updated signal.
-    emit playlistListUpdated();
 }
 
 void KNMusicPlaylistManager::savePlayLists()
@@ -97,32 +85,19 @@ bool KNMusicPlaylistManager::loadPlayList(const QString &filePath)
     }
     QJsonObject playlistObject=playlistContent.object();
     //Append data to list.
-    KNPlayList playlist;
     QJsonArray songList=playlistObject["Songs"].toArray();
-    for(int i=0, songCount=songList.size(); i<songCount; i++)
-    {
-        playlist.songs.append(songList.at(i).toString());
-    }
-    //Add playlist to list.
-    m_playlistNameList.append(playlistObject["Name"].toString());
-    m_playlistList.append(playlist);
+    //Process Data
     return true;
-}
-
-QStringList KNMusicPlaylistManager::playlistNameList() const
-{
-    return m_playlistNameList;
 }
 
 void KNMusicPlaylistManager::setLoopMode(const int &index)
 {
-    m_loopMode=index;
+    m_nowPlaying->setLoopMode(index);
 }
 
 void KNMusicPlaylistManager::createPlaylist(const QString &title)
 {
     //Prepare the playlist data.
-    KNPlayList playlist;
     //Prepare the file name.
     QString baseName=QDateTime::currentDateTime().toString("yyyyMMddhhmmsszzz"),
             playlistPath=m_playlistPath+
@@ -137,11 +112,9 @@ void KNMusicPlaylistManager::createPlaylist(const QString &title)
         playlistFile.setFile(playlistPath);
     }
     //Add to playlist list.
-    m_playlists.append(playlistPath);
-    m_playlistNameList.append(title);
-    m_playlistList.append(playlist);
+    ;
     //Save to file.
-    savePlayList(m_playlistList.size()-1);
+    ;
 }
 
 void KNMusicPlaylistManager::importPlaylist(QStringList filePaths)
@@ -149,292 +122,95 @@ void KNMusicPlaylistManager::importPlaylist(QStringList filePaths)
     for(int i=0; i<filePaths.size(); i++)
     {
         QString currentPath=filePaths.at(i);
-        if(m_playlists.contains(currentPath))
-        {
-            continue;
-        }
-        if(loadPlayList(currentPath))
-        {
-            m_playlists.append(currentPath);
-        }
+        //Process.
     }
-    emit playlistListUpdated();
 }
 
 void KNMusicPlaylistManager::removePlaylist(const int &index)
 {
-    m_playlistNameList.removeAt(index);
-    m_playlistList.removeAt(index);
-    QString removedPath=m_playlists.at(index).toString();
-    if(removedPath.contains(m_playlistPath))
-    {
-        //It's a path in playlist menu, delete it.
-        QFile currentFile(removedPath);
-        currentFile.remove();
-    }
-    m_playlists.removeAt(index);
-}
-
-QString KNMusicPlaylistManager::currentIndexPath()
-{
-    return m_currentPath;
+//    QString removedPath;
+//    if(removedPath.contains(m_playlistPath))
+//    {
+//        //It's a path in playlist menu, delete it.
+//        QFile currentFile(removedPath);
+//        currentFile.remove();
+//    }
 }
 
 void KNMusicPlaylistManager::saveAllChanged()
 {
-    for(int i=0, listSize=m_playlistList.size();
-        i<listSize;
-        i++)
-    {
-        if(m_playlistList.at(i).changed)
-        {
-            savePlayList(i);
-        }
-    }
+//    for(int i=0, listSize=m_playlistList.size();
+//        i<listSize;
+//        i++)
+//    {
+//        //If changed.
+//            savePlayList(i);
+//    }
 }
 
 void KNMusicPlaylistManager::savePlayList(const int &index)
 {
-    KNPlayList saveList=m_playlistList.at(index);
-    QFile playlistFile(m_playlists.at(index).toString());
-    if(playlistFile.open(QIODevice::WriteOnly))
-    {
-        QJsonObject playlistObject;
-        playlistObject["Name"]=m_playlistNameList.at(index);
-        QJsonArray songList;
-        for(int i=0, songCount=saveList.songs.size();
-            i<songCount;
-            i++)
-        {
-            songList.append(saveList.songs.at(i));
-        }
-        playlistObject["Songs"]=songList;
-        QJsonDocument playlistContent;
-        playlistContent.setObject(playlistObject);
-        playlistFile.write(playlistContent.toJson());
-        playlistFile.close();
-        saveList.changed=false;
-        m_playlistList.replace(index, saveList);
-    }
+//    KNPlayList saveList=m_playlistList.at(index);
+//    QFile playlistFile(m_playlists.at(index).toString());
+//    if(playlistFile.open(QIODevice::WriteOnly))
+//    {
+//        QJsonObject playlistObject;
+//        playlistObject["Name"]=m_playlistNameList.at(index);
+//        QJsonArray songList;
+//        for(int i=0, songCount=saveList.songs.size();
+//            i<songCount;
+//            i++)
+//        {
+//            songList.append(saveList.songs.at(i));
+//        }
+//        playlistObject["Songs"]=songList;
+//        QJsonDocument playlistContent;
+//        playlistContent.setObject(playlistObject);
+//        playlistFile.write(playlistContent.toJson());
+//        playlistFile.close();
+//        saveList.changed=false;
+//        m_playlistList.replace(index, saveList);
+//    }
 }
 
 int KNMusicPlaylistManager::loopMode()
 {
-    return m_loopMode;
+    return m_nowPlaying->loopMode();
 }
 
 void KNMusicPlaylistManager::setMusicModel(KNMusicModel *model)
 {
-    m_musicModel=model;
-    m_categoryProxyModel->setSourceModel(m_musicModel);
+    m_nowPlaying->setMusicModel(model);
 }
 
 void KNMusicPlaylistManager::setProxyModel(QSortFilterProxyModel *model)
 {
-    m_usingProxy=true;
-    if(model->filterRegExp().pattern().isEmpty())
-    {
-        m_proxyModel=model;
-        emit requireUpdatePlaylistModel(m_proxyModel);
-        return;
-    }
-    m_categoryProxyModel->setFilterRegExp(model->filterRegExp());
-    m_categoryProxyModel->setSortCaseSensitivity(model->sortCaseSensitivity());
-    m_categoryProxyModel->setSortRole(model->sortRole());
-    m_categoryProxyModel->setFilterKeyColumn(model->filterKeyColumn());
-    m_categoryProxyModel->sort(model->sortColumn(), model->sortOrder());
-    m_proxyModel=m_categoryProxyModel;
-    emit requireUpdatePlaylistModel(m_proxyModel);
+    m_nowPlaying->setProxyModel(model);
 }
 
-void KNMusicPlaylistManager::playNow(const QString &string)
+void KNMusicPlaylistManager::setCurrentPlaying(const QString &string)
 {
-    //If using a proxy, search in the proxy model.
-    if(m_usingProxy)
-    {
-        m_currentPath=string;
-        return;
-    }
-    //Or else, search in the playlist.
-    if(m_currentList->songs.indexOf(string)==-1)
-    {
-        addToCurrentList(string);
-    }
-    m_currentPath=string;
+    m_nowPlaying->setCurrentPlaying(string);
 }
 
 void KNMusicPlaylistManager::addToCurrentList(const QString &index)
 {
-    m_currentList->songs.append(index);
+    ;
+}
+
+QString KNMusicPlaylistManager::nextPlayingSong()
+{
+    return m_nowPlaying->nextPlayingSong();
 }
 
 QString KNMusicPlaylistManager::nextSong()
 {
-    /*! FIXME:
-      Judge whether there's songs wait for playing next*/
-    ;
-    if(m_loopMode==KNMusicGlobal::RepeatSong)
-    {
-        return m_currentPath;
-    }
-    return nextListSong();
+    return m_nowPlaying->nextSong();
 }
 
-QString KNMusicPlaylistManager::nextListSong()
+QString KNMusicPlaylistManager::prevSong()
 {
-    //If we are using proxy mode, search in the proxy model.
-    if(m_usingProxy)
-    {
-        //If current path is empty, set to the initial position.
-        if(m_currentPath.isEmpty())
-        {
-            m_currentPath=
-                    m_musicModel->filePathFromIndex(
-                        m_proxyModel->mapToSource(m_proxyModel->index(0,0)));
-            return m_currentPath;
-        }
-        //Translate to index.
-        int nowPlayingIndex=m_proxyModel->mapFromSource(
-                    m_musicModel->indexFromFilePath(m_currentPath)).row();
-        //Switch to the next according to the loop mode.
-        switch(m_loopMode)
-        {
-        case KNMusicGlobal::RepeatAll:
-            nowPlayingIndex=nowPlayingIndex==m_proxyModel->rowCount()-1?
-                        0:nowPlayingIndex+1;
-            break;
-        case KNMusicGlobal::RepeatSong:
-        case KNMusicGlobal::NoRepeat:
-            if(nowPlayingIndex==m_proxyModel->rowCount()-1)
-            {
-                m_currentPath.clear();
-                return QString();
-            }
-            nowPlayingIndex++;
-            break;
-        }
-        //Translate back to file path.
-        m_currentPath=m_musicModel->filePathFromIndex(
-                    m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
-        return m_currentPath;
-    }
-    //Means using the now playing list.
-    //Check whether the list is empty first.
-    if(m_currentList->songs.isEmpty())
-    {
-        return QString();
-    }
-    //If it's not empty but the current index is -1(invaild),
-    //Set to the first.
-    if(m_currentPath.isEmpty())
-    {
-        m_currentPath=m_currentList->songs.first();
-        return m_currentPath;
-    }
-    int nowPlayingIndex=m_currentList->songs.indexOf(m_currentPath);
-    if(nowPlayingIndex==-1)
-    {
-        nowPlayingIndex=m_currentList->lastPlayingIndex;
-    }
-    switch(m_loopMode)
-    {
-    //RepeatSong: Repeat the single song.
-    case KNMusicGlobal::RepeatAll:
-        nowPlayingIndex=nowPlayingIndex>m_currentList->songs.size()-1?
-                    0:nowPlayingIndex+1;
-        break;
-    case KNMusicGlobal::RepeatSong:
-    case KNMusicGlobal::NoRepeat:
-        if(nowPlayingIndex>m_currentList->songs.size()-1)
-        {
-            m_currentPath.clear();
-            return QString();
-        }
-        nowPlayingIndex++;
-        break;
-    }
-    m_currentList->lastPlayingIndex=nowPlayingIndex;
-    m_currentPath=m_currentList->songs.at(nowPlayingIndex);
-    return m_currentPath;
-}
-
-QString KNMusicPlaylistManager::prevListSong()
-{
-    //If we are using proxy mode, search in the proxy model.
-    if(m_usingProxy)
-    {
-        //If current path is empty, set to the initial position.
-        if(m_currentPath.isEmpty())
-        {
-            m_currentPath=
-                    m_musicModel->filePathFromIndex(
-                        m_proxyModel->mapToSource(m_proxyModel->index(m_proxyModel->rowCount()-1,
-                                                                      0)));
-            return m_currentPath;
-        }
-        //Translate to index.
-        int nowPlayingIndex=m_proxyModel->mapFromSource(
-                    m_musicModel->indexFromFilePath(m_currentPath)).row();
-        //Switch to the next according to the loop mode.
-        switch(m_loopMode)
-        {
-        case KNMusicGlobal::RepeatAll:
-            nowPlayingIndex=nowPlayingIndex==0?
-                        m_proxyModel->rowCount()-1:nowPlayingIndex-1;
-            break;
-        case KNMusicGlobal::RepeatSong:
-        case KNMusicGlobal::NoRepeat:
-            if(nowPlayingIndex==0)
-            {
-                m_currentPath.clear();
-                return QString();
-            }
-            nowPlayingIndex--;
-            break;
-        }
-        //Translate back to file path.
-        m_currentPath=m_musicModel->filePathFromIndex(
-                    m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
-        return m_currentPath;
-    }
-    //Means using the now playing list.
-    //Check whether the list is empty first.
-    if(m_currentList->songs.isEmpty())
-    {
-        return QString();
-    }
-    //If it's not empty but the current index is -1(invaild),
-    //Set to the first.
-    if(m_currentPath.isEmpty())
-    {
-        m_currentPath=m_currentList->songs.last();
-        return m_currentPath;
-    }
-    int nowPlayingIndex=m_currentList->songs.indexOf(m_currentPath);
-    if(nowPlayingIndex==-1)
-    {
-        nowPlayingIndex=m_currentList->lastPlayingIndex;
-    }
-    switch(m_loopMode)
-    {
-    //RepeatSong: Repeat the single song.
-    case KNMusicGlobal::RepeatAll:
-        nowPlayingIndex=nowPlayingIndex<1?
-                    m_currentList->songs.size()-1:nowPlayingIndex-1;
-        break;
-    case KNMusicGlobal::RepeatSong:
-    case KNMusicGlobal::NoRepeat:
-        if(nowPlayingIndex<1)
-        {
-            m_currentPath.clear();
-            return QString();
-        }
-        nowPlayingIndex--;
-        break;
-    }
-    m_currentList->lastPlayingIndex=nowPlayingIndex;
-    m_currentPath=m_currentList->songs.at(nowPlayingIndex);
-    return m_currentPath;
+    return m_nowPlaying->prevSong();
 }
 
 void KNMusicPlaylistManager::retranslate()

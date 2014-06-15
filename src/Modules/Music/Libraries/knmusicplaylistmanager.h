@@ -14,6 +14,7 @@
 
 class QSortFilterProxyModel;
 class QFile;
+class KNMusicNowPlaying;
 class KNMusicModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public QObject
@@ -30,13 +31,13 @@ public:
     //Backend sets.
     void setMusicModel(KNMusicModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
-    void playNow(const QString &string);
+    void setCurrentPlaying(const QString &string);
     void addToCurrentList(const QString &index);
 
     //Song acquirment functions.
+    QString nextPlayingSong();
     QString nextSong();
-    QString nextListSong();
-    QString prevListSong();
+    QString prevSong();
 
     //Datas ports.
     QStringList playlistNameList() const;
@@ -60,15 +61,6 @@ private:
     void savePlayList(const int &index);
     bool loadPlayList(const QString &filePath);
     //Playlist-List data.
-    struct KNPlayList
-    {
-        QStringList songs;
-        //The last playing index is only for reference.
-        int lastPlayingIndex=-1;
-        bool changed=false;
-    };
-    QStringList m_playlistNameList;
-    QList<KNPlayList> m_playlistList;
     //Playlist-List read & write data.
     QJsonDocument m_configureContent;
     QJsonObject m_configure;
@@ -77,17 +69,10 @@ private:
     QFile *m_configureFile;
 
     //Now playing playlist
-    KNPlayList m_nowPlayingList;
-    //Current playlist pointer
-    bool m_usingProxy=false;
-    int m_loopMode=KNMusicGlobal::NoRepeat;
-    KNPlayList *m_currentList;
-    QString m_currentPath, m_playlistPath;
+    KNMusicNowPlaying *m_nowPlaying;
 
-    //Music Database and backends
-    KNMusicModel *m_musicModel;
-    QSortFilterProxyModel *m_proxyModel;
-    KNMusicCategoryDetailModel *m_categoryProxyModel;
+    //Current playlist pointer
+    QString m_currentPath, m_playlistPath;
 
     //Global instance.
     KNMusicGlobal *m_musicGlobal;

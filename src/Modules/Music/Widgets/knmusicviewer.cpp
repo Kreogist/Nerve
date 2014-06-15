@@ -17,7 +17,6 @@
 #include "knmusiclistview.h"
 #include "knmusiccategoryview.h"
 #include "knmusicalbumview.h"
-#include "knmusicplaylistview.h"
 #include "knmusicartistsongs.h"
 #include "knmusicgenresongs.h"
 
@@ -133,8 +132,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
 
-    m_playlistView=new KNMusicPlaylistView(this);
-
+    QWidget *m_playlistView=new QWidget(this);
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
                 m_libraryView);
@@ -176,7 +174,7 @@ KNMusicViewer::~KNMusicViewer()
 
 void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
 {
-    m_playlistView->setPlaylistManager(manager);
+//    m_playlistView->setPlaylistManager(manager);
 }
 
 void KNMusicViewer::setModel(KNMusicModel *model)
@@ -370,7 +368,7 @@ void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 
 void KNMusicViewer::dropEvent(QDropEvent *event)
 {
-    m_filter->analysisList(event->mimeData()->urls());
+    emit requireAnalysisUrls(event->mimeData()->urls());
 }
 
 void KNMusicViewer::resizeEvent(QResizeEvent *event)
