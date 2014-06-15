@@ -1,11 +1,13 @@
 #include <QFile>
 #include <QDir>
+#include <QStandardItemModel>
 #include <QDateTime>
 #include <QSortFilterProxyModel>
 #include <QFileInfo>
 
 #include <QDebug>
 
+#include "knmusicplaylistitem.h"
 #include "knmusicnowplaying.h"
 #include "../../knglobal.h"
 
@@ -29,6 +31,8 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
     m_configureFile=new QFile(m_playlistPath+"Playlists.db", this);
     //Initial category filter model.
     m_nowPlaying=new KNMusicNowPlaying(this);
+    //Initial playlist model.
+    m_playlistModel=new QStandardItemModel(this);
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
@@ -54,6 +58,17 @@ void KNMusicPlaylistManager::loadPlayLists()
     }
     m_configure=m_configureContent.object();
     m_playlists=m_configure["Playlists"].toArray();
+    //Parse configure data.
+    for(int i=0, playlistCount=m_playlists.size();
+        i<playlistCount;
+        i++)
+    {
+        KNMusicPlaylistItem *playlistItem=new KNMusicPlaylistItem;
+        playlistItem->setFilePath(m_playlists.at(i).toString());
+        playlistItem->loadPlaylist();
+        m_playlistModel->appendRow(playlistItem);
+    }
+    emit requireUpdatePlaylistModel(m_playlistModel);
 }
 
 void KNMusicPlaylistManager::savePlayLists()
@@ -63,31 +78,6 @@ void KNMusicPlaylistManager::savePlayLists()
     m_configureFile->open(QIODevice::WriteOnly);
     m_configureFile->write(m_configureContent.toJson());
     m_configureFile->close();
-}
-
-bool KNMusicPlaylistManager::loadPlayList(const QString &filePath)
-{
-    //Open the playlist file.
-    QFile playlistFile(filePath);
-    if(!playlistFile.exists() ||
-            !playlistFile.open(QIODevice::ReadOnly))
-    {
-        return false;
-    }
-    //Read the playlist from file.
-    QByteArray readCache=playlistFile.readAll();
-    playlistFile.close();
-    //Parse document.
-    QJsonDocument playlistContent=QJsonDocument::fromJson(readCache);
-    if(playlistContent.isNull())
-    {
-        return false;
-    }
-    QJsonObject playlistObject=playlistContent.object();
-    //Append data to list.
-    QJsonArray songList=playlistObject["Songs"].toArray();
-    //Process Data
-    return true;
 }
 
 void KNMusicPlaylistManager::setLoopMode(const int &index)
@@ -128,49 +118,33 @@ void KNMusicPlaylistManager::importPlaylist(QStringList filePaths)
 
 void KNMusicPlaylistManager::removePlaylist(const int &index)
 {
-//    QString removedPath;
-//    if(removedPath.contains(m_playlistPath))
-//    {
-//        //It's a path in playlist menu, delete it.
-//        QFile currentFile(removedPath);
-//        currentFile.remove();
-//    }
+    KNMusicPlaylistItem *removedItem=
+            static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(index, 0));
+    QString removedPath=removedItem->filePath();
+    if(removedPath.contains(m_playlistPath))
+    {
+        //It's a path in playlist menu, delete it.
+        if(!removedItem->removedFile())
+        {
+            //Cannot remove the file.
+            qDebug()<<"Cannot remove file!";
+            return;
+        }
+    }
+    m_playlistModel->removeRow(index);
 }
 
 void KNMusicPlaylistManager::saveAllChanged()
 {
-//    for(int i=0, listSize=m_playlistList.size();
-//        i<listSize;
-//        i++)
-//    {
-//        //If changed.
-//            savePlayList(i);
-//    }
-}
-
-void KNMusicPlaylistManager::savePlayList(const int &index)
-{
-//    KNPlayList saveList=m_playlistList.at(index);
-//    QFile playlistFile(m_playlists.at(index).toString());
-//    if(playlistFile.open(QIODevice::WriteOnly))
-//    {
-//        QJsonObject playlistObject;
-//        playlistObject["Name"]=m_playlistNameList.at(index);
-//        QJsonArray songList;
-//        for(int i=0, songCount=saveList.songs.size();
-//            i<songCount;
-//            i++)
-//        {
-//            songList.append(saveList.songs.at(i));
-//        }
-//        playlistObject["Songs"]=songList;
-//        QJsonDocument playlistContent;
-//        playlistContent.setObject(playlistObject);
-//        playlistFile.write(playlistContent.toJson());
-//        playlistFile.close();
-//        saveList.changed=false;
-//        m_playlistList.replace(index, saveList);
-//    }
+    for(int i=0, listSize=m_playlistModel->rowCount();
+        i<listSize;
+        i++)
+    {
+        //If changed.
+        KNMusicPlaylistItem *currentItem=
+                static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(i, 0));
+        currentItem->savePlayList();
+    }
 }
 
 int KNMusicPlaylistManager::loopMode()

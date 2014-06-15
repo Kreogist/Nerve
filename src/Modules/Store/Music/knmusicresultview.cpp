@@ -27,6 +27,9 @@ void KNMusicResultItemDelegate::paint(QPainter *painter,
     QTextOption displayOption;
     displayOption.setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     displayOption.setWrapMode(QTextOption::WrapAnywhere);
+    painter->setPen(options.state & QStyle::State_Selected?
+                    options.palette.color(QPalette::HighlightedText):
+                    options.palette.color(QPalette::Text));
     painter->drawText(QRectF(options.rect),
                       displayText,
                       displayOption);

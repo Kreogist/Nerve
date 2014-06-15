@@ -109,6 +109,7 @@ private:
                                    *m_genreSortModel;
 
     KNMusicArtistSongs *m_artistSongView;
+    KNMusicPlaylistView *m_playlistView;
     KNMusicGenreSongs *m_genreSongView;
 
     KNMusicModel *m_sourceModel;

@@ -13,8 +13,10 @@
 #include "../knmusicglobal.h"
 
 class QSortFilterProxyModel;
+class QStandardItemModel;
 class QFile;
 class KNMusicNowPlaying;
+class KNMusicPlaylistItem;
 class KNMusicModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public QObject
@@ -58,9 +60,6 @@ public slots:
 private:
     QString currentIndexPath();
     void saveAllChanged();
-    void savePlayList(const int &index);
-    bool loadPlayList(const QString &filePath);
-    //Playlist-List data.
     //Playlist-List read & write data.
     QJsonDocument m_configureContent;
     QJsonObject m_configure;
@@ -73,6 +72,7 @@ private:
 
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
+    QStandardItemModel *m_playlistModel;
 
     //Global instance.
     KNMusicGlobal *m_musicGlobal;
