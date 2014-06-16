@@ -40,11 +40,15 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
     m_playlistModel=new QStandardItemModel(this);
     m_playlistDataModel=new KNMusicModel(this);
     m_infoCollectManager=new KNMusicInfoCollectorManager;
+    m_infoCollectManager->moveToThread(&m_infoThread);
     m_playlistDataModel->setInfoCollectorManager(m_infoCollectManager);
+    m_infoThread.start();
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
 {
+    m_infoThread.quit();
+    m_infoThread.wait();
     m_infoCollectManager->deleteLater();
     saveAllChanged();
     savePlayLists();

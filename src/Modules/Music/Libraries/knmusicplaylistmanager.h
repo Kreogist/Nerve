@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonArray>
+#include <QThread>
 #include <QPixmap>
 
 #include "../../knglobal.h"
@@ -81,6 +82,7 @@ private:
                  *m_playlistDataModel;
     KNMusicInfoCollectorManager *m_infoCollectManager;
     QStandardItemModel *m_playlistModel;
+    QThread m_infoThread;
 
     //Global instance.
     KNMusicGlobal *m_musicGlobal;
