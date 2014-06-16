@@ -159,6 +159,7 @@ KNMusicDetailInfo::KNMusicDetailInfo(QWidget *parent) :
 
     m_detailViewer=new QTreeView(this);
     m_detailViewer->setAnimated(true);
+    m_detailViewer->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     m_detailViewer->setAllColumnsShowFocus(true);
     m_switcher->addCategory(QPixmap(":/Music/Resources/Music/details/Treeview.png"), "Details", m_detailViewer);
 

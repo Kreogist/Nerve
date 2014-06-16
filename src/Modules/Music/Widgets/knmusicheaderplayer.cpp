@@ -55,6 +55,7 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                                 this);
     albumArtLayout->setContentsMargins(0,0,0,0);
+    albumArtLayout->setSpacing(10);
     setLayout(albumArtLayout);
 
     m_albumArt=new KNMusicHeaderAlbumArt(this);
@@ -74,7 +75,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 
     QBoxLayout *detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                                 albumArtLayout->widget());
-
+    detailsArtLayout->setContentsMargins(0,10,0,10);
+    detailsArtLayout->setSpacing(0);
     m_title=new QLabel(this);
     m_textPalette=m_title->palette();
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255));
@@ -93,14 +95,14 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     m_loopControl=new KNMusicLoop(this);
     connect(m_loopControl, &KNMusicLoop::requireChangeLoopType,
             this, &KNMusicHeaderPlayer::requireChangeLoop);
-    durationLayout->addWidget(m_loopControl);
+    durationLayout->addWidget(m_loopControl, 0, Qt::AlignVCenter);
     //Add duration display.
     m_time=new KNLabelEditor(this);
-    m_time->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    m_time->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_time->setPalette(m_textPalette);
     connect(m_time, &KNLabelEditor::textEdited,
             this, &KNMusicHeaderPlayer::onActionTimeEdited);
-    durationLayout->addWidget(m_time);
+    durationLayout->addWidget(m_time, 0, Qt::AlignVCenter);
     //Add playing progress slider displayer
     m_progress=new KNPlayerProgress(this);
     m_progress->setMinimumWidth(200);
@@ -111,7 +113,7 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
                     m_sliderPressed=false;
                     m_player->setPosition(m_progress->value());
                });
-    durationLayout->addWidget(m_progress, 1);
+    durationLayout->addWidget(m_progress, 1, Qt::AlignVCenter);
     detailsArtLayout->addLayout(durationLayout);
     albumArtLayout->addLayout(detailsArtLayout);
 
@@ -294,7 +296,7 @@ void KNMusicHeaderPlayer::onActionReachEndOfMusic()
 void KNMusicHeaderPlayer::onActionMouseInOut(const QVariant &controlPos)
 {
     QPoint controlPosition=controlPos.toPoint();
-    m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255,-controlPosition.y()*6));
+    m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255,-controlPosition.y()*5));
     m_title->setPalette(m_textPalette);
     m_artistAlbum->setPalette(m_textPalette);
 }
