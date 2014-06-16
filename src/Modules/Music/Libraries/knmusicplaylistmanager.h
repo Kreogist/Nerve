@@ -21,6 +21,7 @@ class KNMusicInfoCollectorManager;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
 class KNMusicModel;
+class KNMusicPlaylistModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public QObject
 {
@@ -78,11 +79,11 @@ private:
 
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
-    KNMusicModel *m_musicModel,
-                 *m_playlistDataModel;
+    KNMusicModel *m_musicModel;
+    KNMusicPlaylistModel *m_playlistDataModel;
     KNMusicInfoCollectorManager *m_infoCollectManager;
     QStandardItemModel *m_playlistModel;
-    QThread m_infoThread;
+    QThread m_dataModelThread, m_infoThread;
 
     //Global instance.
     KNMusicGlobal *m_musicGlobal;

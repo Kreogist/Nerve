@@ -11,6 +11,7 @@
 #include "knmusicplaylistitem.h"
 #include "knmusicnowplaying.h"
 #include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusicplaylistmodel.h"
 #include "../Libraries/knmusicinfocollectormanager.h"
 #include "../../knglobal.h"
 
@@ -38,18 +39,23 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
             this, &KNMusicPlaylistManager::requireUpdatePlaylistModel);
     //Initial playlist model.
     m_playlistModel=new QStandardItemModel(this);
-    m_playlistDataModel=new KNMusicModel(this);
+    m_playlistDataModel=new KNMusicPlaylistModel;
+    m_playlistDataModel->moveToThread(&m_dataModelThread);
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_infoThread);
     m_playlistDataModel->setInfoCollectorManager(m_infoCollectManager);
     m_infoThread.start();
+    m_dataModelThread.start();
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
 {
     m_infoThread.quit();
+    m_dataModelThread.quit();
     m_infoThread.wait();
+    m_dataModelThread.wait();
     m_infoCollectManager->deleteLater();
+    m_playlistDataModel->deleteLater();
     saveAllChanged();
     savePlayLists();
 }
