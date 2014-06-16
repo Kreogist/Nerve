@@ -37,6 +37,7 @@ protected:
     void closeEvent(QCloseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void leaveEvent(QEvent *event);
+    void hideEvent(QHideEvent *event);
     void startDrag(Qt::DropActions supportedActions);
     bool event(QEvent *event);
 

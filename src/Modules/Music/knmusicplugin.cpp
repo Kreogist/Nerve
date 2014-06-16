@@ -52,6 +52,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     //Initial playlist manager.
     m_playlistManager=new KNMusicPlaylistManager(this);
+    m_playlistManager->setMusicBackend(m_musicPlayer->backend());
 
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());

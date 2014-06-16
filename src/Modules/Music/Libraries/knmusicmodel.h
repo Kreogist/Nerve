@@ -15,6 +15,7 @@ class KNMusicModel : public KNModel
 public:
     explicit KNMusicModel(QObject *parent = 0);
     ~KNMusicModel();
+    void resetHeader();
     QString filePathFromIndex(const QModelIndex &index);
     QString filePathFromIndex(const int &index);
     QModelIndex indexFromFilePath(const QString &filePath);
@@ -23,6 +24,7 @@ public:
     QImage artwork(const int &row) const;
     QImage artworkFromKey(const QString &key) const;
     QString itemArtworkKey(const int &row) const;
+    QList<QStandardItem *> songRow(const int &row) const;
     void addRawFileItem(QString filePath);
     void addRawFileItems(QStringList fileList);
     void setAlbumArtPath(const QString &path);

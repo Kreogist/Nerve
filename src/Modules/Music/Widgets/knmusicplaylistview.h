@@ -6,6 +6,8 @@
 class QAbstractItemModel;
 class KNMusicPlaylistListview;
 class KNMusicPlaylistManager;
+class KNMusicPlaylistDisplay;
+class KNMusicPlaylistSongs;
 class KNMusicPlaylistView : public QSplitter
 {
     Q_OBJECT
@@ -23,6 +25,8 @@ private slots:
 private:
     KNMusicPlaylistManager *m_manager;
     KNMusicPlaylistListview *m_playlistListView;
+    KNMusicPlaylistDisplay *m_displayer;
+    KNMusicPlaylistSongs *m_songsView;
 };
 
 #endif // KNMUSICPLAYLISTVIEW_H

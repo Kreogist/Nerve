@@ -179,6 +179,12 @@ void KNMusicListViewBase::leaveEvent(QEvent *event)
     QTreeView::leaveEvent(event);
 }
 
+void KNMusicListViewBase::hideEvent(QHideEvent *event)
+{
+    QTreeView::hideEvent(event);
+    m_musicDetailTooltip->hide();
+}
+
 void KNMusicListViewBase::startDrag(Qt::DropActions supportedActions)
 {
     QModelIndexList indexes=selectedIndexes();

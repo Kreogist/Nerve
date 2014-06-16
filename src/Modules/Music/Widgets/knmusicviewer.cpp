@@ -204,6 +204,7 @@ void KNMusicViewer::setMusicBackend(KNLibBass *backend)
     m_artistSongView->setMusicBackend(backend);
     m_albumView->setMusicBackend(backend);
     m_genreSongView->setMusicBackend(backend);
+    ;
 }
 
 bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)

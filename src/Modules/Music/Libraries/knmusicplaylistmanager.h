@@ -15,6 +15,8 @@
 class QSortFilterProxyModel;
 class QStandardItemModel;
 class QFile;
+class KNLibBass;
+class KNMusicInfoCollectorManager;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
 class KNMusicModel;
@@ -31,6 +33,7 @@ public:
     int loopMode();
 
     //Backend sets.
+    void setMusicBackend(KNLibBass *backend);
     void setMusicModel(KNMusicModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
@@ -43,6 +46,7 @@ public:
 
     //Datas ports.
     QAbstractItemModel *playlistModel();
+    QAbstractItemModel *playlistDataModel();
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
@@ -56,6 +60,7 @@ public slots:
     void createPlaylist(const QString &title);
     void importPlaylist(QStringList filePaths);
     void removePlaylist(const int &index);
+    void setPlaylist(const int &index);
 
 private:
     QString currentIndexPath();
@@ -72,6 +77,9 @@ private:
 
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
+    KNMusicModel *m_musicModel,
+                 *m_playlistDataModel;
+    KNMusicInfoCollectorManager *m_infoCollectManager;
     QStandardItemModel *m_playlistModel;
 
     //Global instance.

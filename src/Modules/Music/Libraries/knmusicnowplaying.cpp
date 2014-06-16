@@ -154,4 +154,3 @@ void KNMusicNowPlaying::setLoopMode(const int &index)
 {
     m_loopMode=index;
 }
-

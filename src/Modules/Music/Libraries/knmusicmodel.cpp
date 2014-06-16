@@ -27,6 +27,34 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     //Initial the music global.
     m_musicGlobal=KNMusicGlobal::instance();
 
+    //Reset header data.
+    resetHeader();
+
+    //The album art process list.
+    //All the album art data will get from here.
+    m_pixmapList=new KNLibHashPixmapList;
+    m_pixmapList->moveToThread(&m_pixmapListThread);
+    connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
+            this, &KNMusicModel::onActionUpdatePixmap);
+    connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
+            this, &KNMusicModel::onActionImageLoadComplete);
+    connect(this, &KNMusicModel::requireLoadImage,
+            m_pixmapList, &KNLibHashPixmapList::loadImages);
+
+    //Start pixmap list thread.
+    m_pixmapListThread.start();
+}
+
+KNMusicModel::~KNMusicModel()
+{
+    m_pixmapListThread.quit();
+    m_pixmapListThread.wait();
+
+    m_pixmapList->deleteLater();
+}
+
+void KNMusicModel::resetHeader()
+{
     //Set the header text.
     QStringList header;
     for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
@@ -55,28 +83,6 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     setHeaderData(KNMusicGlobal::DateAdded, Qt::Horizontal, 4, Qt::UserRole);
     setHeaderData(KNMusicGlobal::DateModified, Qt::Horizontal, 4, Qt::UserRole);
     setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
-
-    //The album art process list.
-    //All the album art data will get from here.
-    m_pixmapList=new KNLibHashPixmapList;
-    m_pixmapList->moveToThread(&m_pixmapListThread);
-    connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
-            this, &KNMusicModel::onActionUpdatePixmap);
-    connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
-            this, &KNMusicModel::onActionImageLoadComplete);
-    connect(this, &KNMusicModel::requireLoadImage,
-            m_pixmapList, &KNLibHashPixmapList::loadImages);
-
-    //Start pixmap list thread.
-    m_pixmapListThread.start();
-}
-
-KNMusicModel::~KNMusicModel()
-{
-    m_pixmapListThread.quit();
-    m_pixmapListThread.wait();
-
-    m_pixmapList->deleteLater();
 }
 
 QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
@@ -122,6 +128,19 @@ QImage KNMusicModel::artworkFromKey(const QString &key) const
 QString KNMusicModel::itemArtworkKey(const int &row) const
 {
     return data(index(row, KNMusicGlobal::Name), ArtworkKeyRole).toString();
+}
+
+QList<QStandardItem *> KNMusicModel::songRow(const int &row) const
+{
+    QList<QStandardItem *> songRowData;
+    if(row>-1 && row<rowCount())
+    {
+        for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
+        {
+            songRowData.append(item(row, i)->clone());
+        }
+    }
+    return songRowData;
 }
 
 void KNMusicModel::addRawFileItem(QString filePath)

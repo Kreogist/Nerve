@@ -4,6 +4,8 @@
 #include <QJsonParseError>
 #include <QJsonArray>
 
+#include <QDebug>
+
 #include "knmusicplaylistitem.h"
 
 KNMusicPlaylistItem::KNMusicPlaylistItem() :

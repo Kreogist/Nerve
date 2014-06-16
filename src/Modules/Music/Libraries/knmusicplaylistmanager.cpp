@@ -3,12 +3,15 @@
 #include <QStandardItemModel>
 #include <QDateTime>
 #include <QSortFilterProxyModel>
+#include <QDataStream>
 #include <QFileInfo>
 
 #include <QDebug>
 
 #include "knmusicplaylistitem.h"
 #include "knmusicnowplaying.h"
+#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusicinfocollectormanager.h"
 #include "../../knglobal.h"
 
 #include "knmusicplaylistmanager.h"
@@ -31,12 +34,18 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
     m_configureFile=new QFile(m_playlistPath+"Playlists.db", this);
     //Initial category filter model.
     m_nowPlaying=new KNMusicNowPlaying(this);
+    connect(m_nowPlaying, &KNMusicNowPlaying::requireUpdatePlaylistModel,
+            this, &KNMusicPlaylistManager::requireUpdatePlaylistModel);
     //Initial playlist model.
     m_playlistModel=new QStandardItemModel(this);
+    m_playlistDataModel=new KNMusicModel(this);
+    m_infoCollectManager=new KNMusicInfoCollectorManager;
+    m_playlistDataModel->setInfoCollectorManager(m_infoCollectManager);
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
 {
+    m_infoCollectManager->deleteLater();
     saveAllChanged();
     savePlayLists();
 }
@@ -133,6 +142,27 @@ void KNMusicPlaylistManager::removePlaylist(const int &index)
     m_playlistModel->removeRow(index);
 }
 
+void KNMusicPlaylistManager::setPlaylist(const int &index)
+{
+    KNMusicPlaylistItem *currentItem=
+               static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(index));
+    QStringList fileList=currentItem->playlist();
+    m_playlistDataModel->clear();
+    m_playlistDataModel->resetHeader();
+    for(int i=0; i<fileList.size(); i++)
+    {
+        QModelIndex fileSearch=m_musicModel->indexFromFilePath(fileList.at(i));
+        if(fileSearch.isValid())
+        {
+            m_playlistDataModel->appendRow(m_musicModel->songRow(fileSearch.row()));
+        }
+        else
+        {
+            m_playlistDataModel->addRawFileItem(fileList.at(i));
+        }
+    }
+}
+
 void KNMusicPlaylistManager::saveAllChanged()
 {
     for(int i=0, listSize=m_playlistModel->rowCount();
@@ -151,9 +181,15 @@ int KNMusicPlaylistManager::loopMode()
     return m_nowPlaying->loopMode();
 }
 
+void KNMusicPlaylistManager::setMusicBackend(KNLibBass *backend)
+{
+    m_infoCollectManager->setMusicBackend(backend);
+}
+
 void KNMusicPlaylistManager::setMusicModel(KNMusicModel *model)
 {
-    m_nowPlaying->setMusicModel(model);
+    m_musicModel=model;
+    m_nowPlaying->setMusicModel(m_musicModel);
 }
 
 void KNMusicPlaylistManager::setProxyModel(QSortFilterProxyModel *model)
@@ -189,6 +225,11 @@ QString KNMusicPlaylistManager::prevSong()
 QAbstractItemModel *KNMusicPlaylistManager::playlistModel()
 {
     return m_playlistModel;
+}
+
+QAbstractItemModel *KNMusicPlaylistManager::playlistDataModel()
+{
+    return m_playlistDataModel;
 }
 
 void KNMusicPlaylistManager::retranslate()
