@@ -126,9 +126,19 @@ void KNPlayerProgress::mouseReleaseEvent(QMouseEvent *event)
 void KNPlayerProgress::wheelEvent(QWheelEvent *event)
 {
     KNAbstractSlider::wheelEvent(event);
-    setValue(event->pixelDelta().x()==0?
-                 value()+event->pixelDelta().y():
-                 value()+event->pixelDelta().x());
+    if(event->pixelDelta()==QPoint(0,0))
+    {
+        QPoint dataPoint=event->angleDelta()/120;
+        setValue(dataPoint.x()==0?
+                     value()+(dataPoint.y()<0?-1:1)*pow(2,qAbs(dataPoint.y())):
+                     value()+(dataPoint.x()<0?-1:1)*pow(2,qAbs(dataPoint.x())));
+    }
+    else
+    {
+        setValue(event->pixelDelta().x()==0?
+                     value()+event->pixelDelta().y():
+                     value()+event->pixelDelta().x());
+    }
     emit sliderReleased();
 }
 
