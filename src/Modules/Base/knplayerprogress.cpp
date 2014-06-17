@@ -128,10 +128,10 @@ void KNPlayerProgress::wheelEvent(QWheelEvent *event)
     KNAbstractSlider::wheelEvent(event);
     if(event->pixelDelta()==QPoint(0,0))
     {
-        QPoint dataPoint=event->angleDelta()/120;
+        QPoint dataPoint=event->angleDelta()/40;
         setValue(dataPoint.x()==0?
-                     value()+(dataPoint.y()<0?-1:1)*pow(2,qAbs(dataPoint.y())):
-                     value()+(dataPoint.x()<0?-1:1)*pow(2,qAbs(dataPoint.x())));
+                     value()+(dataPoint.y()):
+                     value()+(dataPoint.x()));
     }
     else
     {

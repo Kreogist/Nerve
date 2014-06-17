@@ -7,47 +7,37 @@
 
 #include <QObject>
 
+//Include all public libraries.
+#include "bass.h"
+#include "bass_ac3.h"
+#include "bass_ape.h"
+#include "bass_fx.h"
+#include "bass_mpc.h"
+#include "bass_spx.h"
+#include "bass_tta.h"
+#include "bassenc.h"
+#include "bassflac.h"
+#include "bassmidi.h"
+#include "bassmix.h"
+#include "basswv.h"
+#include "bassopus.h"
+
 #ifdef Q_OS_WIN32
 //Include all win32 bass libraries
-#include "win32/bass.h"
-#include "win32/bass_aac.h"
-#include "win32/bass_ac3.h"
-#include "win32/bass_aix.h"
-#include "win32/bass_alac.h"
-#include "win32/bass_ape.h"
-#include "win32/bass_fx.h"
-#include "win32/bass_mpc.h"
-#include "win32/bass_ofr.h"
-#include "win32/bass_spx.h"
-#include "win32/bass_tta.h"
-#include "win32/basscd.h"
-#include "win32/bassenc.h"
-#include "win32/bassflac.h"
-#include "win32/bassmidi.h"
-#include "win32/bassmix.h"
-#include "win32/bassopus.h"
-#include "win32/basswma.h"
-#include "win32/basswv.h"
-#include "win32/bpm.h"
-#include "win32/dsp.h"
-#include "win32/reverse.h"
-#include "win32/tempo.h"
+#include "bass_aac.h"
+#include "bass_aix.h"
+#include "bass_alac.h"
+#include "bass_ofr.h"
+#include "basscd.h"
+#include "basswma.h"
+#include "bpm.h"
+#include "dsp.h"
+#include "reverse.h"
+#include "tempo.h"
 #endif
 
 #ifdef Q_OS_MACX
-#include "macosx/bass.h"
-#include "macosx/bass_ac3.h"
-#include "macosx/bass_ape.h"
-#include "macosx/bass_fx.h"
-#include "macosx/bass_mpc.h"
-#include "macosx/bass_spx.h"
-#include "macosx/bass_tta.h"
-#include "macosx/bassenc.h"
-#include "macosx/bassflac.h"
-#include "macosx/bassmidi.h"
-#include "macosx/bassmix.h"
-#include "macosx/bassopus.h"
-#include "macosx/basswv.h"
+#include "bass_vst.h"
 #endif
 
 class KNLibBass : public QObject

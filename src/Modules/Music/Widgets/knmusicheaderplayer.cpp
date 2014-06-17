@@ -106,6 +106,13 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     //Add playing progress slider displayer
     m_progress=new KNPlayerProgress(this);
     m_progress->setMinimumWidth(200);
+    connect(m_progress, &KNPlayerProgress::valueChanged,
+            [=](const int &position)
+            {
+                QString second=QString::number(position%60);
+                m_time->setText(QString::number(position/60)+":"+
+                                (second.length()==1?"0"+second:second));
+            });
     connect(m_progress, &KNPlayerProgress::sliderPressed,
             [=]{m_sliderPressed=true;});
     connect(m_progress, &KNPlayerProgress::sliderReleased,
@@ -271,16 +278,11 @@ void KNMusicHeaderPlayer::resizeEvent(QResizeEvent *event)
 
 void KNMusicHeaderPlayer::onActionPositonChanged(const int &position)
 {
-//    m_player->getGraphicData(m_visualEffect->fftData());
-//    m_visualEffect->update();
     if(m_sliderPressed)
     {
         return;
     }
     m_progress->setValue(position);
-    QString second=QString::number(position%60);
-    m_time->setText(QString::number(position/60)+":"+
-                    (second.length()==1?"0"+second:second));
 }
 
 void KNMusicHeaderPlayer::onActionDurationChanged(const int &duration)
