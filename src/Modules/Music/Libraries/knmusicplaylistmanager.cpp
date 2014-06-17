@@ -152,7 +152,7 @@ void KNMusicPlaylistManager::removePlaylist(const int &index)
     m_playlistModel->removeRow(index);
 }
 
-void KNMusicPlaylistManager::setPlaylist(const int &index)
+QString KNMusicPlaylistManager::setModelPlaylist(const int &index)
 {
     KNMusicPlaylistItem *currentItem=
                static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(index));
@@ -171,6 +171,21 @@ void KNMusicPlaylistManager::setPlaylist(const int &index)
             m_playlistDataModel->addRawFileItem(fileList.at(i));
         }
     }
+    return currentItem->filePath();
+}
+
+void KNMusicPlaylistManager::setPlaylist(const QString &filePath)
+{
+    QModelIndexList fileCheck=m_playlistModel->match(m_playlistModel->index(0,0),
+                                                     KNMusicPlaylistItem::FilePath,
+                                                     filePath);
+    if(fileCheck.isEmpty())
+    {
+        return;
+    }
+    KNMusicPlaylistItem *currentItem=
+               static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(fileCheck.first().row()));
+//    m_nowPlaying->setPlaylist(*currentItem->playlist());
 }
 
 void KNMusicPlaylistManager::saveAllChanged()

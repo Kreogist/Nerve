@@ -12,9 +12,18 @@ KNMusicTagWAV::KNMusicTagWAV(QObject *parent) :
     m_id3v2Parser=new KNMusicTagID3v2(this);
 }
 
+void KNMusicTagWAV::clearCache()
+{
+    for(int i=0; i<WAVItemCount; i++)
+    {
+        m_wavFrameData[i].clear();
+    }
+}
+
 bool KNMusicTagWAV::readTag(const QFile &mediaFile,
                             QDataStream &mediaData)
 {
+    clearCache();
     if(mediaFile.size()<12)
     {
         return false;

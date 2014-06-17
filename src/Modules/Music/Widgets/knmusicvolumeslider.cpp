@@ -108,6 +108,21 @@ void KNMusicVolumeSlider::mouseReleaseEvent(QMouseEvent *event)
     KNAbstractSlider::mouseReleaseEvent(event);
 }
 
+void KNMusicVolumeSlider::wheelEvent(QWheelEvent *event)
+{
+    KNAbstractSlider::wheelEvent(event);
+    if(event->pixelDelta()==QPoint(0,0))
+    {
+        setValue(event->angleDelta().x()==0?
+                     value()+(event->angleDelta().y()<<1):
+                     value()+(event->angleDelta().x()<<1));
+        return;
+    }
+    setValue(event->pixelDelta().x()==0?
+                 value()+(event->pixelDelta().y()<<7):
+                 value()+(event->pixelDelta().x()<<7));
+}
+
 void KNMusicVolumeSlider::updateButtonPosition()
 {
     m_buttonLeft=m_value/m_range*m_mouseRange+

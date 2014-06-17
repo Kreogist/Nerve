@@ -326,12 +326,12 @@ void KNLibBass::loadPlugins()
             if(plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toLocal8Bit().data(), 0))
 #endif
             {
-                const BASS_PLUGININFO *pinfo=BASS_PluginGetInfo(plug);
+//                const BASS_PLUGININFO *pinfo=BASS_PluginGetInfo(plug);
                 //formatc -> Format count
-                for(DWORD i=0; i<pinfo->formatc; i++)
-                {
-                    //qDebug()<<pinfo->formats[i].exts;
-                }
+//                for(DWORD i=0; i<pinfo->formatc; i++)
+//                {
+//                    qDebug()<<pinfo->formats[i].exts;
+//                }
             }
         }
     }
