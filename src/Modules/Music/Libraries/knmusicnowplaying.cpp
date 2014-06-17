@@ -32,6 +32,7 @@ void KNMusicNowPlaying::setProxyModel(QSortFilterProxyModel *model)
     m_proxyModel=m_categoryProxyModel;
     emit requireUpdatePlaylistModel(m_proxyModel);
 }
+
 bool KNMusicNowPlaying::usingProxy() const
 {
     return m_usingProxy;
@@ -147,10 +148,29 @@ void KNMusicNowPlaying::setCurrentPlaying(const QString &string)
         return;
     }
     //Or else, search in the playlist.
-    m_currentPath=string;
+    if(m_playlist->contains(m_currentPath))
+    {
+        m_currentPath=string;
+    }
+    //Then it means: we cannot find the file anywhere?! Might a new file from
+    //disk, create a temp playlist for it.
+    m_temporaryPlaylist=QStringList(string);
+//    m_playlist=m_temporaryPlaylist;
 }
 
 void KNMusicNowPlaying::setLoopMode(const int &index)
 {
     m_loopMode=index;
 }
+
+QStringList *KNMusicNowPlaying::playlist() const
+{
+    return m_playlist;
+}
+
+void KNMusicNowPlaying::setPlaylist(QStringList *playlist)
+{
+    m_usingProxy=false;
+    m_playlist=playlist;
+}
+

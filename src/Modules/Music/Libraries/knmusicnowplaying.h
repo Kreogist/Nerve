@@ -1,6 +1,8 @@
 #ifndef KNMUSICNOWPLAYING_H
 #define KNMUSICNOWPLAYING_H
 
+#include <QStringList>
+
 #include "../knmusicglobal.h"
 
 #include "knmusicabstractplaylist.h"
@@ -21,6 +23,8 @@ public:
     QString nextPlayingSong();
     int loopMode();
     void setCurrentPlaying(const QString &string);
+    QStringList *playlist() const;
+    void setPlaylist(QStringList *playlist);
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlistModel);
@@ -33,6 +37,8 @@ private:
     KNMusicModel *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QString m_currentPath;
+    QStringList *m_playlist;
+    QStringList m_temporaryPlaylist;
     KNMusicCategoryDetailModel *m_categoryProxyModel;
     bool m_usingProxy=false;
 };

@@ -62,7 +62,8 @@ public slots:
     void createPlaylist(const QString &title);
     void importPlaylist(QStringList filePaths);
     void removePlaylist(const int &index);
-    void setPlaylist(const int &index);
+    QString setModelPlaylist(const int &index);
+    void setPlaylist(const QString &filePath);
 
 private:
     QString currentIndexPath();

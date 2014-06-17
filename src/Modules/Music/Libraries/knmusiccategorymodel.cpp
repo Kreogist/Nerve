@@ -87,6 +87,7 @@ void KNMusicCategoryModel::onMusicAdded(const QModelIndex &index)
     {
         currentItem=new QStandardItem(currentName);
         currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
+        currentItem->setEditable(false);
         currentItem->setData(1, MusicCount);
         appendRow(currentItem);
     }
@@ -112,6 +113,7 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
     {
         currentItem=new QStandardItem(currentName);
         currentItem->setData(m_sourceModel->itemArtworkKey(index.row()), IconKey);
+        currentItem->setEditable(false);
         currentItem->setData(1, MusicCount);
         appendRow(currentItem);
     }

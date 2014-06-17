@@ -23,6 +23,7 @@ void KNMusicAlbumModel::resetModel()
 
     //Initial the first no category text item.
     QStandardItem *currentItem=new QStandardItem();
+    currentItem->setEditable(false);
     currentItem->setData(noCategoryText(), Qt::DisplayRole);
     currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
     currentItem->setData(0, MusicCount);
@@ -84,6 +85,7 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     else
     {
         currentAlbum=new QStandardItem(currentName);
+        currentAlbum->setEditable(false);
         currentAlbum->setData(m_noAlbumArtIcon, Qt::DecorationRole);
         currentAlbum->setData(1, MusicCount);
         currentAlbum->setData(currentArtist, ArtistName);
@@ -155,6 +157,7 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
     else
     {
         currentAlbum=new QStandardItem(currentName);
+        currentAlbum->setEditable(false);
         currentAlbum->setData(m_sourceModel->itemArtworkKey(index.row()), IconKey);
         currentAlbum->setData(1, MusicCount);
         currentAlbum->setData(currentArtist, ArtistName);

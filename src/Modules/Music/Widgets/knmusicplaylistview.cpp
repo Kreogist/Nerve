@@ -36,6 +36,8 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     m_displayer=new KNMusicPlaylistDisplay(this);
     addWidget(m_displayer);
     m_songsView=new KNMusicPlaylistSongs(this);
+    connect(m_songsView, &KNMusicPlaylistSongs::requireOpenUrl,
+            this, &KNMusicPlaylistView::onActionOpenUrl);
     m_displayer->setSongsView(m_songsView);
 
     setCollapsible(1, false);
@@ -53,5 +55,10 @@ void KNMusicPlaylistView::setManager(KNMusicPlaylistManager *manager)
 
 void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 {
-    m_manager->setPlaylist(index.row());
+    m_currentPath=m_manager->setModelPlaylist(index.row());
+}
+
+void KNMusicPlaylistView::onActionOpenUrl(const QModelIndex &index)
+{
+    m_manager->setPlaylist(m_currentPath);
 }
