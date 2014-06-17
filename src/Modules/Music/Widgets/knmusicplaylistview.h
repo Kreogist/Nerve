@@ -5,6 +5,7 @@
 
 class QAbstractItemModel;
 class KNMusicPlaylistListview;
+class KNMusicPlaylistListEditor;
 class KNMusicPlaylistManager;
 class KNMusicPlaylistDisplay;
 class KNMusicPlaylistSongs;
@@ -25,6 +26,7 @@ private slots:
 private:
     KNMusicPlaylistManager *m_manager;
     KNMusicPlaylistListview *m_playlistListView;
+    KNMusicPlaylistListEditor *m_playlistListEditor;
     KNMusicPlaylistDisplay *m_displayer;
     KNMusicPlaylistSongs *m_songsView;
 };

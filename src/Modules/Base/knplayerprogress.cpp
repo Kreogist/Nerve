@@ -2,6 +2,7 @@
 #include <QTimeLine>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QWheelEvent>
 #include <QPaintEvent>
 #include <QDebug>
 
@@ -120,6 +121,15 @@ void KNPlayerProgress::mouseReleaseEvent(QMouseEvent *event)
     emit sliderReleased();
     m_mouseDown=false;
     event->accept();
+}
+
+void KNPlayerProgress::wheelEvent(QWheelEvent *event)
+{
+    KNAbstractSlider::wheelEvent(event);
+    setValue(event->pixelDelta().x()==0?
+                 value()+event->pixelDelta().y():
+                 value()+event->pixelDelta().x());
+    emit sliderReleased();
 }
 
 void KNPlayerProgress::onActionChangeColor(const int &time)
