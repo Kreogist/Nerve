@@ -6,6 +6,7 @@
 #include "../../Base/knsearchbox.h"
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusicplaylistmanager.h"
+#include "../Libraries/knmusicinfocollector.h"
 #include "../knmusicglobal.h"
 #include "knmusicheaderplayer.h"
 
@@ -48,6 +49,8 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     connect(m_searchBox, &KNSearchBox::requireLostFocus,
             this, &KNMusicHeaderWidget::requireLostFocus);
     m_mainLayout->addWidget(m_searchBox, 0, Qt::AlignRight | Qt::AlignVCenter);
+
+    m_infoCollector=new KNMusicInfoCollector(this);
 }
 
 void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManager *manager)
@@ -121,9 +124,9 @@ void KNMusicHeaderWidget::clearSearch()
     m_searchBox->clear();
 }
 
-void KNMusicHeaderWidget::onActionPlayInLibrary(const QModelIndex &index)
+void KNMusicHeaderWidget::onActionPlayMusic(const QString &filePath)
 {
-    m_currentPath=m_musicModel->filePathFromIndex(index);
+    m_currentPath=filePath;
     m_playlistManager->setCurrentPlaying(m_currentPath);
     playCurrent();
 }
@@ -189,6 +192,8 @@ void KNMusicHeaderWidget::playCurrent()
         m_headerPlayer->playFile(m_currentPath);
         return;
     }
+    m_infoCollector->analysis(m_currentPath);
+    m_headerPlayer->playFile(m_currentPath);
 }
 
 void KNMusicHeaderWidget::resetPlayer()

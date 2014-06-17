@@ -71,7 +71,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             [=](const QModelIndex &index)
             {
                 emit requireSetProxy(m_listViewModel);
-                emit requirePlayMusic(m_listViewModel->mapToSource(index));
+                emit requirePlayMusic(m_musicModel->filePathFromIndex(m_listViewModel->mapToSource(index)));
             });
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicViewer::onActionLibraryViewShowContextMenu);
@@ -86,7 +86,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             [=](const QModelIndex &index)
             {
                 emit requireSetProxy(m_artistDetails);
-                emit requirePlayMusic(m_artistDetails->mapToSource(index));
+                emit requirePlayMusic(m_musicModel->filePathFromIndex(m_artistDetails->mapToSource(index)));
             });
     connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
             this, &KNMusicViewer::onActionArtistShowContextMenu);
@@ -98,7 +98,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             [=](const QModelIndex &index)
             {
                 emit requireSetProxy(m_albumDetails);
-                emit requirePlayMusic(m_albumDetails->mapToSource(index));
+                emit requirePlayMusic(m_musicModel->filePathFromIndex(m_albumDetails->mapToSource(index)));
             });
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
             this, &KNMusicViewer::onActionAlbumShowContextMenu);
@@ -113,7 +113,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
             [=](const QModelIndex &index)
             {
                 emit requireSetProxy(m_genreDetails);
-                emit requirePlayMusic(m_genreDetails->mapToSource(index));
+                emit requirePlayMusic(m_musicModel->filePathFromIndex(m_genreDetails->mapToSource(index)));
             });
     connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
             this, &KNMusicViewer::onActionGenreShowContextMenu);
@@ -178,7 +178,7 @@ void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
     m_playlistView->setManager(manager);
 }
 
-void KNMusicViewer::setModel(KNMusicModel *model)
+void KNMusicViewer::setMusicModel(KNMusicModel *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
@@ -195,7 +195,7 @@ void KNMusicViewer::setModel(KNMusicModel *model)
     m_artistView->resetHeader();
     m_albumView->resetHeader();
     m_genreView->resetHeader();
-    m_sourceModel=model;
+    m_musicModel=model;
 }
 
 void KNMusicViewer::setMusicBackend(KNLibBass *backend)
@@ -289,17 +289,17 @@ void KNMusicViewer::showIn(const int &category,
         m_libraryView->scrollTo(songMappedIndex, QAbstractItemView::PositionAtCenter);
         break;
     case KNMusicGlobal::ArtistView:
-        m_artistView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+        m_artistView->selectCategoryItem(m_musicModel->data(m_musicModel->index(index.row(),
                                                                                   KNMusicGlobal::Artist)).toString());
         m_artistView->selectItem(index);
         break;
     case KNMusicGlobal::AlbumView:
-        m_albumView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+        m_albumView->selectCategoryItem(m_musicModel->data(m_musicModel->index(index.row(),
                                                                                  KNMusicGlobal::Album)).toString());
         m_albumView->selectItem(index);
         break;
     case KNMusicGlobal::GenreView:
-        m_genreView->selectCategoryItem(m_sourceModel->data(m_sourceModel->index(index.row(),
+        m_genreView->selectCategoryItem(m_musicModel->data(m_musicModel->index(index.row(),
                                                                                  KNMusicGlobal::Genre)).toString());
         m_genreView->selectItem(index);
         break;
@@ -317,7 +317,7 @@ void KNMusicViewer::deleteMusic(const QModelIndex &index)
     m_artistModel->onMusicRemoved(index);
     m_albumModel->onMusicRemoved(index);
     m_genreModel->onMusicRemoved(index);
-    m_sourceModel->prepareRemove(index);
+    m_musicModel->prepareRemove(index);
     m_listViewModel->removeOriginalItem(index);
 }
 
@@ -332,7 +332,7 @@ void KNMusicViewer::deleteSelections()
     qStableSort(rowLists.begin(), rowLists.end(), qGreater<int>());
     while(!rowLists.isEmpty())
     {
-        deleteMusic(m_sourceModel->index(rowLists.takeFirst(), 0));
+        deleteMusic(m_musicModel->index(rowLists.takeFirst(), 0));
     }
 }
 

@@ -41,7 +41,7 @@ public:
     ~KNMusicViewer();
     void setDefaultHeader();
     void setPlaylistManager(KNMusicPlaylistManager *manager);
-    void setModel(KNMusicModel *model);
+    void setMusicModel(KNMusicModel *model);
     void setMusicBackend(KNLibBass *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
@@ -49,7 +49,7 @@ public:
 signals:
     void requireShowContextMenu(const QPoint &position,
                                 KNMusicGlobal::MusicCategory currentMode);
-    void requirePlayMusic(const QModelIndex &index);
+    void requirePlayMusic(const QString &index);
     void requireDelete(const QModelIndex &index);
     void requireSetProxy(QSortFilterProxyModel *model);
     void requireClearSearch();
@@ -112,7 +112,7 @@ private:
     KNMusicPlaylistView *m_playlistView;
     KNMusicGenreSongs *m_genreSongView;
 
-    KNMusicModel *m_sourceModel;
+    KNMusicModel *m_musicModel;
 
     QThread m_listViewModelThread,
             m_artistModelThread,

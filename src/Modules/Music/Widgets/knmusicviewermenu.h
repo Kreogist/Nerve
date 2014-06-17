@@ -22,7 +22,7 @@ public:
     void setModel(QStandardItemModel *model);
 
 signals:
-    void requirePlayMusic(const QModelIndex &index);
+    void requirePlayMusic(const QString &filePath);
     void requireShowIn(KNMusicGlobal::MusicCategory category,
                        const QModelIndex &index);
     void requireGetInfo(const QString &filePath);
@@ -43,12 +43,14 @@ private slots:
     void onActionShowInAlbum();
     void onActionShowInGenre();
     void onActionGetInfo();
+    void onActionOpen();
     void onActionDelete();
 
 private:
     enum MusicActions
     {
         Play,
+        Open,
         ShowInSongs,
         ShowInArtist,
         ShowInAlbum,

@@ -89,6 +89,7 @@ void KNMusicViewerMenu::setItemIndex(const QModelIndex &index)
 void KNMusicViewerMenu::retranslate()
 {
     m_actionTitle[Play]=tr("Play %1");
+    m_actionTitle[Open]=tr("Open");
     m_actionTitle[ShowInSongs]=tr("Go to Songs");
     m_actionTitle[ShowInArtist]=tr("Go to Artist");
     m_actionTitle[ShowInAlbum]=tr("Go to Album");
@@ -122,8 +123,7 @@ void KNMusicViewerMenu::onActionCopy()
 
 void KNMusicViewerMenu::onActionPlay()
 {
-    emit requirePlayMusic(m_currentIndex);
-//    m_global->openLocalUrl(m_filePath);
+    emit requirePlayMusic(m_filePath);
 }
 
 void KNMusicViewerMenu::onActionCopyText()
@@ -165,6 +165,11 @@ void KNMusicViewerMenu::onActionGetInfo()
     emit requireGetInfo(m_filePath);
 }
 
+void KNMusicViewerMenu::onActionOpen()
+{
+    m_global->openLocalUrl(m_filePath);
+}
+
 void KNMusicViewerMenu::onActionDelete()
 {
     emit requireDelete(m_currentIndex);
@@ -179,6 +184,8 @@ void KNMusicViewerMenu::createActions()
     }
     connect(m_action[Play], SIGNAL(triggered()),
             this, SLOT(onActionPlay()));
+    connect(m_action[Open], SIGNAL(triggered()),
+            this, SLOT(onActionOpen()));
     connect(m_action[ShowInSongs], SIGNAL(triggered()),
             this, SLOT(onActionShowInSongs()));
     connect(m_action[ShowInArtist], SIGNAL(triggered()),

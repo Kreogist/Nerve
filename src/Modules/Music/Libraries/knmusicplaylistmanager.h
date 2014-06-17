@@ -39,6 +39,7 @@ public:
     void setMusicModel(KNMusicModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
+    void setPlaylist(const int &index);
     void addToCurrentList(const QString &index);
 
     //Song acquirment functions.
@@ -62,7 +63,6 @@ public slots:
     void createPlaylist(const QString &title);
     void importPlaylist(QStringList filePaths);
     void removePlaylist(const int &index);
-    void setPlaylist(const int &index);
 
 private:
     QString currentIndexPath();

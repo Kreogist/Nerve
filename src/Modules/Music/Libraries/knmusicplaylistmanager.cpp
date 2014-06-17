@@ -78,7 +78,6 @@ void KNMusicPlaylistManager::loadPlayLists()
     m_configure=m_configureContent.object();
     m_playlists=m_configure["Playlists"].toArray();
     //Parse configure data.
-    qDebug()<<m_playlists.size();
     for(int i=0, playlistCount=m_playlists.size();
         i<playlistCount;
         i++)

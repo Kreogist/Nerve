@@ -57,7 +57,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setPlaylistManager(m_playlistManager);
-    m_musicViewer->setModel(m_model);
+    m_musicViewer->setMusicModel(m_model);
     m_musicViewer->setMusicBackend(m_musicPlayer->backend());
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             this, &KNMusicPlugin::requireAnalysisUrls);
@@ -82,12 +82,12 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireSetProxy,
             m_headerWidget, &KNMusicHeaderWidget::setProxyModel);
     connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
-            m_headerWidget, &KNMusicHeaderWidget::onActionPlayInLibrary);
+            m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_model);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requirePlayMusic,
-            m_headerWidget, &KNMusicHeaderWidget::onActionPlayInLibrary);
+            m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
             m_musicViewer, &KNMusicViewer::showIn);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,

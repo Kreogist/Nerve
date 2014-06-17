@@ -2,6 +2,7 @@
 #define KNMUSICHEADERWIDGET_H
 
 #include <QModelIndex>
+#include <QThread>
 
 #include "../../Base/knstdlibheaderwidget.h"
 
@@ -10,6 +11,7 @@ class QBoxLayout;
 class QResizeEvent;
 class QSortFilterProxyModel;
 class KNMusicPlaylistManager;
+class KNMusicInfoCollector;
 class KNMusicModel;
 class KNMusicBackend;
 class KNSearchBox;
@@ -42,7 +44,7 @@ public slots:
     void retranslateAndSet();
     void setSearchFocus();
     void clearSearch();
-    void onActionPlayInLibrary(const QModelIndex &index);
+    void onActionPlayMusic(const QString &filePath);
 
 private slots:
     void onActionPlayListPrev();
@@ -58,6 +60,7 @@ private:
     KNMusicModel *m_musicModel;
     KNMusicPlaylistManager *m_playlistManager;
     KNMusicHeaderPlayer *m_headerPlayer;
+    KNMusicInfoCollector *m_infoCollector;
     QString m_searchPlaceHolder, m_currentPath;
 };
 
