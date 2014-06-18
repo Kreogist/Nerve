@@ -14,7 +14,7 @@ KNLibBass::KNLibBass(QObject *parent) :
     connect(m_main.positionUpdater, &QTimer::timeout,
             [=]{DWORD currentPos=
                     BASS_ChannelBytes2Seconds(m_main.channel,
-                                              BASS_ChannelGetPosition(m_main.channel,BASS_POS_BYTE));
+                                              BASS_ChannelGetPosition(m_main.channel, BASS_POS_BYTE));
                 emit positionChanged(currentPos);
                 if(currentPos==m_main.duration)
                 {
@@ -42,7 +42,7 @@ KNLibBass::KNLibBass(QObject *parent) :
 #ifdef Q_OS_MACX
     m_dylinkSuffix="dylib";
 #endif
-
+    m_dylinkSuffix="so";
     //Initial Bass
     //Check bass version.
     if(HIWORD(BASS_GetVersion())!=BASSVERSION)
@@ -97,7 +97,7 @@ bool KNLibBass::loadInfoCollect(const QString &filePath)
     std::wstring uniPath=filePath.toStdWString();
     if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE|BASS_UNICODE))
 #endif
-#ifdef Q_OS_MACX
+#ifdef Q_OS_UNIX
     std::string uniPath=filePath.toStdString();
     if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE))
 #endif
@@ -291,7 +291,7 @@ void KNLibBass::loadMusicFile(MusicThread &musicThread)
     if(!(musicThread.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|m_floatable))
        && !(musicThread.channel=BASS_MusicLoad(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_UNICODE|BASS_MUSIC_RAMPS|m_floatable,1)))
 #endif
-#ifdef Q_OS_MACX
+#ifdef Q_OS_UNIX
     std::string uniPath=musicThread.filePath.toStdString();
     if(!(musicThread.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|m_floatable))
        && !(musicThread.channel=BASS_MusicLoad(FALSE,uniPath.data(),0,0,BASS_SAMPLE_LOOP|BASS_MUSIC_RAMPS|m_floatable,1)))
@@ -320,11 +320,12 @@ void KNLibBass::loadPlugins()
             HPLUGIN plug;
             //If we can load the plugin, output the data.
 #ifdef Q_OS_WIN32
-            if(plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toStdWString().data(), 0))
+            plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toStdWString().data(), 0);
 #endif
-#ifdef Q_OS_MACX
-            if(plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toLocal8Bit().data(), 0))
+#ifdef Q_OS_UNIX
+            plug=BASS_PluginLoad(currentInfo.absoluteFilePath().toLocal8Bit().data(), 0);
 #endif
+            if(plug)
             {
 //                const BASS_PLUGININFO *pinfo=BASS_PluginGetInfo(plug);
                 //formatc -> Format count

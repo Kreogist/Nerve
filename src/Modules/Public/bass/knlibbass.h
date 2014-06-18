@@ -22,6 +22,12 @@
 #include "basswv.h"
 #include "bassopus.h"
 
+#ifdef Q_OS_LINUX
+#include "bass_aac.h"
+#include "bass_alac.h"
+#include "basscd.h"
+#endif
+
 #ifdef Q_OS_WIN32
 //Include all win32 bass libraries
 #include "bass_aac.h"
