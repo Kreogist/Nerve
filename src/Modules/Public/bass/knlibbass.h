@@ -22,12 +22,6 @@
 #include "basswv.h"
 #include "bassopus.h"
 
-#ifdef Q_OS_LINUX
-#include "bass_aac.h"
-#include "bass_alac.h"
-#include "basscd.h"
-#endif
-
 #ifdef Q_OS_WIN32
 //Include all win32 bass libraries
 #include "bass_aac.h"
@@ -44,6 +38,13 @@
 
 #ifdef Q_OS_MACX
 #include "bass_vst.h"
+#endif
+
+#ifdef Q_OS_LINUX
+//Include all linux bass libraries.
+#include "bass_aac.h"
+#include "bass_alac.h"
+#include "basscd.h"
 #endif
 
 class KNLibBass : public QObject
