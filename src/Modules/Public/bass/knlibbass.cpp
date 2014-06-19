@@ -42,7 +42,9 @@ KNLibBass::KNLibBass(QObject *parent) :
 #ifdef Q_OS_MACX
     m_dylinkSuffix="dylib";
 #endif
+#ifdef Q_OS_LINUX
     m_dylinkSuffix="so";
+#endif
     //Initial Bass
     //Check bass version.
     if(HIWORD(BASS_GetVersion())!=BASSVERSION)
@@ -328,7 +330,7 @@ void KNLibBass::loadPlugins()
             if(plug)
             {
 //                const BASS_PLUGININFO *pinfo=BASS_PluginGetInfo(plug);
-                //formatc -> Format count
+//                formatc -> Format count
 //                for(DWORD i=0; i<pinfo->formatc; i++)
 //                {
 //                    qDebug()<<pinfo->formats[i].exts;
