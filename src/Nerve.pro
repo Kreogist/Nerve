@@ -8,7 +8,9 @@ QT += core\
 CONFIG += c++11 sse2 mmx
 QMAKE_RPATHDIR += \$\$ORIGIN/Plugins
 
-LIBS += -lbass
+win32{
+    LIBS += -lbass
+}
 
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
@@ -17,6 +19,10 @@ macx{
 
 unix{
     LIBS += -ldl
+}
+
+linux{
+    LIBS += -lbass
 }
 
 SOURCES += \
