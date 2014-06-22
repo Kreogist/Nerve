@@ -2,7 +2,6 @@
 #define KNMUSICPLAYLISTMANAGER_H
 
 #include <QList>
-#include <QObject>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
@@ -10,13 +9,16 @@
 #include <QThread>
 #include <QPixmap>
 
-#include "../../knglobal.h"
 #include "../knmusicglobal.h"
+#include "../../knglobal.h"
+
+#include <QObject>
 
 class QSortFilterProxyModel;
 class QStandardItemModel;
 class QFile;
 class KNLibBass;
+class KNMusicInfoCollector;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
 class KNMusicModel;
@@ -86,6 +88,7 @@ private:
     KNMusicModel *m_musicModel;
     QStandardItemModel *m_playlistModel;
     QThread m_dataModelThread, m_infoThread;
+    KNMusicInfoCollector *m_infoCollector;
 
     //Global instance.
     KNMusicGlobal *m_musicGlobal;

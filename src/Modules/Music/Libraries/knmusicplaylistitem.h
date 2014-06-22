@@ -5,7 +5,10 @@
 
 #include <QStandardItem>
 
+#include "../knmusicglobal.h"
+
 class QStandardItemModel;
+class KNMusicPlaylistModel;
 class KNMusicPlaylistItem : public QStandardItem
 {
 public:
@@ -30,11 +33,13 @@ public:
     void clearSongPaths();
     QStringList songPaths() const;
     void appendSongRow(const QList<QStandardItem *> &rowData);
+    void appendSongItem(QStringList textList,
+                        KNMusicGlobal::MusicDetailsInfo currentDetails);
     void setSongPaths(const QStringList &songPaths);
 
 private:
     void resetPlaylist(const QString &fileName=QString());
-    QStandardItemModel *m_playlistModel;
+    KNMusicPlaylistModel *m_playlistModel;
     QStringList m_songPaths;
 };
 

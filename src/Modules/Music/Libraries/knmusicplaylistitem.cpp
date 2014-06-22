@@ -1,11 +1,12 @@
 #include <QFile>
-#include <QStandardItemModel>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonArray>
 
 #include <QDebug>
+
+#include "knmusicplaylistmodel.h"
 
 #include "knmusicplaylistitem.h"
 
@@ -14,7 +15,7 @@ KNMusicPlaylistItem::KNMusicPlaylistItem() :
 {
     setData(false, DataChanged);
     setData(false, ModelBuild);
-    m_playlistModel=new QStandardItemModel;
+    m_playlistModel=new KNMusicPlaylistModel;
 }
 
 KNMusicPlaylistItem::~KNMusicPlaylistItem()
@@ -119,6 +120,12 @@ QStringList KNMusicPlaylistItem::songPaths() const
 void KNMusicPlaylistItem::appendSongRow(const QList<QStandardItem *> &rowData)
 {
     m_playlistModel->appendRow(rowData);
+}
+
+void KNMusicPlaylistItem::appendSongItem(QStringList textList,
+                                         KNMusicGlobal::MusicDetailsInfo currentDetails)
+{
+    m_playlistModel->appendMusicItem(textList, currentDetails);
 }
 
 void KNMusicPlaylistItem::setSongPaths(const QStringList &songPaths)

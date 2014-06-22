@@ -162,8 +162,10 @@ void KNMusicListViewBase::mouseReleaseEvent(QMouseEvent *event)
     if(event->button()==Qt::RightButton &&
           rect().contains(event->pos()))
     {
-        if(indexAt(event->pos()).isValid())
+        QModelIndex mouseIndex=indexAt(event->pos());
+        if(mouseIndex.isValid())
         {
+            KNMusicGlobal::instance()->setSelectedColumn(mouseIndex.column());
             setSelectedRows();
             emit requireShowContextMenu(event->globalPos());
         }

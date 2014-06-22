@@ -99,9 +99,16 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     {
         musicInfo.append(m_musicInfos[i]);
     }
-
-    emit requireAppendMusic(musicInfo,
-                            currentFileInfo);
+    if(m_signalMode)
+    {
+        emit requireAppendMusic(musicInfo,
+                                currentFileInfo);
+    }
+    else
+    {
+        m_currentMusicValue=musicInfo;
+        m_currentMusicDatas=currentFileInfo;
+    }
 }
 
 void KNMusicInfoCollector::resetInfoCache()
@@ -374,3 +381,24 @@ void KNMusicInfoCollector::setMusicCover(const QImage &pixmap)
         m_musicCover=pixmap;
     }
 }
+
+KNMusicGlobal::MusicDetailsInfo KNMusicInfoCollector::currentMusicDatas() const
+{
+    return m_currentMusicDatas;
+}
+
+QStringList KNMusicInfoCollector::currentMusicValue() const
+{
+    return m_currentMusicValue;
+}
+
+bool KNMusicInfoCollector::signalMode() const
+{
+    return m_signalMode;
+}
+
+void KNMusicInfoCollector::setSignalMode(bool signalMode)
+{
+    m_signalMode = signalMode;
+}
+

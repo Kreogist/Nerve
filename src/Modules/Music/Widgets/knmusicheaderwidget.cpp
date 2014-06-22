@@ -20,7 +20,7 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
 
     //Initial layout.
     m_mainLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
-    m_mainLayout->setContentsMargins(0,0,0,0);
+    m_mainLayout->setContentsMargins(0,0,10,0);
     m_mainLayout->setAlignment(Qt::AlignVCenter);
     setLayout(m_mainLayout);
 

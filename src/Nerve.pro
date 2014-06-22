@@ -12,6 +12,10 @@ win32{
     LIBS += -lbass
 }
 
+linux{
+    LIBS += -lbass
+}
+
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
     LIBS += /usr/lib/libbass.dylib
@@ -19,10 +23,6 @@ macx{
 
 unix{
     LIBS += -ldl
-}
-
-linux{
-    LIBS += -lbass
 }
 
 SOURCES += \
@@ -158,7 +158,9 @@ SOURCES += \
     Modules/Music/Widgets/knmusicplaylistlistview.cpp \
     Modules/Music/Widgets/knmusicplaylistdisplay.cpp \
     Modules/Music/Widgets/knmusicplaylistsongs.cpp \
-    Modules/Music/Widgets/knmusicplaylistlisteditor.cpp
+    Modules/Music/Widgets/knmusicplaylistlisteditor.cpp \
+    Modules/Music/Libraries/knmusicmodelbase.cpp \
+    Modules/Music/Libraries/knmusicplaylistmodel.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -294,7 +296,9 @@ HEADERS += \
     Modules/Music/Widgets/knmusicplaylistlistview.h \
     Modules/Music/Widgets/knmusicplaylistdisplay.h \
     Modules/Music/Widgets/knmusicplaylistsongs.h \
-    Modules/Music/Widgets/knmusicplaylistlisteditor.h
+    Modules/Music/Widgets/knmusicplaylistlisteditor.h \
+    Modules/Music/Libraries/knmusicmodelbase.h \
+    Modules/Music/Libraries/knmusicplaylistmodel.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

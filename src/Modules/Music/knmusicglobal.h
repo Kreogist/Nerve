@@ -29,6 +29,13 @@ public:
         QString coverImageHash;
     };
 
+    enum MusicModelProperty
+    {
+        FilePathRole=Qt::UserRole,
+        FileNameRole,
+        ArtworkKeyRole,
+    };
+
     enum MusicDatas
     {
         Name,
@@ -90,6 +97,8 @@ public:
     void setSelectedIndexes(const QModelIndexList &indexes);
     QModelIndexList selectedIndexes() const;
     int genreIndex(const QString &genre) const;
+    int selectedColumn() const;
+    void setSelectedColumn(int selectedColumn);
 
 signals:
 
@@ -107,6 +116,7 @@ private:
     QImage m_noAlbumImage;
     QMap<QString, QString> m_genreImage;
     QModelIndexList m_currentIndexes;
+    int m_selectedColumn=-1;
 };
 
 #endif // KNMUSICGLOBAL_H

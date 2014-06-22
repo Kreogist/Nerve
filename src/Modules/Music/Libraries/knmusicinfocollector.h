@@ -27,6 +27,11 @@ public:
     explicit KNMusicInfoCollector(QObject *parent = 0);
     void setMusicBackend(KNLibBass *backend);
 
+    bool signalMode() const;
+    void setSignalMode(bool signalMode);
+    QStringList currentMusicValue() const;
+    KNMusicGlobal::MusicDetailsInfo currentMusicDatas() const;
+
 signals:
     void requireAppendMusic(QStringList value,
                             KNMusicGlobal::MusicDetailsInfo datas);
@@ -67,7 +72,10 @@ private:
     KNMusicTagWAV *m_tagWAV;
 
     QString m_musicInfos[KNMusicGlobal::MusicDataCount];
+    QStringList m_currentMusicValue;
+    KNMusicGlobal::MusicDetailsInfo m_currentMusicDatas;
     QImage m_musicCover;
+    bool m_signalMode=true;
     int m_musicRating, m_duration, m_bitRate, m_samplingRate;
     KNGlobal *m_global;
     KNMusicGlobal *m_musicGlobal;

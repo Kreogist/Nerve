@@ -486,6 +486,16 @@ KNMusicGlobal::KNMusicGlobal() :
              <<"umx";
 }
 
+int KNMusicGlobal::selectedColumn() const
+{
+    return m_selectedColumn;
+}
+
+void KNMusicGlobal::setSelectedColumn(int selectedColumn)
+{
+    m_selectedColumn = selectedColumn;
+}
+
 QImage KNMusicGlobal::noAlbumImage() const
 {
     return m_noAlbumImage;

@@ -95,6 +95,7 @@ void KNLibBass::loadPreview(const QString &filePath)
 
 bool KNLibBass::loadInfoCollect(const QString &filePath)
 {
+    BASS_StreamFree(m_infoCollector.channel);
 #ifdef Q_OS_WIN32
     std::wstring uniPath=filePath.toStdWString();
     if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE|BASS_UNICODE))

@@ -11,7 +11,7 @@
 #include "knmusicplaylistitem.h"
 #include "knmusicnowplaying.h"
 #include "../Libraries/knmusicmodel.h"
-#include "../Libraries/knmusicinfocollectormanager.h"
+#include "../Libraries/knmusicinfocollector.h"
 #include "../../knglobal.h"
 
 #include "knmusicplaylistmanager.h"
@@ -38,6 +38,10 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
             this, &KNMusicPlaylistManager::requireUpdatePlaylistModel);
     //Initial playlist model.
     m_playlistModel=new QStandardItemModel(this);
+    //Initial info collector.
+    m_infoCollector=new KNMusicInfoCollector(this);
+    m_infoCollector->setSignalMode(false);
+//    m_infoCollector->moveToThread(&m_infoThread);
 }
 
 KNMusicPlaylistManager::~KNMusicPlaylistManager()
@@ -210,7 +214,9 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
         }
         else
         {
-            ;
+            m_infoCollector->analysis(filePath);
+            item->appendSongItem(m_infoCollector->currentMusicValue(),
+                                 m_infoCollector->currentMusicDatas());
         }
     }
     item->clearSongPaths();
@@ -237,7 +243,7 @@ int KNMusicPlaylistManager::loopMode()
 
 void KNMusicPlaylistManager::setMusicBackend(KNLibBass *backend)
 {
-    ;
+    m_infoCollector->setMusicBackend(backend);
 }
 
 void KNMusicPlaylistManager::setMusicModel(KNMusicModel *model)

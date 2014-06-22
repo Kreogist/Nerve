@@ -15,14 +15,13 @@
 #include "../../Base/knlibdatabase.h"
 #include "../../Base/knlibhashpixmaplist.h"
 #include "../../knglobal.h"
-#include "knmusicstarrating.h"
 
 #include "knmusicinfocollectormanager.h"
 
 #include "knmusicmodel.h"
 
 KNMusicModel::KNMusicModel(QObject *parent) :
-    KNModel(parent)
+    KNMusicModelBase(parent)
 {
     //Initial the music global.
     m_musicGlobal=KNMusicGlobal::instance();
@@ -53,66 +52,6 @@ KNMusicModel::~KNMusicModel()
     m_pixmapList->deleteLater();
 }
 
-void KNMusicModel::resetHeader()
-{
-    //Set the header text.
-    QStringList header;
-    for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
-    {
-        header<<(m_musicGlobal->getHeader(i));
-    }
-    setHorizontalHeaderLabels(header);
-    //Set header size hint.
-    setHeaderData(0, Qt::Horizontal, QSize(10,23), Qt::SizeHintRole);
-    //Set header alignment
-    for(int i=0;i<KNMusicGlobal::MusicDataCount;i++)
-    {
-        setHeaderData(i, Qt::Horizontal, Qt::AlignVCenter, Qt::TextAlignmentRole);
-    }
-    //Set special header data, e.g.: Sort flag.
-    setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
-    setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
-    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, QVariant(Qt::AlignVCenter|Qt::AlignRight), Qt::TextAlignmentRole);
-    setHeaderData(KNMusicGlobal::Time, Qt::Horizontal, 2, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::DiscNumber, Qt::Horizontal, 1, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::DiscCount, Qt::Horizontal, 1, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::TrackNumber, Qt::Horizontal, 1, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::TrackCount, Qt::Horizontal, 1, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::Size, Qt::Horizontal, 2, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::BitRate, Qt::Horizontal, 3, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::DateAdded, Qt::Horizontal, 4, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::DateModified, Qt::Horizontal, 4, Qt::UserRole);
-    setHeaderData(KNMusicGlobal::LastPlayed, Qt::Horizontal, 4, Qt::UserRole);
-}
-
-QString KNMusicModel::filePathFromIndex(const QModelIndex &index)
-{
-    return data(this->index(index.row(), KNMusicGlobal::Name), FilePathRole).toString();
-}
-
-QString KNMusicModel::filePathFromIndex(const int &index)
-{
-    return data(this->index(index, KNMusicGlobal::Name), FilePathRole).toString();
-}
-
-QModelIndex KNMusicModel::indexFromFilePath(const QString &filePath)
-{
-    QModelIndexList fileCheck=match(index(0,0),
-                                    FilePathRole,
-                                    filePath);
-    return fileCheck.isEmpty()?QModelIndex():fileCheck.first();
-}
-
-QString KNMusicModel::itemText(const int &row, const int &column) const
-{
-    return itemRoleData(row, column, Qt::DisplayRole).toString();
-}
-
-QVariant KNMusicModel::itemRoleData(int row, int column, int role) const
-{
-    return data(index(row, column), role);
-}
-
 QImage KNMusicModel::artwork(const int &row) const
 {
     QString imageKey=itemArtworkKey(row);
@@ -127,26 +66,14 @@ QImage KNMusicModel::artworkFromKey(const QString &key) const
 
 QString KNMusicModel::itemArtworkKey(const int &row) const
 {
-    return data(index(row, KNMusicGlobal::Name), ArtworkKeyRole).toString();
-}
-
-QList<QStandardItem *> KNMusicModel::songRow(const int &row) const
-{
-    QList<QStandardItem *> songRowData;
-    if(row>-1 && row<rowCount())
-    {
-        for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
-        {
-            songRowData.append(item(row, i)->clone());
-        }
-    }
-    return songRowData;
+    return data(index(row, KNMusicGlobal::Name),
+                KNMusicGlobal::ArtworkKeyRole).toString();
 }
 
 void KNMusicModel::addRawFileItem(QString filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),
-                                    FilePathRole,
+                                    KNMusicGlobal::FilePathRole,
                                     filePath);
     if(fileCheck.size()!=0)
     {
@@ -168,7 +95,7 @@ void KNMusicModel::addRawFileItem(QString filePath)
     songItem->setData(currentTime, Qt::UserRole);
     songItem=songItemList.at(KNMusicGlobal::Name);
     songItem->setText(rawFileInfo.fileName());
-    songItem->setData(filePath, FilePathRole);
+    songItem->setData(filePath, KNMusicGlobal::FilePathRole);
     songItem->setData(1);
     appendRow(songItemList);
     m_rawFileCount++;
@@ -197,24 +124,7 @@ void KNMusicModel::setAlbumArtPath(const QString &path)
 void KNMusicModel::recoverFile(QStringList textList,
                                KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
-    QList<QStandardItem *> songItemList;
-    QStandardItem *songItem;
-    for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
-    {
-        songItem=new QStandardItem(textList.at(i));
-        songItem->setEditable(false);
-        songItemList.append(songItem);
-    }
-    appendRow(songItemList);
-    int currentRow=songItem->index().row();
-    songItem=item(currentRow, KNMusicGlobal::DateAdded);
-    songItem->setData(currentDetails.dateAdded, Qt::UserRole);
-    setMusicDetailsInfo(currentRow,
-                        currentDetails);
-    songItem=item(currentRow, KNMusicGlobal::Name);
-    songItem->setData(currentDetails.coverImageHash, ArtworkKeyRole);
-    songItem->setData(currentDetails.filePath, FilePathRole);
-    emit musicRecover(songItem->index());
+    emit musicRecover(appendMusicItem(textList, currentDetails));
 }
 
 void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
@@ -261,7 +171,7 @@ void KNMusicModel::onActionUpdateRowInfo()
         m_pixmapList->append(currentRow, currentDetails.coverImage);
     }
     songItem=item(currentRow,KNMusicGlobal::Name);
-    songItem->setData(currentDetails.filePath, FilePathRole);
+    songItem->setData(currentDetails.filePath, KNMusicGlobal::FilePathRole);
     if(songItem->data().toInt()==1)
     {
         //This is a new file, never add to list.
@@ -301,38 +211,9 @@ void KNMusicModel::onActionUpdatePixmap()
     setData(index(m_pixmapList->currentRow(),
                   KNMusicGlobal::Name),
             m_pixmapList->currentKey(),
-            ArtworkKeyRole);
+            KNMusicGlobal::ArtworkKeyRole);
     emit musicAlbumArtUpdate(m_pixmapList->currentRow());
     m_pixmapList->removeCurrentUpdate();
-}
-
-void KNMusicModel::setMusicDetailsInfo(const int &currentRow,
-                                       const KNMusicGlobal::MusicDetailsInfo &currentDetails)
-{
-    QStandardItem *songItem;
-    songItem=item(currentRow,KNMusicGlobal::TrackNumber);
-    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
-    songItem=item(currentRow,KNMusicGlobal::Time);
-    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
-    songItem->setData(currentDetails.duration, Qt::UserRole);
-    songItem=item(currentRow,KNMusicGlobal::BitRate);
-    songItem->setData(QVariant(currentDetails.bitRate), Qt::UserRole);
-    songItem=item(currentRow,KNMusicGlobal::SampleRate);
-    songItem->setData(currentDetails.samplingRate, Qt::UserRole);
-    songItem=item(currentRow,KNMusicGlobal::DateModified);
-    songItem->setData(currentDetails.dateModified, Qt::UserRole);
-    songItem=item(currentRow,KNMusicGlobal::LastPlayed);
-    songItem->setData(currentDetails.lastPlayed, Qt::UserRole);
-    songItem=item(currentRow,KNMusicGlobal::Size);
-    songItem->setData(currentDetails.size, Qt::UserRole);
-    songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
-    songItem=item(currentRow,KNMusicGlobal::Rating);
-    songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
-                      0);
-    songItem->setEditable(true);
-    songItem=item(currentRow,KNMusicGlobal::DateAdded);
-    songItem->setText(KNGlobal::instance()->dateTimeToDisplayString(
-                          songItem->data(Qt::UserRole).toDateTime()));
 }
 
 void KNMusicModel::updateIndexInfo(const QModelIndex &index,

@@ -5,26 +5,19 @@
 
 #include "../knmusicglobal.h"
 
-#include "../../Base/knmodel.h"
+#include "knmusicmodelbase.h"
 
 class KNLibHashPixmapList;
 class KNMusicInfoCollectorManager;
-class KNMusicModel : public KNModel
+class KNMusicModel : public KNMusicModelBase
 {
     Q_OBJECT
 public:
     explicit KNMusicModel(QObject *parent = 0);
     ~KNMusicModel();
-    void resetHeader();
-    QString filePathFromIndex(const QModelIndex &index);
-    QString filePathFromIndex(const int &index);
-    QModelIndex indexFromFilePath(const QString &filePath);
-    QString itemText(const int &row, const int &column) const;
-    QVariant itemRoleData(int row, int column, int role) const;
     QImage artwork(const int &row) const;
     QImage artworkFromKey(const QString &key) const;
     QString itemArtworkKey(const int &row) const;
-    QList<QStandardItem *> songRow(const int &row) const;
     void addRawFileItem(QString filePath);
     void addRawFileItems(QStringList fileList);
     void setAlbumArtPath(const QString &path);
@@ -57,15 +50,6 @@ private slots:
     void onActionUpdatePixmap();
 
 private:
-    enum MusicProperty
-    {
-        FilePathRole=Qt::UserRole,
-        FileNameRole,
-        ArtworkKeyRole,
-    };
-
-    void setMusicDetailsInfo(const int &currentRow,
-                             const KNMusicGlobal::MusicDetailsInfo &currentDetails);
     KNMusicGlobal *m_musicGlobal;
     KNMusicInfoCollectorManager *m_infoCollectorManager;
     KNLibHashPixmapList *m_pixmapList;
