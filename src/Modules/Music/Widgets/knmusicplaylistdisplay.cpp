@@ -15,6 +15,11 @@ KNMusicPlaylistDisplay::KNMusicPlaylistDisplay(QWidget *parent) :
     m_layout->addWidget(m_playlistName);
 }
 
+void KNMusicPlaylistDisplay::setPlaylistName(const QString &name)
+{
+    m_playlistName->setText(name);
+}
+
 void KNMusicPlaylistDisplay::setSongsView(KNMusicPlaylistSongs *songsView)
 {
     m_songsView=songsView;

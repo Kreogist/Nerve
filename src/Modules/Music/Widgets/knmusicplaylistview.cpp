@@ -27,6 +27,8 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     layout->setSpacing(0);
     playlistList->setLayout(layout);
     m_playlistListView=new KNMusicPlaylistListview(this);
+    connect(m_playlistListView, SIGNAL(activated(QModelIndex)),
+            this, SLOT(onActionShowPlaylist(QModelIndex)));
     layout->addWidget(m_playlistListView, 1);
     m_playlistListEditor=new KNMusicPlaylistListEditor(this);
     layout->addWidget(m_playlistListEditor);
@@ -48,13 +50,14 @@ void KNMusicPlaylistView::setManager(KNMusicPlaylistManager *manager)
 {
     m_manager=manager;
     m_playlistListView->setModel(m_manager->playlistModel());
-    m_songsView->setModel(m_manager->playlistDataModel());
     connect(m_playlistListView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &KNMusicPlaylistView::onActionShowPlaylist);
 }
 
 void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 {
+    m_displayer->setPlaylistName(m_manager->playlistName(index));
+    m_songsView->setModel(m_manager->playlistDataModel(index));
     m_currentPath=m_manager->setModelPlaylist(index.row());
 }
 

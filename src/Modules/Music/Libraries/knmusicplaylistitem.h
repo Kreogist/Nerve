@@ -5,14 +5,15 @@
 
 #include <QStandardItem>
 
+class QStandardItemModel;
 class KNMusicPlaylistItem : public QStandardItem
 {
 public:
     enum PlayListProperties
     {
         FilePath=Qt::UserRole,
-        SongsPath,
-        DataChanged
+        DataChanged,
+        ModelBuild
     };
 
     explicit KNMusicPlaylistItem();
@@ -22,14 +23,19 @@ public:
     bool removedFile();
     QString filePath() const;
     void setFilePath(const QString &path);
-    void setPlaylist(const QStringList &data);
-    QStringList playlist() const;
-    bool loadPlaylist();
     bool savePlayList();
     bool forceSavePlaylist();
+    bool modelBuild() const;
+    QStandardItemModel *playlistModel();
+    void clearSongPaths();
+    QStringList songPaths() const;
+    void appendSongRow(const QList<QStandardItem *> &rowData);
+    void setSongPaths(const QStringList &songPaths);
 
 private:
     void resetPlaylist(const QString &fileName=QString());
+    QStandardItemModel *m_playlistModel;
+    QStringList m_songPaths;
 };
 
 #endif // KNMUSICPLAYLISTITEM_H

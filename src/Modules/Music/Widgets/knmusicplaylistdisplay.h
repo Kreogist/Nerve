@@ -11,6 +11,7 @@ class KNMusicPlaylistDisplay : public QWidget
     Q_OBJECT
 public:
     explicit KNMusicPlaylistDisplay(QWidget *parent = 0);
+    void setPlaylistName(const QString &name);
     void setSongsView(KNMusicPlaylistSongs *songsView);
 
 signals:

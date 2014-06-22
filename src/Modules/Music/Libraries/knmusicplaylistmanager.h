@@ -17,11 +17,9 @@ class QSortFilterProxyModel;
 class QStandardItemModel;
 class QFile;
 class KNLibBass;
-class KNMusicInfoCollectorManager;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
 class KNMusicModel;
-class KNMusicPlaylistModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public QObject
 {
@@ -46,10 +44,11 @@ public:
     QString nextPlayingSong();
     QString nextSong();
     QString prevSong();
+    QString playlistName(const QModelIndex &index) const;
 
     //Datas ports.
     QAbstractItemModel *playlistModel();
-    QAbstractItemModel *playlistDataModel();
+    QAbstractItemModel *playlistDataModel(const QModelIndex &index);
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
@@ -67,6 +66,9 @@ public slots:
     void setPlaylist(const QString &filePath);
 
 private:
+    bool loadPlaylist(KNMusicPlaylistItem *item);
+    bool savePlaylist(KNMusicPlaylistItem *item);
+    QAbstractItemModel *buildPlaylist(KNMusicPlaylistItem *item);
     QString currentIndexPath();
     void saveAllChanged();
     //Playlist-List read & write data.
@@ -82,8 +84,6 @@ private:
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
     KNMusicModel *m_musicModel;
-    KNMusicPlaylistModel *m_playlistDataModel;
-    KNMusicInfoCollectorManager *m_infoCollectManager;
     QStandardItemModel *m_playlistModel;
     QThread m_dataModelThread, m_infoThread;
 
