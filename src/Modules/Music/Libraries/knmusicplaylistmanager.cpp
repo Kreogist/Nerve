@@ -215,6 +215,11 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
         else
         {
             m_infoCollector->analysis(filePath);
+            if(m_infoCollector->currentMusicValue().isEmpty())
+            {
+                //!FIXME: Here should display when the file is not exsist.
+                continue;
+            }
             item->appendSongItem(m_infoCollector->currentMusicValue(),
                                  m_infoCollector->currentMusicDatas());
         }
