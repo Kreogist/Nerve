@@ -20,7 +20,7 @@ Makefile
 *-build-*
 
 # build dir
-/build
+/build-*
 
 #gedit temp file
 *~
@@ -34,3 +34,4 @@ Thumbs.db
 
 #doxygen
 doc/html
+
