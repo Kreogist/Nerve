@@ -267,6 +267,11 @@ void KNMusicPlaylistManager::setCurrentPlaying(const QString &string)
     m_nowPlaying->setCurrentPlaying(string);
 }
 
+void KNMusicPlaylistManager::setCurrentPlaylistPlaying(const QModelIndex &index)
+{
+    m_nowPlaying->setCurrentPlaying(index);
+}
+
 void KNMusicPlaylistManager::addToCurrentList(const QString &index)
 {
     ;

@@ -64,5 +64,6 @@ void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 void KNMusicPlaylistView::onActionOpenUrl(const QModelIndex &index)
 {
     m_manager->setPlaylist(m_currentPath);
+    m_manager->setCurrentPlaylistPlaying(index);
     emit requirePlayMusic(m_manager->filePathFromIndex(index));
 }

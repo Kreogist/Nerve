@@ -39,6 +39,7 @@ public:
     void setMusicModel(KNMusicModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
+    void setCurrentPlaylistPlaying(const QModelIndex &index);
     void setPlaylist(const int &index);
     void addToCurrentList(const QString &index);
 
