@@ -45,6 +45,7 @@ private:
         TemporaryListMode
     };
     int nextSongRow(int currentRow, int rowCount);
+    int prevSongRow(int currentRow, int rowCount);
 
     int m_loopMode=KNMusicGlobal::NoRepeat,
         m_mode=NoListMode;

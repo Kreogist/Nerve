@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 
@@ -53,29 +55,36 @@ QString KNMusicNowPlaying::prevSong()
                                                                       0)));
             return m_currentPath;
         }
-        //Translate to index.
-        nowPlayingIndex=m_proxyModel->mapFromSource(
-                    m_musicModel->indexFromFilePath(m_currentPath)).row();
         //Switch to the next according to the loop mode.
-        switch(m_loopMode)
-        {
-        case KNMusicGlobal::RepeatAll:
-            nowPlayingIndex=nowPlayingIndex==0?
-                        m_proxyModel->rowCount()-1:nowPlayingIndex-1;
-            break;
-        case KNMusicGlobal::RepeatSong:
-        case KNMusicGlobal::NoRepeat:
-            if(nowPlayingIndex==0)
-            {
-                m_currentPath.clear();
-                return QString();
-            }
-            nowPlayingIndex--;
-            break;
-        }
+        nowPlayingIndex=prevSongRow(m_proxyModel->mapFromSource(m_musicModel->indexFromFilePath(m_currentPath)).row(),
+                                    m_proxyModel->rowCount());
         //Translate back to file path.
-        m_currentPath=m_musicModel->filePathFromIndex(
-                    m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
+        m_currentPath=nowPlayingIndex==-1?
+                      QString():
+                        m_musicModel->filePathFromIndex(
+                        m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
+        break;
+    case PlayListMode:
+        //If current path is empty, set to the initial position.
+        if(m_currentPath.isEmpty())
+        {
+            nowPlayingIndex=m_playlist->rowCount()-1;
+            m_currentItem=m_playlist->item(nowPlayingIndex,0);
+            m_currentPath=m_playlist->filePathFromIndex(m_playlist->index(nowPlayingIndex,0));
+            return m_currentPath;
+        }
+        nowPlayingIndex=prevSongRow(m_currentItem->row(),
+                                    m_playlist->rowCount());
+        if(nowPlayingIndex==-1)
+        {
+            m_currentItem=nullptr;
+            m_currentPath.clear();
+        }
+        else
+        {
+            m_currentItem=m_playlist->item(nowPlayingIndex, 0);
+            m_currentPath=m_playlist->filePathFromIndex(nowPlayingIndex);
+        }
         break;
     default:
         break;
@@ -105,8 +114,7 @@ QString KNMusicNowPlaying::nextSong()
         m_currentPath=nowPlayingIndex==-1?
                       QString():
                         m_musicModel->filePathFromIndex(
-                        m_proxyModel->mapToSource(
-                        m_proxyModel->index(nowPlayingIndex,0)));
+                        m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
         break;
     case PlayListMode:
         //If current path is empty, set to the initial position.
@@ -210,10 +218,30 @@ int KNMusicNowPlaying::nextSongRow(int currentRow, int rowCount)
     case KNMusicGlobal::NoRepeat:
         if(nowPlayingIndex==rowCount-1)
         {
-            m_currentPath.clear();
             return -1;
         }
         nowPlayingIndex++;
+        break;
+    }
+    return nowPlayingIndex;
+}
+
+int KNMusicNowPlaying::prevSongRow(int currentRow, int rowCount)
+{
+    int nowPlayingIndex=currentRow;
+    switch(m_loopMode)
+    {
+    case KNMusicGlobal::RepeatAll:
+        nowPlayingIndex=nowPlayingIndex==0?
+                    rowCount-1:nowPlayingIndex-1;
+        break;
+    case KNMusicGlobal::RepeatSong:
+    case KNMusicGlobal::NoRepeat:
+        if(nowPlayingIndex==0)
+        {
+            return -1;
+        }
+        nowPlayingIndex--;
         break;
     }
     return nowPlayingIndex;
