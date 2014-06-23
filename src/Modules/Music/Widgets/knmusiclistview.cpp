@@ -7,7 +7,7 @@
 #include "knmusiclistview.h"
 
 KNMusicListView::KNMusicListView(QWidget *parent) :
-    KNMusicListViewBase(parent)
+    KNMusicLibraryListview(parent)
 {
     setObjectName("KNMusicListView");
     //Set palette.
@@ -40,7 +40,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
 void KNMusicListView::resetHeader()
 {
-    KNMusicListViewBase::resetHeader();
+    KNMusicLibraryListview::resetHeader();
     setColumnWidth(KNMusicGlobal::Name, 430);
     setColumnWidth(KNMusicGlobal::Time, 60);
     setColumnWidth(KNMusicGlobal::Artist, 125);
@@ -53,7 +53,7 @@ void KNMusicListView::enterEvent(QEvent *e)
     m_mouseIn->stop();
     m_mouseIn->setStartFrame(m_backgroundColor.red());
     m_mouseIn->start();
-    KNMusicListViewBase::enterEvent(e);
+    KNMusicLibraryListview::enterEvent(e);
 }
 
 void KNMusicListView::leaveEvent(QEvent *e)
@@ -62,7 +62,7 @@ void KNMusicListView::leaveEvent(QEvent *e)
     m_mouseOut->stop();
     m_mouseOut->setStartFrame(m_backgroundColor.red());
     m_mouseOut->start();
-    KNMusicListViewBase::leaveEvent(e);
+    KNMusicLibraryListview::leaveEvent(e);
 }
 
 void KNMusicListView::changeBackground(int frameData)

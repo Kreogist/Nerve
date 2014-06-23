@@ -21,16 +21,18 @@ void KNMusicNowPlaying::setProxyModel(QSortFilterProxyModel *model)
     if(model->filterRegExp().pattern().isEmpty())
     {
         m_proxyModel=model;
-        emit requireUpdatePlaylistModel(m_proxyModel);
-        return;
     }
-    m_categoryProxyModel->setFilterRegExp(model->filterRegExp());
-    m_categoryProxyModel->setSortCaseSensitivity(model->sortCaseSensitivity());
-    m_categoryProxyModel->setSortRole(model->sortRole());
-    m_categoryProxyModel->setFilterKeyColumn(model->filterKeyColumn());
-    m_categoryProxyModel->sort(model->sortColumn(), model->sortOrder());
-    m_proxyModel=m_categoryProxyModel;
-    emit requireUpdatePlaylistModel(m_proxyModel);
+    else
+    {
+        m_categoryProxyModel->setFilterRegExp(model->filterRegExp());
+        m_categoryProxyModel->setSortCaseSensitivity(model->sortCaseSensitivity());
+        m_categoryProxyModel->setSortRole(model->sortRole());
+        m_categoryProxyModel->setFilterKeyColumn(model->filterKeyColumn());
+        m_categoryProxyModel->sort(model->sortColumn(), model->sortOrder());
+        m_proxyModel=m_categoryProxyModel;
+    }
+    m_playlist=m_proxyModel;
+    emit requireUpdatePlaylistModel(m_playlist);
 }
 
 bool KNMusicNowPlaying::usingProxy() const
@@ -148,10 +150,7 @@ void KNMusicNowPlaying::setCurrentPlaying(const QString &string)
         return;
     }
     //Or else, search in the playlist.
-    if(m_playlist->contains(m_currentPath))
-    {
-        m_currentPath=string;
-    }
+    //!FIXME: Add codes here.
     //Then it means: we cannot find the file anywhere?! Might a new file from
     //disk, create a temp playlist for it.
     m_temporaryPlaylist=QStringList(string);
@@ -163,14 +162,9 @@ void KNMusicNowPlaying::setLoopMode(const int &index)
     m_loopMode=index;
 }
 
-QStringList *KNMusicNowPlaying::playlist() const
-{
-    return m_playlist;
-}
-
-void KNMusicNowPlaying::setPlaylist(QStringList *playlist)
+void KNMusicNowPlaying::setPlaylist(QAbstractItemModel *playlistModel)
 {
     m_usingProxy=false;
-    m_playlist=playlist;
+    m_playlist=static_cast<QStandardItemModel *>(playlistModel);
 }
 

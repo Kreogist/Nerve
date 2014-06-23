@@ -6,7 +6,7 @@
 #include "knmusicgenresongs.h"
 
 KNMusicGenreSongs::KNMusicGenreSongs(QWidget *parent) :
-    KNMusicListViewBase(parent)
+    KNMusicLibraryListview(parent)
 {
     setAutoFillBackground(false);
     m_alternateColor=QColor(0xff, 0xff, 0xff, 0);
@@ -62,7 +62,7 @@ void KNMusicGenreSongs::enterEvent(QEvent *e)
     m_mouseIn->stop();
     m_mouseIn->setStartFrame(m_alternateColor.alpha());
     m_mouseIn->start();
-    KNMusicListViewBase::enterEvent(e);
+    KNMusicLibraryListview::enterEvent(e);
 }
 
 void KNMusicGenreSongs::leaveEvent(QEvent *e)
@@ -71,7 +71,7 @@ void KNMusicGenreSongs::leaveEvent(QEvent *e)
     m_mouseOut->stop();
     m_mouseOut->setStartFrame(m_alternateColor.alpha());
     m_mouseOut->start();
-    KNMusicListViewBase::leaveEvent(e);
+    KNMusicLibraryListview::leaveEvent(e);
 }
 
 void KNMusicGenreSongs::changeBackground(int frameData)

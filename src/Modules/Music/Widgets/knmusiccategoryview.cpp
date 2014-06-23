@@ -18,7 +18,7 @@
 #include "../knmusicglobal.h"
 
 #include "knmusiccategorylist.h"
-#include "knmusiclistviewbase.h"
+#include "knmusiclibrarylistview.h"
 
 #include "knmusiccategoryview.h"
 
@@ -111,7 +111,7 @@ void KNMusicCategoryDetailsDisplay::setCurrentIndex(const QModelIndex &index)
     m_songViewer->scrollTo(index, QAbstractItemView::PositionAtCenter);
 }
 
-void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicListViewBase *listview)
+void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicLibraryListview *listview)
 {
     m_songViewer=listview;
     m_layout->addWidget(m_songViewer, 1);
@@ -210,7 +210,7 @@ void KNMusicCategoryView::selectItem(const QModelIndex &index)
     }
 }
 
-void KNMusicCategoryView::setSongListView(KNMusicListViewBase *listview)
+void KNMusicCategoryView::setSongListView(KNMusicLibraryListview *listview)
 {
     m_artistDetails->setSongListView(listview);
 }

@@ -54,11 +54,6 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
             this, &KNMusicListViewHeader::changeBackground);
 }
 
-void KNMusicListViewHeader::moveToFirst(int logicalIndex)
-{
-    moveSection(visualIndex(logicalIndex), 0);
-}
-
 void KNMusicListViewHeader::hideStrectch()
 {
     //setSectionHidden();

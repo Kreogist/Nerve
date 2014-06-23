@@ -8,6 +8,7 @@
 #include "knmusicabstractplaylist.h"
 
 class QSortFilterProxyModel;
+class QStandardItemModel;
 class KNMusicModel;
 class KNMusicCategoryDetailModel;
 class KNMusicNowPlaying : public KNMusicAbstractPlaylist
@@ -23,8 +24,8 @@ public:
     QString nextPlayingSong();
     int loopMode();
     void setCurrentPlaying(const QString &string);
-    QStringList *playlist() const;
-    void setPlaylist(QStringList *playlist);
+    QAbstractItemModel *playlist() const;
+    void setPlaylist(QAbstractItemModel *playlistModel);
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlistModel);
@@ -37,7 +38,7 @@ private:
     KNMusicModel *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QString m_currentPath;
-    QStringList *m_playlist;
+    QStandardItemModel *m_playlist;
     QStringList m_temporaryPlaylist;
     KNMusicCategoryDetailModel *m_categoryProxyModel;
     bool m_usingProxy=false;

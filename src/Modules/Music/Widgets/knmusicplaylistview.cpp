@@ -64,4 +64,5 @@ void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 void KNMusicPlaylistView::onActionOpenUrl(const QModelIndex &index)
 {
     m_manager->setPlaylist(m_currentPath);
+    ;
 }

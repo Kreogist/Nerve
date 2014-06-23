@@ -161,7 +161,7 @@ void KNMusicPlaylistManager::setPlaylist(const QString &filePath)
     }
     KNMusicPlaylistItem *currentItem=
                static_cast<KNMusicPlaylistItem *>(m_playlistModel->item(fileCheck.first().row()));
-    //    m_nowPlaying->setPlaylist(*currentItem->playlist());
+    m_nowPlaying->setPlaylist(currentItem->playlistModel());
 }
 
 bool KNMusicPlaylistManager::loadPlaylist(KNMusicPlaylistItem *item)

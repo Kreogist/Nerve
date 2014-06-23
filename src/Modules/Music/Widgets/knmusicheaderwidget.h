@@ -9,7 +9,6 @@
 class QAbstractItemModel;
 class QBoxLayout;
 class QResizeEvent;
-class QSortFilterProxyModel;
 class KNMusicPlaylistManager;
 class KNMusicInfoCollector;
 class KNMusicModel;
@@ -23,7 +22,6 @@ public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
     void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicModel *model);
-    void setProxyModel(QSortFilterProxyModel *model);
     void setBackend(KNMusicBackend *backend);
     void setAlbumArt(const QPixmap &albumArt);
     void setTitle(const QString &string);

@@ -68,11 +68,6 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicModel *model)
     m_playlistManager->setMusicModel(model);
 }
 
-void KNMusicHeaderWidget::setProxyModel(QSortFilterProxyModel *model)
-{
-    m_playlistManager->setProxyModel(model);
-}
-
 void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
 {
     m_headerPlayer->setBackend(backend);

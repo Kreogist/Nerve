@@ -1,16 +1,15 @@
 #ifndef KNMUSICPLAYLISTSONGS_H
 #define KNMUSICPLAYLISTSONGS_H
 
-#include <QTreeView>
+#include "knmusiclistviewbase.h"
 
-class KNMusicPlaylistSongs : public QTreeView
+class KNMusicPlaylistSongs : public KNMusicListViewBase
 {
     Q_OBJECT
 public:
     explicit KNMusicPlaylistSongs(QWidget *parent = 0);
 
 signals:
-    void requireOpenUrl(const QModelIndex &index);
 
 public slots:
 

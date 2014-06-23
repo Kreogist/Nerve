@@ -14,7 +14,6 @@ class KNMusicListViewHeader : public QHeaderView
     Q_OBJECT
 public:
     explicit KNMusicListViewHeader(QWidget *parent = 0);
-    void moveToFirst(int logicalIndex);
     void hideStrectch();
     void showStrectch();
 

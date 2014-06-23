@@ -124,6 +124,7 @@ void KNMusicOnlineNetease::handleMusicData()
     currentSongData.url=QString("http://m1.music.126.net/"+
               QString(encrypted_id(currentSongData.dfsId.toLatin1())).toLatin1()
             +"/"+currentSongData.dfsId.toLatin1()+"."+highMusic["extension"].toString());
+    qDebug()<<currentSongData.name<<currentSongData.url;
     QList<QStandardItem *> rowData;
     QStandardItem *item=new QStandardItem(currentSongData.name);
     item->setEditable(false);

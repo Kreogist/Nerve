@@ -14,7 +14,7 @@ class QGraphicsOpacityEffect;
 class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
-class KNMusicListViewBase;
+class KNMusicLibraryListview;
 class KNMusicCategorySortFilterModel;
 class KNMusicCategoryDetailsDisplay : public QWidget
 {
@@ -25,7 +25,7 @@ public:
     void setSongNumber(const int &index);
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void setCurrentIndex(const QModelIndex &index);
-    void setSongListView(KNMusicListViewBase *listview);
+    void setSongListView(KNMusicLibraryListview *listview);
     void setBackground(const QIcon &background);
     void resetHeader();
 
@@ -37,7 +37,7 @@ protected:
 private:
     QLabel *m_artistName, *m_artistInfo, *m_largeIcon;
     QString m_song, m_songs;
-    KNMusicListViewBase *m_songViewer;
+    KNMusicLibraryListview *m_songViewer;
     QBoxLayout *m_layout;
     QGraphicsOpacityEffect *m_opacityEffect;
     QRadialGradient m_alphaGradient;
@@ -53,7 +53,7 @@ public:
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
-    void setSongListView(KNMusicListViewBase *listview);
+    void setSongListView(KNMusicLibraryListview *listview);
 
 signals:
 

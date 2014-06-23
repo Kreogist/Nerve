@@ -1,7 +1,7 @@
 #include "knmusicplaylistsongs.h"
 
 KNMusicPlaylistSongs::KNMusicPlaylistSongs(QWidget *parent) :
-    QTreeView(parent)
+    KNMusicListViewBase(parent)
 {
     connect(this, &KNMusicPlaylistSongs::activated,
             this, &KNMusicPlaylistSongs::onItemActived);

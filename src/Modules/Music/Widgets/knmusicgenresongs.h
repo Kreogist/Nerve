@@ -1,10 +1,10 @@
 #ifndef KNMUSICGENRESONGS_H
 #define KNMUSICGENRESONGS_H
 
-#include "knmusiclistviewbase.h"
+#include "knmusiclibrarylistview.h"
 
 class QTimeLine;
-class KNMusicGenreSongs : public KNMusicListViewBase
+class KNMusicGenreSongs : public KNMusicLibraryListview
 {
     Q_OBJECT
 public:
