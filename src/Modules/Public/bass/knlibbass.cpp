@@ -34,6 +34,8 @@ KNLibBass::KNLibBass(QObject *parent) :
                     emit previewFinished();
                 }
                 });
+    connect(m_onlinePreivew.bufferCheck, &QTimer::timeout,
+            this, &KNLibBass::onActionBufferCheckTimeout);
 
     //Initial Dymantic Link Library suffix
 #ifdef Q_OS_WIN32
@@ -66,6 +68,12 @@ KNLibBass::KNLibBass(QObject *parent) :
         BASS_StreamFree(m_floatable);
         m_floatable=BASS_SAMPLE_FLOAT;
     }
+    //Enable playlist processing
+    BASS_SetConfig(BASS_CONFIG_NET_PLAYLIST,1);
+    //Minimize automatic pre-buffering, so we can do it (and display it) instead
+    BASS_SetConfig(BASS_CONFIG_NET_PREBUF,0);
+    //Disable proxy
+    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY,NULL);
     //Load Plugins
     loadPlugins();
 }
@@ -93,9 +101,30 @@ void KNLibBass::loadPreview(const QString &filePath)
     BASS_ChannelFlags(m_preview.channel, 0, BASS_SAMPLE_LOOP);
 }
 
+void KNLibBass::loadUrl(const QString &url)
+{
+//    DWORD r;
+    m_onlinePreivew.filePath=url;
+    m_onlinePreivew.positionUpdater->stop();
+    BASS_StreamFree(m_onlinePreivew.channel);
+    qDebug()<<m_onlinePreivew.filePath.toStdString().data();
+    m_onlinePreivew.channel=BASS_StreamCreateURL(m_onlinePreivew.filePath.toStdString().data(),
+                                                 0,
+                                                 BASS_STREAM_BLOCK|BASS_STREAM_STATUS|BASS_STREAM_AUTOFREE,
+                                                 NULL,
+                                                 NULL);
+    if(!m_onlinePreivew.channel)
+    {
+        qDebug()<<"Cannot play the channel";
+    }
+    else
+    {
+        m_onlinePreivew.bufferCheck->start();
+    }
+}
+
 bool KNLibBass::loadInfoCollect(const QString &filePath)
 {
-    BASS_StreamFree(m_infoCollector.channel);
 #ifdef Q_OS_WIN32
     std::wstring uniPath=filePath.toStdWString();
     if(m_infoCollector.channel=BASS_StreamCreateFile(FALSE,uniPath.data(),0,0,BASS_MUSIC_DECODE|BASS_UNICODE))
@@ -281,6 +310,35 @@ void KNLibBass::setEqualizerParam(const int &index, const float &value)
     BASS_FXGetParameters(m_equalizer[index], &equalizerParam);
     equalizerParam.fGain=m_eqGain[index];
     BASS_FXSetParameters(m_equalizer[index], &equalizerParam);
+}
+
+void KNLibBass::onActionBufferCheckTimeout()
+{
+    m_onlinePreivew.progress=BASS_StreamGetFilePosition(m_onlinePreivew.channel,
+                                                        BASS_FILEPOS_BUFFER)*100/
+                             BASS_StreamGetFilePosition(m_onlinePreivew.channel,BASS_FILEPOS_END);
+    qDebug()<<BASS_StreamGetFilePosition(m_onlinePreivew.channel,BASS_FILEPOS_END);
+    if(m_onlinePreivew.progress>75 ||
+            !BASS_StreamGetFilePosition(m_onlinePreivew.channel,BASS_FILEPOS_CONNECTED))
+    {
+        m_onlinePreivew.bufferCheck->stop();
+        BASS_ChannelPlay(m_onlinePreivew.channel,FALSE);
+    }
+    else
+    {
+        //Buffering.
+        ;
+    }
+}
+
+void CALLBACK KNLibBass::StatusProc(const void *buffer, DWORD length, void *user)
+{
+    ;
+}
+
+void CALLBACK KNLibBass::MetaSync(HSYNC handle, DWORD channel, DWORD data, void *user)
+{
+    ;
 }
 
 void KNLibBass::loadMusicFile(MusicThread &musicThread)

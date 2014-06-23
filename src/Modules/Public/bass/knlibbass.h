@@ -69,6 +69,7 @@ public:
     ~KNLibBass();
     void loadMusic(const QString &filePath);
     void loadPreview(const QString &filePath);
+    void loadUrl(const QString &url);
     bool loadInfoCollect(const QString &filePath);
     QString eqFrequencyTitle(const int &index);
     float duration() const;
@@ -100,6 +101,9 @@ public slots:
     void setPreviewPosition(const float &secondPosition);
     void setEqualizerParam(const int &index,
                            const float &value);
+
+private slots:
+    void onActionBufferCheckTimeout();
 
 private:
     struct MusicThread
@@ -134,6 +138,37 @@ private:
         QByteArray fingerPrint;
     };
 
+    struct OnlineThread
+    {
+        QString filePath;
+        bool stopped=true;
+        DWORD channel;
+        DWORD progress;
+        DWORD duration;
+        BASS_CHANNELINFO channelInfo;
+        QWORD byteDuration;
+        QTimer *positionUpdater,
+               *bufferCheck;
+        OnlineThread()
+        {
+            positionUpdater=new QTimer;
+            positionUpdater->setInterval(30);
+            bufferCheck=new QTimer;
+            bufferCheck->setInterval(50);
+        }
+        ~OnlineThread()
+        {
+            if(positionUpdater->parent()==0)
+            {
+                positionUpdater->deleteLater();
+            }
+            if(bufferCheck->parent()==0)
+            {
+                bufferCheck->deleteLater();
+            }
+        }
+    };
+
     HFX m_equalizer[EqualizerCount];
     float m_eqFrequency[EqualizerCount]={
         32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
@@ -144,8 +179,11 @@ private:
     QString m_eqTitle[EqualizerCount]={
        "32", "63", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"
     };
+    void CALLBACK StatusProc(const void *buffer, DWORD length, void *user);
+    void CALLBACK MetaSync(HSYNC handle, DWORD channel, DWORD data, void *user);
     float m_eqGain[EqualizerCount]={0};
     MusicThread m_main, m_preview;
+    OnlineThread m_onlinePreivew;
     InfoCollectThread m_infoCollector;
     void loadMusicFile(MusicThread &musicThread);
     void loadPlugins();
