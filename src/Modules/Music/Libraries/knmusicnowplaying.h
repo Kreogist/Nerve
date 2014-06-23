@@ -38,6 +38,7 @@ private:
     KNMusicModel *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QString m_currentPath;
+    QAbstractItemModel *m_currentModel;
     QStandardItemModel *m_playlist;
     QStringList m_temporaryPlaylist;
     KNMusicCategoryDetailModel *m_categoryProxyModel;

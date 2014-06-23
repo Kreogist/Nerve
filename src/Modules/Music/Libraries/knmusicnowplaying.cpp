@@ -31,8 +31,8 @@ void KNMusicNowPlaying::setProxyModel(QSortFilterProxyModel *model)
         m_categoryProxyModel->sort(model->sortColumn(), model->sortOrder());
         m_proxyModel=m_categoryProxyModel;
     }
-    m_playlist=m_proxyModel;
-    emit requireUpdatePlaylistModel(m_playlist);
+    m_currentModel=m_proxyModel;
+    emit requireUpdatePlaylistModel(m_currentModel);
 }
 
 bool KNMusicNowPlaying::usingProxy() const
@@ -166,5 +166,6 @@ void KNMusicNowPlaying::setPlaylist(QAbstractItemModel *playlistModel)
 {
     m_usingProxy=false;
     m_playlist=static_cast<QStandardItemModel *>(playlistModel);
+    m_currentModel=m_playlist;
 }
 

@@ -1,4 +1,3 @@
-
 #include "knmusiclibrarylistview.h"
 
 #include <QCursor>
@@ -53,6 +52,13 @@ KNMusicLibraryListview::KNMusicLibraryListview(QWidget *parent) :
 KNMusicLibraryListview::~KNMusicLibraryListview()
 {
     m_dragAction->deleteLater();
+}
+
+void KNMusicLibraryListview::resetHeader()
+{
+    connect(header(), &QHeaderView::sortIndicatorChanged,
+            this, &KNMusicLibraryListview::onActionSort);
+    KNMusicListViewBase::resetHeader();
 }
 
 void KNMusicLibraryListview::setModel(QAbstractItemModel *model)

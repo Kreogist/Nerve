@@ -32,8 +32,6 @@ void KNMusicListViewBase::resetHeader()
 //    setItemDelegateForColumn(KNMusicGlobal::Rating,
 //                             new KNMusicRatingDelegate(this));
     setEditTriggers(QAbstractItemView::SelectedClicked);
-    connect(header(), &QHeaderView::sortIndicatorChanged,
-            this, &KNMusicListViewBase::onActionSort);
     for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)

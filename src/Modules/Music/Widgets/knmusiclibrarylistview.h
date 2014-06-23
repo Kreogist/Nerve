@@ -19,6 +19,7 @@ class KNMusicLibraryListview : public KNMusicListViewBase
 public:
     explicit KNMusicLibraryListview(QWidget *parent = 0);
     ~KNMusicLibraryListview();
+    void resetHeader();
     void setModel(QAbstractItemModel *model);
     void setSourceModel(KNMusicModel *musicModel);
     void setMusicBackend(KNLibBass *backend);
