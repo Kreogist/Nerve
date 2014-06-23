@@ -3,7 +3,7 @@
 
 #include <QThread>
 #include <QStringList>
-#include <QList>
+#include <QLinkedList>
 #include <QModelIndex>
 
 #include "../knmusicglobal.h"
@@ -54,8 +54,8 @@ private:
 
     KNMusicInfoCollector *m_collector;
     QThread m_collectThread;
-    QList<AnalysisQueueItem> m_analysisQueue;
-    QList<ResultQueueItem> m_resultQueue;
+    QLinkedList<AnalysisQueueItem> m_analysisQueue;
+    QLinkedList<ResultQueueItem> m_resultQueue;
     bool m_working=false, m_noUpdating=true;
 };
 

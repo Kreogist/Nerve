@@ -61,8 +61,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     KNMusicPlugin *musicPlugin=new KNMusicPlugin(this);
     addPlugin(musicPlugin);
-    KNStorePlugin *storePlugin=new KNStorePlugin(this);
-    addPlugin(storePlugin);
+//    KNStorePlugin *storePlugin=new KNStorePlugin(this);
+//    addPlugin(storePlugin);
 }
 
 void MainWindow::addPlugin(KNPluginBase *plugin)

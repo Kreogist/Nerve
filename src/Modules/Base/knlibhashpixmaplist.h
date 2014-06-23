@@ -5,7 +5,7 @@
 #include <QHash>
 #include <QByteArray>
 #include <QThread>
-#include <QList>
+#include <QLinkedList>
 #include <QObject>
 
 class KNLibImageBuffer : public QObject
@@ -71,8 +71,8 @@ private:
         QString key;
     };
 
-    QList<AnalysisQueueItem> m_analysisQueue;
-    QList<UpdateQueueItem> m_updateQueue;
+    QLinkedList<AnalysisQueueItem> m_analysisQueue;
+    QLinkedList<UpdateQueueItem> m_updateQueue;
     QHash<QString, QImage> m_list;
     KNLibImageBuffer *m_buffer;
     bool m_working=false, m_needToSaveImage=false;

@@ -1,8 +1,5 @@
-#include "../knglobal.h"
-
 #include <QAction>
 #include <QKeySequence>
-#include <QList>
 #include <QFile>
 #include <QDir>
 #include <QSortFilterProxyModel>
@@ -22,6 +19,8 @@
 #include "Widgets/knmusicviewer.h"
 #include "Widgets/knmusicviewermenu.h"
 #include "Widgets/knmusiceq.h"
+
+#include "../knglobal.h"
 
 #include "knmusicplugin.h"
 
