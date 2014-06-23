@@ -1,6 +1,8 @@
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 
+#include "knmusicplaylistmodel.h"
+
 #include "knmusicnowplaying.h"
 
 KNMusicNowPlaying::KNMusicNowPlaying(QObject *parent) :
@@ -136,6 +138,15 @@ QString KNMusicNowPlaying::nextPlayingSong()
     return nextSong();
 }
 
+QString KNMusicNowPlaying::filePathFromIndex(const QModelIndex &index)
+{
+    if(m_proxyModel)
+    {
+        return QString();
+    }
+    return m_playlist->filePathFromIndex(index);
+}
+
 int KNMusicNowPlaying::loopMode()
 {
     return m_loopMode;
@@ -150,7 +161,7 @@ void KNMusicNowPlaying::setCurrentPlaying(const QString &string)
         return;
     }
     //Or else, search in the playlist.
-    //!FIXME: Add codes here.
+    m_playlist;
     //Then it means: we cannot find the file anywhere?! Might a new file from
     //disk, create a temp playlist for it.
     m_temporaryPlaylist=QStringList(string);
@@ -164,8 +175,12 @@ void KNMusicNowPlaying::setLoopMode(const int &index)
 
 void KNMusicNowPlaying::setPlaylist(QAbstractItemModel *playlistModel)
 {
+    //Disable proxy from database.
     m_usingProxy=false;
-    m_playlist=static_cast<QStandardItemModel *>(playlistModel);
+    //Set the playlist pointer.
+    m_playlist=static_cast<KNMusicPlaylistModel *>(playlistModel);
+    //Set the current model.
     m_currentModel=m_playlist;
+    emit requireUpdatePlaylistModel(m_currentModel);
 }
 

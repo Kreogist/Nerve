@@ -292,6 +292,11 @@ QString KNMusicPlaylistManager::playlistName(const QModelIndex &index) const
     return m_playlistModel->data(index, Qt::DisplayRole).toString();
 }
 
+QString KNMusicPlaylistManager::filePathFromIndex(const QModelIndex &index) const
+{
+    return m_nowPlaying->filePathFromIndex(index);
+}
+
 QAbstractItemModel *KNMusicPlaylistManager::playlistModel()
 {
     return m_playlistModel;

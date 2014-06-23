@@ -49,7 +49,7 @@ public:
 signals:
     void requireShowContextMenu(const QPoint &position,
                                 KNMusicGlobal::MusicCategory currentMode);
-    void requirePlayMusic(const QString &index);
+    void requirePlayMusic(const QString &filePath);
     void requireDelete(const QModelIndex &index);
     void requireSetProxy(QSortFilterProxyModel *model);
     void requireClearSearch();

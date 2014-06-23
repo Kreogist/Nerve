@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "knmusicplaylistsongs.h"
 
 KNMusicPlaylistSongs::KNMusicPlaylistSongs(QWidget *parent) :

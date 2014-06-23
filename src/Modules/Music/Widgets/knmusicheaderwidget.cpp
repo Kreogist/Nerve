@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "../../Base/knsearchbox.h"
+#include "../Libraries/knmusicbackend.h"
 #include "../Libraries/knmusicmodel.h"
 #include "../Libraries/knmusicplaylistmanager.h"
 #include "../Libraries/knmusicinfocollector.h"
@@ -51,6 +52,7 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     m_mainLayout->addWidget(m_searchBox, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     m_infoCollector=new KNMusicInfoCollector(this);
+    m_infoCollector->setSignalMode(false);
 }
 
 void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManager *manager)
@@ -71,6 +73,7 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicModel *model)
 void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
 {
     m_headerPlayer->setBackend(backend);
+    m_infoCollector->setMusicBackend(backend->backend());
 }
 
 void KNMusicHeaderWidget::setAlbumArt(const QPixmap &albumArt)
@@ -183,11 +186,18 @@ void KNMusicHeaderWidget::playCurrent()
         m_headerPlayer->setTitle(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Name));
         m_headerPlayer->setArtist(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Artist));
         m_headerPlayer->setAlbum(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Album));
-        m_headerPlayer->syncData();
-        m_headerPlayer->playFile(m_currentPath);
-        return;
     }
-    m_infoCollector->analysis(m_currentPath);
+    else
+    {
+        m_infoCollector->analysis(m_currentPath);
+        QStringList values=m_infoCollector->currentMusicValue();
+        KNMusicGlobal::MusicDetailsInfo details=m_infoCollector->currentMusicDatas();
+        m_headerPlayer->setAlbumArt(QPixmap::fromImage(details.coverImage));
+        m_headerPlayer->setTitle(values.at(KNMusicGlobal::Name));
+        m_headerPlayer->setArtist(values.at(KNMusicGlobal::Artist));
+        m_headerPlayer->setAlbum(values.at(KNMusicGlobal::Album));
+    }
+    m_headerPlayer->syncData();
     m_headerPlayer->playFile(m_currentPath);
 }
 

@@ -47,6 +47,7 @@ public:
     QString nextSong();
     QString prevSong();
     QString playlistName(const QModelIndex &index) const;
+    QString filePathFromIndex(const QModelIndex &index) const;
 
     //Datas ports.
     QAbstractItemModel *playlistModel();

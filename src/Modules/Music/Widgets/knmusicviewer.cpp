@@ -118,6 +118,11 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
             this, &KNMusicViewer::onActionGenreShowContextMenu);
 
+    m_playlistView=new KNMusicPlaylistView(this);
+    m_playlistView->installEventFilter(this);
+    connect(m_playlistView, &KNMusicPlaylistView::requirePlayMusic,
+            this, &KNMusicViewer::requirePlayMusic);
+
     m_artistDetails=new KNMusicCategoryDetailModel;
     m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
     m_artistDetails->setCategoryModel(m_artistModel);
@@ -133,7 +138,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_genreDetails->setCategoryModel(m_genreModel);
     m_genreView->setDetailModel(m_genreDetails);
 
-    m_playlistView=new KNMusicPlaylistView(this);
     addCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                 m_categoryCaption[Songs],
                 m_libraryView);
