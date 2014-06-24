@@ -95,6 +95,16 @@ bool KNMusicPlaylistItem::modelBuild() const
     return data(ModelBuild).toBool();
 }
 
+QModelIndex KNMusicPlaylistItem::firstIndexFromMusicPath(const QString &filePath)
+{
+    return m_playlistModel->indexFromFilePath(filePath);
+}
+
+QList<QStandardItem *> KNMusicPlaylistItem::songRow(const int &row) const
+{
+    return m_playlistModel->songRow(row);
+}
+
 QStandardItemModel *KNMusicPlaylistItem::playlistModel()
 {
     return m_playlistModel;

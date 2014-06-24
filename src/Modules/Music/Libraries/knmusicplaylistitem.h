@@ -29,6 +29,8 @@ public:
     bool savePlayList();
     bool forceSavePlaylist();
     bool modelBuild() const;
+    QModelIndex firstIndexFromMusicPath(const QString &filePath);
+    QList<QStandardItem *> songRow(const int &row) const;
     QStandardItemModel *playlistModel();
     void clearSongPaths();
     QStringList songPaths() const;

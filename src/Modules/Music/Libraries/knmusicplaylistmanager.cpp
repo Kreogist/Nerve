@@ -214,6 +214,13 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
         }
         else
         {
+            //Check the song has been load before. If it does, load it.
+            QModelIndex exsistCheck=item->firstIndexFromMusicPath(filePath);
+            if(exsistCheck.isValid())
+            {
+                item->appendSongRow(item->songRow(exsistCheck.row()));
+                continue;
+            }
             m_infoCollector->analysis(filePath);
             if(m_infoCollector->currentMusicValue().isEmpty())
             {
