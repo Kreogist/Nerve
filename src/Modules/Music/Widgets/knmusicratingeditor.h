@@ -1,8 +1,7 @@
 #ifndef KNMUSICRATINGEDITOR_H
 #define KNMUSICRATINGEDITOR_H
 
-#include "../Libraries/knmusicstarrating.h"
-
+#include <QPixmap>
 #include <QWidget>
 
 class KNMusicRatingEditor : public QWidget
@@ -12,16 +11,13 @@ public:
     explicit KNMusicRatingEditor(QWidget *parent = 0);
     QSize sizeHint() const
     {
-        return m_starRating.sizeHint();
+        return QSize(m_editorWidth, m_starSizeHint);
     }
-    void setStarRating(const KNMusicStarRating &starRating)
-    {
-        m_starRating = starRating;
-    }
-    KNMusicStarRating starRating()
-    {
-        return m_starRating;
-    }
+
+    int starSizeHint() const;
+    void setStarSizeHint(int starSizeHint);
+    int starNum() const;
+    void setStarNum(int starNum);
 
 signals:
     void editingFinished();
@@ -33,8 +29,8 @@ protected:
 
 private:
     int starAtPosition(int x);
-    KNMusicStarRating m_starRating;
-
+    int m_starSizeHint=0, m_editorWidth=0, m_starNum, m_halfStarSizeHint;
+    QPixmap m_star, m_unstar, m_scaleStar, m_scaleUnstar;
 };
 
 #endif // KNMUSICRATINGEDITOR_H

@@ -49,6 +49,7 @@ void KNMusicDatabase::recoverData()
         currentDetails.size=(int)currentSong["Size"].toDouble();
         currentDetails.bitRate=(float)currentSong["BitRate"].toDouble();
         currentDetails.samplingRate=(float)currentSong["SampleRate"].toDouble();
+        currentDetails.rating=(int)currentSong["Rating"].toInt();
 
         dateTimeStringCache=currentSong["DateModified"].toString();
         dateTimeCache=stringToDateTime(dateTimeStringCache);
@@ -112,6 +113,7 @@ QJsonObject KNMusicDatabase::createRowObject(const int &row)
     currentSong["Size"]=m_model->itemRoleData(row, KNMusicGlobal::Size, Qt::UserRole).toInt();
     currentSong["Time"]=m_model->itemRoleData(row, KNMusicGlobal::Time, Qt::UserRole).toInt();
     currentSong["FilePath"]=m_model->itemRoleData(row, KNMusicGlobal::Name, Qt::UserRole).toString();
+    currentSong["Rating"]=m_model->itemRoleData(row, KNMusicGlobal::Rating, Qt::DisplayRole).toInt();
     return currentSong;
 }
 

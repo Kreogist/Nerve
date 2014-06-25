@@ -1,5 +1,3 @@
-#include "knmusicstarrating.h"
-
 #include "../../knglobal.h"
 
 #include "knmusicmodelbase.h"
@@ -128,7 +126,7 @@ void KNMusicModelBase::setMusicDetailsInfo(const int &currentRow,
     songItem->setData(currentDetails.size, Qt::UserRole);
     songItem->setData(QVariant(Qt::AlignRight | Qt::AlignVCenter), Qt::TextAlignmentRole);
     songItem=item(currentRow,KNMusicGlobal::Rating);
-    songItem->setData(QVariant::fromValue(KNMusicStarRating(currentDetails.rating)),
+    songItem->setData(currentDetails.rating,
                       0);
     songItem->setEditable(true);
     songItem=item(currentRow,KNMusicGlobal::DateAdded);

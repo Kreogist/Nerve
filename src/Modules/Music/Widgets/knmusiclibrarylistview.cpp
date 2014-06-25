@@ -21,7 +21,6 @@
 #include "../knmusicglobal.h"
 
 #include "knmusiclistviewheader.h"
-#include "knmusicratingdelegate.h"
 #include "knmusicdetailtooltip.h"
 
 KNMusicLibraryListview::KNMusicLibraryListview(QWidget *parent) :

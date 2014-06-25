@@ -67,7 +67,6 @@ SOURCES += \
     Modules/Music/Libraries/knmusicgenremodel.cpp \
     Modules/Music/Libraries/knmusiccategorydetailmodel.cpp \
     Modules/Music/Widgets/knmusicratingdelegate.cpp \
-    Modules/Music/Libraries/knmusicstarrating.cpp \
     Modules/Music/Widgets/knmusicratingeditor.cpp \
     Modules/Music/Widgets/knmusicalbumview.cpp \
     Modules/Music/Libraries/knmusicalbummodel.cpp \
@@ -206,7 +205,6 @@ HEADERS += \
     Modules/Music/Libraries/knmusicgenremodel.h \
     Modules/Music/Libraries/knmusiccategorydetailmodel.h \
     Modules/Music/Widgets/knmusicratingdelegate.h \
-    Modules/Music/Libraries/knmusicstarrating.h \
     Modules/Music/Widgets/knmusicratingeditor.h \
     Modules/Music/Widgets/knmusicalbumview.h \
     Modules/Music/Libraries/knmusicalbummodel.h \

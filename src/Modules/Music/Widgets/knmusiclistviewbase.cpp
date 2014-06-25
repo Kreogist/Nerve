@@ -1,6 +1,7 @@
 #include <QHeaderView>
 #include <QScrollBar>
 
+#include "knmusicratingdelegate.h"
 #include "../knmusicglobal.h"
 
 #include "knmusiclistviewbase.h"
@@ -25,13 +26,14 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     horizontalScrollBar()->setPageStep(5);
     verticalScrollBar()->setSingleStep(4);
     verticalScrollBar()->setPageStep(4);
+
+    setItemDelegateForColumn(KNMusicGlobal::Rating,
+                             new KNMusicRatingDelegate(this));
+    setEditTriggers(QAbstractItemView::DoubleClicked);
 }
 
 void KNMusicListViewBase::resetHeader()
 {
-//    setItemDelegateForColumn(KNMusicGlobal::Rating,
-//                             new KNMusicRatingDelegate(this));
-    setEditTriggers(QAbstractItemView::SelectedClicked);
     for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)

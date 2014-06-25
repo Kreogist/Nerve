@@ -28,6 +28,10 @@ public slots:
 
 private slots:
     void commitAndCloseEditor();
+
+private:
+    QPixmap m_star;
+    int m_starSizeHint=20;
 };
 
 #endif // KNMUSICRATINGDELEGATE_H
