@@ -103,6 +103,7 @@ void KNMusicLibraryListview::mouseReleaseEvent(QMouseEvent *event)
         QModelIndex mouseIndex=indexAt(event->pos());
         if(mouseIndex.isValid())
         {
+            m_musicDetailTooltip->hide();
             KNMusicGlobal::instance()->setSelectedColumn(mouseIndex.column());
             setSelectedRows();
             emit requireShowContextMenu(event->globalPos());

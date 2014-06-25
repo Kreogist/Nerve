@@ -1,3 +1,5 @@
+#include <QMap>
+
 #include <QDebug>
 
 #include "knmusicplaylistsongs.h"
