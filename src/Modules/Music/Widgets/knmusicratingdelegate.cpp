@@ -4,7 +4,6 @@
 
 #include <QDebug>
 
-#include "../Libraries/knmusicstarrating.h"
 #include "knmusicratingeditor.h"
 
 #include "knmusicratingdelegate.h"

@@ -1,8 +1,8 @@
-#include <QDebug>
-
+#include <QPainter>
 #include <QMouseEvent>
 
-#include "../Libraries/knmusicstarrating.h"
+#include <QDebug>
+
 #include "knmusicratingeditor.h"
 
 KNMusicRatingEditor::KNMusicRatingEditor(QWidget *parent) :
@@ -51,8 +51,7 @@ void KNMusicRatingEditor::mouseReleaseEvent(QMouseEvent *event)
 
 int KNMusicRatingEditor::starAtPosition(int x)
 {
-    int starNum=x<m_halfStarSizeHint?0:
-                ((x-m_halfStarSizeHint)/m_starSizeHint)+1;
+    int starNum=x<m_halfStarSizeHint?0:(x/m_starSizeHint+1);
     if(starNum<0)
     {
         return -1;
