@@ -8,7 +8,7 @@ class QPropertyAnimation;
 class QLabel;
 class QSpacerItem;
 class QBoxLayout;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNOpacityButton;
 class KNMusicBackend;
 class KNMusicHeaderPlayer;

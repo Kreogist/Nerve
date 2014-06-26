@@ -18,10 +18,10 @@
 
 #include "knmusicinfocollectormanager.h"
 
-#include "knmusicmodel.h"
+#include "knmusiclibrarymodel.h"
 
-KNMusicModel::KNMusicModel(QObject *parent) :
-    KNMusicModelBase(parent)
+KNMusicLibraryModel::KNMusicLibraryModel(QObject *parent) :
+    KNMusicLibraryModelBase(parent)
 {
     //Initial the music global.
     m_musicGlobal=KNMusicGlobal::instance();
@@ -34,17 +34,17 @@ KNMusicModel::KNMusicModel(QObject *parent) :
     m_pixmapList=new KNLibHashPixmapList;
     m_pixmapList->moveToThread(&m_pixmapListThread);
     connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
-            this, &KNMusicModel::onActionUpdatePixmap);
+            this, &KNMusicLibraryModel::onActionUpdatePixmap);
     connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
-            this, &KNMusicModel::onActionImageLoadComplete);
-    connect(this, &KNMusicModel::requireLoadImage,
+            this, &KNMusicLibraryModel::onActionImageLoadComplete);
+    connect(this, &KNMusicLibraryModel::requireLoadImage,
             m_pixmapList, &KNLibHashPixmapList::loadImages);
 
     //Start pixmap list thread.
     m_pixmapListThread.start();
 }
 
-KNMusicModel::~KNMusicModel()
+KNMusicLibraryModel::~KNMusicLibraryModel()
 {
     m_pixmapListThread.quit();
     m_pixmapListThread.wait();
@@ -52,25 +52,25 @@ KNMusicModel::~KNMusicModel()
     m_pixmapList->deleteLater();
 }
 
-QImage KNMusicModel::artwork(const int &row) const
+QImage KNMusicLibraryModel::artwork(const int &row) const
 {
     QString imageKey=itemArtworkKey(row);
     return imageKey.isEmpty()?m_musicGlobal->noAlbumImage():artworkFromKey(imageKey);
 }
 
-QImage KNMusicModel::artworkFromKey(const QString &key) const
+QImage KNMusicLibraryModel::artworkFromKey(const QString &key) const
 {
     QImage pixmap=m_pixmapList->pixmap(key);
     return pixmap.isNull()?m_musicGlobal->noAlbumImage():pixmap;
 }
 
-QString KNMusicModel::itemArtworkKey(const int &row) const
+QString KNMusicLibraryModel::itemArtworkKey(const int &row) const
 {
     return data(index(row, KNMusicGlobal::Name),
                 KNMusicGlobal::ArtworkKeyRole).toString();
 }
 
-void KNMusicModel::addRawFileItem(QString filePath)
+void KNMusicLibraryModel::addRawFileItem(QString filePath)
 {
     QModelIndexList fileCheck=match(index(0,0),
                                     KNMusicGlobal::FilePathRole,
@@ -102,7 +102,7 @@ void KNMusicModel::addRawFileItem(QString filePath)
     updateIndexInfo(songItem->index(), filePath);
 }
 
-void KNMusicModel::addRawFileItems(QStringList fileList)
+void KNMusicLibraryModel::addRawFileItems(QStringList fileList)
 {
     int listFileCount=fileList.size();
     //***Speed Test***
@@ -115,35 +115,35 @@ void KNMusicModel::addRawFileItems(QStringList fileList)
     }
 }
 
-void KNMusicModel::setAlbumArtPath(const QString &path)
+void KNMusicLibraryModel::setAlbumArtPath(const QString &path)
 {
     m_pixmapList->setAlbumArtPath(path);
     emit requireLoadImage();
 }
 
-void KNMusicModel::recoverFile(QStringList textList,
+void KNMusicLibraryModel::recoverFile(QStringList textList,
                                KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
     emit musicRecover(appendMusicItem(textList, currentDetails));
 }
 
-void KNMusicModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
+void KNMusicLibraryModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
 {
     KNModel::setInfoCollectorManager(infoCollectorManager);
     m_infoCollectorManager=qobject_cast<KNMusicInfoCollectorManager *>(infoCollectorManager);
 }
 
-void KNMusicModel::retranslate()
+void KNMusicLibraryModel::retranslate()
 {
     ;
 }
 
-void KNMusicModel::retranslateAndSet()
+void KNMusicLibraryModel::retranslateAndSet()
 {
     KNModel::retranslate();
 }
 
-void KNMusicModel::onActionRecoverComplete()
+void KNMusicLibraryModel::onActionRecoverComplete()
 {
     m_dataRecoverComplete=true;
     emit requireResort();
@@ -153,7 +153,7 @@ void KNMusicModel::onActionRecoverComplete()
     }
 }
 
-void KNMusicModel::onActionUpdateRowInfo()
+void KNMusicLibraryModel::onActionUpdateRowInfo()
 {
     QStringList currentText=m_infoCollectorManager->currentFileData();
     KNMusicGlobal::MusicDetailsInfo currentDetails=
@@ -197,7 +197,7 @@ void KNMusicModel::onActionUpdateRowInfo()
     }
 }
 
-void KNMusicModel::onActionImageLoadComplete()
+void KNMusicLibraryModel::onActionImageLoadComplete()
 {
     m_imageRecoverComplete=true;
     if(m_dataRecoverComplete)
@@ -206,7 +206,7 @@ void KNMusicModel::onActionImageLoadComplete()
     }
 }
 
-void KNMusicModel::onActionUpdatePixmap()
+void KNMusicLibraryModel::onActionUpdatePixmap()
 {
     setData(index(m_pixmapList->currentRow(),
                   KNMusicGlobal::Name),
@@ -216,14 +216,14 @@ void KNMusicModel::onActionUpdatePixmap()
     m_pixmapList->removeCurrentUpdate();
 }
 
-void KNMusicModel::updateIndexInfo(const QModelIndex &index,
+void KNMusicLibraryModel::updateIndexInfo(const QModelIndex &index,
                                    const QString &filePath)
 {
     infoCollectorManager()->addAnalysisList(index.row(),
                                             filePath);
 }
 
-void KNMusicModel::prepareRemove(const QModelIndex &index)
+void KNMusicLibraryModel::prepareRemove(const QModelIndex &index)
 {
     emit musicAboutToRemove(index);
 }

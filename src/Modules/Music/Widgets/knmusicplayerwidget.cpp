@@ -6,7 +6,7 @@
 #include <QDebug>
 
 #include "../../Base/knopacitybutton.h"
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicbackend.h"
 #include "knmusicvisualeffect.h"
 #include "knmusicheaderplayer.h"

@@ -23,7 +23,7 @@
 
 #include "../../Base/knlibfilter.h"
 
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Libraries/knmusicartistmodel.h"
 #include "../Libraries/knmusicalbummodel.h"
@@ -182,7 +182,7 @@ void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
     m_playlistView->setManager(manager);
 }
 
-void KNMusicViewer::setMusicModel(KNMusicModel *model)
+void KNMusicViewer::setMusicModel(KNMusicLibraryModel *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);

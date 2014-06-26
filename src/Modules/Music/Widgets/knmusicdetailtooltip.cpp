@@ -12,7 +12,7 @@
 
 #include "../../Public/bass/knlibbass.h"
 
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../knmusicglobal.h"
 #include "../../Base/knplayerprogress.h"
 
@@ -184,7 +184,7 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
     move(bestPosition(point));
 }
 
-void KNMusicDetailTooltip::setMusicModel(KNMusicModel *model)
+void KNMusicDetailTooltip::setMusicModel(KNMusicLibraryModel *model)
 {
     m_musicModel=model;
 }

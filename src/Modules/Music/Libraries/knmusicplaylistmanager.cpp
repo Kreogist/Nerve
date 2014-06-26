@@ -10,7 +10,7 @@
 
 #include "knmusicplaylistitem.h"
 #include "knmusicnowplaying.h"
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicinfocollector.h"
 #include "../../knglobal.h"
 
@@ -258,7 +258,7 @@ void KNMusicPlaylistManager::setMusicBackend(KNLibBass *backend)
     m_infoCollector->setMusicBackend(backend);
 }
 
-void KNMusicPlaylistManager::setMusicModel(KNMusicModel *model)
+void KNMusicPlaylistManager::setMusicModel(KNMusicLibraryModel *model)
 {
     m_musicModel=model;
     m_nowPlaying->setMusicModel(m_musicModel);

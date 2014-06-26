@@ -5,7 +5,7 @@
 
 #include "../../Base/knsearchbox.h"
 #include "../Libraries/knmusicbackend.h"
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicplaylistmanager.h"
 #include "../Libraries/knmusicinfocollector.h"
 #include "../knmusicglobal.h"
@@ -64,7 +64,7 @@ void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManager *manager)
             m_playlistManager, &KNMusicPlaylistManager::setLoopMode);
 }
 
-void KNMusicHeaderWidget::setMusicModel(KNMusicModel *model)
+void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModel *model)
 {
     m_musicModel=model;
     m_playlistManager->setMusicModel(model);

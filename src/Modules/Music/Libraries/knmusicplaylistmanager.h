@@ -21,7 +21,7 @@ class KNLibBass;
 class KNMusicInfoCollector;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public QObject
 {
@@ -36,7 +36,7 @@ public:
 
     //Backend sets.
     void setMusicBackend(KNLibBass *backend);
-    void setMusicModel(KNMusicModel *model);
+    void setMusicModel(KNMusicLibraryModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
     void setCurrentPlaylistPlaying(const QModelIndex &index);
@@ -87,7 +87,7 @@ private:
 
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
-    KNMusicModel *m_musicModel;
+    KNMusicLibraryModel *m_musicModel;
     QStandardItemModel *m_playlistModel;
     QThread m_dataModelThread, m_infoThread;
     KNMusicInfoCollector *m_infoCollector;

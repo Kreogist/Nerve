@@ -1,9 +1,10 @@
 #ifndef KNMUSICSEARCHER_H
 #define KNMUSICSEARCHER_H
 
-#include <QObject>
+#include "../../../Modules/Base/knlibfilter.h"
 
-class KNMusicSearcher : public QObject
+class KNMusicGlobal;
+class KNMusicSearcher : public KNLibSearcher
 {
     Q_OBJECT
 public:
@@ -13,8 +14,11 @@ signals:
 
 public slots:
 
+protected:
+    int getType(const QString &suffix);
+
 private:
-    ;
+    KNMusicGlobal *m_musicGlobal;
 };
 
 #endif // KNMUSICSEARCHER_H

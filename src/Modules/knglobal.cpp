@@ -37,14 +37,22 @@ QString KNGlobal::byteToHigher(const qint64 &fileSize)
 KNGlobal::KNGlobal() :
     QObject()
 {
+    //Initial the storage unit.
     m_storageUnit[0]="Byte";
     m_storageUnit[1]="KB";
     m_storageUnit[2]="MB";
     m_storageUnit[3]="GB";
     m_storageUnit[4]="TB";
+    //Initial the system clipboard.
     m_clipboard=QApplication::clipboard();
+    //Initial the default library path.
     m_libraryPath=QDir::toNativeSeparators(qApp->applicationDirPath()+QString("/Library"));
+    //Initial the configure.
     m_configure=KNConfigure::instance();
+    //Get the arguments.
+    m_arguments=QApplication::arguments();
+    //!FIXME: we should load configure here!
+    //After loading all configure, check the library path is exsist or not.
     QDir libraryCheck(m_libraryPath);
     if(!libraryCheck.exists())
     {
@@ -52,11 +60,16 @@ KNGlobal::KNGlobal() :
     }
 }
 
+QStringList KNGlobal::arguments() const
+{
+    return m_arguments;
+}
+
 #ifdef Q_OS_LINUX
 QString KNGlobal::substituteFileBrowserParameters(QString &pre, QString &file)
 {
     QString cmd;
-        for (int i = 0; i < pre.size(); ++i) {
+    for (int i = 0; i < pre.size(); ++i) {
             QChar c = pre.at(i);
             if (c == QLatin1Char('%') && i < pre.size()-1) {
                 c = pre.at(++i);

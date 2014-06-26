@@ -8,14 +8,11 @@
 
 #include <QObject>
 
-class KNModel;
-class KNLibFilter : public QObject
+class KNLibSearcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNLibFilter(QObject *parent = 0);
-    KNModel *model() const;
-    void setModel(KNModel *model);
+    explicit KNLibSearcher(QObject *parent = 0);
 
 signals:
     void requireAddRawFiles(QStringList fileList);
@@ -32,7 +29,6 @@ private:
                       const QString &filePath);
     QFileInfo m_currentDetails;
     QStringList m_rawFileList;
-    KNModel *m_model;
 };
 
 #endif // KNLIBSEARCHER_H

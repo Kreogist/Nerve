@@ -1,4 +1,4 @@
-#include "knmusicmodel.h"
+#include "knmusiclibrarymodel.h"
 #include "../knmusicglobal.h"
 #include "../../knglobal.h"
 
@@ -14,17 +14,17 @@ KNMusicDatabase::KNMusicDatabase(QObject *parent) :
 
 void KNMusicDatabase::setModel(QAbstractItemModel *model)
 {
-    m_model=static_cast<KNMusicModel *>(model);
-    connect(m_model, &KNMusicModel::musicAppend,
+    m_model=static_cast<KNMusicLibraryModel *>(model);
+    connect(m_model, &KNMusicLibraryModel::musicAppend,
             this, &KNMusicDatabase::onActionRowAppend);
-    connect(m_model, &KNMusicModel::musicAboutToRemove,
+    connect(m_model, &KNMusicLibraryModel::musicAboutToRemove,
             this, &KNMusicDatabase::onActionRowRemove);
-    connect(m_model, &KNMusicModel::musicUpdate,
+    connect(m_model, &KNMusicLibraryModel::musicUpdate,
             this, &KNMusicDatabase::onActionRowUpdate);
-    connect(m_model, &KNMusicModel::musicAlbumArtUpdate,
+    connect(m_model, &KNMusicLibraryModel::musicAlbumArtUpdate,
             this, &KNMusicDatabase::onActionUpdateCoverImage);
     connect(this, &KNMusicDatabase::recoverComplete,
-            m_model, &KNMusicModel::onActionRecoverComplete);
+            m_model, &KNMusicLibraryModel::onActionRecoverComplete);
 }
 
 void KNMusicDatabase::recoverData()

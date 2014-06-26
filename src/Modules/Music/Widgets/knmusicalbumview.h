@@ -12,7 +12,7 @@ class QResizeEvent;
 class QParallelAnimationGroup;
 class QTimeLine;
 class KNLibBass;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
 class KNMusicAlbumModel;
@@ -51,7 +51,7 @@ public:
     void resetHeader();
     void resetSongState();
     void setMusicBackend(KNLibBass *backend);
-    void setSourceModel(KNMusicModel *model);
+    void setSourceModel(KNMusicLibraryModel *model);
 
 signals:
     void requireOpenUrl(const QModelIndex &index);
@@ -81,7 +81,7 @@ public:
     void setArtistName(const QString &name);
     void setYear(const QString &value);
     void setDetailModel(KNMusicAlbumDetailModel *model);
-    void setSourceModel(KNMusicModel *model);
+    void setSourceModel(KNMusicLibraryModel *model);
     void selectItem(const QModelIndex &index);
     void resetHeader();
     void resetSongState();
@@ -140,7 +140,7 @@ public:
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
     void resetHeader();
-    void setSourceModel(KNMusicModel *model);
+    void setSourceModel(KNMusicLibraryModel *model);
     void setMusicBackend(KNLibBass *backend);
     void setFilterFixedString(const QString &text);
 

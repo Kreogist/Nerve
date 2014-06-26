@@ -66,7 +66,7 @@ void KNMusicLibraryListview::setModel(QAbstractItemModel *model)
     m_proxyModel=static_cast<QSortFilterProxyModel *>(model);
 }
 
-void KNMusicLibraryListview::setSourceModel(KNMusicModel *musicModel)
+void KNMusicLibraryListview::setSourceModel(KNMusicLibraryModel *musicModel)
 {
     m_musicModel=musicModel;
     m_musicDetailTooltip->setMusicModel(musicModel);

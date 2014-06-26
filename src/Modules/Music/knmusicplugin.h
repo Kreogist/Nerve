@@ -11,17 +11,17 @@
 
 class QAction;
 class KNGlobal;
-class KNLibFilter;
+class KNLibSearcher;
 class KNMusicBackend;
 class KNMusicPlayerWidget;
 class KNMusicDatabase;
 class KNMusicHeaderWidget;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNMusicPlaylistManager;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
-class KNMusicFilter;
+class KNMusicSearcher;
 class KNMusicViewerMenu;
 class KNMusicEQ;
 class KNMusicDetailInfo;
@@ -32,7 +32,8 @@ public:
     explicit KNMusicPlugin(QObject *parent = 0);
     ~KNMusicPlugin();
     void applyPlugin();
-    void setFileFilter(KNLibFilter *filter);
+    void setSearcher(KNLibSearcher *searcher);
+    void setLibrary();
 
 signals:
     void requireAnalysisUrls(const QList<QUrl> urls);
@@ -52,10 +53,11 @@ private:
     void createShortcuts();
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
-    KNMusicModel *m_model;
+    KNMusicLibraryModel *m_libraryModel;
     KNMusicInfoCollector *m_infoCollector;
     KNMusicInfoCollectorManager *m_infoCollectManager;
-    KNMusicFilter *m_searcher;
+    KNMusicSearcher *m_musicSearcher;
+    KNLibSearcher *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfo *m_detailsDialog;
     KNMusicDatabase *m_database;

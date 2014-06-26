@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusiccategorydetailmodel.h"
 
 #include "knmusicplaylistmodel.h"
@@ -13,7 +13,7 @@ KNMusicNowPlaying::KNMusicNowPlaying(QObject *parent) :
     m_categoryProxyModel=new KNMusicCategoryDetailModel(this);
 }
 
-void KNMusicNowPlaying::setMusicModel(KNMusicModel *model)
+void KNMusicNowPlaying::setMusicModel(KNMusicLibraryModel *model)
 {
     m_musicModel=model;
     m_categoryProxyModel->setSourceModel(m_musicModel);

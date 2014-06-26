@@ -14,7 +14,7 @@ class QToolButton;
 class QSlider;
 class QMouseEvent;
 class QBoxLayout;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNPlayerProgress;
 class KNLibBass;
 class KNMusicDetailTooltipPlay : public QLabel
@@ -46,7 +46,7 @@ public:
     ~KNMusicDetailTooltip();
     void setTooltip(const QModelIndex &index,
                     const QPoint &point);
-    void setMusicModel(KNMusicModel *model);
+    void setMusicModel(KNMusicLibraryModel *model);
     void showTooltip();
     void forceQuit();
     void setMusicBackend(KNLibBass *backend);
@@ -90,7 +90,7 @@ private:
     QTimer *m_tooltipDisapper;
     int m_currentRow=-1, m_fixedWidth=448, m_fixedHeight=176;
     bool m_sliderPressed=false;
-    KNMusicModel *m_musicModel;
+    KNMusicLibraryModel *m_musicModel;
     KNLibBass *m_preview;
     KNPlayerProgress *m_playerStatus;
     KNMusicDetailTooltipPlay *m_control;

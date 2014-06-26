@@ -69,7 +69,6 @@ void KNMusicRatingEditor::setStarNum(int starNum)
     m_starNum = starNum;
 }
 
-
 int KNMusicRatingEditor::starSizeHint() const
 {
     return m_starSizeHint;
@@ -83,6 +82,3 @@ void KNMusicRatingEditor::setStarSizeHint(int starSizeHint)
     m_scaleStar=m_star.scaled(m_starSizeHint, m_starSizeHint, Qt::KeepAspectRatio);
     m_scaleUnstar=m_unstar.scaled(m_starSizeHint, m_starSizeHint, Qt::KeepAspectRatio);
 }
-
-
-

@@ -4,7 +4,6 @@
 #include "knlibviewer.h"
 
 class QBoxLayout;
-class KNLibFilter;
 class KNStdLibViewerCategory;
 class KNWidgetSwitcher;
 class KNStdLibViewer : public KNLibViewer

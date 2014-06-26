@@ -27,6 +27,7 @@ public:
     void copyTextToClipboard(const QString &text);
     QString databaseFolder() const;
     QTextCodec *codecForCurrentLocale() const;
+    QStringList arguments() const;
 
 signals:
 
@@ -43,6 +44,7 @@ private:
     QString m_storageUnit[5], m_libraryPath;
     QWidget *m_mainWindow;
     QClipboard *m_clipboard;
+    QStringList m_arguments;
 };
 
 #endif // KNGLOBAL_H

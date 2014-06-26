@@ -3,14 +3,14 @@
 
 #include <QMimeData>
 
-#include "../Libraries/knmusicmodel.h"
+#include "../Libraries/knmusiclibrarymodel.h"
 
 #include "knmusiclistviewbase.h"
 
 class QDrag;
 class QSortFilterProxyModel;
 class KNLibBass;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNMusicDetailTooltip;
 class KNMusicListViewHeader;
 class KNMusicLibraryListview : public KNMusicListViewBase
@@ -21,7 +21,7 @@ public:
     ~KNMusicLibraryListview();
     void resetHeader();
     void setModel(QAbstractItemModel *model);
-    void setSourceModel(KNMusicModel *musicModel);
+    void setSourceModel(KNMusicLibraryModel *musicModel);
     void setMusicBackend(KNLibBass *backend);
 
 signals:
@@ -50,7 +50,7 @@ private:
     KNMusicListViewHeader *m_headerWidget;
     QModelIndex m_detailIndex;
     KNMusicDetailTooltip *m_musicDetailTooltip;
-    KNMusicModel *m_musicModel;
+    KNMusicLibraryModel *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QDrag *m_dragAction;
     QMimeData *m_mimeData;

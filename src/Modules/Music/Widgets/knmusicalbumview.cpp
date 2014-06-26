@@ -127,7 +127,7 @@ void KNMusicAlbumSongDetail::setMusicBackend(KNLibBass *backend)
     m_albumSongs->setMusicBackend(backend);
 }
 
-void KNMusicAlbumSongDetail::setSourceModel(KNMusicModel *model)
+void KNMusicAlbumSongDetail::setSourceModel(KNMusicLibraryModel *model)
 {
     m_albumSongs->setSourceModel(model);
 }
@@ -256,7 +256,7 @@ void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
             m_infoPanel, &KNMusicAlbumInfoDetail::onActionSongCountChange);*/
 }
 
-void KNMusicAlbumDetail::setSourceModel(KNMusicModel *model)
+void KNMusicAlbumDetail::setSourceModel(KNMusicLibraryModel *model)
 {
     m_songPanel->setSourceModel(model);
 }
@@ -998,7 +998,7 @@ void KNMusicAlbumView::resetHeader()
     m_albumDetail->resetHeader();
 }
 
-void KNMusicAlbumView::setSourceModel(KNMusicModel *model)
+void KNMusicAlbumView::setSourceModel(KNMusicLibraryModel *model)
 {
     m_albumDetail->setSourceModel(model);
 }

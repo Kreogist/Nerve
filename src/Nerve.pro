@@ -42,7 +42,6 @@ SOURCES += \
     Modules/Music/Widgets/knmusicviewer.cpp \
     Modules/Base/kncutestyle.cpp \
     Modules/knlocale.cpp \
-    Modules/Music/Libraries/knmusicmodel.cpp \
     Modules/Base/knpluginbase.cpp \
     Modules/Music/knmusicplugin.cpp \
     Modules/Base/knlibcategoryswitcher.cpp \
@@ -95,8 +94,6 @@ SOURCES += \
     Modules/Base/knstdlibheaderswitcher.cpp \
     Modules/Base/knsearchbox.cpp \
     Modules/Base/knlibfilter.cpp \
-    Modules/Music/Libraries/knmusicfilter.cpp \
-    Modules/Music/Libraries/knmusicsearcher.cpp \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.cpp \
     Modules/Music/Libraries/knmusictagwav.cpp \
     Modules/Public/knlibmediainfoparser.cpp \
@@ -161,7 +158,10 @@ SOURCES += \
     Modules/Music/Libraries/knmusicmodelbase.cpp \
     Modules/Music/Libraries/knmusicplaylistmodel.cpp \
     Modules/Music/Widgets/knmusiclibrarylistview.cpp \
-    Modules/Base/knlibheaderstatus.cpp
+    Modules/Base/knlibheaderstatus.cpp \
+    Modules/Music/Libraries/knmusiclibrarymodel.cpp \
+    Modules/Music/Libraries/knmusicsearcher.cpp \
+    Modules/Music/Libraries/knmusiclibrarymodelbase.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -180,7 +180,6 @@ HEADERS += \
     Modules/Music/Widgets/knmusicviewer.h \
     Modules/Base/kncutestyle.h \
     Modules/knlocale.h \
-    Modules/Music/Libraries/knmusicmodel.h \
     Modules/Base/knpluginbase.h \
     Modules/Music/knmusicplugin.h \
     Modules/Base/knlibcategoryswitcher.h \
@@ -234,8 +233,6 @@ HEADERS += \
     Modules/Base/knstdlibheaderswitcher.h \
     Modules/Base/knsearchbox.h \
     Modules/Base/knlibfilter.h \
-    Modules/Music/Libraries/knmusicfilter.h \
-    Modules/Music/Libraries/knmusicsearcher.h \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.h \
     Modules/Music/Libraries/knmusictagwav.h \
     Modules/Public/knlibmediainfoparser.h \
@@ -300,7 +297,10 @@ HEADERS += \
     Modules/Music/Libraries/knmusicmodelbase.h \
     Modules/Music/Libraries/knmusicplaylistmodel.h \
     Modules/Music/Widgets/knmusiclibrarylistview.h \
-    Modules/Base/knlibheaderstatus.h
+    Modules/Base/knlibheaderstatus.h \
+    Modules/Music/Libraries/knmusiclibrarymodel.h \
+    Modules/Music/Libraries/knmusicsearcher.h \
+    Modules/Music/Libraries/knmusiclibrarymodelbase.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

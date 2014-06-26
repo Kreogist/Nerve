@@ -7,7 +7,7 @@
 #include "../../Base/knstdlibdatabase.h"
 
 class QAbstractItemModel;
-class KNMusicModel;
+class KNMusicLibraryModel;
 class KNGlobal;
 class KNMusicDatabase : public KNStdLibDatabase
 {
@@ -30,7 +30,7 @@ private:
     QJsonObject createRowObject(const int &row);
     QString dateTimeToString(const QDateTime &dateTime);
     QDateTime stringToDateTime(const QString &string);
-    KNMusicModel *m_model;
+    KNMusicLibraryModel *m_model;
     KNGlobal *m_global;
 };
 

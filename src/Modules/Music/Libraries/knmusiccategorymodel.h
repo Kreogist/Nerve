@@ -4,7 +4,7 @@
 #include <QIcon>
 #include <QList>
 
-#include "knmusicmodel.h"
+#include "knmusiclibrarymodel.h"
 
 #include <QStandardItemModel>
 
@@ -46,7 +46,7 @@ protected:
     virtual void updateImage(const int &index);
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
-    KNMusicModel *m_sourceModel;
+    KNMusicLibraryModel *m_sourceModel;
     int m_noCategoryItemCount=0;
     QIcon m_noAlbumArtIcon;
 
