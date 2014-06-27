@@ -54,7 +54,7 @@ KNMusicLibraryModel::~KNMusicLibraryModel()
 
 QImage KNMusicLibraryModel::artwork(const int &row) const
 {
-    QString imageKey=itemArtworkKey(row);
+    QString imageKey=artworkKey(row);
     return imageKey.isEmpty()?m_musicGlobal->noAlbumImage():artworkFromKey(imageKey);
 }
 
@@ -64,7 +64,7 @@ QImage KNMusicLibraryModel::artworkFromKey(const QString &key) const
     return pixmap.isNull()?m_musicGlobal->noAlbumImage():pixmap;
 }
 
-QString KNMusicLibraryModel::itemArtworkKey(const int &row) const
+QString KNMusicLibraryModel::artworkKey(const int &row) const
 {
     return data(index(row, KNMusicGlobal::Name),
                 KNMusicGlobal::ArtworkKeyRole).toString();
@@ -168,7 +168,7 @@ void KNMusicLibraryModel::onActionUpdateRowInfo()
     setMusicDetailsInfo(currentRow, currentDetails);
     if(!currentDetails.coverImage.isNull())
     {
-        m_pixmapList->append(currentRow, currentDetails.coverImage);
+        m_pixmapList->appendImage(currentRow, currentDetails.coverImage);
     }
     songItem=item(currentRow,KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, KNMusicGlobal::FilePathRole);
@@ -223,7 +223,15 @@ void KNMusicLibraryModel::updateIndexInfo(const QModelIndex &index,
                                             filePath);
 }
 
-void KNMusicLibraryModel::prepareRemove(const QModelIndex &index)
+void KNMusicLibraryModel::prepareRemove(const QModelIndex &removedIndex)
 {
-    emit musicAboutToRemove(index);
+    QString currentKey=artworkKey(removedIndex.row());
+    QModelIndexList artworkCheck=match(index(0,0),
+                                       KNMusicGlobal::ArtworkKeyRole,
+                                       currentKey);
+    if(artworkCheck.size()==1)
+    {
+        m_pixmapList->removeImage(currentKey);
+    }
+    emit musicAboutToRemove(removedIndex);
 }

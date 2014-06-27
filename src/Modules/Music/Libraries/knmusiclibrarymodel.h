@@ -15,7 +15,7 @@ public:
     ~KNMusicLibraryModel();
     QImage artwork(const int &row) const;
     QImage artworkFromKey(const QString &key) const;
-    QString itemArtworkKey(const int &row) const;
+    QString artworkKey(const int &row) const;
     void addRawFileItem(QString filePath);
     void addRawFileItems(QStringList fileList);
     void setAlbumArtPath(const QString &path);
@@ -23,7 +23,7 @@ public:
                      KNMusicGlobal::MusicDetailsInfo currentDetails);
     void updateIndexInfo(const QModelIndex &index,
                          const QString &filePath);
-    void prepareRemove(const QModelIndex &index);
+    void prepareRemove(const QModelIndex &removedIndex);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:

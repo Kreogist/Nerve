@@ -86,18 +86,29 @@ QImage KNLibHashPixmapList::pixmap(const QString &key) const
     return m_list[key];
 }
 
-void KNLibHashPixmapList::append(const int rowIndex,
+void KNLibHashPixmapList::appendImage(const int rowIndex,
                                  const QImage pixmap)
 {
+    //Prepare the analysis queue.
     AnalysisQueueItem analysisItem;
     analysisItem.row=rowIndex;
     analysisItem.pixmap=pixmap;
+    //Append the analysis queue.
     m_analysisQueue.append(analysisItem);
     if(!m_working)
     {
         m_working=true;
         emit requireCacheImage(m_analysisQueue.first().pixmap);
     }
+}
+
+bool KNLibHashPixmapList::removeImage(const QString &key)
+{
+    if(!removeImageFile(key))
+    {
+        qDebug()<<"File cannot delete.";
+    }
+    m_list.remove(key);
 }
 
 void KNLibHashPixmapList::loadImages()
@@ -180,4 +191,16 @@ void KNLibHashPixmapList::onActionRecoverData(const QString &key,
                                               const QImage &pixmap)
 {
     m_list[key]=pixmap;
+}
+
+bool KNLibHashPixmapList::removeImageFile(const QString &key)
+{
+    QFile imageFile(m_folderPath+key+".png");
+    //If the file is exsist, then return the delete state.
+    if(imageFile.exists())
+    {
+        return imageFile.remove();
+    }
+    //File is not exsist.
+    return true;
 }

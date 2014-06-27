@@ -38,7 +38,8 @@ public:
     explicit KNLibHashPixmapList(QObject *parent = 0);
     ~KNLibHashPixmapList();
     QImage pixmap(const QString &key) const;
-    void append(const int rowIndex, const QImage pixmap);
+    void appendImage(const int rowIndex, const QImage pixmap);
+    bool removeImage(const QString &key);
     void removeCurrentUpdate();
     void setAlbumArtPath(const QString &path);
     int currentRow() const;
@@ -60,6 +61,7 @@ private slots:
                              const QImage &pixmap);
 
 private:
+    bool removeImageFile(const QString &key);
     struct AnalysisQueueItem
     {
         int row;

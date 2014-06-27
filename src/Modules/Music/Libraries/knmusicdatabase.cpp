@@ -88,7 +88,7 @@ void KNMusicDatabase::onActionRowRemove(const QModelIndex &index)
 void KNMusicDatabase::onActionUpdateCoverImage(const int &index)
 {
     QJsonObject currentSong=row(index);
-    currentSong["CoverImage"]=m_model->itemArtworkKey(index);
+    currentSong["CoverImage"]=m_model->artworkKey(index);
     replace(index, currentSong);
 }
 

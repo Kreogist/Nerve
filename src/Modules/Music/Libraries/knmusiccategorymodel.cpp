@@ -112,7 +112,7 @@ void KNMusicCategoryModel::onMusicRecover(const QModelIndex &index)
     else
     {
         currentItem=new QStandardItem(currentName);
-        currentItem->setData(m_sourceModel->itemArtworkKey(index.row()), IconKey);
+        currentItem->setData(m_sourceModel->artworkKey(index.row()), IconKey);
         currentItem->setEditable(false);
         currentItem->setData(1, MusicCount);
         appendRow(currentItem);
@@ -159,7 +159,7 @@ void KNMusicCategoryModel::onAlbumArtUpdate(const int &index)
         return;
     }
     QStandardItem *currentItem=itemFromIndex(searchResult);
-    currentItem->setData(m_sourceModel->itemArtworkKey(index), IconKey);
+    currentItem->setData(m_sourceModel->artworkKey(index), IconKey);
     currentItem->setData(itemIcon(index), Qt::DecorationRole);
 }
 

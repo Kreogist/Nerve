@@ -158,7 +158,7 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
     {
         currentAlbum=new QStandardItem(currentName);
         currentAlbum->setEditable(false);
-        currentAlbum->setData(m_sourceModel->itemArtworkKey(index.row()), IconKey);
+        currentAlbum->setData(m_sourceModel->artworkKey(index.row()), IconKey);
         currentAlbum->setData(1, MusicCount);
         currentAlbum->setData(currentArtist, ArtistName);
         currentAlbum->setData(false, VariousArtist);

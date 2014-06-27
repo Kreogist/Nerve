@@ -10,11 +10,12 @@
 #include "../Base/knlibsearcher.h"
 #include "Libraries/knmusicdatabasebase.h"
 
-#include "Libraries/knmusicdatabase.h"
-#include "Libraries/knmusiclibrarymodel.h"
-#include "Libraries/knmusicinfocollector.h"
-#include "Libraries/knmusicinfocollectormanager.h"
+//Differentiation class.
 #include "Libraries/knmusicsearcher.h"
+#include "Libraries/knmusicdatabase.h"
+
+#include "Libraries/knmusiclibrarymodel.h"
+#include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicplaylistmanager.h"
 #include "Libraries/knmusicbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
