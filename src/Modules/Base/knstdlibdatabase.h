@@ -14,11 +14,11 @@ public:
     virtual void recoverData();
 
 signals:
+    void recoverComplete();
 
 public slots:
 
 private:
-    ;
 };
 
 #endif // KNSTDLIBDATABASE_H

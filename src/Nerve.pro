@@ -93,7 +93,6 @@ SOURCES += \
     Modules/Base/knstdlibswitcher.cpp \
     Modules/Base/knstdlibheaderswitcher.cpp \
     Modules/Base/knsearchbox.cpp \
-    Modules/Base/knlibfilter.cpp \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.cpp \
     Modules/Music/Libraries/knmusictagwav.cpp \
     Modules/Public/knlibmediainfoparser.cpp \
@@ -161,7 +160,10 @@ SOURCES += \
     Modules/Base/knlibheaderstatus.cpp \
     Modules/Music/Libraries/knmusiclibrarymodel.cpp \
     Modules/Music/Libraries/knmusicsearcher.cpp \
-    Modules/Music/Libraries/knmusiclibrarymodelbase.cpp
+    Modules/Music/Libraries/knmusiclibrarymodelbase.cpp \
+    Modules/Music/Libraries/knmusicdatabasebase.cpp \
+    Modules/Music/Widgets/knmusicdetailinfobase.cpp \
+    Modules/Base/knlibseacher.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -232,7 +234,6 @@ HEADERS += \
     Modules/Base/knstdlibswitcher.h \
     Modules/Base/knstdlibheaderswitcher.h \
     Modules/Base/knsearchbox.h \
-    Modules/Base/knlibfilter.h \
     Modules/Music/Libraries/knmusiccategorysortfiltermodel.h \
     Modules/Music/Libraries/knmusictagwav.h \
     Modules/Public/knlibmediainfoparser.h \
@@ -300,7 +301,10 @@ HEADERS += \
     Modules/Base/knlibheaderstatus.h \
     Modules/Music/Libraries/knmusiclibrarymodel.h \
     Modules/Music/Libraries/knmusicsearcher.h \
-    Modules/Music/Libraries/knmusiclibrarymodelbase.h
+    Modules/Music/Libraries/knmusiclibrarymodelbase.h \
+    Modules/Music/Libraries/knmusicdatabasebase.h \
+    Modules/Music/Widgets/knmusicdetailinfobase.h \
+    Modules/Base/knlibsearcher.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

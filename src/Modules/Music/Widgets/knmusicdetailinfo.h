@@ -5,7 +5,7 @@
 #include <QStandardItemModel>
 #include <QTreeView>
 
-#include <QDialog>
+#include "knmusicdetailinfobase.h"
 
 class QPlainTextEdit;
 class QTreeView;
@@ -60,7 +60,7 @@ private:
     QString m_caption[MusicDetailCount];
 };
 
-class KNMusicDetailInfo : public QDialog
+class KNMusicDetailInfo : public KNMusicDetailInfoBase
 {
     Q_OBJECT
 public:

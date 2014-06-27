@@ -6,11 +6,15 @@
 
 #include <QDebug>
 
+//Abstract class.
+#include "../Base/knlibsearcher.h"
+#include "Libraries/knmusicdatabasebase.h"
+
+#include "Libraries/knmusicdatabase.h"
 #include "Libraries/knmusiclibrarymodel.h"
 #include "Libraries/knmusicinfocollector.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicsearcher.h"
-#include "Libraries/knmusicdatabase.h"
 #include "Libraries/knmusicplaylistmanager.h"
 #include "Libraries/knmusicbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
@@ -30,7 +34,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     //Initial global instance and file pathes.
     m_global=KNGlobal::instance();
     m_musicAlbumArt=QDir::toNativeSeparators(m_global->databaseFolder()+"/AlbumArt/");
-    m_musicDatabase=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
+    m_musicDatabasePath=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
 
     //Initial music backend.
     m_musicPlayer=new KNMusicBackend;
@@ -44,10 +48,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             m_libraryModel, &KNMusicLibraryModel::addRawFileItems);
 
     //Initial music data base for storage.
-    m_database=new KNMusicDatabase;
-    m_database->moveToThread(&m_databaseThread);
-    m_database->setDatabase(m_musicDatabase);
-    m_database->setModel(m_libraryModel);
+    setDatabase(new KNMusicDatabase);
 
     //Initial playlist manager.
     m_playlistManager=new KNMusicPlaylistManager(this);
@@ -115,23 +116,16 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicPlayerWidget->setEqualizer(m_equalizer);
     m_musicViewer->setPlayWidget(m_musicPlayerWidget);
 
-    m_detailsDialog=new KNMusicDetailInfo(m_musicViewer);
+    setDetailsDialog(new KNMusicDetailInfo(m_musicViewer));
 
-    createShortcuts();
-
-    m_modelThread.start();
-    m_collectThread.start();
-    m_databaseThread.start();
-    m_searcherThread.start();
-    m_playerThread.start();
-
-    m_database->load();
-    m_playlistManager->loadPlayLists();
+    loadShortcuts();
+    loadThreads();
+    loadData();
 }
 
 KNMusicPlugin::~KNMusicPlugin()
 {
-    m_database->flush();
+    m_musicDatabase->flush();
 
     m_collectThread.quit();
     m_playerThread.quit();
@@ -149,7 +143,7 @@ KNMusicPlugin::~KNMusicPlugin()
     m_musicPlayer->deleteLater();
     m_searcher->deleteLater();
     m_infoCollectManager->deleteLater();
-    m_database->deleteLater();
+    m_musicDatabase->deleteLater();
 }
 
 void KNMusicPlugin::applyPlugin()
@@ -168,6 +162,34 @@ void KNMusicPlugin::setSearcher(KNLibSearcher *searcher)
             m_searcher, &KNLibSearcher::analysisUrls);
     connect(m_searcher, &KNLibSearcher::requireAddRawFiles,
             this, &KNMusicPlugin::requireAddRawFiles);
+}
+
+void KNMusicPlugin::setDatabase(KNMusicDatabaseBase *database)
+{
+    m_musicDatabase=database;
+    m_musicDatabase->moveToThread(&m_databaseThread);
+    m_musicDatabase->setDatabase(m_musicDatabasePath);
+    m_musicDatabase->setModel(m_libraryModel);
+}
+
+void KNMusicPlugin::setDetailsDialog(KNMusicDetailInfoBase *detailInfoDialog)
+{
+    m_detailsDialog=detailInfoDialog;
+}
+
+void KNMusicPlugin::loadThreads()
+{
+    m_modelThread.start();
+    m_collectThread.start();
+    m_databaseThread.start();
+    m_searcherThread.start();
+    m_playerThread.start();
+}
+
+void KNMusicPlugin::loadData()
+{
+    m_musicDatabase->load();
+    m_playlistManager->loadPlayLists();
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
@@ -191,7 +213,7 @@ void KNMusicPlugin::onActionGetInfo(const QString &filePath)
     m_detailsDialog->show();
 }
 
-void KNMusicPlugin::createShortcuts()
+void KNMusicPlugin::loadShortcuts()
 {
     QAction *searchShortcut=new QAction(m_musicViewer);
     searchShortcut->setShortcut(QKeySequence::Find);

@@ -21,7 +21,7 @@
 #include "knmusicartistsongs.h"
 #include "knmusicgenresongs.h"
 
-#include "../../Base/knlibfilter.h"
+#include "../../Base/knlibsearcher.h"
 
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicsortmodel.h"

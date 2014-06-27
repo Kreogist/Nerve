@@ -7,7 +7,7 @@
 
 #include "knstdlibviewercategory.h"
 #include "knwidgetswitcher.h"
-#include "knlibfilter.h"
+#include "knlibsearcher.h"
 
 #include "knstdlibviewer.h"
 

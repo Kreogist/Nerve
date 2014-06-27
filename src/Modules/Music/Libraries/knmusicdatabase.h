@@ -4,12 +4,12 @@
 #include <QModelIndex>
 #include <QDateTime>
 
-#include "../../Base/knstdlibdatabase.h"
+#include "knmusicdatabasebase.h"
 
 class QAbstractItemModel;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNGlobal;
-class KNMusicDatabase : public KNStdLibDatabase
+class KNMusicDatabase : public KNMusicDatabaseBase
 {
     Q_OBJECT
 public:
@@ -18,9 +18,8 @@ public:
     void recoverData();
 
 signals:
-    void recoverComplete();
 
-private slots:
+protected slots:
     void onActionRowAppend(const QModelIndex &index);
     void onActionRowUpdate(const QModelIndex &index);
     void onActionRowRemove(const QModelIndex &index);
@@ -30,7 +29,7 @@ private:
     QJsonObject createRowObject(const int &row);
     QString dateTimeToString(const QDateTime &dateTime);
     QDateTime stringToDateTime(const QString &string);
-    KNMusicLibraryModel *m_model;
+    KNMusicLibraryModelBase *m_model;
     KNGlobal *m_global;
 };
 

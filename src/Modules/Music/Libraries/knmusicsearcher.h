@@ -1,7 +1,7 @@
 #ifndef KNMUSICSEARCHER_H
 #define KNMUSICSEARCHER_H
 
-#include "../../../Modules/Base/knlibfilter.h"
+#include "../../Base/knlibsearcher.h"
 
 class KNMusicGlobal;
 class KNMusicSearcher : public KNLibSearcher

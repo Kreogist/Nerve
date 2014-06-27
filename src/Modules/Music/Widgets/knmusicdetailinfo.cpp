@@ -136,7 +136,7 @@ void KNMusicDetailOverview::retranslateAndSet()
 }
 
 KNMusicDetailInfo::KNMusicDetailInfo(QWidget *parent) :
-    QDialog(parent)
+    KNMusicDetailInfoBase(parent)
 {
     setContentsMargins(0,0,0,0);
     setFixedSize(500, 450);
