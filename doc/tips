@@ -1,0 +1,41 @@
+1. If you want to break a long function call chain, like this:
+
+void func()
+{
+    doSomething();
+    func();
+}
+
+try using signals and slots, it can break the long chain:
+
+…
+    connect(this, &Test::doFunc,
+            this, &Test::func);
+…
+
+void func()
+{
+    doSomething();
+    emit doFunc();
+}
+
+2. You can use QImage if you want to get all the pixel data.
+3. QPalette is a powerful class. You can set gradient instead of the fucking Windows 8 Metro style.
+4. To make a QTreeView’s (or any view) background transparent, set the QPalette::Base of the class to any QColor which alpha is 0, like QColor(0,0,0,0).
+5. The right way to use multi-threads in Qt:
+
+…
+QThread workThread;
+work=new yourWorkObject();
+work->moveToThread(&workThread);
+connect(work, &yourWorkObject::yourSignal,
+        this, &managerObject::yourSlot);
+workThread.start();
+...
+
+~managerObject()
+{
+    workThread.quit();
+    workThread.wait();
+    work->deleteLater();
+}
