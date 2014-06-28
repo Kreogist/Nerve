@@ -8,7 +8,7 @@ class QPropertyAnimation;
 class QMouseEvent;
 class KNPlayerProgress;
 class KNLabelEditor;
-class KNMusicPlayerBackend;
+class KNMusicBackend;
 class KNMusicLoop;
 class KNMusicPlayerControl;
 class KNMusicHeaderAlbumArt : public QLabel
@@ -43,7 +43,7 @@ public:
     void setArtist(const QString &string);
     void setAlbum(const QString &string);
     float position() const;
-    void setBackend(KNMusicPlayerBackend *player);
+    void setBackend(KNMusicBackend *player);
     void playFile(const QString &filePath);
     void play();
     void stop();
@@ -81,7 +81,7 @@ private:
     QString m_artist, m_album;
     KNPlayerProgress *m_progress;
     QPalette m_textPalette;
-    KNMusicPlayerBackend *m_player;
+    KNMusicBackend *m_player;
     KNMusicPlayerControl *m_playerControl;
     KNLabelEditor *m_time;
     QPropertyAnimation *m_mouseIn, *m_mouseOut;

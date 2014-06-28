@@ -12,7 +12,7 @@
 class QAction;
 class KNGlobal;
 class KNLibSearcher;
-class KNMusicPlayerBackend;
+class KNMusicBackend;
 class KNMusicPlayerWidget;
 class KNMusicDatabaseBase;
 class KNMusicHeaderWidget;
@@ -64,7 +64,7 @@ private:
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfoBase *m_detailsDialog;
     KNMusicDatabaseBase *m_musicDatabase;
-    KNMusicPlayerBackend *m_musicPlayer;
+    KNMusicBackend *m_backend;
     KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
     KNMusicPlayerWidget *m_musicPlayerWidget;

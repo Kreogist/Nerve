@@ -4,7 +4,6 @@
 #include <QDebug>
 
 #include "../../Base/knsearchbox.h"
-#include "../Libraries/knmusicplayerbackend.h"
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicplaylistmanager.h"
 #include "../Libraries/knmusicinfocollector.h"
@@ -70,10 +69,10 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModel *model)
     m_playlistManager->setMusicModel(model);
 }
 
-void KNMusicHeaderWidget::setBackend(KNMusicPlayerBackend *backend)
+void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
 {
     m_headerPlayer->setBackend(backend);
-    m_infoCollector->setMusicBackend(backend->backend());
+    m_infoCollector->setMusicBackend(backend);
 }
 
 void KNMusicHeaderWidget::setAlbumArt(const QPixmap &albumArt)

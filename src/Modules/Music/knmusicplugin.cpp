@@ -9,15 +9,16 @@
 //Abstract class.
 #include "../Base/knlibsearcher.h"
 #include "Libraries/knmusicdatabasebase.h"
+#include "../Public/Base/knmusicbackend.h"
 
 //Differentiation class.
 #include "Libraries/knmusicsearcher.h"
 #include "Libraries/knmusicdatabase.h"
+#include "../Public/bass/knlibbass.h"
 
 #include "Libraries/knmusiclibrarymodel.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicplaylistmanager.h"
-#include "Libraries/knmusicplayerbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
 #include "Widgets/knmusicplayerwidget.h"
@@ -38,8 +39,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicDatabasePath=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
 
     //Initial music backend.
-    m_musicPlayer=new KNMusicPlayerBackend;
-    m_musicPlayer->moveToThread(&m_playerThread);
+    m_backend=new KNLibBass;
 
     //Initial music model
     m_libraryModel=new KNMusicLibraryModel;
@@ -53,13 +53,13 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     //Initial playlist manager.
     m_playlistManager=new KNMusicPlaylistManager(this);
-    m_playlistManager->setMusicBackend(m_musicPlayer->backend());
+    m_playlistManager->setMusicBackend(m_backend);
 
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setPlaylistManager(m_playlistManager);
     m_musicViewer->setMusicModel(m_libraryModel);
-    m_musicViewer->setMusicBackend(m_musicPlayer->backend());
+    m_musicViewer->setMusicBackend(m_backend);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             this, &KNMusicPlugin::requireAnalysisUrls);
     connect(m_libraryModel, &KNMusicLibraryModel::requireResort,
@@ -69,7 +69,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
     m_headerWidget->setPlaylistManager(m_playlistManager); //This must be done first!
     m_headerWidget->setMusicModel(m_libraryModel);
-    m_headerWidget->setBackend(m_musicPlayer);
+    m_headerWidget->setBackend(m_backend);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::onActionSearch);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
@@ -104,16 +104,16 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     m_infoCollectManager=new KNMusicInfoCollectorManager;
     m_infoCollectManager->moveToThread(&m_collectThread);
-    m_infoCollectManager->setMusicBackend(m_musicPlayer->backend());
+    m_infoCollectManager->setMusicBackend(m_backend);
     m_libraryModel->setInfoCollectorManager(m_infoCollectManager);
 
     m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
     m_musicPlayerWidget->setHeaderPlayer(m_headerWidget->player());
-    m_musicPlayerWidget->setBackend(m_musicPlayer);
+    m_musicPlayerWidget->setBackend(m_backend);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireUpdatePlaylistModel,
             m_musicPlayerWidget, &KNMusicPlayerWidget::setPlayListModel);
 
-    m_equalizer=new KNMusicEQ(m_musicPlayer->backend());
+    m_equalizer=new KNMusicEQ(m_backend);
     m_musicPlayerWidget->setEqualizer(m_equalizer);
     m_musicViewer->setPlayWidget(m_musicPlayerWidget);
 
@@ -141,7 +141,7 @@ KNMusicPlugin::~KNMusicPlugin()
     m_databaseThread.wait();
 
     m_libraryModel->deleteLater();
-    m_musicPlayer->deleteLater();
+    m_backend->deleteLater();
     m_searcher->deleteLater();
     m_infoCollectManager->deleteLater();
     m_musicDatabase->deleteLater();
@@ -226,7 +226,7 @@ void KNMusicPlugin::loadShortcuts()
     connect(musicPlay, &QAction::triggered,
             [=]
             {
-                m_musicPlayer->play();
+                m_backend->play();
             });
     m_musicViewer->addAction(musicPlay);
     m_headerWidget->addAction(musicPlay);
@@ -235,7 +235,7 @@ void KNMusicPlugin::loadShortcuts()
     connect(musicPause, &QAction::triggered,
             [=]
             {
-                m_musicPlayer->pause();
+                m_backend->pause();
             });
     m_musicViewer->addAction(musicPause);
     m_headerWidget->addAction(musicPause);

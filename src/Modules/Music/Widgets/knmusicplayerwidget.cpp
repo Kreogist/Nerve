@@ -7,7 +7,7 @@
 
 #include "../../Base/knopacitybutton.h"
 #include "../Libraries/knmusiclibrarymodel.h"
-#include "../Libraries/knmusicplayerbackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 #include "knmusicvisualeffect.h"
 #include "knmusicheaderplayer.h"
 #include "knmusicplayerwidget.h"
@@ -90,10 +90,10 @@ void KNMusicPlayerWidget::setEqualizer(QWidget *equalizer)
     m_equalizerHide->setTargetObject(m_equalizer);
 }
 
-void KNMusicPlayerWidget::setBackend(KNMusicPlayerBackend *backend)
+void KNMusicPlayerWidget::setBackend(KNMusicBackend *backend)
 {
     m_backend=backend;
-    connect(m_backend, &KNMusicPlayerBackend::positionChanged,
+    connect(m_backend, &KNMusicBackend::positionChanged,
             this, &KNMusicPlayerWidget::onActionPositionChanged);
 }
 
@@ -173,7 +173,7 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
 void KNMusicPlayerWidget::onActionPositionChanged(const int &position)
 {
     Q_UNUSED(position);
-    m_backend->getGraphicData(m_visualEffect->fftData());
+    m_backend->getFFTData(m_visualEffect->fftData());
     m_visualEffect->update();
 }
 

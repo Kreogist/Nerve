@@ -6,7 +6,7 @@
 
 #include "knmusicplayercontrol.h"
 #include "knmusicloop.h"
-#include "../Libraries/knmusicplayerbackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
 
@@ -192,14 +192,14 @@ float KNMusicHeaderPlayer::position() const
     return m_player->position();
 }
 
-void KNMusicHeaderPlayer::setBackend(KNMusicPlayerBackend *player)
+void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
 {
     m_player=player;
-    connect(m_player, &KNMusicPlayerBackend::positionChanged,
+    connect(m_player, &KNMusicBackend::positionChanged,
             this, &KNMusicHeaderPlayer::onActionPositonChanged);
-    connect(m_player, &KNMusicPlayerBackend::durationChanged,
+    connect(m_player, &KNMusicBackend::durationChanged,
             this, &KNMusicHeaderPlayer::onActionDurationChanged);
-    connect(m_player, &KNMusicPlayerBackend::finished,
+    connect(m_player, &KNMusicBackend::finished,
             this, &KNMusicHeaderPlayer::finished);
     m_playerControl->setVolume(m_player->volume());
     connect(m_playerControl, &KNMusicPlayerControl::requireNext,
@@ -217,7 +217,7 @@ void KNMusicHeaderPlayer::setBackend(KNMusicPlayerBackend *player)
                 m_player->pause();
             });
     connect(m_playerControl, &KNMusicPlayerControl::requireChangeVolume,
-            m_player, &KNMusicPlayerBackend::setVolume);
+            m_player, &KNMusicBackend::setVolume);
 }
 
 void KNMusicHeaderPlayer::playFile(const QString &filePath)
@@ -248,6 +248,7 @@ void KNMusicHeaderPlayer::enterEvent(QEvent *event)
     if(m_animate)
     {
         m_mouseOut->stop();
+        m_mouseIn->stop();
         m_mouseIn->setStartValue(m_playerControl->pos());
         m_mouseIn->setEndValue(QPoint(m_albumArt->width(),
                                       0));
@@ -262,6 +263,7 @@ void KNMusicHeaderPlayer::leaveEvent(QEvent *event)
     if(m_animate)
     {
         m_mouseIn->stop();
+        m_mouseOut->stop();
         m_mouseOut->setStartValue(m_playerControl->pos());
         m_mouseOut->setEndValue(QPoint(m_albumArt->width(),
                                        -m_progress->y()));
