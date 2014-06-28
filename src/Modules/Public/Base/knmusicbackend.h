@@ -31,6 +31,7 @@ public:
     virtual float position() const=0;
     virtual float previewDuration() const=0;
     virtual void play()=0;
+    virtual void playFile(const QString &fileName)=0;
     virtual void playPreview()=0;
     virtual void stop()=0;
     virtual void stopPreview()=0;
@@ -45,6 +46,7 @@ public:
 
 signals:
     void positionChanged(float position);
+    void durationChanged(float duration);
     void finished();
     void stopped();
     void previewPositionChanged(float position);

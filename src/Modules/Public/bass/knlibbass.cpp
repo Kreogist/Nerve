@@ -180,6 +180,13 @@ void KNLibBass::play()
     }
 }
 
+void KNLibBass::playFile(const QString &fileName)
+{
+    loadMusic(fileName);
+    emit durationChanged(duration());
+    play();
+}
+
 void KNLibBass::playPreview()
 {
     float mainVolume;

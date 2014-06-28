@@ -61,6 +61,7 @@ public:
     float position() const;
     float previewDuration() const;
     void play();
+    void playFile(const QString &fileName);
     void playPreview();
     void stop();
     void stopPreview();

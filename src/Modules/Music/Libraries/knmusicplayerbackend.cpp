@@ -25,9 +25,7 @@ void KNMusicPlayerBackend::setBackend(KNMusicBackend *backend)
 
 void KNMusicPlayerBackend::playFile(const QString &fileName)
 {
-    m_backend->loadMusic(fileName);
-    emit durationChanged(m_backend->duration());
-    m_backend->play();
+    m_backend->playFile(fileName);
 }
 
 void KNMusicPlayerBackend::play()
