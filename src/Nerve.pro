@@ -106,7 +106,6 @@ SOURCES += \
     Modules/Music/Widgets/knmusicm4aeditor.cpp \
     Modules/Music/Widgets/knmusicflaceditor.cpp \
     Modules/Music/Widgets/knmusicwaveditor.cpp \
-    Modules/Music/Libraries/knmusicbackend.cpp \
     Modules/Music/Widgets/knmusicheaderplayer.cpp \
     Modules/Base/knplayerprogress.cpp \
     Modules/Public/bass/knlibbass.cpp \
@@ -163,7 +162,9 @@ SOURCES += \
     Modules/Music/Libraries/knmusiclibrarymodelbase.cpp \
     Modules/Music/Libraries/knmusicdatabasebase.cpp \
     Modules/Music/Widgets/knmusicdetailinfobase.cpp \
-    Modules/Base/knlibseacher.cpp
+    Modules/Base/knlibseacher.cpp \
+    Modules/Music/Libraries/knmusicplayerbackend.cpp \
+    Modules/Public/Base/knmusicbackend.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -247,7 +248,6 @@ HEADERS += \
     Modules/Music/Widgets/knmusicm4aeditor.h \
     Modules/Music/Widgets/knmusicflaceditor.h \
     Modules/Music/Widgets/knmusicwaveditor.h \
-    Modules/Music/Libraries/knmusicbackend.h \
     Modules/Music/Widgets/knmusicheaderplayer.h \
     Modules/Base/knplayerprogress.h \
     Modules/Public/bass/knlibbass.h \
@@ -304,7 +304,9 @@ HEADERS += \
     Modules/Music/Libraries/knmusiclibrarymodelbase.h \
     Modules/Music/Libraries/knmusicdatabasebase.h \
     Modules/Music/Widgets/knmusicdetailinfobase.h \
-    Modules/Base/knlibsearcher.h
+    Modules/Base/knlibsearcher.h \
+    Modules/Music/Libraries/knmusicplayerbackend.h \
+    Modules/Public/Base/knmusicbackend.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

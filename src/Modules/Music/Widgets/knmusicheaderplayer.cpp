@@ -6,7 +6,7 @@
 
 #include "knmusicplayercontrol.h"
 #include "knmusicloop.h"
-#include "../Libraries/knmusicbackend.h"
+#include "../Libraries/knmusicplayerbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
 
@@ -192,14 +192,14 @@ float KNMusicHeaderPlayer::position() const
     return m_player->position();
 }
 
-void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
+void KNMusicHeaderPlayer::setBackend(KNMusicPlayerBackend *player)
 {
     m_player=player;
-    connect(m_player, &KNMusicBackend::positionChanged,
+    connect(m_player, &KNMusicPlayerBackend::positionChanged,
             this, &KNMusicHeaderPlayer::onActionPositonChanged);
-    connect(m_player, &KNMusicBackend::durationChanged,
+    connect(m_player, &KNMusicPlayerBackend::durationChanged,
             this, &KNMusicHeaderPlayer::onActionDurationChanged);
-    connect(m_player, &KNMusicBackend::finished,
+    connect(m_player, &KNMusicPlayerBackend::finished,
             this, &KNMusicHeaderPlayer::finished);
     m_playerControl->setVolume(m_player->volume());
     connect(m_playerControl, &KNMusicPlayerControl::requireNext,
@@ -217,7 +217,7 @@ void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
                 m_player->pause();
             });
     connect(m_playerControl, &KNMusicPlayerControl::requireChangeVolume,
-            m_player, &KNMusicBackend::setVolume);
+            m_player, &KNMusicPlayerBackend::setVolume);
 }
 
 void KNMusicHeaderPlayer::playFile(const QString &filePath)

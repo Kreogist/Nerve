@@ -9,7 +9,7 @@
 
 class QDrag;
 class QSortFilterProxyModel;
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicLibraryModel;
 class KNMusicDetailTooltip;
 class KNMusicListViewHeader;
@@ -22,7 +22,7 @@ public:
     void resetHeader();
     void setModel(QAbstractItemModel *model);
     void setSourceModel(KNMusicLibraryModel *musicModel);
-    void setMusicBackend(KNLibBass *backend);
+    void setMusicBackend(KNMusicBackend *backend);
 
 signals:
     void requireShowContextMenu(const QPoint &position);

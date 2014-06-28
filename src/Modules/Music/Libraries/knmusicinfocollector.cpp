@@ -8,7 +8,7 @@
 
 #include "../knmusicglobal.h"
 #include "../../Public/knlibmediainfo.h"
-#include "../../Public/bass/knlibbass.h"
+#include "../../Public/Base/KNMusicBackend.h"
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"
@@ -37,7 +37,7 @@ KNMusicInfoCollector::KNMusicInfoCollector(QObject *parent) :
     m_tagWAV=new KNMusicTagWAV(this);
 }
 
-void KNMusicInfoCollector::setMusicBackend(KNLibBass *backend)
+void KNMusicInfoCollector::setMusicBackend(KNMusicBackend *backend)
 {
     m_backend=backend;
 }

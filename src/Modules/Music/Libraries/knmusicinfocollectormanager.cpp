@@ -95,7 +95,7 @@ bool KNMusicInfoCollectorManager::isWorking()
     return !m_analysisQueue.isEmpty();
 }
 
-void KNMusicInfoCollectorManager::setMusicBackend(KNLibBass *backend)
+void KNMusicInfoCollectorManager::setMusicBackend(KNMusicBackend *backend)
 {
     m_collector->setMusicBackend(backend);
 }

@@ -8,7 +8,7 @@
 #include "knlibbass.h"
 
 KNLibBass::KNLibBass(QObject *parent) :
-    QObject(parent)
+    KNMusicBackend(parent)
 {
     //Connect the signals.
     connect(m_main.positionUpdater, &QTimer::timeout,
@@ -148,11 +148,6 @@ bool KNLibBass::loadInfoCollect(const QString &filePath)
         return true;
     }
     return false;
-}
-
-QString KNLibBass::eqFrequencyTitle(const int &index)
-{
-    return m_eqTitle[index];
 }
 
 float KNLibBass::duration() const

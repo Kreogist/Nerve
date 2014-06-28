@@ -253,7 +253,7 @@ int KNMusicPlaylistManager::loopMode()
     return m_nowPlaying->loopMode();
 }
 
-void KNMusicPlaylistManager::setMusicBackend(KNLibBass *backend)
+void KNMusicPlaylistManager::setMusicBackend(KNMusicBackend *backend)
 {
     m_infoCollector->setMusicBackend(backend);
 }

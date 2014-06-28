@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#include "../../Public/bass/knlibbass.h"
+#include "../../Public/Base/KNMusicBackend.h"
 
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../knmusicglobal.h"
@@ -206,7 +206,7 @@ void KNMusicDetailTooltip::forceQuit()
     hide();
 }
 
-void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
+void KNMusicDetailTooltip::setMusicBackend(KNMusicBackend *backend)
 {
     m_preview=backend;
     connect(m_control, &KNMusicDetailTooltipPlay::requirePlay,
@@ -219,9 +219,9 @@ void KNMusicDetailTooltip::setMusicBackend(KNLibBass *backend)
             {
                 m_preview->pausePreview();
             });
-    connect(m_preview, &KNLibBass::previewPositionChanged,
+    connect(m_preview, &KNMusicBackend::previewPositionChanged,
             this, &KNMusicDetailTooltip::onActionPositionChanged);
-    connect(m_preview, &KNLibBass::previewFinished,
+    connect(m_preview, &KNMusicBackend::previewFinished,
             this, &KNMusicDetailTooltip::onActionPreviewFinished);
 }
 

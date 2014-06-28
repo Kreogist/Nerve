@@ -10,7 +10,7 @@
 #include "../../Base/knlibinfocollector.h"
 
 class KNGlobal;
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicGlobal;
 class KNLibMediaInfo;
 class KNMusicTagID3v1;
@@ -25,7 +25,7 @@ class KNMusicInfoCollector : public KNLibInfoCollector
     Q_OBJECT
 public:
     explicit KNMusicInfoCollector(QObject *parent = 0);
-    void setMusicBackend(KNLibBass *backend);
+    void setMusicBackend(KNMusicBackend *backend);
 
     bool signalMode() const;
     void setSignalMode(bool signalMode);
@@ -61,7 +61,7 @@ private:
     void setMediaData(const int &index,
                       const QString &value);
     void setMusicCover(const QImage &pixmap);
-    KNLibBass *m_backend;
+    KNMusicBackend *m_backend;
     KNLibMediaInfo *m_mediaInfo;
     KNMusicTagID3v1 *m_tagID3v1;
     KNMusicTagID3v2 *m_tagID3v2;

@@ -10,7 +10,7 @@ class QSpacerItem;
 class QBoxLayout;
 class KNMusicLibraryModel;
 class KNOpacityButton;
-class KNMusicBackend;
+class KNMusicPlayerBackend;
 class KNMusicHeaderPlayer;
 class KNMusicVisualEffect;
 class KNMusicPlayerWidget : public QWidget
@@ -19,7 +19,7 @@ class KNMusicPlayerWidget : public QWidget
 public:
     explicit KNMusicPlayerWidget(QWidget *parent = 0);
     void setEqualizer(QWidget *equalizer);
-    void setBackend(KNMusicBackend *backend);
+    void setBackend(KNMusicPlayerBackend *backend);
     void setHeaderPlayer(KNMusicHeaderPlayer *headerPlayer);
     void setArtwork(const QPixmap &artwork);
 
@@ -47,7 +47,7 @@ private:
     QPropertyAnimation *m_equalizerShow, *m_equalizerHide;
     QBoxLayout *m_mainLayout, *m_artworkLayout, *m_detailsLayout, *m_controlsLayout;
     KNMusicHeaderPlayer *m_headerPlayer;
-    KNMusicBackend *m_backend;
+    KNMusicPlayerBackend *m_backend;
     KNMusicVisualEffect *m_visualEffect;
     KNOpacityButton *m_equalizerControl, *m_playlistControl;
 };

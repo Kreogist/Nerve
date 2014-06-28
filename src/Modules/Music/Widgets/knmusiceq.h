@@ -3,20 +3,19 @@
 
 #include <QWidget>
 
-#include "../../Public/bass/knlibbass.h"
+#include "../../Public/Base/KNMusicBackend.h"
 
 class QSignalMapper;
 class QLabel;
 class KNLabelEditor;
 class KNMusicVolumeSlider;
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicEQSlider;
 class KNMusicEQ : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KNMusicEQ(KNLibBass *backend, QWidget *parent = 0);
-    void setBackend(KNLibBass *backend);
+    explicit KNMusicEQ(KNMusicBackend *backend, QWidget *parent = 0);
 
 signals:
 
@@ -29,13 +28,13 @@ private slots:
     void setTuneValue(const int &index);
 
 private:
-    KNLibBass *m_bassBackend;
+    KNMusicBackend *m_bassBackend;
     QSignalMapper *m_tuneRelease, *m_textChange;
-    KNLabelEditor *m_equalizerEdit[KNLibBass::EqualizerCount],
+    KNLabelEditor *m_equalizerEdit[KNMusicBackend::EqualizerCount],
                   *m_rangeEdit;
-    KNMusicEQSlider *m_equalizerTune[KNLibBass::EqualizerCount],
+    KNMusicEQSlider *m_equalizerTune[KNMusicBackend::EqualizerCount],
                     *m_rangeControl;
-    QLabel *m_equalizerCaption[KNLibBass::EqualizerCount],
+    QLabel *m_equalizerCaption[KNMusicBackend::EqualizerCount],
            *m_rangeLabel;
     QString m_rangeCaption;
 };

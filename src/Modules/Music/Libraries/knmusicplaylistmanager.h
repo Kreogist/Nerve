@@ -17,7 +17,7 @@
 class QSortFilterProxyModel;
 class QStandardItemModel;
 class QFile;
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicInfoCollector;
 class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
@@ -35,7 +35,7 @@ public:
     int loopMode();
 
     //Backend sets.
-    void setMusicBackend(KNLibBass *backend);
+    void setMusicBackend(KNMusicBackend *backend);
     void setMusicModel(KNMusicLibraryModel *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);

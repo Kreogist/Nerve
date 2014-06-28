@@ -10,7 +10,7 @@
 
 #include "../../Base/knlibinfocollectormanager.h"
 
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager : public KNLibInfoCollectorManager
 {
@@ -25,7 +25,7 @@ public:
     void removeFirstUpdateResult();
     bool isUpdateQueueEmpty();
     bool isWorking();
-    void setMusicBackend(KNLibBass *backend);
+    void setMusicBackend(KNMusicBackend *backend);
 
 signals:
     void requireAnalysis(const QString &filePath);

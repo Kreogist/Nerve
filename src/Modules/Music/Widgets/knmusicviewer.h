@@ -30,7 +30,7 @@ class KNMusicAlbumDetailModel;
 class KNMusicArtistSongs;
 class KNMusicPlaylistView;
 class KNMusicGenreSongs;
-class KNLibBass;
+class KNMusicBackend;
 class KNMusicPlaylistManager;
 class KNMusicViewer : public KNStdLibViewer
 {
@@ -41,7 +41,7 @@ public:
     void setDefaultHeader();
     void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicLibraryModel *model);
-    void setMusicBackend(KNLibBass *backend);
+    void setMusicBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
 

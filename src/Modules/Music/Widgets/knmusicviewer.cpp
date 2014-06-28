@@ -202,7 +202,7 @@ void KNMusicViewer::setMusicModel(KNMusicLibraryModel *model)
     m_musicModel=model;
 }
 
-void KNMusicViewer::setMusicBackend(KNLibBass *backend)
+void KNMusicViewer::setMusicBackend(KNMusicBackend *backend)
 {
     m_libraryView->setMusicBackend(backend);
     m_artistSongView->setMusicBackend(backend);

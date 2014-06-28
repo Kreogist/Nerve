@@ -122,7 +122,7 @@ void KNMusicAlbumSongDetail::resetSongState()
     m_albumSongs->resizeHeader();
 }
 
-void KNMusicAlbumSongDetail::setMusicBackend(KNLibBass *backend)
+void KNMusicAlbumSongDetail::setMusicBackend(KNMusicBackend *backend)
 {
     m_albumSongs->setMusicBackend(backend);
 }
@@ -282,7 +282,7 @@ void KNMusicAlbumDetail::disableArtworkExpand()
     m_albumArtExpanding=false;
 }
 
-void KNMusicAlbumDetail::setMusicBackend(KNLibBass *backend)
+void KNMusicAlbumDetail::setMusicBackend(KNMusicBackend *backend)
 {
     m_songPanel->setMusicBackend(backend);
 }
@@ -1003,7 +1003,7 @@ void KNMusicAlbumView::setSourceModel(KNMusicLibraryModel *model)
     m_albumDetail->setSourceModel(model);
 }
 
-void KNMusicAlbumView::setMusicBackend(KNLibBass *backend)
+void KNMusicAlbumView::setMusicBackend(KNMusicBackend *backend)
 {
     m_albumDetail->setMusicBackend(backend);
 }

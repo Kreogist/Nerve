@@ -72,7 +72,7 @@ void KNMusicLibraryListview::setSourceModel(KNMusicLibraryModel *musicModel)
     m_musicDetailTooltip->setMusicModel(musicModel);
 }
 
-void KNMusicLibraryListview::setMusicBackend(KNLibBass *backend)
+void KNMusicLibraryListview::setMusicBackend(KNMusicBackend *backend)
 {
     m_musicDetailTooltip->setMusicBackend(backend);
 }

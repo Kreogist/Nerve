@@ -5,7 +5,7 @@
 
 #include <QTimer>
 
-#include <QObject>
+#include "../Base/knmusicbackend.h"
 
 //Include all public libraries.
 #include "bass.h"
@@ -47,31 +47,16 @@
 #include "basscd.h"
 #endif
 
-class KNLibBass : public QObject
+class KNLibBass : public KNMusicBackend
 {
     Q_OBJECT
 public:
-    enum Equalizer31
-    {
-        Hz32,
-        Hz63,
-        Hz125,
-        Hz250,
-        Hz500,
-        Hz1000,
-        Hz2000,
-        Hz4000,
-        Hz8000,
-        Hz16000,
-        EqualizerCount
-    };
     explicit KNLibBass(QObject *parent = 0);
     ~KNLibBass();
     void loadMusic(const QString &filePath);
     void loadPreview(const QString &filePath);
     void loadUrl(const QString &url);
     bool loadInfoCollect(const QString &filePath);
-    QString eqFrequencyTitle(const int &index);
     float duration() const;
     float position() const;
     float previewDuration() const;
@@ -89,11 +74,6 @@ public:
     int collectorSamplingRate() const;
 
 signals:
-    void positionChanged(float position);
-    void finished();
-    void stopped();
-    void previewPositionChanged(float position);
-    void previewFinished();
 
 public slots:
     void setVolume(const float &volumeSize);
@@ -170,15 +150,6 @@ private:
     };
 
     HFX m_equalizer[EqualizerCount];
-    float m_eqFrequency[EqualizerCount]={
-        32, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000
-    };
-    float m_eqBandWidth[EqualizerCount]={
-       31, 62, 188, 312, 688, 1312, 2688, 5312, 10688, 21312
-    };
-    QString m_eqTitle[EqualizerCount]={
-       "32", "63", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"
-    };
     void CALLBACK StatusProc(const void *buffer, DWORD length, void *user);
     void CALLBACK MetaSync(HSYNC handle, DWORD channel, DWORD data, void *user);
     float m_eqGain[EqualizerCount]={0};

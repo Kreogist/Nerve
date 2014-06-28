@@ -12,7 +12,7 @@ class QResizeEvent;
 class KNMusicPlaylistManager;
 class KNMusicInfoCollector;
 class KNMusicLibraryModel;
-class KNMusicBackend;
+class KNMusicPlayerBackend;
 class KNSearchBox;
 class KNMusicHeaderPlayer;
 class KNMusicHeaderWidget : public KNStdLibHeaderWidget
@@ -22,7 +22,7 @@ public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
     void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicLibraryModel *model);
-    void setBackend(KNMusicBackend *backend);
+    void setBackend(KNMusicPlayerBackend *backend);
     void setAlbumArt(const QPixmap &albumArt);
     void setTitle(const QString &string);
     void setArtist(const QString &string);

@@ -17,7 +17,7 @@
 #include "Libraries/knmusiclibrarymodel.h"
 #include "Libraries/knmusicinfocollectormanager.h"
 #include "Libraries/knmusicplaylistmanager.h"
-#include "Libraries/knmusicbackend.h"
+#include "Libraries/knmusicplayerbackend.h"
 #include "Widgets/knmusicdetailinfo.h"
 #include "Widgets/knmusicheaderwidget.h"
 #include "Widgets/knmusicplayerwidget.h"
@@ -38,7 +38,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicDatabasePath=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
 
     //Initial music backend.
-    m_musicPlayer=new KNMusicBackend;
+    m_musicPlayer=new KNMusicPlayerBackend;
     m_musicPlayer->moveToThread(&m_playerThread);
 
     //Initial music model

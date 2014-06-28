@@ -2,14 +2,14 @@
 #include <QSignalMapper>
 #include <QBoxLayout>
 
-#include "../../Public/bass/knlibbass.h"
+#include "../../Public/Base/KNMusicBackend.h"
 #include "../../Base/knlabeleditor.h"
 #include "knmusicvolumeslider.h"
 #include "knmusiceqslider.h"
 
 #include "knmusiceq.h"
 
-KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
+KNMusicEQ::KNMusicEQ(KNMusicBackend *backend, QWidget *parent) :
     QWidget(parent)
 {
     retranslate();
@@ -22,7 +22,7 @@ KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
     pal.setColor(QPalette::ButtonText, QColor(0xff,0xff,0xff));
     setPalette(pal);
 
-    //Backup the KNLibBass pointer.
+    //Backup the KNMusicBackend pointer.
     m_bassBackend=backend;
 
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom,
@@ -72,7 +72,7 @@ KNMusicEQ::KNMusicEQ(KNLibBass *backend, QWidget *parent) :
     connect(m_textChange, SIGNAL(mapped(int)),
             this, SLOT(setTuneValue(int)));
     //Initial the 31 step tunner.
-    for(int i=0; i<KNLibBass::EqualizerCount; i++)
+    for(int i=0; i<KNMusicBackend::EqualizerCount; i++)
     {
         QBoxLayout *sliderLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                                 sliderList->widget());

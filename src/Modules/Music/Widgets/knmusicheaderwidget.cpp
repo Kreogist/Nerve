@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #include "../../Base/knsearchbox.h"
-#include "../Libraries/knmusicbackend.h"
+#include "../Libraries/knmusicplayerbackend.h"
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../Libraries/knmusicplaylistmanager.h"
 #include "../Libraries/knmusicinfocollector.h"
@@ -70,7 +70,7 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModel *model)
     m_playlistManager->setMusicModel(model);
 }
 
-void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
+void KNMusicHeaderWidget::setBackend(KNMusicPlayerBackend *backend)
 {
     m_headerPlayer->setBackend(backend);
     m_infoCollector->setMusicBackend(backend->backend());
