@@ -51,6 +51,7 @@ private:
     void setSearcher(KNLibSearcher *searcher);
     void setDatabase(KNMusicDatabaseBase *database);
     void setDetailsDialog(KNMusicDetailInfoBase *detailInfoDialog);
+    void setBackend(KNMusicBackend *backend);
     void setListviewMenu();
     void loadThreads();
     void loadData();
@@ -74,7 +75,7 @@ private:
             m_collectThread,
             m_modelThread,
             m_databaseThread,
-            m_playerThread;
+            m_backendThread;
     QString m_musicDatabasePath,
             m_musicAlbumArt;
 };

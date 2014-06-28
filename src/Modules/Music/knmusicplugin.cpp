@@ -39,7 +39,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicDatabasePath=QDir::toNativeSeparators(m_global->databaseFolder()+"/Music.db");
 
     //Initial music backend.
-    m_backend=new KNLibBass;
+    setBackend(new KNLibBass);
 
     //Initial music model
     m_libraryModel=new KNMusicLibraryModel;
@@ -129,13 +129,13 @@ KNMusicPlugin::~KNMusicPlugin()
     m_musicDatabase->flush();
 
     m_collectThread.quit();
-    m_playerThread.quit();
+    m_backendThread.quit();
     m_searcherThread.quit();
     m_modelThread.quit();
     m_databaseThread.quit();
 
     m_collectThread.wait();
-    m_playerThread.wait();
+    m_backendThread.wait();
     m_searcherThread.wait();
     m_modelThread.wait();
     m_databaseThread.wait();
@@ -178,13 +178,19 @@ void KNMusicPlugin::setDetailsDialog(KNMusicDetailInfoBase *detailInfoDialog)
     m_detailsDialog=detailInfoDialog;
 }
 
+void KNMusicPlugin::setBackend(KNMusicBackend *backend)
+{
+    m_backend=backend;
+    m_backend->moveToThread(&m_backendThread);
+}
+
 void KNMusicPlugin::loadThreads()
 {
     m_modelThread.start();
     m_collectThread.start();
     m_databaseThread.start();
     m_searcherThread.start();
-    m_playerThread.start();
+    m_backendThread.start();
 }
 
 void KNMusicPlugin::loadData()
