@@ -184,7 +184,7 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
     move(bestPosition(point));
 }
 
-void KNMusicDetailTooltip::setMusicModel(KNMusicLibraryModel *model)
+void KNMusicDetailTooltip::setMusicModel(KNMusicLibraryModelBase *model)
 {
     m_musicModel=model;
 }

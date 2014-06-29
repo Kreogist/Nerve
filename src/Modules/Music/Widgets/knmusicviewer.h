@@ -17,7 +17,7 @@ class QSortFilterProxyModel;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicCategorySortFilterModel;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNMusicListView;
 class KNMusicCategoryView;
 class KNMusicAlbumView;
@@ -38,10 +38,9 @@ class KNMusicViewer : public KNStdLibViewer
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
     ~KNMusicViewer();
-    void setDefaultHeader();
     void setPlaylistManager(KNMusicPlaylistManager *manager);
-    void setMusicModel(KNMusicLibraryModel *model);
-    void setMusicBackend(KNMusicBackend *backend);
+    void setMusicModel(KNMusicLibraryModelBase *model);
+    void setBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
 
@@ -111,7 +110,7 @@ private:
     KNMusicPlaylistView *m_playlistView;
     KNMusicGenreSongs *m_genreSongView;
 
-    KNMusicLibraryModel *m_musicModel;
+    KNMusicLibraryModelBase *m_musicModel;
 
     QThread m_listViewModelThread,
             m_artistModelThread,

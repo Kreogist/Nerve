@@ -46,7 +46,7 @@ protected:
     virtual void updateImage(const int &index);
     virtual QIcon itemIcon(const int &index) const;
     virtual QString categoryName(const int &index) const;
-    KNMusicLibraryModel *m_sourceModel;
+    KNMusicLibraryModelBase *m_sourceModel;
     int m_noCategoryItemCount=0;
     QIcon m_noAlbumArtIcon;
 

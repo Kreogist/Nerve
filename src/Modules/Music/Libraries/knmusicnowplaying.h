@@ -10,7 +10,7 @@
 class QSortFilterProxyModel;
 class QStandardItemModel;
 class QStandardItem;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNMusicPlaylistModel;
 class KNMusicCategoryDetailModel;
 class KNMusicNowPlaying : public KNMusicAbstractPlaylist
@@ -18,7 +18,7 @@ class KNMusicNowPlaying : public KNMusicAbstractPlaylist
     Q_OBJECT
 public:
     explicit KNMusicNowPlaying(QObject *parent = 0);
-    void setMusicModel(KNMusicLibraryModel *model);
+    void setMusicModel(KNMusicLibraryModelBase *model);
     void setProxyModel(QSortFilterProxyModel *model);
     QString prevSong();
     QString nextSong();
@@ -49,7 +49,7 @@ private:
 
     int m_loopMode=KNMusicGlobal::NoRepeat,
         m_mode=NoListMode;
-    KNMusicLibraryModel *m_musicModel;
+    KNMusicLibraryModelBase *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QString m_currentPath;
     QStandardItem *m_currentItem;

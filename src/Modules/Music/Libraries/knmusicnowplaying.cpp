@@ -13,7 +13,7 @@ KNMusicNowPlaying::KNMusicNowPlaying(QObject *parent) :
     m_categoryProxyModel=new KNMusicCategoryDetailModel(this);
 }
 
-void KNMusicNowPlaying::setMusicModel(KNMusicLibraryModel *model)
+void KNMusicNowPlaying::setMusicModel(KNMusicLibraryModelBase *model)
 {
     m_musicModel=model;
     m_categoryProxyModel->setSourceModel(m_musicModel);

@@ -170,7 +170,7 @@ void KNMusicCategoryModel::updateImage(const int &index)
 
 void KNMusicCategoryModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
-    KNMusicLibraryModel *musicModel=qobject_cast<KNMusicLibraryModel *>(sourceModel);
+    KNMusicLibraryModelBase *musicModel=qobject_cast<KNMusicLibraryModelBase *>(sourceModel);
     m_sourceModel=musicModel;
     connect(m_sourceModel, &KNMusicLibraryModel::musicAppend,
             this, &KNMusicCategoryModel::onMusicAdded);

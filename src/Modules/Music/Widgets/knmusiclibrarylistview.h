@@ -10,7 +10,7 @@
 class QDrag;
 class QSortFilterProxyModel;
 class KNMusicBackend;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNMusicDetailTooltip;
 class KNMusicListViewHeader;
 class KNMusicLibraryListview : public KNMusicListViewBase
@@ -21,7 +21,7 @@ public:
     ~KNMusicLibraryListview();
     void resetHeader();
     void setModel(QAbstractItemModel *model);
-    void setSourceModel(KNMusicLibraryModel *musicModel);
+    void setSourceModel(KNMusicLibraryModelBase *musicModel);
     void setMusicBackend(KNMusicBackend *backend);
 
 signals:
@@ -50,7 +50,7 @@ private:
     KNMusicListViewHeader *m_headerWidget;
     QModelIndex m_detailIndex;
     KNMusicDetailTooltip *m_musicDetailTooltip;
-    KNMusicLibraryModel *m_musicModel;
+    KNMusicLibraryModelBase *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
     QDrag *m_dragAction;
     QMimeData *m_mimeData;

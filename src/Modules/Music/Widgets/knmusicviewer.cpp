@@ -182,7 +182,7 @@ void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
     m_playlistView->setManager(manager);
 }
 
-void KNMusicViewer::setMusicModel(KNMusicLibraryModel *model)
+void KNMusicViewer::setMusicModel(KNMusicLibraryModelBase *model)
 {
     m_listViewModel->setSourceModel(model);
     m_artistModel->setSourceModel(model);
@@ -202,7 +202,7 @@ void KNMusicViewer::setMusicModel(KNMusicLibraryModel *model)
     m_musicModel=model;
 }
 
-void KNMusicViewer::setMusicBackend(KNMusicBackend *backend)
+void KNMusicViewer::setBackend(KNMusicBackend *backend)
 {
     m_libraryView->setMusicBackend(backend);
     m_artistSongView->setMusicBackend(backend);

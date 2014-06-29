@@ -8,8 +8,9 @@
 
 //Abstract class.
 #include "../Base/knlibsearcher.h"
-#include "Libraries/knmusicdatabasebase.h"
 #include "../Public/Base/knmusicbackend.h"
+#include "Libraries/knmusicdatabasebase.h"
+#include "Libraries/knmusiclibrarymodelbase.h"
 
 //Differentiation class.
 #include "Libraries/knmusicsearcher.h"
@@ -46,23 +47,23 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_libraryModel->moveToThread(&m_modelThread);
     m_libraryModel->setAlbumArtPath(m_musicAlbumArt);
     connect(this, &KNMusicPlugin::requireAddRawFiles,
-            m_libraryModel, &KNMusicLibraryModel::addRawFileItems);
+            m_libraryModel, &KNMusicLibraryModelBase::addRawFileItems);
 
     //Initial music data base for storage.
     setDatabase(new KNMusicDatabase);
 
     //Initial playlist manager.
     m_playlistManager=new KNMusicPlaylistManager(this);
-    m_playlistManager->setMusicBackend(m_backend);
+    m_playlistManager->setBackend(m_backend);
 
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setPlaylistManager(m_playlistManager);
     m_musicViewer->setMusicModel(m_libraryModel);
-    m_musicViewer->setMusicBackend(m_backend);
+    m_musicViewer->setBackend(m_backend);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             this, &KNMusicPlugin::requireAnalysisUrls);
-    connect(m_libraryModel, &KNMusicLibraryModel::requireResort,
+    connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
             m_musicViewer, &KNMusicViewer::resort);
 
     //Initial header widget

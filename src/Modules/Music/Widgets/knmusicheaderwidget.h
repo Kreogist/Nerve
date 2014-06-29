@@ -11,7 +11,7 @@ class QBoxLayout;
 class QResizeEvent;
 class KNMusicPlaylistManager;
 class KNMusicInfoCollector;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNMusicBackend;
 class KNSearchBox;
 class KNMusicHeaderPlayer;
@@ -21,7 +21,7 @@ class KNMusicHeaderWidget : public KNStdLibHeaderWidget
 public:
     explicit KNMusicHeaderWidget(QWidget *parent = 0);
     void setPlaylistManager(KNMusicPlaylistManager *manager);
-    void setMusicModel(KNMusicLibraryModel *model);
+    void setMusicModel(KNMusicLibraryModelBase *model);
     void setBackend(KNMusicBackend *backend);
     void setAlbumArt(const QPixmap &albumArt);
     void setTitle(const QString &string);
@@ -55,7 +55,7 @@ private:
     QBoxLayout *m_mainLayout;
     QWidget *m_visualEffect;
     KNSearchBox *m_searchBox;
-    KNMusicLibraryModel *m_musicModel;
+    KNMusicLibraryModelBase *m_musicModel;
     KNMusicPlaylistManager *m_playlistManager;
     KNMusicHeaderPlayer *m_headerPlayer;
     KNMusicInfoCollector *m_infoCollector;

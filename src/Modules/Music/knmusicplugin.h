@@ -16,7 +16,7 @@ class KNMusicBackend;
 class KNMusicPlayerWidget;
 class KNMusicDatabaseBase;
 class KNMusicHeaderWidget;
-class KNMusicLibraryModel;
+class KNMusicLibraryModelBase;
 class KNMusicPlaylistManager;
 class KNMusicViewer;
 class KNMusicInfoCollector;
@@ -58,7 +58,7 @@ private:
     void loadShortcuts();
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
-    KNMusicLibraryModel *m_libraryModel;
+    KNMusicLibraryModelBase *m_libraryModel;
     KNMusicInfoCollector *m_infoCollector;
     KNMusicInfoCollectorManager *m_infoCollectManager;
     KNLibSearcher *m_searcher;

@@ -63,7 +63,7 @@ void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManager *manager)
             m_playlistManager, &KNMusicPlaylistManager::setLoopMode);
 }
 
-void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModel *model)
+void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModelBase *model)
 {
     m_musicModel=model;
     m_playlistManager->setMusicModel(model);

@@ -19,6 +19,7 @@ Nerve is a cross-platform application for media file managing.
 
 ## Dependencies
 MediaInfo
+
 Bass
 
 ## License
