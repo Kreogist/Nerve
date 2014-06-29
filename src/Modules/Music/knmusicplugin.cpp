@@ -201,7 +201,7 @@ void KNMusicPlugin::loadData()
 }
 
 void KNMusicPlugin::onActionShowContextMenu(const QPoint &position,
-                                    KNMusicGlobal::MusicCategory currentMode)
+                                            int currentMode)
 {
     m_libraryViewMenu->setMode(currentMode);
     m_libraryViewMenu->readIndexesFromGlobal();

@@ -25,7 +25,7 @@ KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     createActions();
 }
 
-void KNMusicViewerMenu::setMode(KNMusicGlobal::MusicCategory category)
+void KNMusicViewerMenu::setMode(int category)
 {
     for(int i=ShowInSongs;
         i<=ShowInGenre;

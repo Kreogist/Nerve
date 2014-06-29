@@ -43,7 +43,7 @@ protected:
 
 private slots:
     void onActionShowContextMenu(const QPoint &position,
-                                 KNMusicGlobal::MusicCategory currentMode);
+                                 int currentMode);
     void onActionOpenUrl(const QModelIndex &index);
     void onActionGetInfo(const QString &filePath);
 

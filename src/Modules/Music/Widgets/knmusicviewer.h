@@ -46,9 +46,9 @@ public:
 
 signals:
     void requireShowContextMenu(const QPoint &position,
-                                KNMusicGlobal::MusicCategory currentMode);
-    void requirePlayMusic(const QString &filePath);
+                                int currentMode);
     void requireDelete(const QModelIndex &index);
+    void requirePlayMusic(const QString &filePath);
     void requireSetProxy(QSortFilterProxyModel *model);
     void requireClearSearch();
 
@@ -71,7 +71,6 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void onActionLibraryViewShowContextMenu(const QPoint &position);
     void onActionArtistShowContextMenu(const QPoint &position);
     void onActionAlbumShowContextMenu(const QPoint &position);
     void onActionGenreShowContextMenu(const QPoint &position);
@@ -89,12 +88,12 @@ private:
     QString m_categoryCaption[MusicCategoriesCount];
     QPropertyAnimation *m_playerIn, *m_playerOut;
     QWidget *m_playerWidget;
-    KNMusicListView *m_libraryView;
+
     KNMusicCategoryView *m_artistView,
                       *m_genreView;
     KNMusicAlbumView *m_albumView;
+    KNMusicPlaylistView *m_playlistView;
 
-    KNMusicSortModel *m_listViewModel;
     KNMusicArtistModel *m_artistModel;
     KNMusicAlbumModel *m_albumModel;
     KNMusicGenreModel *m_genreModel;
@@ -107,7 +106,6 @@ private:
                                    *m_genreSortModel;
 
     KNMusicArtistSongs *m_artistSongView;
-    KNMusicPlaylistView *m_playlistView;
     KNMusicGenreSongs *m_genreSongView;
 
     KNMusicLibraryModelBase *m_musicModel;
