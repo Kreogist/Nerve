@@ -11,6 +11,7 @@ class QStandardItemModel;
 class QResizeEvent;
 class QShowEvent;
 class QGraphicsOpacityEffect;
+class KNMusicLibraryModelBase;
 class KNMusicCategoryList;
 class KNMusicCategoryModel;
 class KNMusicCategoryDetailModel;
@@ -26,6 +27,7 @@ public:
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void setCurrentIndex(const QModelIndex &index);
     void setSongListView(KNMusicLibraryListview *listview);
+    void setMusicSourceModel(KNMusicLibraryModelBase *model);
     void setBackground(const QIcon &background);
     void resetHeader();
 
@@ -49,10 +51,12 @@ class KNMusicCategoryView : public QSplitter
 public:
     explicit KNMusicCategoryView(QWidget *parent = 0);
     void resetHeader();
+    void setMusicSourceModel(KNMusicLibraryModelBase *model);
     void setModel(KNMusicCategorySortFilterModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
+    void selectMusicItem(const QModelIndex &index);
     void setSongListView(KNMusicLibraryListview *listview);
 
 signals:
@@ -73,6 +77,7 @@ private:
     KNMusicCategoryModel *m_artistModel;
     KNMusicCategoryDetailModel *m_artistDetailModel;
     KNMusicCategorySortFilterModel *m_proxyModel;
+    KNMusicLibraryModelBase *m_musicModel;
 };
 
 #endif // KNMUSICCATEGORYVIEW_H

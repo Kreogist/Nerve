@@ -45,7 +45,9 @@ public:
     void setBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
-    void addListviewModePlugin(KNMusicViewerItem *plugin);
+    void addListViewPlugin(KNMusicViewerItem *plugin);
+    void addArtistViewPlugin(KNMusicViewerItem *plugin);
+    void addGenreViewPlugin(KNMusicViewerItem *plugin);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -86,9 +88,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void onActionArtistShowContextMenu(const QPoint &position);
     void onActionAlbumShowContextMenu(const QPoint &position);
-    void onActionGenreShowContextMenu(const QPoint &position);
 
 private:
     void addPlugin(KNMusicViewerItem *plugin);
@@ -107,19 +107,13 @@ private:
 
     QSignalMapper *m_showInMapper;
 
-    KNMusicCategoryView *m_genreView;
     KNMusicAlbumView *m_albumView;
     KNMusicPlaylistView *m_playlistView;
 
     KNMusicAlbumModel *m_albumModel;
-    KNMusicGenreModel *m_genreModel;
 
-    KNMusicCategoryDetailModel *m_genreDetails;
     KNMusicAlbumDetailModel *m_albumDetails;
-    KNMusicCategorySortFilterModel *m_albumSortModel,
-                                   *m_genreSortModel;
-
-    KNMusicGenreSongs *m_genreSongView;
+    KNMusicCategorySortFilterModel *m_albumSortModel;
 
     KNMusicLibraryModelBase *m_musicModel;
 

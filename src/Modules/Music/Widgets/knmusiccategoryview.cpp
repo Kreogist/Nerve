@@ -117,6 +117,11 @@ void KNMusicCategoryDetailsDisplay::setSongListView(KNMusicLibraryListview *list
     m_layout->addWidget(m_songViewer, 1);
 }
 
+void KNMusicCategoryDetailsDisplay::setMusicSourceModel(KNMusicLibraryModelBase *model)
+{
+    m_songViewer->setSourceModel(model);
+}
+
 void KNMusicCategoryDetailsDisplay::setBackground(const QIcon &background)
 {
     m_largeIcon->setPixmap(background.pixmap(m_largeIcon->size()));
@@ -174,6 +179,13 @@ void KNMusicCategoryView::resetHeader()
     m_artistDetails->resetHeader();
 }
 
+void KNMusicCategoryView::setMusicSourceModel(KNMusicLibraryModelBase *model)
+{
+    m_artistDetailModel->setSourceModel(model);
+    m_artistDetails->setMusicSourceModel(model);
+    m_musicModel=model;
+}
+
 void KNMusicCategoryView::setModel(KNMusicCategorySortFilterModel *model)
 {
     m_artistList->setModel(model);
@@ -185,10 +197,10 @@ void KNMusicCategoryView::setModel(KNMusicCategorySortFilterModel *model)
 
 void KNMusicCategoryView::setDetailModel(KNMusicCategoryDetailModel *model)
 {
-    m_artistDetails->setDetailModel(model);
-    connect(model, &KNMusicCategoryDetailModel::requireSongCountChange,
-            this, &KNMusicCategoryView::onActionSongCountChange);
     m_artistDetailModel=model;
+    m_artistDetails->setDetailModel(m_artistDetailModel);
+    connect(m_artistDetailModel, &KNMusicCategoryDetailModel::requireSongCountChange,
+            this, &KNMusicCategoryView::onActionSongCountChange);
 }
 
 void KNMusicCategoryView::selectCategoryItem(const QString &value)
@@ -208,6 +220,13 @@ void KNMusicCategoryView::selectItem(const QModelIndex &index)
     {
         m_artistDetails->setCurrentIndex(testIndex);
     }
+}
+
+void KNMusicCategoryView::selectMusicItem(const QModelIndex &index)
+{
+    selectCategoryItem(m_musicModel->itemText(index.row(),
+                                              m_artistDetailModel->filterKeyColumn()));
+    selectItem(index);
 }
 
 void KNMusicCategoryView::setSongListView(KNMusicLibraryListview *listview)

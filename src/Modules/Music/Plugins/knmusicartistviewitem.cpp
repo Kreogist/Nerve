@@ -16,19 +16,25 @@ KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
     //Initial the artist model.
     m_artistModel=new KNMusicArtistModel;
 
-    //Initial the sort filter proxy model for search.
+    //Initial the sort filter proxy model for artist search.
     m_artistSortModel=new KNMusicCategorySortFilterModel;
     m_artistSortModel->setFilterKeyColumn(0);
     m_artistSortModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_artistSortModel->setSourceModel(m_artistModel);
 
+    //Initial the songs display filter model.
+    m_artistDetails=new KNMusicCategoryDetailModel;
+    m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
+    m_artistDetails->setCategoryModel(m_artistModel);
+
     //Initial the artist view.
     m_artistView=new KNMusicCategoryView;
+    //Initial the artist songs view.
     m_artistSongView=new KNMusicArtistSongs(m_artistView);
-    m_artistView->installEventFilter(this);
-    m_artistSongView->installEventFilter(this);
+
     m_artistView->setSongListView(m_artistSongView);
     m_artistView->setModel(m_artistSortModel);
+    m_artistView->setDetailModel(m_artistDetails);
     connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
             [=](const QModelIndex &index)
             {
@@ -37,12 +43,6 @@ KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
             });
     connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
             this, &KNMusicArtistViewItem::onActionShowContextMenu);
-
-    //Initial the songs display filter model.
-    m_artistDetails=new KNMusicCategoryDetailModel;
-    m_artistDetails->setFilterKeyColumn(KNMusicGlobal::Artist);
-    m_artistDetails->setCategoryModel(m_artistModel);
-    m_artistView->setDetailModel(m_artistDetails);
 }
 
 KNMusicArtistViewItem::~KNMusicArtistViewItem()
@@ -73,7 +73,7 @@ void KNMusicArtistViewItem::onActionSearch(const QString &text)
 
 void KNMusicArtistViewItem::onActionShowIndex(const QModelIndex &index)
 {
-    ;
+    m_artistView->selectMusicItem(index);
 }
 
 void KNMusicArtistViewItem::onActionRemoveItem(const QModelIndex &index)
@@ -89,8 +89,7 @@ void KNMusicArtistViewItem::retranslate()
 void KNMusicArtistViewItem::setMusicSourceModel(KNMusicLibraryModelBase *model)
 {
     m_artistModel->setSourceModel(model);
-    m_artistDetails->setSourceModel(model);
-    m_artistSongView->setSourceModel(model);
+    m_artistView->setMusicSourceModel(model);
     m_artistView->resetHeader();
 }
 
