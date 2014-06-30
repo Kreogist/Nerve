@@ -8,12 +8,14 @@
 #include <QThread>
 
 #include "../knmusicglobal.h"
+#include "../../Public/Base/knmusicbackend.h"
 
 #include "../../Base/knstdlibviewer.h"
 
 class QEvent;
 class QDragEnterEvent;
 class QSortFilterProxyModel;
+class QSignalMapper;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicCategorySortFilterModel;
@@ -30,8 +32,8 @@ class KNMusicAlbumDetailModel;
 class KNMusicArtistSongs;
 class KNMusicPlaylistView;
 class KNMusicGenreSongs;
-class KNMusicBackend;
 class KNMusicPlaylistManager;
+class KNMusicViewerItem;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -43,6 +45,7 @@ public:
     void setBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
+    void addListviewModePlugin(KNMusicViewerItem *plugin);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -50,7 +53,18 @@ signals:
     void requireDelete(const QModelIndex &index);
     void requirePlayMusic(const QString &filePath);
     void requireSetProxy(QSortFilterProxyModel *model);
+    void requireShowIn(const int &category,
+                       const QModelIndex &index);
     void requireClearSearch();
+    void requireResort();
+    void requireSearch(const QString &text);
+    void requireSetMusicModel(KNMusicLibraryModelBase *model);
+    void requireSetBackend(KNMusicBackend *backend);
+    void requireRemoveOriginal(const QModelIndex &index);
+    void requireShowInSongsView(const QModelIndex &index);
+    void requireShowInArtistView(const QModelIndex &index);
+    void requireShowInAlbumView(const QModelIndex &index);
+    void requireShowInGenreView(const QModelIndex &index);
 
 public slots:
     void retranslate();
@@ -76,6 +90,7 @@ private slots:
     void onActionGenreShowContextMenu(const QPoint &position);
 
 private:
+    void addPlugin(KNMusicViewerItem *plugin);
     enum MusicCategories
     {
         Songs,
@@ -88,6 +103,8 @@ private:
     QString m_categoryCaption[MusicCategoriesCount];
     QPropertyAnimation *m_playerIn, *m_playerOut;
     QWidget *m_playerWidget;
+
+    QSignalMapper *m_showInMapper;
 
     KNMusicCategoryView *m_artistView,
                       *m_genreView;

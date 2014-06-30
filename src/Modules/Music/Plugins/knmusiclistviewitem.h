@@ -12,19 +12,27 @@ class KNMusicListviewItem : public KNMusicViewerItem
 public:
     explicit KNMusicListviewItem(QObject *parent = 0);
     ~KNMusicListviewItem();
-    void setSourceModel(KNMusicLibraryModelBase *model);
-    QWidget *widget();
+    QWidget *viewerWidget();
+    void applyPlugin();
 
 signals:
 
 public slots:
+    void onActionResort();
+    void onActionSearch(const QString &text);
+    void onActionShowIndex(const QModelIndex &index);
+    void onActionRemoveOriginalItem(const QModelIndex &index);
+    void retranslate();
+    void setMusicSourceModel(KNMusicLibraryModelBase *model);
+    void setBackend(KNMusicBackend *backend);
 
-private slots:
+protected slots:
     void onActionShowContextMenu(const QPoint &position);
 
 private:
     KNMusicSortModel *m_listViewModel;
     KNMusicListView *m_libraryView;
+    QString m_captionTitle;
 };
 
 #endif // KNMUSICLISTVIEWITEM_H

@@ -10,7 +10,7 @@
 #include "knmusicviewermenu.h"
 
 KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
-    KNMenu(parent)
+    KNMusicViewerMenuBase(parent)
 {
     QPalette pal=palette();
     pal.setColor(QPalette::Base, QColor(0x10, 0x10, 0x10));

@@ -11,9 +11,6 @@ class KNStdLibViewer : public KNLibViewer
     Q_OBJECT
 public:
     explicit KNStdLibViewer(QWidget *parent = 0);
-    void addCategory(const QPixmap &icon,
-                     const QString &category,
-                     QWidget *widget);
     void setCategoryIndex(const int &index);
     int categoryIndex() const;
     void moveLeft();
@@ -22,6 +19,9 @@ public:
 signals:
 
 public slots:
+    void addCategory(const QPixmap &icon,
+                     const QString &category,
+                     QWidget *widget);
     void setContentsFocus();
 
 protected:

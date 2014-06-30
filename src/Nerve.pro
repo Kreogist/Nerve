@@ -165,7 +165,8 @@ SOURCES += \
     Modules/Base/knlibseacher.cpp \
     Modules/Public/Base/knmusicbackend.cpp \
     Modules/Music/Base/knmusicvieweritem.cpp \
-    Modules/Music/Plugins/knmusiclistviewitem.cpp
+    Modules/Music/Plugins/knmusiclistviewitem.cpp \
+    Modules/Music/Widgets/knmusicviewermenubase.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -308,7 +309,8 @@ HEADERS += \
     Modules/Base/knlibsearcher.h \
     Modules/Public/Base/knmusicbackend.h \
     Modules/Music/Base/knmusicvieweritem.h \
-    Modules/Music/Plugins/knmusiclistviewitem.h
+    Modules/Music/Plugins/knmusiclistviewitem.h \
+    Modules/Music/Widgets/knmusicviewermenubase.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

@@ -223,8 +223,9 @@ void KNMusicLibraryModel::updateIndexInfo(const QModelIndex &index,
                                             filePath);
 }
 
-void KNMusicLibraryModel::prepareRemove(const QModelIndex &removedIndex)
+void KNMusicLibraryModel::removeAppendData(const QModelIndex &removedIndex)
 {
+    //Here, we have to remove the image first.
     QString currentKey=artworkKey(removedIndex.row());
     QModelIndexList artworkCheck=match(index(0,0),
                                        KNMusicGlobal::ArtworkKeyRole,
@@ -233,5 +234,6 @@ void KNMusicLibraryModel::prepareRemove(const QModelIndex &removedIndex)
     {
         m_pixmapList->removeImage(currentKey);
     }
+    //Emit the data about to remove signal.
     emit musicAboutToRemove(removedIndex);
 }

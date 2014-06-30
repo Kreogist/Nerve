@@ -65,6 +65,8 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             this, &KNMusicPlugin::requireAnalysisUrls);
     connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
             m_musicViewer, &KNMusicViewer::resort);
+    connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
+            m_musicViewer, &KNMusicViewer::requireResort);
 
     //Initial header widget
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());

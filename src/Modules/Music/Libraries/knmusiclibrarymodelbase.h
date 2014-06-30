@@ -16,7 +16,7 @@ public:
                              KNMusicGlobal::MusicDetailsInfo currentDetails)=0;
     virtual void updateIndexInfo(const QModelIndex &index,
                                  const QString &filePath)=0;
-    virtual void prepareRemove(const QModelIndex &removedIndex)=0;
+    virtual void removeAppendData(const QModelIndex &removedIndex)=0;
 
 signals:
     void musicAppend(QModelIndex index);

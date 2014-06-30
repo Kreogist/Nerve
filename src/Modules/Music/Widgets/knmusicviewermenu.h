@@ -5,12 +5,12 @@
 
 #include "../knmusicglobal.h"
 
-#include "../../../Modules/Base/knmenu.h"
+#include "knmusicviewermenubase.h"
 
 class KNGlobal;
 class QStandardItem;
 class QStandardItemModel;
-class KNMusicViewerMenu : public KNMenu
+class KNMusicViewerMenu : public KNMusicViewerMenuBase
 {
     Q_OBJECT
 public:
@@ -22,12 +22,6 @@ public:
     void setModel(QStandardItemModel *model);
 
 signals:
-    void requirePlayMusic(const QString &filePath);
-    void requireShowIn(KNMusicGlobal::MusicCategory category,
-                       const QModelIndex &index);
-    void requireGetInfo(const QString &filePath);
-    void requireDelete(const QModelIndex &index);
-    void requireDeleteSelection();
 
 public slots:
     void retranslate();
