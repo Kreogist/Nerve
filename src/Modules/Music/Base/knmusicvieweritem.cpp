@@ -1,35 +1,35 @@
-#include "knmusicvieweritem.h"
+#include "knmusicvieweritembase.h"
 
-KNMusicViewerItem::KNMusicViewerItem(QObject *parent) :
+KNMusicViewerItemBase::KNMusicViewerItemBase(QObject *parent) :
     QObject(parent)
 {
 }
 
-void KNMusicViewerItem::onActionResort()
+void KNMusicViewerItemBase::onActionResort()
 {
 }
 
-void KNMusicViewerItem::onActionShowContextMenu(const QPoint &position)
+void KNMusicViewerItemBase::onActionShowContextMenu(const QPoint &position)
 {
     Q_UNUSED(position);
 }
 
-void KNMusicViewerItem::onActionSearch(const QString &text)
+void KNMusicViewerItemBase::onActionSearch(const QString &text)
 {
     Q_UNUSED(text);
 }
 
-void KNMusicViewerItem::onActionShowIndex(const QModelIndex &index)
+void KNMusicViewerItemBase::onActionShowIndex(const QModelIndex &index)
 {
     Q_UNUSED(index);
 }
 
-void KNMusicViewerItem::onActionRemoveItem(const QModelIndex &index)
+void KNMusicViewerItemBase::onActionRemoveItem(const QModelIndex &index)
 {
     Q_UNUSED(index);
 }
 
-void KNMusicViewerItem::onActionRemoveOriginalItem(const QModelIndex &index)
+void KNMusicViewerItemBase::onActionRemoveOriginalItem(const QModelIndex &index)
 {
     Q_UNUSED(index);
 }

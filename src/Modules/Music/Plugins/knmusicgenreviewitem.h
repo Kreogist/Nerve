@@ -1,14 +1,14 @@
 #ifndef KNMUSICGENREVIEWITEM_H
 #define KNMUSICGENREVIEWITEM_H
 
-#include "../Base/knmusicvieweritem.h"
+#include "../Base/knmusicvieweritembase.h"
 
 class KNMusicCategoryView;
 class KNMusicGenreModel;
 class KNMusicCategoryDetailModel;
 class KNMusicCategorySortFilterModel;
 class KNMusicGenreSongs;
-class KNMusicGenreViewItem : public KNMusicViewerItem
+class KNMusicGenreViewItem : public KNMusicViewerItemBase
 {
     Q_OBJECT
 public:

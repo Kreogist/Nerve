@@ -7,7 +7,7 @@
 #include "knmusicalbumviewitem.h"
 
 KNMusicAlbumViewItem::KNMusicAlbumViewItem(QObject *parent) :
-    KNMusicViewerItem(parent)
+    KNMusicViewerItemBase(parent)
 {
     //Initial translation and icons.
     retranslate();

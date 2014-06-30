@@ -15,7 +15,7 @@
 
 #include <QDebug>
 
-#include "../Base/knmusicvieweritem.h"
+#include "../Base/knmusicvieweritembase.h"
 
 #include "knmusicplaylistview.h"
 
@@ -134,40 +134,40 @@ void KNMusicViewer::setPlayWidget(QWidget *widget)
     m_playerOut->setTargetObject(m_playerWidget);
 }
 
-void KNMusicViewer::addListViewPlugin(KNMusicViewerItem *plugin)
+void KNMusicViewer::addListViewPlugin(KNMusicViewerItemBase *plugin)
 {
     connect(this, &KNMusicViewer::requireRemoveOriginal,
-            plugin, &KNMusicViewerItem::onActionRemoveOriginalItem);
+            plugin, &KNMusicViewerItemBase::onActionRemoveOriginalItem);
     connect(this, &KNMusicViewer::requireShowInSongsView,
-            plugin, &KNMusicViewerItem::onActionShowIndex);
-    addPlugin(plugin);
+            plugin, &KNMusicViewerItemBase::onActionShowIndex);
+    addDatabasePlugin(plugin);
 }
 
-void KNMusicViewer::addArtistViewPlugin(KNMusicViewerItem *plugin)
+void KNMusicViewer::addArtistViewPlugin(KNMusicViewerItemBase *plugin)
 {
     connect(this, &KNMusicViewer::requireRemoveMusic,
-            plugin, &KNMusicViewerItem::onActionRemoveItem);
+            plugin, &KNMusicViewerItemBase::onActionRemoveItem);
     connect(this, &KNMusicViewer::requireShowInArtistView,
-            plugin, &KNMusicViewerItem::onActionShowIndex);
-    addPlugin(plugin);
+            plugin, &KNMusicViewerItemBase::onActionShowIndex);
+    addDatabasePlugin(plugin);
 }
 
-void KNMusicViewer::addAlbumViewPlugin(KNMusicViewerItem *plugin)
+void KNMusicViewer::addAlbumViewPlugin(KNMusicViewerItemBase *plugin)
 {
     connect(this, &KNMusicViewer::requireRemoveMusic,
-            plugin, &KNMusicViewerItem::onActionRemoveItem);
+            plugin, &KNMusicViewerItemBase::onActionRemoveItem);
     connect(this, &KNMusicViewer::requireShowInAlbumView,
-            plugin, &KNMusicViewerItem::onActionShowIndex);
-    addPlugin(plugin);
+            plugin, &KNMusicViewerItemBase::onActionShowIndex);
+    addDatabasePlugin(plugin);
 }
 
-void KNMusicViewer::addGenreViewPlugin(KNMusicViewerItem *plugin)
+void KNMusicViewer::addGenreViewPlugin(KNMusicViewerItemBase *plugin)
 {
     connect(this, &KNMusicViewer::requireRemoveMusic,
-            plugin, &KNMusicViewerItem::onActionRemoveItem);
+            plugin, &KNMusicViewerItemBase::onActionRemoveItem);
     connect(this, &KNMusicViewer::requireShowInGenreView,
-            plugin, &KNMusicViewerItem::onActionShowIndex);
-    addPlugin(plugin);
+            plugin, &KNMusicViewerItemBase::onActionShowIndex);
+    addDatabasePlugin(plugin);
 }
 
 void KNMusicViewer::retranslate()
@@ -282,27 +282,27 @@ void KNMusicViewer::resizeEvent(QResizeEvent *event)
                             geometry():QRect(0, -height(), width(), height()));
 }
 
-void KNMusicViewer::addPlugin(KNMusicViewerItem *plugin)
+void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
 {
     //Connect actions.
     connect(this, &KNMusicViewer::requireResort,
-            plugin, &KNMusicViewerItem::onActionResort);
+            plugin, &KNMusicViewerItemBase::onActionResort);
     connect(this, &KNMusicViewer::requireSearch,
-            plugin, &KNMusicViewerItem::onActionSearch);
+            plugin, &KNMusicViewerItemBase::onActionSearch);
     connect(this, &KNMusicViewer::requireSetMusicModel,
-            plugin, &KNMusicViewerItem::setMusicSourceModel);
+            plugin, &KNMusicViewerItemBase::setMusicSourceModel);
     connect(this, &KNMusicViewer::requireSetBackend,
-            plugin, &KNMusicViewerItem::setBackend);
+            plugin, &KNMusicViewerItemBase::setBackend);
 
     //Connect requires.
-    connect(plugin, &KNMusicViewerItem::requirePlayMusic,
+    connect(plugin, &KNMusicViewerItemBase::requirePlayMusic,
             [=](const QModelIndex &sourceIndex)
             {
                 emit requirePlayMusic(m_musicModel->filePathFromIndex(sourceIndex));
             });
-    connect(plugin, &KNMusicViewerItem::requireShowContextMenu,
+    connect(plugin, &KNMusicViewerItemBase::requireShowContextMenu,
             this, &KNMusicViewer::requireShowContextMenu);
-    connect(plugin, &KNMusicViewerItem::requireAddCategory,
+    connect(plugin, &KNMusicViewerItemBase::requireAddCategory,
             this, &KNMusicViewer::addCategory);
 
     //Apply plugin.

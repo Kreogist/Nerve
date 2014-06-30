@@ -1,12 +1,12 @@
 #ifndef KNMUSICLISTVIEWITEM_H
 #define KNMUSICLISTVIEWITEM_H
 
-#include "../Base/knmusicvieweritem.h"
+#include "../Base/knmusicvieweritembase.h"
 
 class KNMusicListView;
 class KNMusicLibraryModelBase;
 class KNMusicSortModel;
-class KNMusicListViewItem : public KNMusicViewerItem
+class KNMusicListViewItem : public KNMusicViewerItemBase
 {
     Q_OBJECT
 public:

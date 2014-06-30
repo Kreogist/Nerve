@@ -8,7 +8,7 @@
 #include "knmusicartistviewitem.h"
 
 KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
-    KNMusicViewerItem(parent)
+    KNMusicViewerItemBase(parent)
 {
     //Initial translation and icons.
     retranslate();

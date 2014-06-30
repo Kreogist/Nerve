@@ -25,7 +25,7 @@ class KNMusicSortModel;
 class KNMusicCategoryDetailModel;
 class KNMusicPlaylistView;
 class KNMusicPlaylistManager;
-class KNMusicViewerItem;
+class KNMusicViewerItemBase;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
@@ -37,10 +37,11 @@ public:
     void setBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
-    void addListViewPlugin(KNMusicViewerItem *plugin);
-    void addArtistViewPlugin(KNMusicViewerItem *plugin);
-    void addAlbumViewPlugin(KNMusicViewerItem *plugin);
-    void addGenreViewPlugin(KNMusicViewerItem *plugin);
+    void addListViewPlugin(KNMusicViewerItemBase *plugin);
+    void addArtistViewPlugin(KNMusicViewerItemBase *plugin);
+    void addAlbumViewPlugin(KNMusicViewerItemBase *plugin);
+    void addGenreViewPlugin(KNMusicViewerItemBase *plugin);
+    void addPlaylistPlugin();
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -80,7 +81,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
-    void addPlugin(KNMusicViewerItem *plugin);
+    void addDatabasePlugin(KNMusicViewerItemBase *plugin);
     enum MusicCategories
     {
         Songs,

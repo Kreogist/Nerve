@@ -1,5 +1,5 @@
-#ifndef KNMUSICVIEWERITEM_H
-#define KNMUSICVIEWERITEM_H
+#ifndef KNMUSICVIEWERITEMBASE_H
+#define KNMUSICVIEWERITEMBASE_H
 
 #include <QWidget>
 #include <QObject>
@@ -7,11 +7,11 @@
 class QSortFilterProxyModel;
 class KNMusicBackend;
 class KNMusicLibraryModelBase;
-class KNMusicViewerItem : public QObject
+class KNMusicViewerItemBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNMusicViewerItem(QObject *parent = 0);
+    explicit KNMusicViewerItemBase(QObject *parent = 0);
     virtual void applyPlugin()=0;
 
 signals:
@@ -37,4 +37,4 @@ protected slots:
 
 };
 
-#endif // KNMUSICVIEWERITEM_H
+#endif // KNMUSICVIEWERITEMBASE_H

@@ -1,14 +1,14 @@
 #ifndef KNMUSICARTISTVIEWITEM_H
 #define KNMUSICARTISTVIEWITEM_H
 
-#include "../Base/knmusicvieweritem.h"
+#include "../Base/knmusicvieweritembase.h"
 
 class KNMusicCategoryView;
 class KNMusicArtistModel;
 class KNMusicCategoryDetailModel;
 class KNMusicCategorySortFilterModel;
 class KNMusicArtistSongs;
-class KNMusicArtistViewItem : public KNMusicViewerItem
+class KNMusicArtistViewItem : public KNMusicViewerItemBase
 {
     Q_OBJECT
 public:
