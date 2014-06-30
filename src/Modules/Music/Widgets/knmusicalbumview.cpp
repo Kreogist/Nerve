@@ -568,8 +568,8 @@ void KNMusicAlbumView::setCategoryModel(KNMusicCategorySortFilterModel *model)
 
 void KNMusicAlbumView::setDetailModel(KNMusicAlbumDetailModel *model)
 {
-    m_albumDetail->setDetailModel(model);
     m_detailModel=model;
+    m_albumDetail->setDetailModel(m_detailModel);
 }
 
 void KNMusicAlbumView::selectCategoryItem(const QString &value)
@@ -598,6 +598,13 @@ void KNMusicAlbumView::selectItem(const QModelIndex &index)
     {
         m_albumDetail->selectItem(testIndex);
     }
+}
+
+void KNMusicAlbumView::selectMusicItem(const QModelIndex &index)
+{
+    selectCategoryItem(m_musicModel->itemText(index.row(),
+                                              KNMusicGlobal::Album));
+    selectItem(index);
 }
 
 void KNMusicAlbumView::updateGeometries()
@@ -998,9 +1005,11 @@ void KNMusicAlbumView::resetHeader()
     m_albumDetail->resetHeader();
 }
 
-void KNMusicAlbumView::setSourceModel(KNMusicLibraryModelBase *model)
+void KNMusicAlbumView::setMusicSourceModel(KNMusicLibraryModelBase *model)
 {
-    m_albumDetail->setSourceModel(model);
+    m_musicModel=model;
+    m_albumDetail->setSourceModel(m_musicModel);
+    m_detailModel->setSourceModel(m_musicModel);
 }
 
 void KNMusicAlbumView::setMusicBackend(KNMusicBackend *backend)

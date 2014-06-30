@@ -137,10 +137,11 @@ public:
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectCategoryItem(const QString &value);
     void selectItem(const QModelIndex &index);
+    void selectMusicItem(const QModelIndex &index);
     int gridMinimumWidth() const;
     void setGridMinimumWidth(int gridMinimumWidth);
     void resetHeader();
-    void setSourceModel(KNMusicLibraryModelBase *model);
+    void setMusicSourceModel(KNMusicLibraryModelBase *model);
     void setMusicBackend(KNMusicBackend *backend);
     void setFilterFixedString(const QString &text);
 
@@ -207,6 +208,7 @@ private:
     QModelIndex m_detailIndex, m_pressedIndex;
     KNMusicAlbumDetailModel *m_detailModel;
     KNMusicAlbumModel *m_model;
+    KNMusicLibraryModelBase *m_musicModel;
     KNMusicCategorySortFilterModel *m_proxyModel;
 };
 

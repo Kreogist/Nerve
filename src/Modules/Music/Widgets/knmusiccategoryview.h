@@ -54,8 +54,6 @@ public:
     void setMusicSourceModel(KNMusicLibraryModelBase *model);
     void setModel(KNMusicCategorySortFilterModel *model);
     void setDetailModel(KNMusicCategoryDetailModel *model);
-    void selectCategoryItem(const QString &value);
-    void selectItem(const QModelIndex &index);
     void selectMusicItem(const QModelIndex &index);
     void setSongListView(KNMusicLibraryListview *listview);
 
@@ -72,6 +70,8 @@ private slots:
                               const QModelIndex &previous);
 
 private:
+    void selectCategoryItem(const QString &value);
+    void selectItem(const QModelIndex &index);
     KNMusicCategoryList *m_artistList;
     KNMusicCategoryDetailsDisplay *m_artistDetails;
     KNMusicCategoryModel *m_artistModel;

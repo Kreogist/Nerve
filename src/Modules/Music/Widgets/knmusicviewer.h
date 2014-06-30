@@ -18,20 +18,12 @@ class QSortFilterProxyModel;
 class QSignalMapper;
 class QDropEvent;
 class QPropertyAnimation;
-class KNMusicCategorySortFilterModel;
 class KNMusicLibraryModelBase;
 class KNMusicListView;
 class KNMusicCategoryView;
-class KNMusicAlbumView;
 class KNMusicSortModel;
-class KNMusicArtistModel;
-class KNMusicAlbumModel;
-class KNMusicGenreModel;
 class KNMusicCategoryDetailModel;
-class KNMusicAlbumDetailModel;
-class KNMusicArtistSongs;
 class KNMusicPlaylistView;
-class KNMusicGenreSongs;
 class KNMusicPlaylistManager;
 class KNMusicViewerItem;
 class KNMusicViewer : public KNStdLibViewer
@@ -47,6 +39,7 @@ public:
     void setPlayWidget(QWidget *widget);
     void addListViewPlugin(KNMusicViewerItem *plugin);
     void addArtistViewPlugin(KNMusicViewerItem *plugin);
+    void addAlbumViewPlugin(KNMusicViewerItem *plugin);
     void addGenreViewPlugin(KNMusicViewerItem *plugin);
 
 signals:
@@ -78,7 +71,6 @@ public slots:
     void showInCurrent(const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
     void deleteSelections();
-    void onActionSearch(const QString &text);
     void onActionShowPlayer();
     void onActionHidePlayer();
 
@@ -86,9 +78,6 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void resizeEvent(QResizeEvent *event);
-
-private slots:
-    void onActionAlbumShowContextMenu(const QPoint &position);
 
 private:
     void addPlugin(KNMusicViewerItem *plugin);
@@ -107,13 +96,7 @@ private:
 
     QSignalMapper *m_showInMapper;
 
-    KNMusicAlbumView *m_albumView;
     KNMusicPlaylistView *m_playlistView;
-
-    KNMusicAlbumModel *m_albumModel;
-
-    KNMusicAlbumDetailModel *m_albumDetails;
-    KNMusicCategorySortFilterModel *m_albumSortModel;
 
     KNMusicLibraryModelBase *m_musicModel;
 

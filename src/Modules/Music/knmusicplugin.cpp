@@ -74,8 +74,6 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_headerWidget->setMusicModel(m_libraryModel);
     m_headerWidget->setBackend(m_backend);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
-            m_musicViewer, &KNMusicViewer::onActionSearch);
-    connect(m_headerWidget, &KNMusicHeaderWidget::requireSearch,
             m_musicViewer, &KNMusicViewer::requireSearch);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
             m_musicViewer, &KNMusicViewer::onActionShowPlayer);
