@@ -2,7 +2,7 @@
 #include <QSignalMapper>
 #include <QBoxLayout>
 
-#include "../../Public/Base/KNMusicBackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 #include "../../Base/knlabeleditor.h"
 #include "knmusicvolumeslider.h"
 #include "knmusiceqslider.h"

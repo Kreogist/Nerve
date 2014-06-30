@@ -171,7 +171,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e);
 
 private slots:
-    void expandAlbumDetails(const QModelIndex &index);
+    void expandAlbumDetail(const QModelIndex &index);
     void onActionHideAlbumDetail();
     void onActionHideAlbumDetailFinished();
     void onActionAlbumRemoved(const QModelIndex &index);

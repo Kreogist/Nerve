@@ -578,14 +578,14 @@ void KNMusicAlbumView::selectCategoryItem(const QString &value)
     if(value.isEmpty())
     {
         albumSearch=m_model->index(0,0);
-        expandAlbumDetails(albumSearch);
+        expandAlbumDetail(albumSearch);
         //scrollTo(albumSearch, QAbstractItemView::PositionAtTop);
         return;
     }
     albumSearch=m_model->indexOf(value);
     if(albumSearch.isValid())
     {
-        expandAlbumDetails(albumSearch);
+        expandAlbumDetail(albumSearch);
         scrollTo(m_proxyModel->mapFromSource(albumSearch),
                  QAbstractItemView::PositionAtCenter);
     }
@@ -798,7 +798,7 @@ void KNMusicAlbumView::mouseReleaseEvent(QMouseEvent *e)
      }*/
 }
 
-void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
+void KNMusicAlbumView::expandAlbumDetail(const QModelIndex &index)
 {
     m_albumDetail->hide();
     m_albumDetail->disableArtworkExpand();
@@ -828,6 +828,7 @@ void KNMusicAlbumView::expandAlbumDetails(const QModelIndex &index)
                                    (height()>>2)*3));
     m_albumDetail->hideDetailWidget();
     m_albumDetail->show();
+    m_hidingAlbum=false;
     m_albumShow->start();
 }
 
@@ -1028,7 +1029,7 @@ void KNMusicAlbumView::selectAlbum(const QModelIndex &index)
 {
     if(index.isValid())
     {
-        expandAlbumDetails(index);
+        expandAlbumDetail(index);
     }
     else
     {

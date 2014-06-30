@@ -8,7 +8,7 @@
 
 #include "../knmusicglobal.h"
 #include "../../Public/knlibmediainfo.h"
-#include "../../Public/Base/KNMusicBackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 #include "knmusictagid3v1.h"
 #include "knmusictagid3v2.h"
 #include "knmusictagapev2.h"

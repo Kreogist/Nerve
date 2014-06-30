@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#include "../../Public/Base/KNMusicBackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../knmusicglobal.h"

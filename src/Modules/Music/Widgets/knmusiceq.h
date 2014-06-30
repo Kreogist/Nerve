@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "../../Public/Base/KNMusicBackend.h"
+#include "../../Public/Base/knmusicbackend.h"
 
 class QSignalMapper;
 class QLabel;
