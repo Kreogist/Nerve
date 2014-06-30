@@ -6,13 +6,12 @@
 class KNMusicListView;
 class KNMusicLibraryModelBase;
 class KNMusicSortModel;
-class KNMusicListviewItem : public KNMusicViewerItem
+class KNMusicListViewItem : public KNMusicViewerItem
 {
     Q_OBJECT
 public:
-    explicit KNMusicListviewItem(QObject *parent = 0);
-    ~KNMusicListviewItem();
-    QWidget *viewerWidget();
+    explicit KNMusicListViewItem(QObject *parent = 0);
+    ~KNMusicListViewItem();
     void applyPlugin();
 
 signals:

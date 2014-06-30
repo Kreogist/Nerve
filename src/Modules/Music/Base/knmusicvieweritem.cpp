@@ -24,6 +24,11 @@ void KNMusicViewerItem::onActionShowIndex(const QModelIndex &index)
     Q_UNUSED(index);
 }
 
+void KNMusicViewerItem::onActionRemoveItem(const QModelIndex &index)
+{
+    Q_UNUSED(index);
+}
+
 void KNMusicViewerItem::onActionRemoveOriginalItem(const QModelIndex &index)
 {
     Q_UNUSED(index);

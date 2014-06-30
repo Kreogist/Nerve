@@ -3,7 +3,7 @@
 
 #include "knmusiclistviewitem.h"
 
-KNMusicListviewItem::KNMusicListviewItem(QObject *parent) :
+KNMusicListViewItem::KNMusicListViewItem(QObject *parent) :
     KNMusicViewerItem(parent)
 {
     //Initial translation and icons.
@@ -26,16 +26,16 @@ KNMusicListviewItem::KNMusicListviewItem(QObject *parent) :
                 emit requirePlayMusic(m_listViewModel->mapToSource(index));
             });
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
-            this, &KNMusicListviewItem::onActionShowContextMenu);
+            this, &KNMusicListViewItem::onActionShowContextMenu);
 }
 
-KNMusicListviewItem::~KNMusicListviewItem()
+KNMusicListViewItem::~KNMusicListViewItem()
 {
     m_libraryView->deleteLater();
     m_listViewModel->deleteLater();
 }
 
-void KNMusicListviewItem::setMusicSourceModel(KNMusicLibraryModelBase *model)
+void KNMusicListViewItem::setMusicSourceModel(KNMusicLibraryModelBase *model)
 {
     //Set the music source model.
     m_libraryView->setSourceModel(model);
@@ -44,34 +44,29 @@ void KNMusicListviewItem::setMusicSourceModel(KNMusicLibraryModelBase *model)
     m_libraryView->resetHeader();
 }
 
-void KNMusicListviewItem::setBackend(KNMusicBackend *backend)
+void KNMusicListViewItem::setBackend(KNMusicBackend *backend)
 {
     m_libraryView->setMusicBackend(backend);
 }
 
-QWidget *KNMusicListviewItem::viewerWidget()
-{
-    return m_libraryView;
-}
-
-void KNMusicListviewItem::applyPlugin()
+void KNMusicListViewItem::applyPlugin()
 {
     emit requireAddCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                             m_captionTitle,
                             m_libraryView);
 }
 
-void KNMusicListviewItem::onActionResort()
+void KNMusicListViewItem::onActionResort()
 {
     m_listViewModel->sort(0);
 }
 
-void KNMusicListviewItem::onActionSearch(const QString &text)
+void KNMusicListViewItem::onActionSearch(const QString &text)
 {
     m_listViewModel->setFilterFixedString(text);
 }
 
-void KNMusicListviewItem::onActionShowIndex(const QModelIndex &index)
+void KNMusicListViewItem::onActionShowIndex(const QModelIndex &index)
 {
     //Get the proxy index.
     QModelIndex songMappedIndex=m_listViewModel->mapFromSource(index);
@@ -80,17 +75,17 @@ void KNMusicListviewItem::onActionShowIndex(const QModelIndex &index)
     m_libraryView->scrollTo(songMappedIndex, QAbstractItemView::PositionAtCenter);
 }
 
-void KNMusicListviewItem::onActionRemoveOriginalItem(const QModelIndex &index)
+void KNMusicListViewItem::onActionRemoveOriginalItem(const QModelIndex &index)
 {
     m_listViewModel->removeOriginalItem(index);
 }
 
-void KNMusicListviewItem::retranslate()
+void KNMusicListViewItem::retranslate()
 {
     m_captionTitle=tr("Songs");
 }
 
-void KNMusicListviewItem::onActionShowContextMenu(const QPoint &position)
+void KNMusicListViewItem::onActionShowContextMenu(const QPoint &position)
 {
     emit requireShowContextMenu(position, KNMusicGlobal::SongsView);
 }

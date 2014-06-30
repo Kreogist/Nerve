@@ -12,7 +12,6 @@ class KNMusicViewerItem : public QObject
     Q_OBJECT
 public:
     explicit KNMusicViewerItem(QObject *parent = 0);
-    virtual QWidget *viewerWidget()=0;
     virtual void applyPlugin()=0;
 
 signals:
@@ -30,6 +29,7 @@ public slots:
     virtual void onActionSearch(const QString &text);
     virtual void onActionShowIndex(const QModelIndex &index);
     virtual void setBackend(KNMusicBackend *backend)=0;
+    virtual void onActionRemoveItem(const QModelIndex &index);
     virtual void onActionRemoveOriginalItem(const QModelIndex &index);
 
 protected slots:

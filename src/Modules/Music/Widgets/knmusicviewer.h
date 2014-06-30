@@ -61,6 +61,7 @@ signals:
     void requireSetMusicModel(KNMusicLibraryModelBase *model);
     void requireSetBackend(KNMusicBackend *backend);
     void requireRemoveOriginal(const QModelIndex &index);
+    void requireRemoveMusic(const QModelIndex &index);
     void requireShowInSongsView(const QModelIndex &index);
     void requireShowInArtistView(const QModelIndex &index);
     void requireShowInAlbumView(const QModelIndex &index);
@@ -106,23 +107,18 @@ private:
 
     QSignalMapper *m_showInMapper;
 
-    KNMusicCategoryView *m_artistView,
-                      *m_genreView;
+    KNMusicCategoryView *m_genreView;
     KNMusicAlbumView *m_albumView;
     KNMusicPlaylistView *m_playlistView;
 
-    KNMusicArtistModel *m_artistModel;
     KNMusicAlbumModel *m_albumModel;
     KNMusicGenreModel *m_genreModel;
 
-    KNMusicCategoryDetailModel *m_artistDetails,
-                               *m_genreDetails;
+    KNMusicCategoryDetailModel *m_genreDetails;
     KNMusicAlbumDetailModel *m_albumDetails;
-    KNMusicCategorySortFilterModel *m_artistSortModel,
-                                   *m_albumSortModel,
+    KNMusicCategorySortFilterModel *m_albumSortModel,
                                    *m_genreSortModel;
 
-    KNMusicArtistSongs *m_artistSongView;
     KNMusicGenreSongs *m_genreSongView;
 
     KNMusicLibraryModelBase *m_musicModel;
