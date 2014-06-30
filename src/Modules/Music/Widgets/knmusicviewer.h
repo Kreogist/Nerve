@@ -4,34 +4,27 @@
 #include <QList>
 #include <QUrl>
 #include <QModelIndex>
-#include <QRegExp>
-#include <QThread>
 
 #include "../knmusicglobal.h"
 #include "../../Public/Base/knmusicbackend.h"
+#include "../Libraries/knmusicplaylistmanager.h"
 
 #include "../../Base/knstdlibviewer.h"
 
 class QEvent;
 class QDragEnterEvent;
 class QSortFilterProxyModel;
-class QSignalMapper;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicLibraryModelBase;
-class KNMusicListView;
-class KNMusicCategoryView;
-class KNMusicSortModel;
-class KNMusicCategoryDetailModel;
-class KNMusicPlaylistView;
 class KNMusicPlaylistManager;
 class KNMusicViewerItemBase;
+class KNMusicViewerPlaylistItemBase;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
-    ~KNMusicViewer();
     void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicLibraryModelBase *model);
     void setBackend(KNMusicBackend *backend);
@@ -41,7 +34,7 @@ public:
     void addArtistViewPlugin(KNMusicViewerItemBase *plugin);
     void addAlbumViewPlugin(KNMusicViewerItemBase *plugin);
     void addGenreViewPlugin(KNMusicViewerItemBase *plugin);
-    void addPlaylistPlugin();
+    void addPlaylistPlugin(KNMusicViewerPlaylistItemBase *plugin);
 
 signals:
     void requireShowContextMenu(const QPoint &position,
@@ -54,6 +47,7 @@ signals:
     void requireClearSearch();
     void requireResort();
     void requireSearch(const QString &text);
+    void requireSetPlaylistManager(KNMusicPlaylistManager *manager);
     void requireSetMusicModel(KNMusicLibraryModelBase *model);
     void requireSetBackend(KNMusicBackend *backend);
     void requireRemoveOriginal(const QModelIndex &index);
@@ -91,26 +85,10 @@ private:
         Playlists,
         MusicCategoriesCount
     };
-    QString m_categoryCaption[MusicCategoriesCount];
     QPropertyAnimation *m_playerIn, *m_playerOut;
     QWidget *m_playerWidget;
 
-    QSignalMapper *m_showInMapper;
-
-    KNMusicPlaylistView *m_playlistView;
-
     KNMusicLibraryModelBase *m_musicModel;
-
-    QThread m_listViewModelThread,
-            m_artistModelThread,
-            m_albumViewModelThread,
-            m_albumSortModelThread,
-            m_genreModelThread,
-            m_artistSortModelThread,
-            m_genreSortModelThread,
-            m_artistDetailsThread,
-            m_albumDetailsThread,
-            m_genreDetailsThread;
 };
 
 #endif // KNMUSICVIEWER_H

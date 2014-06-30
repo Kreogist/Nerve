@@ -1,13 +1,11 @@
-#include <QSignalMapper>
 #include <QAbstractItemModel>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QEvent>
-#include <QSignalMapper>
-#include <QMouseEvent>
 #include <QKeyEvent>
 #include <QMimeData>
 #include <QModelIndex>
+#include <QMouseEvent>
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
@@ -16,8 +14,7 @@
 #include <QDebug>
 
 #include "../Base/knmusicvieweritembase.h"
-
-#include "knmusicplaylistview.h"
+#include "../Base/knmusicviewerplaylistitembase.h"
 
 #include "../../Base/knlibsearcher.h"
 
@@ -25,10 +22,9 @@
 #include "../Plugins/knmusicartistviewitem.h"
 #include "../Plugins/knmusicalbumviewitem.h"
 #include "../Plugins/knmusicgenreviewitem.h"
+#include "../Plugins/knmusicplaylistviewitem.h"
 
-#include "../Libraries/knmusiclibrarymodel.h"
-#include "../Libraries/knmusicsortmodel.h"
-#include "../Libraries/knmusiccategorydetailmodel.h"
+#include "../Libraries/knmusiclibrarymodelbase.h"
 
 #include "knmusicviewer.h"
 
@@ -39,23 +35,12 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     setContentsMargins(0,0,0,0);
     setAcceptDrops(true);
 
-    //Prepare show in signal mapper.
-    m_showInMapper=new QSignalMapper(this);
-
     //Add plugins
     addListViewPlugin(new KNMusicListViewItem);
     addArtistViewPlugin(new KNMusicArtistViewItem);
     addAlbumViewPlugin(new KNMusicAlbumViewItem);
     addGenreViewPlugin(new KNMusicGenreViewItem);
-
-    m_playlistView=new KNMusicPlaylistView(this);
-    m_playlistView->installEventFilter(this);
-    connect(m_playlistView, &KNMusicPlaylistView::requirePlayMusic,
-            this, &KNMusicViewer::requirePlayMusic);
-
-    addCategory(QPixmap(":/Category/Resources/Category/05_playlists.png"),
-                m_categoryCaption[Playlists],
-                m_playlistView);
+    addPlaylistPlugin(new KNMusicPlaylistViewItem);
 
     m_playerIn=new QPropertyAnimation(this);
     m_playerIn->setPropertyName("geometry");
@@ -66,14 +51,9 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_playerOut->setEasingCurve(QEasingCurve::OutCubic);
 }
 
-KNMusicViewer::~KNMusicViewer()
-{
-    ;
-}
-
 void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
 {
-    m_playlistView->setManager(manager);
+    emit requireSetPlaylistManager(manager);
 }
 
 void KNMusicViewer::setMusicModel(KNMusicLibraryModelBase *model)
@@ -170,13 +150,23 @@ void KNMusicViewer::addGenreViewPlugin(KNMusicViewerItemBase *plugin)
     addDatabasePlugin(plugin);
 }
 
+void KNMusicViewer::addPlaylistPlugin(KNMusicViewerPlaylistItemBase *plugin)
+{
+    //Connect actions
+    connect(this, &KNMusicViewer::requireSetPlaylistManager,
+            plugin, &KNMusicViewerPlaylistItemBase::setPlaylistManager);
+
+    //Connect requires
+    connect(plugin, &KNMusicViewerPlaylistItemBase::requireAddCategory,
+            this, &KNMusicViewer::addCategory);
+    connect(plugin, &KNMusicViewerPlaylistItemBase::requirePlayMusic,
+            this, &KNMusicViewer::requirePlayMusic);
+    plugin->applyPlugin();
+}
+
 void KNMusicViewer::retranslate()
 {
-    m_categoryCaption[Songs]=tr("Songs");
-    m_categoryCaption[Artists]=tr("Artists");
-    m_categoryCaption[Albums]=tr("Albums");
-    m_categoryCaption[Genres]=tr("Genres");
-    m_categoryCaption[Playlists]=tr("Playlists");
+    ;
 }
 
 void KNMusicViewer::retranslateAndSet()
