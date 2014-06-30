@@ -129,7 +129,7 @@ void KNMusicLibraryModel::recoverFile(QStringList textList,
 
 void KNMusicLibraryModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
 {
-    KNModel::setInfoCollectorManager(infoCollectorManager);
+    KNMusicLibraryModelBase::setInfoCollectorManager(infoCollectorManager);
     m_infoCollectorManager=qobject_cast<KNMusicInfoCollectorManager *>(infoCollectorManager);
 }
 
@@ -140,7 +140,7 @@ void KNMusicLibraryModel::retranslate()
 
 void KNMusicLibraryModel::retranslateAndSet()
 {
-    KNModel::retranslate();
+    KNMusicLibraryModelBase::retranslate();
 }
 
 void KNMusicLibraryModel::onActionRecoverComplete()

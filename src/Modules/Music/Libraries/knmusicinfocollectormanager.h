@@ -8,11 +8,11 @@
 
 #include "../knmusicglobal.h"
 
-#include "../../Base/knlibinfocollectormanager.h"
+#include "../Base/knmusicinfocollectormanagerbase.h"
 
 class KNMusicBackend;
 class KNMusicInfoCollector;
-class KNMusicInfoCollectorManager : public KNLibInfoCollectorManager
+class KNMusicInfoCollectorManager : public KNMusicInfoCollectorManagerBase
 {
     Q_OBJECT
 public:
