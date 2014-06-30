@@ -12,7 +12,7 @@
 #include "../knmusicglobal.h"
 #include "../../knglobal.h"
 
-#include <QObject>
+#include "../Base/knmusicplaylistmanagerbase.h"
 
 class QSortFilterProxyModel;
 class QStandardItemModel;
@@ -23,7 +23,7 @@ class KNMusicNowPlaying;
 class KNMusicPlaylistItem;
 class KNMusicLibraryModelBase;
 class KNMusicCategoryDetailModel;
-class KNMusicPlaylistManager : public QObject
+class KNMusicPlaylistManager : public KNMusicPlaylistManagerBase
 {
     Q_OBJECT
 public:

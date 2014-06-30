@@ -43,11 +43,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     setBackend(new KNLibBass);
 
     //Initial music model
-    m_libraryModel=new KNMusicLibraryModel;
-    m_libraryModel->moveToThread(&m_modelThread);
-    m_libraryModel->setAlbumArtPath(m_musicAlbumArt);
-    connect(this, &KNMusicPlugin::requireAddRawFiles,
-            m_libraryModel, &KNMusicLibraryModelBase::addRawFileItems);
+    setLibraryModel(new KNMusicLibraryModel);
 
     //Initial music data base for storage.
     setDatabase(new KNMusicDatabase);
@@ -183,6 +179,15 @@ void KNMusicPlugin::setBackend(KNMusicBackend *backend)
 {
     m_backend=backend;
     m_backend->moveToThread(&m_backendThread);
+}
+
+void KNMusicPlugin::setLibraryModel(KNMusicLibraryModelBase *model)
+{
+    m_libraryModel=model;
+    m_libraryModel->moveToThread(&m_modelThread);
+    m_libraryModel->setAlbumArtPath(m_musicAlbumArt);
+    connect(this, &KNMusicPlugin::requireAddRawFiles,
+            m_libraryModel, &KNMusicLibraryModelBase::addRawFileItems);
 }
 
 void KNMusicPlugin::loadThreads()

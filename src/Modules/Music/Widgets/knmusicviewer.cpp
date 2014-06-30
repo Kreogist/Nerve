@@ -275,6 +275,8 @@ void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
             });
     connect(plugin, &KNMusicViewerItemBase::requireShowContextMenu,
             this, &KNMusicViewer::requireShowContextMenu);
+    connect(plugin, &KNMusicViewerItemBase::requireSetProxy,
+            this, &KNMusicViewer::requireSetProxy);
     connect(plugin, &KNMusicViewerItemBase::requireAddCategory,
             this, &KNMusicViewer::addCategory);
 

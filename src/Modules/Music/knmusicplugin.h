@@ -52,6 +52,7 @@ private:
     void setDatabase(KNMusicDatabaseBase *database);
     void setDetailsDialog(KNMusicDetailInfoBase *detailInfoDialog);
     void setBackend(KNMusicBackend *backend);
+    void setLibraryModel(KNMusicLibraryModelBase *model);
     void setListviewMenu();
     void loadThreads();
     void loadData();

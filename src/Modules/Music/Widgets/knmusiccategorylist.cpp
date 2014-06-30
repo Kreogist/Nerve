@@ -11,11 +11,15 @@
 KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     QListView(parent)
 {
+    //Set viewport properties.
     viewport()->setContentsMargins(0,0,0,0);
     viewport()->installEventFilter(this);
-    setFrameShape(QFrame::NoFrame);
-    setContentsMargins(0,0,0,0);
+
+    //Set listview properties.
     setAutoFillBackground(true);
+    setContentsMargins(0,0,0,0);
+    setFrameShape(QFrame::NoFrame);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setIconSize(QSize(40, 40));
     setLineWidth(0);
     setLayoutMode(QListView::Batched);
@@ -24,11 +28,12 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     setSpacing(2);
     setUniformItemSizes(true);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    //Set scroll bar properties.
     verticalScrollBar()->setSingleStep(8);
     verticalScrollBar()->setPageStep(8);
 
+    //Set palette.
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, m_backgroundColor);
@@ -39,6 +44,7 @@ KNMusicCategoryList::KNMusicCategoryList(QWidget *parent) :
     m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(m_palette);
 
+    //Set mouse sensative animation time line.
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x50);

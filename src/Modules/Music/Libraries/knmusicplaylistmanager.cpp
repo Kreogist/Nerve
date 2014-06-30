@@ -17,7 +17,7 @@
 #include "knmusicplaylistmanager.h"
 
 KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
-    QObject(parent)
+    KNMusicPlaylistManagerBase(parent)
 {
     //Get the latest translation.
     retranslate();

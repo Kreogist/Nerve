@@ -4,6 +4,7 @@
 #include <QList>
 #include <QUrl>
 #include <QModelIndex>
+#include <QSortFilterProxyModel>
 
 #include "../knmusicglobal.h"
 #include "../../Public/Base/knmusicbackend.h"
@@ -13,7 +14,6 @@
 
 class QEvent;
 class QDragEnterEvent;
-class QSortFilterProxyModel;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicLibraryModelBase;

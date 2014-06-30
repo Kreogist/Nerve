@@ -28,14 +28,15 @@ KNMusicListViewHeader::KNMusicListViewHeader(QWidget *parent) :
             this, &KNMusicListViewHeader::requireChangeVisible);
 
     //Set palette.
+    m_lineColor=QColor(0x20,0x20,0x20);
     m_backgroundColor=m_lineColor;
     m_palette=palette();
     m_palette.setColor(QPalette::Base,          QColor(0,0,0,0));
     m_palette.setColor(QPalette::Window,        QColor(0,0,0,0));
-    buttonGradient=QLinearGradient(QPoint(0,0), QPoint(0, height()));
-    buttonGradient.setColorAt(0, QColor(0x48,0x48,0x48));
-    buttonGradient.setColorAt(1, QColor(0x48,0x48,0x48));
-    m_palette.setBrush(QPalette::Button,        QBrush(buttonGradient));
+    m_buttonGradient=QLinearGradient(QPoint(0,0), QPoint(0, height()));
+    m_buttonGradient.setColorAt(0, QColor(0x48,0x48,0x48));
+    m_buttonGradient.setColorAt(1, QColor(0x48,0x48,0x48));
+    m_palette.setBrush(QPalette::Button,        QBrush(m_buttonGradient));
     m_palette.setColor(QPalette::ButtonText,    QColor(0xbf, 0xbf, 0xbf));
     setPalette(m_palette);
 
@@ -118,8 +119,8 @@ void KNMusicListViewHeader::changeBackground(int frameData)
     m_backgroundColor=QColor(frameData, frameData, frameData);
     int textParam=(frameData<<1);
     m_lineColor=QColor(textParam, textParam, textParam);
-    buttonGradient.setColorAt(1, QColor(frameData+0x38,frameData+0x38,frameData+0x38));
-    m_palette.setBrush(QPalette::Button, QBrush(buttonGradient));
+    m_buttonGradient.setColorAt(0, QColor(frameData+0x38,frameData+0x38,frameData+0x38));
+    m_palette.setBrush(QPalette::Button, QBrush(m_buttonGradient));
     textParam+=127;
     m_palette.setColor(QPalette::ButtonText, QColor(textParam,
                                                     textParam,
