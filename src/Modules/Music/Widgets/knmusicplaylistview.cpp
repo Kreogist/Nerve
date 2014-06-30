@@ -6,7 +6,7 @@
 #include "knmusicplaylistlisteditor.h"
 #include "knmusicplaylistdisplay.h"
 #include "knmusicplaylistsongs.h"
-#include "../Libraries/knmusicplaylistmanager.h"
+#include "../Base/knmusicplaylistmanagerbase.h"
 
 #include "knmusicplaylistview.h"
 
@@ -46,7 +46,7 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     setStretchFactor(1, 1);
 }
 
-void KNMusicPlaylistView::setManager(KNMusicPlaylistManager *manager)
+void KNMusicPlaylistView::setManager(KNMusicPlaylistManagerBase *manager)
 {
     m_manager=manager;
     m_playlistListView->setModel(m_manager->playlistModel());

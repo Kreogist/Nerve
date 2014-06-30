@@ -23,7 +23,7 @@ void KNMusicPlaylistViewItem::applyPlugin()
                             m_playlistView);
 }
 
-void KNMusicPlaylistViewItem::setPlaylistManager(KNMusicPlaylistManager *manager)
+void KNMusicPlaylistViewItem::setPlaylistManager(KNMusicPlaylistManagerBase *manager)
 {
     m_playlistView->setManager(manager);
 }

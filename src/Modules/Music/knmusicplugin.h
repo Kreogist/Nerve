@@ -17,7 +17,7 @@ class KNMusicPlayerWidget;
 class KNMusicDatabaseBase;
 class KNMusicHeaderWidget;
 class KNMusicLibraryModelBase;
-class KNMusicPlaylistManager;
+class KNMusicPlaylistManagerBase;
 class KNMusicViewer;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager;
@@ -70,7 +70,7 @@ private:
     KNMusicEQ *m_equalizer;
     KNMusicHeaderWidget *m_headerWidget;
     KNMusicPlayerWidget *m_musicPlayerWidget;
-    KNMusicPlaylistManager *m_playlistManager;
+    KNMusicPlaylistManagerBase *m_playlistManager;
 
     QThread m_searcherThread,
             m_collectThread,

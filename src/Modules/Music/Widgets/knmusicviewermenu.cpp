@@ -66,7 +66,7 @@ void KNMusicViewerMenu::readIndexesFromGlobal()
 
 void KNMusicViewerMenu::setItemIndex(const QModelIndex &index)
 {
-    m_currentIndex=index;
+    m_currentIndex=m_model->index(index.row(), m_musicGlobal->selectedColumn());
     QStandardItem *item=m_model->itemFromIndex(m_currentIndex);
 
     m_filePath=m_model->item(m_currentIndex.row(),

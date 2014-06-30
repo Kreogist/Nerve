@@ -1,6 +1,8 @@
 #ifndef KNMUSICLIBRARYMODELBASE_H
 #define KNMUSICLIBRARYMODELBASE_H
 
+#include <QStringList>
+
 #include "knmusicmodelbase.h"
 
 class KNMusicLibraryModelBase : public KNMusicModelBase

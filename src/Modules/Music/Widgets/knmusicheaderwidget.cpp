@@ -5,7 +5,7 @@
 
 #include "../../Base/knsearchbox.h"
 #include "../Libraries/knmusiclibrarymodel.h"
-#include "../Libraries/knmusicplaylistmanager.h"
+#include "../Base/knmusicplaylistmanagerbase.h"
 #include "../Libraries/knmusicinfocollector.h"
 #include "../knmusicglobal.h"
 #include "knmusicheaderplayer.h"
@@ -54,13 +54,13 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
     m_infoCollector->setSignalMode(false);
 }
 
-void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManager *manager)
+void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManagerBase *manager)
 {
     m_playlistManager=manager;
-    connect(m_playlistManager, &KNMusicPlaylistManager::requireUpdatePlaylistModel,
+    connect(m_playlistManager, &KNMusicPlaylistManagerBase::requireUpdatePlaylistModel,
             this, &KNMusicHeaderWidget::requireUpdatePlaylistModel);
     connect(m_headerPlayer, &KNMusicHeaderPlayer::requireChangeLoop,
-            m_playlistManager, &KNMusicPlaylistManager::setLoopMode);
+            m_playlistManager, &KNMusicPlaylistManagerBase::setLoopMode);
 }
 
 void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModelBase *model)

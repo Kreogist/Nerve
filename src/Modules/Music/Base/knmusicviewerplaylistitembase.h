@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class KNMusicPlaylistManager;
+class KNMusicPlaylistManagerBase;
 class KNMusicViewerPlaylistItemBase : public QObject
 {
     Q_OBJECT
@@ -18,7 +18,7 @@ signals:
                             QWidget *widget);
 
 public slots:
-    virtual void setPlaylistManager(KNMusicPlaylistManager *manager)=0;
+    virtual void setPlaylistManager(KNMusicPlaylistManagerBase *manager)=0;
 
 };
 

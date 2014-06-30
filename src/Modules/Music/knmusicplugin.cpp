@@ -78,7 +78,7 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,
             m_headerWidget, &KNMusicHeaderWidget::clearSearch);
     connect(m_musicViewer, &KNMusicViewer::requireSetProxy,
-            m_playlistManager, &KNMusicPlaylistManager::setProxyModel);
+            m_playlistManager, &KNMusicPlaylistManagerBase::setProxyModel);
     connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
             m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
 

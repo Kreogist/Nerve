@@ -6,7 +6,7 @@
 class QAbstractItemModel;
 class KNMusicPlaylistListview;
 class KNMusicPlaylistListEditor;
-class KNMusicPlaylistManager;
+class KNMusicPlaylistManagerBase;
 class KNMusicPlaylistDisplay;
 class KNMusicPlaylistSongs;
 class KNMusicPlaylistView : public QSplitter
@@ -14,7 +14,7 @@ class KNMusicPlaylistView : public QSplitter
     Q_OBJECT
 public:
     explicit KNMusicPlaylistView(QWidget *parent = 0);
-    void setManager(KNMusicPlaylistManager *manager);
+    void setManager(KNMusicPlaylistManagerBase *manager);
 
 signals:
     void requirePlayMusic(const QString &filePath);
@@ -26,7 +26,7 @@ private slots:
     void onActionOpenUrl(const QModelIndex &index);
 
 private:
-    KNMusicPlaylistManager *m_manager;
+    KNMusicPlaylistManagerBase *m_manager;
     KNMusicPlaylistListview *m_playlistListView;
     KNMusicPlaylistListEditor *m_playlistListEditor;
     KNMusicPlaylistDisplay *m_displayer;

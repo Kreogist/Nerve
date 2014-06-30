@@ -14,15 +14,6 @@
 
 #include "../Base/knmusicplaylistmanagerbase.h"
 
-class QSortFilterProxyModel;
-class QStandardItemModel;
-class QFile;
-class KNMusicBackend;
-class KNMusicInfoCollector;
-class KNMusicNowPlaying;
-class KNMusicPlaylistItem;
-class KNMusicLibraryModelBase;
-class KNMusicCategoryDetailModel;
 class KNMusicPlaylistManager : public KNMusicPlaylistManagerBase
 {
     Q_OBJECT
@@ -40,7 +31,6 @@ public:
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
     void setCurrentPlaylistPlaying(const QModelIndex &index);
-    void setPlaylist(const int &index);
     void addToCurrentList(const QString &index);
 
     //Song acquirment functions.
@@ -55,8 +45,6 @@ public:
     QAbstractItemModel *playlistDataModel(const QModelIndex &index);
 
 signals:
-    void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
-    void playlistListUpdated();
 
 public slots:
     void retranslate();

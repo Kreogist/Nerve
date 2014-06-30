@@ -8,7 +8,7 @@
 
 #include "../knmusicglobal.h"
 #include "../../Public/Base/knmusicbackend.h"
-#include "../Libraries/knmusicplaylistmanager.h"
+#include "../Base/knmusicplaylistmanagerbase.h"
 
 #include "../../Base/knstdlibviewer.h"
 
@@ -17,7 +17,6 @@ class QDragEnterEvent;
 class QDropEvent;
 class QPropertyAnimation;
 class KNMusicLibraryModelBase;
-class KNMusicPlaylistManager;
 class KNMusicViewerItemBase;
 class KNMusicViewerPlaylistItemBase;
 class KNMusicViewer : public KNStdLibViewer
@@ -45,7 +44,7 @@ signals:
     void requireClearSearch();
     void requireResort();
     void requireSearch(const QString &text);
-    void requireSetPlaylistManager(KNMusicPlaylistManager *manager);
+    void requireSetPlaylistManager(KNMusicPlaylistManagerBase *manager);
     void requireSetMusicModel(KNMusicLibraryModelBase *model);
     void requireSetBackend(KNMusicBackend *backend);
     void requireRemoveOriginal(const QModelIndex &index);

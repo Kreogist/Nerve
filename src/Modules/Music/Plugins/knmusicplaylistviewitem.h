@@ -16,7 +16,7 @@ signals:
 
 public slots:
     void retranslate();
-    void setPlaylistManager(KNMusicPlaylistManager *manager);
+    void setPlaylistManager(KNMusicPlaylistManagerBase *manager);
 
 private:
     KNMusicPlaylistView *m_playlistView;
