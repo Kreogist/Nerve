@@ -58,13 +58,11 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
-    m_musicViewer->setPlaylistManager(m_playlistManager);
     m_musicViewer->setMusicModel(m_libraryModel);
-    m_musicViewer->setBackend(m_backend);
+    m_musicViewer->requireSetPlaylistManager(m_playlistManager);
+    m_musicViewer->requireSetBackend(m_backend);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             this, &KNMusicPlugin::requireAnalysisUrls);
-    connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
-            m_musicViewer, &KNMusicViewer::resort);
     connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
             m_musicViewer, &KNMusicViewer::requireResort);
 

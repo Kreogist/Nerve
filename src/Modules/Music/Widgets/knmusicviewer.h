@@ -25,9 +25,7 @@ class KNMusicViewer : public KNStdLibViewer
     Q_OBJECT
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
-    void setPlaylistManager(KNMusicPlaylistManager *manager);
     void setMusicModel(KNMusicLibraryModelBase *model);
-    void setBackend(KNMusicBackend *backend);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
     void addListViewPlugin(KNMusicViewerItemBase *plugin);
@@ -60,9 +58,7 @@ signals:
 public slots:
     void retranslate();
     void retranslateAndSet();
-    void resort();
-    void showIn(const int &category,
-                const QModelIndex &index);
+    void showIn(const int &category, const QModelIndex &index);
     void showInCurrent(const QModelIndex &index);
     void deleteMusic(const QModelIndex &index);
     void deleteSelections();

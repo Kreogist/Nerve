@@ -1,4 +1,3 @@
-#include <QAbstractItemModel>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QEvent>
@@ -9,14 +8,12 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
-#include <QStyleFactory>
-
 #include <QDebug>
 
 #include "../Base/knmusicvieweritembase.h"
 #include "../Base/knmusicviewerplaylistitembase.h"
-
 #include "../../Base/knlibsearcher.h"
+#include "../Libraries/knmusiclibrarymodelbase.h"
 
 #include "../Plugins/knmusiclistviewitem.h"
 #include "../Plugins/knmusicartistviewitem.h"
@@ -24,24 +21,19 @@
 #include "../Plugins/knmusicgenreviewitem.h"
 #include "../Plugins/knmusicplaylistviewitem.h"
 
-#include "../Libraries/knmusiclibrarymodelbase.h"
-
 #include "knmusicviewer.h"
 
 KNMusicViewer::KNMusicViewer(QWidget *parent) :
     KNStdLibViewer(parent)
 {
+    //Initial the translations.
     retranslate();
-    setContentsMargins(0,0,0,0);
+
+    //Set the properties.
     setAcceptDrops(true);
+    setContentsMargins(0,0,0,0);
 
-    //Add plugins
-    addListViewPlugin(new KNMusicListViewItem);
-    addArtistViewPlugin(new KNMusicArtistViewItem);
-    addAlbumViewPlugin(new KNMusicAlbumViewItem);
-    addGenreViewPlugin(new KNMusicGenreViewItem);
-    addPlaylistPlugin(new KNMusicPlaylistViewItem);
-
+    //Set the player widget animations.
     m_playerIn=new QPropertyAnimation(this);
     m_playerIn->setPropertyName("geometry");
     m_playerIn->setEasingCurve(QEasingCurve::OutCubic);
@@ -49,22 +41,19 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_playerOut=new QPropertyAnimation(this);
     m_playerOut->setPropertyName("geometry");
     m_playerOut->setEasingCurve(QEasingCurve::OutCubic);
-}
 
-void KNMusicViewer::setPlaylistManager(KNMusicPlaylistManager *manager)
-{
-    emit requireSetPlaylistManager(manager);
+    //Add plugins
+    addListViewPlugin(new KNMusicListViewItem);
+    addArtistViewPlugin(new KNMusicArtistViewItem);
+    addAlbumViewPlugin(new KNMusicAlbumViewItem);
+    addGenreViewPlugin(new KNMusicGenreViewItem);
+    addPlaylistPlugin(new KNMusicPlaylistViewItem);
 }
 
 void KNMusicViewer::setMusicModel(KNMusicLibraryModelBase *model)
 {
     emit requireSetMusicModel(model);
     m_musicModel=model;
-}
-
-void KNMusicViewer::setBackend(KNMusicBackend *backend)
-{
-    emit requireSetBackend(backend);
 }
 
 bool KNMusicViewer::eventFilter(QObject *watched, QEvent *event)
@@ -174,13 +163,7 @@ void KNMusicViewer::retranslateAndSet()
     retranslate();
 }
 
-void KNMusicViewer::resort()
-{
-    ;
-}
-
-void KNMusicViewer::showIn(const int &category,
-                           const QModelIndex &index)
+void KNMusicViewer::showIn(const int &category, const QModelIndex &index)
 {
     emit requireClearSearch();
     switch(category)
