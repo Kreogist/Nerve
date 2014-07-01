@@ -5,7 +5,10 @@
 
 #include "../Base/knmusicplaylistlisteditorbase.h"
 
+class QAction;
+class QResizeEvent;
 class QTimeLine;
+class KNMenu;
 class KNOpacityButton;
 class KNMusicPlaylistListEditor : public KNMusicPlaylistListEditorBase
 {
@@ -16,16 +19,31 @@ public:
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
 
 protected:
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private slots:
     void changeBackground(const int &frame);
+    void showAddMenu();
 
 private:
+    void createAddMenu();
+    enum AddCategory
+    {
+        Playlist,
+        CategoryCount
+    };
+    QString m_addActionCaption[CategoryCount];
+    QAction *m_addAction[CategoryCount];
+    KNMenu *m_addMenu;
     KNOpacityButton *m_add, *m_remove, *m_edit;
+
+    //UI tweaks.
     QPalette m_palette;
     QLinearGradient m_background;
     QColor m_backgroundColor;

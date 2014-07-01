@@ -1,20 +1,35 @@
+#include <QAction>
+#include <QResizeEvent>
 #include <QTimeLine>
 #include <QLinearGradient>
 #include <QBoxLayout>
 
 #include "../../Base/knopacitybutton.h"
+#include "../../Base/knmenu.h"
 
 #include "knmusicplaylistlisteditor.h"
 
 KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
     KNMusicPlaylistListEditorBase(parent)
 {
+    //Get translation
+    retranslate();
+
     //Set properties.
     setAutoFillBackground(true);
 
     //Set layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
     setLayout(mainLayout);
+
+    //Set palette.
+    m_palette=palette();
+    m_background=QLinearGradient(QPoint(0,0), QPoint(0, height()));
+    m_backgroundColor=QColor(0x27,0x27,0x27);
+    m_background.setColorAt(0, m_backgroundColor);
+    m_background.setColorAt(1, m_backgroundColor);
+    m_palette.setBrush(QPalette::Window, QBrush(m_background));
+    setPalette(m_palette);
 
     //Set buttons.
     m_add=new KNOpacityButton(this);
@@ -28,14 +43,10 @@ KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
     m_edit->setPixmap(QPixmap(":/Music/Resources/Music/playlists/edit.png"));
     mainLayout->addWidget(m_edit);
 
-    //Set palette.
-    m_palette=palette();
-    m_background=QLinearGradient(QPoint(0,0), QPoint(0, height()));
-    m_backgroundColor=QColor(0x27,0x27,0x27);
-    m_background.setColorAt(0, m_backgroundColor);
-    m_background.setColorAt(1, m_backgroundColor);
-    m_palette.setBrush(QPalette::Window, QBrush(m_background));
-    setPalette(m_palette);
+    //Create add menu.
+    createAddMenu();
+    connect(m_add, &KNOpacityButton::mouseReleased,
+            this, &KNMusicPlaylistListEditor::showAddMenu);
 
     //Set enter and leave animation.
     m_mouseIn=new QTimeLine(200, this);
@@ -51,6 +62,16 @@ KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
     m_mouseOut->setEndFrame(0x27);
     connect(m_mouseOut, &QTimeLine::frameChanged,
             this, &KNMusicPlaylistListEditor::changeBackground);
+}
+
+void KNMusicPlaylistListEditor::retranslate()
+{
+    m_addActionCaption[Playlist]=tr("New Playlist");
+}
+
+void KNMusicPlaylistListEditor::retranslateAndSet()
+{
+    retranslate();
 }
 
 void KNMusicPlaylistListEditor::enterEvent(QEvent *event)
@@ -71,6 +92,14 @@ void KNMusicPlaylistListEditor::leaveEvent(QEvent *event)
     KNMusicPlaylistListEditorBase::leaveEvent(event);
 }
 
+void KNMusicPlaylistListEditor::resizeEvent(QResizeEvent *event)
+{
+    KNMusicPlaylistListEditorBase::resizeEvent(event);
+    m_background.setFinalStop(QPoint(0,height()));
+    m_palette.setBrush(QPalette::Window, QBrush(m_background));
+    setPalette(m_palette);
+}
+
 void KNMusicPlaylistListEditor::changeBackground(const int &frame)
 {
     m_backgroundColor=QColor(frame,frame,frame);
@@ -79,3 +108,22 @@ void KNMusicPlaylistListEditor::changeBackground(const int &frame)
     setPalette(m_palette);
 }
 
+void KNMusicPlaylistListEditor::showAddMenu()
+{
+    m_addMenu->move(mapToGlobal(m_add->pos()));
+    m_addMenu->exec();
+}
+
+void KNMusicPlaylistListEditor::createAddMenu()
+{
+    m_addMenu=new KNMenu(this);
+    //Create all actions.
+    for(int i=0; i<CategoryCount; i++)
+    {
+        m_addAction[i]=new QAction(m_addActionCaption[i],
+                                   this);
+        m_addMenu->addAction(m_addAction[i]);
+    }
+    connect(m_addAction[Playlist], SIGNAL(triggered()),
+            this, SIGNAL(requireAddPlaylist()));
+}

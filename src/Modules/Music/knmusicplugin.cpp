@@ -97,12 +97,9 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     connect(m_musicViewer, &KNMusicViewer::requireShowContextMenu,
             this, &KNMusicPlugin::onActionShowContextMenu);
 
+    //Initial music searcher and collector manager.
     setSearcher(new KNMusicSearcher);
-
-    m_infoCollectManager=new KNMusicInfoCollectorManager;
-    m_infoCollectManager->moveToThread(&m_collectThread);
-    m_infoCollectManager->setMusicBackend(m_backend);
-    m_libraryModel->setInfoCollectorManager(m_infoCollectManager);
+    setInfoCollectManager(new KNMusicInfoCollectorManager);
 
     m_musicPlayerWidget=new KNMusicPlayerWidget(m_musicViewer);
     m_musicPlayerWidget->setHeaderPlayer(m_headerWidget->player());
@@ -114,8 +111,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicPlayerWidget->setEqualizer(m_equalizer);
     m_musicViewer->setPlayWidget(m_musicPlayerWidget);
 
+    //Initial the detail dialog.
     setDetailsDialog(new KNMusicDetailInfo(m_musicViewer));
 
+    //Initial other things.
     loadShortcuts();
     loadThreads();
     loadData();
@@ -160,6 +159,14 @@ void KNMusicPlugin::setSearcher(KNLibSearcher *searcher)
             m_searcher, &KNLibSearcher::analysisUrls);
     connect(m_searcher, &KNLibSearcher::requireAddRawFiles,
             this, &KNMusicPlugin::requireAddRawFiles);
+}
+
+void KNMusicPlugin::setInfoCollectManager(KNMusicInfoCollectorManagerBase *manager)
+{
+    m_infoCollectManager=manager;
+    m_infoCollectManager->moveToThread(&m_collectThread);
+    m_infoCollectManager->setMusicBackend(m_backend);
+    m_libraryModel->setInfoCollectorManager(m_infoCollectManager);
 }
 
 void KNMusicPlugin::setDatabase(KNMusicDatabaseBase *database)

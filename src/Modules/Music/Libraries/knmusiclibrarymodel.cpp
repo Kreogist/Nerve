@@ -16,7 +16,7 @@
 #include "../../Base/knlibhashpixmaplist.h"
 #include "../../knglobal.h"
 
-#include "knmusicinfocollectormanager.h"
+#include "../Base/knmusicinfocollectormanagerbase.h"
 
 #include "knmusiclibrarymodel.h"
 
@@ -130,7 +130,7 @@ void KNMusicLibraryModel::recoverFile(QStringList textList,
 void KNMusicLibraryModel::setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager)
 {
     KNMusicLibraryModelBase::setInfoCollectorManager(infoCollectorManager);
-    m_infoCollectorManager=qobject_cast<KNMusicInfoCollectorManager *>(infoCollectorManager);
+    m_infoCollectorManager=qobject_cast<KNMusicInfoCollectorManagerBase *>(infoCollectorManager);
 }
 
 void KNMusicLibraryModel::retranslate()

@@ -19,8 +19,7 @@ class KNMusicHeaderWidget;
 class KNMusicLibraryModelBase;
 class KNMusicPlaylistManagerBase;
 class KNMusicViewer;
-class KNMusicInfoCollector;
-class KNMusicInfoCollectorManager;
+class KNMusicInfoCollectorManagerBase;
 class KNMusicSearcher;
 class KNMusicViewerMenu;
 class KNMusicEQ;
@@ -49,6 +48,7 @@ private slots:
 
 private:
     void setSearcher(KNLibSearcher *searcher);
+    void setInfoCollectManager(KNMusicInfoCollectorManagerBase *manager);
     void setDatabase(KNMusicDatabaseBase *database);
     void setDetailsDialog(KNMusicDetailInfoBase *detailInfoDialog);
     void setBackend(KNMusicBackend *backend);
@@ -60,8 +60,7 @@ private:
     KNMusicViewer *m_musicViewer;
     KNGlobal *m_global;
     KNMusicLibraryModelBase *m_libraryModel;
-    KNMusicInfoCollector *m_infoCollector;
-    KNMusicInfoCollectorManager *m_infoCollectManager;
+    KNMusicInfoCollectorManagerBase *m_infoCollectManager;
     KNLibSearcher *m_searcher;
     KNMusicViewerMenu *m_libraryViewMenu;
     KNMusicDetailInfoBase *m_detailsDialog;

@@ -6,7 +6,7 @@
 #include "knmusiclibrarymodelbase.h"
 
 class KNLibHashPixmapList;
-class KNMusicInfoCollectorManager;
+class KNMusicInfoCollectorManagerBase;
 class KNMusicLibraryModel : public KNMusicLibraryModelBase
 {
     Q_OBJECT
@@ -42,7 +42,7 @@ private slots:
 
 private:
     KNMusicGlobal *m_musicGlobal;
-    KNMusicInfoCollectorManager *m_infoCollectorManager;
+    KNMusicInfoCollectorManagerBase *m_infoCollectorManager;
     KNLibHashPixmapList *m_pixmapList;
     QThread m_pixmapListThread;
     int m_rawFileCount=0;

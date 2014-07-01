@@ -2,15 +2,11 @@
 #define KNMUSICINFOCOLLECTORMANAGER_H
 
 #include <QThread>
-#include <QStringList>
 #include <QLinkedList>
 #include <QModelIndex>
 
-#include "../knmusicglobal.h"
-
 #include "../Base/knmusicinfocollectormanagerbase.h"
 
-class KNMusicBackend;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager : public KNMusicInfoCollectorManagerBase
 {
@@ -28,11 +24,9 @@ public:
     void setMusicBackend(KNMusicBackend *backend);
 
 signals:
-    void requireAnalysis(const QString &filePath);
 
 public slots:
-    void addAnalysisList(int index,
-                         QString filePath);
+    void addAnalysisList(int index, QString filePath);
 
 private slots:
     void analysisNext();

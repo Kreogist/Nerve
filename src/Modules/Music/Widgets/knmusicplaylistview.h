@@ -3,9 +3,10 @@
 
 #include <QSplitter>
 
+class QBoxLayout;
 class QAbstractItemModel;
 class KNMusicPlaylistListview;
-class KNMusicPlaylistListEditor;
+class KNMusicPlaylistListEditorBase;
 class KNMusicPlaylistManagerBase;
 class KNMusicPlaylistDisplay;
 class KNMusicPlaylistSongs;
@@ -15,6 +16,7 @@ class KNMusicPlaylistView : public QSplitter
 public:
     explicit KNMusicPlaylistView(QWidget *parent = 0);
     void setManager(KNMusicPlaylistManagerBase *manager);
+    void setListEditor(KNMusicPlaylistListEditorBase *editor);
 
 signals:
     void requirePlayMusic(const QString &filePath);
@@ -28,9 +30,10 @@ private slots:
 private:
     KNMusicPlaylistManagerBase *m_manager;
     KNMusicPlaylistListview *m_playlistListView;
-    KNMusicPlaylistListEditor *m_playlistListEditor;
+    KNMusicPlaylistListEditorBase *m_playlistListEditor;
     KNMusicPlaylistDisplay *m_displayer;
     KNMusicPlaylistSongs *m_songsView;
+    QBoxLayout *m_listLayout;
     QString m_currentPath;
 };
 

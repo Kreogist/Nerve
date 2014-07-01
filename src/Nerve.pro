@@ -5,7 +5,8 @@ QT += core\
       widgets\
       network
 
-CONFIG += c++11 sse2 mmx
+CONFIG += c++11 sse sse2
+QMAKE_CXXFLAGS += -msse -msse2
 QMAKE_RPATHDIR += \$\$ORIGIN/Plugins
 
 win32{
