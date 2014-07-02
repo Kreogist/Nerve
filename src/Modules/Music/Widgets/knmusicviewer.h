@@ -13,9 +13,6 @@
 #include "../../Base/knstdlibviewer.h"
 
 class QEvent;
-class QDragEnterEvent;
-class QDragLeaveEvent;
-class QDropEvent;
 class QPropertyAnimation;
 class KNMusicLibraryModelBase;
 class KNMusicViewerItemBase;
@@ -66,9 +63,6 @@ public slots:
     void onActionHidePlayer();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dropEvent(QDropEvent *event);
     void resizeEvent(QResizeEvent *event);
 
 private:

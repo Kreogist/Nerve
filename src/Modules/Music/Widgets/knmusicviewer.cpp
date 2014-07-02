@@ -1,9 +1,5 @@
-#include <QDragEnterEvent>
-#include <QDragLeaveEvent>
-#include <QDropEvent>
 #include <QEvent>
 #include <QKeyEvent>
-#include <QMimeData>
 #include <QModelIndex>
 #include <QMouseEvent>
 #include <QResizeEvent>
@@ -234,39 +230,6 @@ void KNMusicViewer::onActionHidePlayer()
     m_playerOut->setStartValue(m_playerWidget->geometry());
     m_playerOut->setEndValue(QRect(0, -height(), width(), height()));
     m_playerOut->start();
-}
-
-void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
-{
-    KNStdLibViewer::dragEnterEvent(event);
-//    if(event->mimeData()->hasUrls())
-//    {
-//        event->acceptProposedAction();
-//    }
-}
-
-void KNMusicViewer::dragLeaveEvent(QDragLeaveEvent *event)
-{
-    KNStdLibViewer::dragLeaveEvent(event);
-}
-
-void KNMusicViewer::dropEvent(QDropEvent *event)
-{
-    KNStdLibViewer::dropEvent(event);
-//    switch(categoryIndex())
-//    {
-//    case Songs:
-//    case Artists:
-//    case Albums:
-//    case Genres:
-//        emit requireAnalysisUrls(event->mimeData()->urls());
-//        break;
-//    case Playlists:
-//        break;
-//    default:
-//        //Here should never comes.
-//        break;
-//    }
 }
 
 void KNMusicViewer::resizeEvent(QResizeEvent *event)
