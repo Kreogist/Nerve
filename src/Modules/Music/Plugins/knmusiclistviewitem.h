@@ -5,6 +5,7 @@
 
 class KNMusicListView;
 class KNMusicLibraryModelBase;
+class KNMusicViewContainer;
 class KNMusicSortModel;
 class KNMusicListViewItem : public KNMusicViewerItemBase
 {
@@ -31,6 +32,7 @@ protected slots:
 private:
     KNMusicSortModel *m_listViewModel;
     KNMusicListView *m_libraryView;
+    KNMusicViewContainer *m_container;
     QString m_captionTitle;
 };
 

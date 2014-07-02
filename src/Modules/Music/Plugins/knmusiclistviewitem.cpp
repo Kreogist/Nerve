@@ -1,5 +1,6 @@
 #include "../Libraries/knmusicsortmodel.h"
 #include "../Widgets/knmusiclistview.h"
+#include "../Widgets/knmusicviewcontainer.h"
 
 #include "knmusiclistviewitem.h"
 
@@ -18,7 +19,6 @@ KNMusicListViewItem::KNMusicListViewItem(QObject *parent) :
     //Initial the view widget.
     m_libraryView=new KNMusicListView;
     m_libraryView->setModel(m_listViewModel);
-    m_libraryView->installEventFilter(this);
     connect(m_libraryView, &KNMusicListView::requireOpenUrl,
             [=](const QModelIndex &index)
             {
@@ -27,10 +27,16 @@ KNMusicListViewItem::KNMusicListViewItem(QObject *parent) :
             });
     connect(m_libraryView, &KNMusicListView::requireShowContextMenu,
             this, &KNMusicListViewItem::onActionShowContextMenu);
+
+    m_container=new KNMusicViewContainer;
+    m_container->setCentralWidget(m_libraryView);
+    connect(m_container, &KNMusicViewContainer::requireAnalysisUrls,
+            this, &KNMusicListViewItem::requireAnalysisUrls);
 }
 
 KNMusicListViewItem::~KNMusicListViewItem()
 {
+    m_container->deleteLater();
     m_libraryView->deleteLater();
     m_listViewModel->deleteLater();
 }
@@ -53,7 +59,7 @@ void KNMusicListViewItem::applyPlugin()
 {
     emit requireAddCategory(QPixmap(":/Category/Resources/Category/01_musics.png"),
                             m_captionTitle,
-                            m_libraryView);
+                            m_container);
 }
 
 void KNMusicListViewItem::onActionResort()

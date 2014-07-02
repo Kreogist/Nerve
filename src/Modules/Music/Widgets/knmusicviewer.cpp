@@ -1,4 +1,5 @@
 #include <QDragEnterEvent>
+#include <QDragLeaveEvent>
 #include <QDropEvent>
 #include <QEvent>
 #include <QKeyEvent>
@@ -30,7 +31,7 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     retranslate();
 
     //Set the properties.
-    setAcceptDrops(true);
+//    setAcceptDrops(true);
     setContentsMargins(0,0,0,0);
 
     //Set the player widget animations.
@@ -237,15 +238,35 @@ void KNMusicViewer::onActionHidePlayer()
 
 void KNMusicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
-    if(event->mimeData()->hasUrls())
-    {
-        event->acceptProposedAction();
-    }
+    KNStdLibViewer::dragEnterEvent(event);
+//    if(event->mimeData()->hasUrls())
+//    {
+//        event->acceptProposedAction();
+//    }
+}
+
+void KNMusicViewer::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    KNStdLibViewer::dragLeaveEvent(event);
 }
 
 void KNMusicViewer::dropEvent(QDropEvent *event)
 {
-    emit requireAnalysisUrls(event->mimeData()->urls());
+    KNStdLibViewer::dropEvent(event);
+//    switch(categoryIndex())
+//    {
+//    case Songs:
+//    case Artists:
+//    case Albums:
+//    case Genres:
+//        emit requireAnalysisUrls(event->mimeData()->urls());
+//        break;
+//    case Playlists:
+//        break;
+//    default:
+//        //Here should never comes.
+//        break;
+//    }
 }
 
 void KNMusicViewer::resizeEvent(QResizeEvent *event)
@@ -279,6 +300,8 @@ void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
             this, &KNMusicViewer::requireSetProxy);
     connect(plugin, &KNMusicViewerItemBase::requireAddCategory,
             this, &KNMusicViewer::addCategory);
+    connect(plugin, &KNMusicViewerItemBase::requireAnalysisUrls,
+            this, &KNMusicViewer::requireAnalysisUrls);
 
     //Apply plugin.
     plugin->applyPlugin();

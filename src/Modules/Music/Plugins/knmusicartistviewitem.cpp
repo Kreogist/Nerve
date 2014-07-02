@@ -31,10 +31,6 @@ KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
     m_artistView=new KNMusicCategoryView;
     //Initial the artist songs view.
     m_artistSongView=new KNMusicArtistSongs(m_artistView);
-
-    m_artistView->setSongListView(m_artistSongView);
-    m_artistView->setModel(m_artistSortModel);
-    m_artistView->setDetailModel(m_artistDetails);
     connect(m_artistSongView, &KNMusicArtistSongs::requireOpenUrl,
             [=](const QModelIndex &index)
             {
@@ -43,6 +39,12 @@ KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
             });
     connect(m_artistSongView, &KNMusicArtistSongs::requireShowContextMenu,
             this, &KNMusicArtistViewItem::onActionShowContextMenu);
+
+    m_artistView->setSongListView(m_artistSongView);
+    m_artistView->setModel(m_artistSortModel);
+    m_artistView->setDetailModel(m_artistDetails);
+    connect(m_artistView, &KNMusicCategoryView::requireAnalysisUrls,
+            this, &KNMusicArtistViewItem::requireAnalysisUrls);
 }
 
 KNMusicArtistViewItem::~KNMusicArtistViewItem()

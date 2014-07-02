@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QObject>
+#include <QUrl>
+#include <QList>
 
 class QSortFilterProxyModel;
 class KNMusicBackend;
@@ -22,6 +24,7 @@ signals:
     void requireAddCategory(const QPixmap &icon,
                             const QString &title,
                             QWidget *widget);
+    void requireAnalysisUrls(QList<QUrl> urls);
 
 public slots:
     virtual void setMusicSourceModel(KNMusicLibraryModelBase *model)=0;

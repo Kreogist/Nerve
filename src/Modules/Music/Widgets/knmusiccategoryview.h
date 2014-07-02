@@ -1,6 +1,8 @@
 #ifndef KNMUSICCATEGORYVIEW_H
 #define KNMUSICCATEGORYVIEW_H
 
+#include <QUrl>
+#include <QList>
 #include <QTreeView>
 #include <QSplitter>
 #include <QRadialGradient>
@@ -9,6 +11,8 @@ class QBoxLayout;
 class QLabel;
 class QStandardItemModel;
 class QResizeEvent;
+class QDragEnterEvent;
+class QDropEvent;
 class QShowEvent;
 class QGraphicsOpacityEffect;
 class KNMusicLibraryModelBase;
@@ -58,12 +62,15 @@ public:
     void setSongListView(KNMusicLibraryListview *listview);
 
 signals:
+    void requireAnalysisUrls(QList<QUrl> urls);
 
 public slots:
     void onActionSongCountChange(const int &value);
 
 protected:
     void showEvent(QShowEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
 
 private slots:
     void onActionItemActivate(const QModelIndex &current,

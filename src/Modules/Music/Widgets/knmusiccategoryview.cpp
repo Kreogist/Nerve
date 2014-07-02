@@ -1,5 +1,7 @@
 #include <QItemSelectionModel>
 #include <QSplitter>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QLabel>
 #include <QShowEvent>
 #include <QBitmap>
@@ -149,6 +151,7 @@ void KNMusicCategoryDetailsDisplay::resizeEvent(QResizeEvent *event)
 KNMusicCategoryView::KNMusicCategoryView(QWidget *parent) :
     QSplitter(parent)
 {
+    setAcceptDrops(true);
     setContentsMargins(0,0,0,0);
     setChildrenCollapsible(false);
     setOpaqueResize(false);
@@ -250,6 +253,19 @@ void KNMusicCategoryView::showEvent(QShowEvent *event)
                                                             QItemSelectionModel::SelectCurrent);
         }
     }
+}
+
+void KNMusicCategoryView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls())
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void KNMusicCategoryView::dropEvent(QDropEvent *event)
+{
+    emit requireAnalysisUrls(event->mimeData()->urls());
 }
 
 void KNMusicCategoryView::onActionItemActivate(const QModelIndex &current,

@@ -3,6 +3,7 @@
 #include "../Libraries/knmusiccategorysortfiltermodel.h"
 
 #include "../Widgets/knmusicalbumview.h"
+#include "../Widgets/knmusicviewcontainer.h"
 
 #include "knmusicalbumviewitem.h"
 
@@ -39,6 +40,12 @@ KNMusicAlbumViewItem::KNMusicAlbumViewItem(QObject *parent) :
             });
     connect(m_albumView, &KNMusicAlbumView::requireShowContextMenu,
             this, &KNMusicAlbumViewItem::onActionShowContextMenu);
+
+    //Initial the container.
+    m_container=new KNMusicViewContainer;
+    m_container->setCentralWidget(m_albumView);
+    connect(m_container, &KNMusicViewContainer::requireAnalysisUrls,
+            this, &KNMusicAlbumViewItem::requireAnalysisUrls);
 }
 
 KNMusicAlbumViewItem::~KNMusicAlbumViewItem()
@@ -53,7 +60,7 @@ void KNMusicAlbumViewItem::applyPlugin()
 {
     emit requireAddCategory(QPixmap(":/Category/Resources/Category/03_ablums.png"),
                             m_captionTitle,
-                            m_albumView);
+                            m_container);
 }
 
 void KNMusicAlbumViewItem::onActionResort()

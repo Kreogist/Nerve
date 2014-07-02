@@ -31,10 +31,6 @@ KNMusicGenreViewItem::KNMusicGenreViewItem(QObject *parent) :
     m_genreView=new KNMusicCategoryView;
     //Initial the genre songs view.
     m_genreSongView=new KNMusicGenreSongs(m_genreView);
-
-    m_genreView->setSongListView(m_genreSongView);
-    m_genreView->setModel(m_genreSortModel);
-    m_genreView->setDetailModel(m_genreDetails);
     connect(m_genreSongView, &KNMusicGenreSongs::requireOpenUrl,
             [=](const QModelIndex &index)
             {
@@ -43,6 +39,12 @@ KNMusicGenreViewItem::KNMusicGenreViewItem(QObject *parent) :
             });
     connect(m_genreSongView, &KNMusicGenreSongs::requireShowContextMenu,
             this, &KNMusicGenreViewItem::onActionShowContextMenu);
+
+    m_genreView->setSongListView(m_genreSongView);
+    m_genreView->setModel(m_genreSortModel);
+    m_genreView->setDetailModel(m_genreDetails);
+    connect(m_genreView, &KNMusicCategoryView::requireAnalysisUrls,
+            this, &KNMusicGenreViewItem::requireAnalysisUrls);
 }
 
 KNMusicGenreViewItem::~KNMusicGenreViewItem()

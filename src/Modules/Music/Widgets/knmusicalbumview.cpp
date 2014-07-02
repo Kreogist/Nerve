@@ -421,8 +421,10 @@ void KNMusicAlbumDetail::raisePanel()
 KNMusicAlbumView::KNMusicAlbumView(QWidget *parent) :
     QAbstractItemView(parent)
 {
+    //Set default scrollbar properties.
     verticalScrollBar()->setRange(0, 0);
 
+    //Set palette properties.
     m_backgroundColor=QColor(m_minGrey, m_minGrey, m_minGrey);
     m_palette=palette();
     m_palette.setColor(QPalette::Base, m_backgroundColor);

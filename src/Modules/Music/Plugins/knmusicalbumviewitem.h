@@ -3,6 +3,7 @@
 
 #include "../Base/knmusicvieweritembase.h"
 
+class KNMusicViewContainer;
 class KNMusicAlbumView;
 class KNMusicAlbumModel;
 class KNMusicAlbumDetailModel;
@@ -34,6 +35,7 @@ private:
     KNMusicAlbumModel *m_albumModel;
     KNMusicAlbumDetailModel *m_albumDetails;
     KNMusicCategorySortFilterModel *m_albumSortModel;
+    KNMusicViewContainer *m_container;
     QString m_captionTitle;
 };
 
