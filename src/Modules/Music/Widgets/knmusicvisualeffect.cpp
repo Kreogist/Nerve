@@ -22,22 +22,29 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    int SPECWIDTH=width(), SPECHEIGHT=(height()>>1),
-            b0=0,x,y,b1, bandWidth=10,BANDS=SPECWIDTH/(bandWidth+1), currentX=0;
-    float peak;
+    int b0=0,i,y,b1, bandWidth=10,bandCount=width()/(bandWidth+1), currentX=0;
+    float peak, heightF=(float)(height());
     painter.setPen(Qt::NoPen);
     painter.setBrush(m_itemColor);
-    for(x=0;x<BANDS;x++)
+    for(i=0;i<bandCount;i++)
     {
         peak=0;
-        b1=pow(2,x*11.0/(BANDS-1));
-        if (b1>2047) b1=2047;
-        if (b1<=b0) b1=b0+1; // make sure it uses at least 1 FFT bin
+        b1=pow(2,i*11.0/(bandCount-1));
+        //If the start frame is larger than the top bound, then stop it.
+        if(b1>2047)
+        {
+            b1=2047;
+        }
+        // make sure it uses at least 1 FFT bin
+        if(b1<=b0)
+        {
+            b1=b0+1;
+        }
+        //Find the biggest fft for this frame.
         for (;b0<b1;b0++)
             if (peak<m_fft[1+b0])
                 peak=m_fft[1+b0];
-        y=((int)(qsqrt(peak)*SPECHEIGHT)<<1); // scale it (sqrt to make low values more visible)
-//        if (y>SPECHEIGHT) y=SPECHEIGHT; // cap it
+        y=qMax(1.0+log10f(peak)/3.0, 0.0)*heightF;
         painter.drawRect(currentX,
                          height()-y,
                          bandWidth,
@@ -48,16 +55,4 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
         }
         currentX+=bandWidth+1;
     }
-}
-
-//Refer to quake3-1.32b's source code Q_rsqrt() for fast square root calculate.
-float KNMusicVisualEffect::qsqrt(const float &number)
-{
-    float y=number;
-    long i=*(long*) &number;   // evil floating point bit level hacking
-    i=0x5f375a86-(i>>1); // what the fuck?
-    y=*(float*)&i;
-    y*=(1.5F-(number*0.5F*y*y)); // 1st iteration
-    //y*=(threehalfs-(x2*y*y));// 2nd iteration, this can be removed
-    return qAbs(1/y);
 }

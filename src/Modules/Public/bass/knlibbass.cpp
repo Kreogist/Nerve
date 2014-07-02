@@ -263,7 +263,7 @@ void KNLibBass::getFFTData(float *fftData)
 {
     BASS_ChannelGetData(m_main.channel,
                         fftData,
-                        BASS_DATA_FFT4096);
+                        BASS_DATA_FFT2048);
 }
 
 float KNLibBass::volume() const

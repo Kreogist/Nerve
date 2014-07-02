@@ -19,7 +19,7 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     retranslate();
 
     QPalette pal=palette();
-    pal.setColor(QPalette::Window, QColor(0,0,0,240));
+    pal.setColor(QPalette::Window, QColor(0,0,0,230));
     pal.setColor(QPalette::WindowText, QColor(255,255,255));
     setPalette(pal);
 

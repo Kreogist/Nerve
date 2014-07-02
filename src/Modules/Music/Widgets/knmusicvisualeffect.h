@@ -19,7 +19,6 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    float qsqrt(const float &number);
     float m_fft[2048]={0};
     QColor m_itemColor=QColor(255,255,255);
 };

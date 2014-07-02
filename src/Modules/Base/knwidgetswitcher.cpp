@@ -14,12 +14,12 @@ KNWidgetSwitcher::KNWidgetSwitcher(QWidget *parent) :
 
     m_flyOutAnime=new QPropertyAnimation(this);
     m_flyOutAnime->setPropertyName("geometry");
-    m_flyOutAnime->setEasingCurve(QEasingCurve::InOutQuad);
+    m_flyOutAnime->setEasingCurve(QEasingCurve::OutCubic);
     m_flyOutAnime->setDuration(200);
 
     m_flyInAnime=new QPropertyAnimation(this);
     m_flyInAnime->setPropertyName("geometry");
-    m_flyInAnime->setEasingCurve(QEasingCurve::InOutQuad);
+    m_flyInAnime->setEasingCurve(QEasingCurve::OutCubic);
     m_flyInAnime->setDuration(200);
 
     m_switchAnime->addAnimation(m_flyInAnime);
