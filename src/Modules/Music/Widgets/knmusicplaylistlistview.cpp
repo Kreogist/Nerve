@@ -2,8 +2,8 @@
 
 #include "knmusicplaylistlistview.h"
 
-KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
-    QListView(parent)
+KNMusicPlaylistListView::KNMusicPlaylistListView(QWidget *parent) :
+    KNMusicPlaylistListViewBase(parent)
 {
     //Set viewport properties.
     viewport()->setContentsMargins(0,0,0,0);
@@ -39,16 +39,16 @@ KNMusicPlaylistListview::KNMusicPlaylistListview(QWidget *parent) :
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEndFrame(0x50);
     connect(m_mouseIn, &QTimeLine::frameChanged,
-            this, &KNMusicPlaylistListview::changeBackground);
+            this, &KNMusicPlaylistListView::changeBackground);
 
     m_mouseOut=new QTimeLine(200, this);
     m_mouseOut->setUpdateInterval(5);
     m_mouseOut->setEndFrame(m_minGrey);
     connect(m_mouseOut, &QTimeLine::frameChanged,
-            this, &KNMusicPlaylistListview::changeBackground);
+            this, &KNMusicPlaylistListView::changeBackground);
 }
 
-void KNMusicPlaylistListview::enterEvent(QEvent *e)
+void KNMusicPlaylistListView::enterEvent(QEvent *e)
 {
     m_mouseOut->stop();
     m_mouseIn->stop();
@@ -57,7 +57,7 @@ void KNMusicPlaylistListview::enterEvent(QEvent *e)
     QListView::enterEvent(e);
 }
 
-void KNMusicPlaylistListview::leaveEvent(QEvent *e)
+void KNMusicPlaylistListView::leaveEvent(QEvent *e)
 {
     m_mouseIn->stop();
     m_mouseOut->stop();
@@ -66,7 +66,7 @@ void KNMusicPlaylistListview::leaveEvent(QEvent *e)
     QListView::leaveEvent(e);
 }
 
-void KNMusicPlaylistListview::changeBackground(int frameData)
+void KNMusicPlaylistListView::changeBackground(int frameData)
 {
     m_backgroundColor=QColor(frameData, frameData, frameData);
     int baseGrey=((frameData-m_minGrey)>>1)+m_minGrey;

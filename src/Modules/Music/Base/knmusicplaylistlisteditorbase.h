@@ -11,6 +11,7 @@ public:
 
 signals:
     void requireAddPlaylist();
+    void requireRemoveCurrentPlaylist();
 
 public slots:
 

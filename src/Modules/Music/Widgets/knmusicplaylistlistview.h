@@ -1,18 +1,20 @@
 #ifndef KNMUSICPLAYLISTLISTVIEW_H
 #define KNMUSICPLAYLISTLISTVIEW_H
 
-#include <QListView>
+#include "../Base/knmusicplaylistlistviewbase.h"
 
 class QTimeLine;
-class KNMusicPlaylistListview : public QListView
+class KNMusicPlaylistListView : public KNMusicPlaylistListViewBase
 {
     Q_OBJECT
 public:
-    explicit KNMusicPlaylistListview(QWidget *parent = 0);
+    explicit KNMusicPlaylistListView(QWidget *parent = 0);
 
 protected:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
+
+public slots:
 
 private slots:
     void changeBackground(int frameData);

@@ -46,6 +46,7 @@
         <file>Resources/Music/playlists/remove.png</file>
         <file>Resources/Music/stars/star.png</file>
         <file>Resources/Music/stars/unstar.png</file>
+        <file>Resources/Music/playlists/playlist.png</file>
     </qresource>
     <qresource prefix="/MusicGenre">
         <file>Resources/Music/genres/genre-action.jpg</file>

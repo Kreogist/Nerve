@@ -28,8 +28,8 @@ KNMusicPlaylistView::KNMusicPlaylistView(QWidget *parent) :
     m_listLayout->setContentsMargins(0,0,0,0);
     m_listLayout->setSpacing(0);
     playlistList->setLayout(m_listLayout);
-    m_playlistListView=new KNMusicPlaylistListview(this);
-    connect(m_playlistListView, &KNMusicPlaylistListview::activated,
+    m_playlistListView=new KNMusicPlaylistListView(this);
+    connect(m_playlistListView, &KNMusicPlaylistListView::activated,
             this, &KNMusicPlaylistView::onActionShowPlaylist);
     m_listLayout->addWidget(m_playlistListView, 1);
     setListEditor(new KNMusicPlaylistListEditor);
@@ -54,19 +54,37 @@ void KNMusicPlaylistView::setManager(KNMusicPlaylistManagerBase *manager)
     m_playlistListView->setModel(m_manager->playlistModel());
     connect(m_playlistListView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &KNMusicPlaylistView::onActionShowPlaylist);
+    connect(m_manager, &KNMusicPlaylistManagerBase::requireUpdateItem,
+            this, &KNMusicPlaylistView::onActionItemUpdate);
 }
 
 void KNMusicPlaylistView::setListEditor(KNMusicPlaylistListEditorBase *editor)
 {
     m_playlistListEditor=editor;
+    connect(m_playlistListEditor, &KNMusicPlaylistListEditorBase::requireAddPlaylist,
+            this, &KNMusicPlaylistView::onActionAddPlaylist);
+    connect(m_playlistListEditor, &KNMusicPlaylistListEditorBase::requireRemoveCurrentPlaylist,
+            this, &KNMusicPlaylistView::onActionRemoveCurrentPlaylist);
     m_listLayout->addWidget(m_playlistListEditor);
+}
+
+void KNMusicPlaylistView::onActionAddPlaylist()
+{
+    QModelIndex createdIndex=m_manager->createPlaylist(tr("New Playlist"));
+    m_playlistListView->setCurrentIndex(createdIndex);
+    m_playlistListView->edit(createdIndex);
+}
+
+void KNMusicPlaylistView::onActionRemoveCurrentPlaylist()
+{
+    m_manager->removePlaylist(m_currentPath);
 }
 
 void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 {
     m_displayer->setPlaylistName(m_manager->playlistName(index));
     m_songsView->setModel(m_manager->playlistDataModel(index));
-    m_currentPath=m_manager->setModelPlaylist(index.row());
+    m_currentPath=m_manager->playlistPath(index.row());
 }
 
 void KNMusicPlaylistView::onActionOpenUrl(const QModelIndex &index)
@@ -74,4 +92,13 @@ void KNMusicPlaylistView::onActionOpenUrl(const QModelIndex &index)
     m_manager->setPlaylist(m_currentPath);
     m_manager->setCurrentPlaylistPlaying(index);
     emit requirePlayMusic(m_manager->filePathFromIndex(index));
+}
+
+void KNMusicPlaylistView::onActionItemUpdate(const QModelIndex &index)
+{
+    QString updateFilePath=m_manager->playlistPath(index.row());
+    if(m_currentPath==updateFilePath)
+    {
+        onActionShowPlaylist(index);
+    }
 }

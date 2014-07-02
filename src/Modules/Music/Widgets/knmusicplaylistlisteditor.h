@@ -33,6 +33,7 @@ private slots:
 
 private:
     void createAddMenu();
+    void createRemove();
     enum AddCategory
     {
         Playlist,

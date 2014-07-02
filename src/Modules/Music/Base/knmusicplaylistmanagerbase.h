@@ -2,6 +2,7 @@
 #define KNMUSICPLAYLISTMANAGERBASE_H
 
 #include <QStringList>
+#include <QModelIndex>
 
 #include <QObject>
 
@@ -50,15 +51,16 @@ public:
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
+    void requireUpdateItem(const QModelIndex &index);
     void playlistListUpdated();
 
 public slots:
     virtual void setLoopMode(const int &index)=0;
     //Create playlist
-    virtual void createPlaylist(const QString &title)=0;
+    virtual QModelIndex createPlaylist(const QString &title)=0;
     virtual void importPlaylist(QStringList filePaths)=0;
-    virtual void removePlaylist(const int &index)=0;
-    virtual QString setModelPlaylist(const int &index)=0;
+    virtual void removePlaylist(QString filePath)=0;
+    virtual QString playlistPath(const int &index)=0;
     virtual void setPlaylist(const QString &filePath)=0;
 
 };

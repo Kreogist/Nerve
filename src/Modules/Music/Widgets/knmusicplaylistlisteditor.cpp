@@ -45,6 +45,7 @@ KNMusicPlaylistListEditor::KNMusicPlaylistListEditor(QWidget *parent) :
 
     //Create add menu.
     createAddMenu();
+    createRemove();
     connect(m_add, &KNOpacityButton::mouseReleased,
             this, &KNMusicPlaylistListEditor::showAddMenu);
 
@@ -95,6 +96,7 @@ void KNMusicPlaylistListEditor::leaveEvent(QEvent *event)
 void KNMusicPlaylistListEditor::resizeEvent(QResizeEvent *event)
 {
     KNMusicPlaylistListEditorBase::resizeEvent(event);
+    //When the widget resized, the background gradient should changed with the size.
     m_background.setFinalStop(QPoint(0,height()));
     m_palette.setBrush(QPalette::Window, QBrush(m_background));
     setPalette(m_palette);
@@ -110,6 +112,7 @@ void KNMusicPlaylistListEditor::changeBackground(const int &frame)
 
 void KNMusicPlaylistListEditor::showAddMenu()
 {
+    //Move and show the menu.
     m_addMenu->move(mapToGlobal(m_add->pos()));
     m_addMenu->exec();
 }
@@ -126,4 +129,10 @@ void KNMusicPlaylistListEditor::createAddMenu()
     }
     connect(m_addAction[Playlist], SIGNAL(triggered()),
             this, SIGNAL(requireAddPlaylist()));
+}
+
+void KNMusicPlaylistListEditor::createRemove()
+{
+    connect(m_remove, &KNOpacityButton::clicked,
+            this, &KNMusicPlaylistListEditor::requireRemoveCurrentPlaylist);
 }

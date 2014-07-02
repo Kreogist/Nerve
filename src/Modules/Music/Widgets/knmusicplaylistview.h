@@ -5,7 +5,7 @@
 
 class QBoxLayout;
 class QAbstractItemModel;
-class KNMusicPlaylistListview;
+class KNMusicPlaylistListView;
 class KNMusicPlaylistListEditorBase;
 class KNMusicPlaylistManagerBase;
 class KNMusicPlaylistDisplay;
@@ -22,14 +22,17 @@ signals:
     void requirePlayMusic(const QString &filePath);
 
 public slots:
+    void onActionAddPlaylist();
+    void onActionRemoveCurrentPlaylist();
 
 private slots:
     void onActionShowPlaylist(const QModelIndex &index);
     void onActionOpenUrl(const QModelIndex &index);
+    void onActionItemUpdate(const QModelIndex &index);
 
 private:
     KNMusicPlaylistManagerBase *m_manager;
-    KNMusicPlaylistListview *m_playlistListView;
+    KNMusicPlaylistListView *m_playlistListView;
     KNMusicPlaylistListEditorBase *m_playlistListEditor;
     KNMusicPlaylistDisplay *m_displayer;
     KNMusicPlaylistSongs *m_songsView;

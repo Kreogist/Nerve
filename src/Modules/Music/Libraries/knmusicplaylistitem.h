@@ -14,7 +14,7 @@ class KNMusicPlaylistItem : public QStandardItem
 public:
     enum PlayListProperties
     {
-        FilePath=Qt::UserRole,
+        PlaylistPath=Qt::UserRole,
         DataChanged,
         ModelBuild
     };
@@ -23,11 +23,9 @@ public:
     ~KNMusicPlaylistItem();
     void setName(const QString &name);
     bool changed();
-    bool removedFile();
+    void setChanged(const bool &changed);
     QString filePath() const;
     void setFilePath(const QString &path);
-    bool savePlayList();
-    bool forceSavePlaylist();
     bool modelBuild() const;
     QModelIndex firstIndexFromMusicPath(const QString &filePath);
     QList<QStandardItem *> songRow(const int &row) const;
@@ -37,6 +35,8 @@ public:
     void appendSongRow(const QList<QStandardItem *> &rowData);
     void appendSongItem(QStringList textList,
                         KNMusicGlobal::MusicDetailsInfo currentDetails);
+    int songCount() const;
+    QString songPath(const int &songIndex) const;
     void setSongPaths(const QStringList &songPaths);
 
 private:

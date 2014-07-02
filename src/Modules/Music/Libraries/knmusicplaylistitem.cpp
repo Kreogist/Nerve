@@ -1,9 +1,3 @@
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonParseError>
-#include <QJsonArray>
-
 #include <QDebug>
 
 #include "knmusicplaylistmodel.h"
@@ -34,60 +28,20 @@ bool KNMusicPlaylistItem::changed()
     return data(DataChanged).toBool();
 }
 
-bool KNMusicPlaylistItem::removedFile()
+void KNMusicPlaylistItem::setChanged(const bool &changed)
 {
-    //Open the playlist file.
-    QFile playlistFile(data(FilePath).toString());
-    if(playlistFile.exists())
-    {
-        return playlistFile.remove();
-    }
-    return true;
+    setData(changed, DataChanged);
 }
 
 QString KNMusicPlaylistItem::filePath() const
 {
-    return data(FilePath).toString();
+    return data(PlaylistPath).toString();
 }
 
 void KNMusicPlaylistItem::setFilePath(const QString &path)
 {
-    setData(path, FilePath);
+    setData(path, PlaylistPath);
     setData(true, DataChanged);
-}
-
-bool KNMusicPlaylistItem::savePlayList()
-{
-    if(!data(DataChanged).toBool())
-    {
-        //Nothing to write.
-        return true;
-    }
-    return forceSavePlaylist();
-}
-
-bool KNMusicPlaylistItem::forceSavePlaylist()
-{
-    //Open the playlist file.
-    QFile playlistFile(data(FilePath).toString());
-    if(playlistFile.open(QIODevice::WriteOnly))
-    {
-        //Prepare the Json Data.
-        QJsonObject playlistObject;
-        playlistObject["Name"]=text();
-        QJsonArray songList;
-        //!FIXME: songList should contains all the song file path.
-        playlistObject["Songs"]=songList;
-        QJsonDocument playlistContent;
-        playlistContent.setObject(playlistObject);
-        //Rewrite data.
-        playlistFile.write(playlistContent.toJson());
-        playlistFile.close();
-        //Clear the data changed flag.
-        setData(false, DataChanged);
-        return true;
-    }
-    return false;
 }
 
 bool KNMusicPlaylistItem::modelBuild() const
@@ -118,7 +72,7 @@ void KNMusicPlaylistItem::clearSongPaths()
 
 void KNMusicPlaylistItem::resetPlaylist(const QString &fileName)
 {
-    setName(fileName.isEmpty()?data(FilePath).toString():fileName);
+    setName(fileName.isEmpty()?data(PlaylistPath).toString():fileName);
     setData(false, DataChanged);
 }
 
@@ -136,6 +90,16 @@ void KNMusicPlaylistItem::appendSongItem(QStringList textList,
                                          KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
     m_playlistModel->appendMusicItem(textList, currentDetails);
+}
+
+int KNMusicPlaylistItem::songCount() const
+{
+    return m_playlistModel->rowCount();
+}
+
+QString KNMusicPlaylistItem::songPath(const int &songIndex) const
+{
+    return m_playlistModel->filePathFromIndex(songIndex);
 }
 
 void KNMusicPlaylistItem::setSongPaths(const QStringList &songPaths)

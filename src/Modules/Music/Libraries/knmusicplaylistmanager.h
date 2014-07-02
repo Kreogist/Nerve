@@ -2,6 +2,7 @@
 #define KNMUSICPLAYLISTMANAGER_H
 
 #include <QList>
+#include <QIcon>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
@@ -14,6 +15,7 @@
 
 #include "../Base/knmusicplaylistmanagerbase.h"
 
+class QStandardItem;
 class KNMusicPlaylistManager : public KNMusicPlaylistManagerBase
 {
     Q_OBJECT
@@ -51,15 +53,20 @@ public slots:
     void retranslateAndSet();
     void setLoopMode(const int &index);
     //Create playlist
-    void createPlaylist(const QString &title);
+    QModelIndex createPlaylist(const QString &title);
     void importPlaylist(QStringList filePaths);
-    void removePlaylist(const int &index);
-    QString setModelPlaylist(const int &index);
+    void removePlaylist(QString filePath);
+    QString playlistPath(const int &index);
     void setPlaylist(const QString &filePath);
 
+private slots:
+    void onActionPlaylistItemChanged(QStandardItem *item);
+
 private:
+    KNMusicPlaylistItem *createPlaylistItem();
     bool loadPlaylist(KNMusicPlaylistItem *item);
     bool savePlaylist(KNMusicPlaylistItem *item);
+    bool writePlaylist(KNMusicPlaylistItem *item);
     QAbstractItemModel *buildPlaylist(KNMusicPlaylistItem *item);
     QString currentIndexPath();
     void saveAllChanged();
@@ -83,6 +90,9 @@ private:
     //Global instance.
     KNMusicGlobal *m_musicGlobal;
     KNGlobal *m_global;
+
+    //Icons
+    QIcon m_playlistIcon;
 };
 
 #endif // KNMUSICPLAYLISTMANAGER_H
