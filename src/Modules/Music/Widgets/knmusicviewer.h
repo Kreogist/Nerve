@@ -51,6 +51,8 @@ signals:
     void requireShowInArtistView(const QModelIndex &index);
     void requireShowInAlbumView(const QModelIndex &index);
     void requireShowInGenreView(const QModelIndex &index);
+    void dragEntered();
+    void dropped();
 
 public slots:
     void retranslate();
@@ -65,6 +67,10 @@ public slots:
 protected:
     void resizeEvent(QResizeEvent *event);
 
+private slots:
+    void onActionDragEntered();
+    void onActionDropped();
+
 private:
     void addDatabasePlugin(KNMusicViewerItemBase *plugin);
     enum MusicCategories
@@ -76,8 +82,8 @@ private:
         Playlists,
         MusicCategoriesCount
     };
-    QPropertyAnimation *m_playerIn, *m_playerOut;
-    QWidget *m_playerWidget;
+    QPropertyAnimation *m_playerIn, *m_playerOut, *m_playlistIn, *m_playlistOut;
+    QWidget *m_playerWidget, *m_playlistListView;
 
     KNMusicLibraryModelBase *m_musicModel;
 };

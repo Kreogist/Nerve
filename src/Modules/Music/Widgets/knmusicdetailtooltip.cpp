@@ -167,18 +167,10 @@ void KNMusicDetailTooltip::setTooltip(const QModelIndex &index,
     m_albumArt->setPixmap(QPixmap::fromImage(m_musicModel->artwork(m_currentRow)));
 
     QFileInfo musicFileInfo(m_musicModel->filePathFromIndex(index));
-    m_labels[Title]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Name));
-    m_labels[Title]->setToolTip(fontMetrics().width(m_labels[Title]->text())>m_labelContainer->width()?
-                                    m_labels[Title]->text():"");
-    m_labels[FileName]->setText(m_inFile.arg(musicFileInfo.fileName()));
-    m_labels[FileName]->setToolTip(fontMetrics().width(m_labels[FileName]->text())>m_labelContainer->width()?
-                                    m_labels[FileName]->text():"");
-    m_labels[Time]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Time));
-    m_labels[Time]->setToolTip(fontMetrics().width(m_labels[Time]->text())>m_labelContainer->width()?
-                                    m_labels[Time]->text():"");
-    m_labels[Artist]->setText(m_musicModel->itemText(m_currentRow, KNMusicGlobal::Artist));
-    m_labels[Artist]->setToolTip(fontMetrics().width(m_labels[Artist]->text())>m_labelContainer->width()?
-                                    m_labels[Artist]->text():"");
+    setEliedText(m_labels[Title], m_musicModel->itemText(m_currentRow, KNMusicGlobal::Name));
+    setEliedText(m_labels[FileName], m_inFile.arg(musicFileInfo.fileName()));
+    setEliedText(m_labels[Time], m_musicModel->itemText(m_currentRow, KNMusicGlobal::Time));
+    setEliedText(m_labels[Artist], m_musicModel->itemText(m_currentRow, KNMusicGlobal::Artist));
 
     m_filePath=m_musicModel->filePathFromIndex(m_currentRow);
     move(bestPosition(point));
@@ -324,6 +316,22 @@ void KNMusicDetailTooltip::onActionChangeBackground(const int &colorParam)
 void KNMusicDetailTooltip::onActionPreviewFinished()
 {
     resetPlayStatus();
+}
+
+void KNMusicDetailTooltip::setEliedText(QLabel *widget, const QString &rawTextData)
+{
+    if(widget->fontMetrics().width(rawTextData)>widget->width())
+    {
+        widget->setText(widget->fontMetrics().elidedText(rawTextData,
+                                                          Qt::ElideRight,
+                                                          widget->width()));
+        widget->setToolTip(rawTextData);
+    }
+    else
+    {
+        widget->setText(rawTextData);
+        widget->setToolTip("");
+    }
 }
 
 QPoint KNMusicDetailTooltip::bestPosition(const QPoint &pos)

@@ -5,8 +5,8 @@ QT += core\
       widgets\
       network
 
-CONFIG += c++11 sse sse2
-QMAKE_CXXFLAGS += -msse -msse2
+CONFIG += c++11 mmx sse sse2 sse3
+#QMAKE_CXXFLAGS += -mmmx -msse -msse2 -msse3
 QMAKE_RPATHDIR += \$\$ORIGIN/Plugins
 
 win32{
@@ -165,7 +165,6 @@ SOURCES += \
     Modules/Music/Widgets/knmusicdetailinfobase.cpp \
     Modules/Base/knlibseacher.cpp \
     Modules/Public/Base/knmusicbackend.cpp \
-    Modules/Music/Base/knmusicvieweritem.cpp \
     Modules/Music/Plugins/knmusiclistviewitem.cpp \
     Modules/Music/Widgets/knmusicviewermenubase.cpp \
     Modules/Music/Plugins/knmusicartistviewitem.cpp \
@@ -177,7 +176,10 @@ SOURCES += \
     Modules/Music/Base/knmusicplaylistlisteditorbase.cpp \
     Modules/Music/Base/knmusicplaylistmanagerbase.cpp \
     Modules/Music/Base/knmusicplaylistlistviewbase.cpp \
-    Modules/Music/Widgets/knmusicviewcontainer.cpp
+    Modules/Music/Widgets/knmusicviewcontainer.cpp \
+    Modules/Music/Base/knmusicvieweritembase.cpp \
+    Modules/Music/Widgets/knmusicplaylistdraglistview.cpp \
+    Modules/Music/Libraries/knmusicplaylistlistmodel.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -331,7 +333,9 @@ HEADERS += \
     Modules/Music/Base/knmusicplaylistlisteditorbase.h \
     Modules/Music/Base/knmusicplaylistmanagerbase.h \
     Modules/Music/Base/knmusicplaylistlistviewbase.h \
-    Modules/Music/Widgets/knmusicviewcontainer.h
+    Modules/Music/Widgets/knmusicviewcontainer.h \
+    Modules/Music/Widgets/knmusicplaylistdraglistview.h \
+    Modules/Music/Libraries/knmusicplaylistlistmodel.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

@@ -1,6 +1,7 @@
 #ifndef KNMUSICVIEWERPLAYLISTITEMBASE_H
 #define KNMUSICVIEWERPLAYLISTITEMBASE_H
 
+#include <QWidget>
 #include <QObject>
 
 class KNMusicPlaylistManagerBase;
@@ -10,6 +11,7 @@ class KNMusicViewerPlaylistItemBase : public QObject
 public:
     explicit KNMusicViewerPlaylistItemBase(QObject *parent = 0);
     virtual void applyPlugin()=0;
+    virtual QWidget *playlistListView()=0;
 
 signals:
     void requirePlayMusic(const QString &filePath);

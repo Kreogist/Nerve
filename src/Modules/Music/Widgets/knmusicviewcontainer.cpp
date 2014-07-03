@@ -29,10 +29,12 @@ void KNMusicViewContainer::dragEnterEvent(QDragEnterEvent *event)
     if(event->mimeData()->hasUrls())
     {
         event->acceptProposedAction();
+        emit dragEntered();
     }
 }
 
 void KNMusicViewContainer::dropEvent(QDropEvent *event)
 {
+    emit dropped();
     emit requireAnalysisUrls(event->mimeData()->urls());
 }

@@ -63,6 +63,8 @@ public:
 
 signals:
     void requireAnalysisUrls(QList<QUrl> urls);
+    void dragEntered();
+    void dropped();
 
 public slots:
     void onActionSongCountChange(const int &value);

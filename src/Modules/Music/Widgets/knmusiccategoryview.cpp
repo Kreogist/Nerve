@@ -2,6 +2,7 @@
 #include <QSplitter>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QMimeData>
 #include <QLabel>
 #include <QShowEvent>
 #include <QBitmap>
@@ -260,11 +261,13 @@ void KNMusicCategoryView::dragEnterEvent(QDragEnterEvent *event)
     if(event->mimeData()->hasUrls())
     {
         event->acceptProposedAction();
+        emit dragEntered();
     }
 }
 
 void KNMusicCategoryView::dropEvent(QDropEvent *event)
 {
+    emit dropped();
     emit requireAnalysisUrls(event->mimeData()->urls());
 }
 

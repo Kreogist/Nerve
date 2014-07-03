@@ -27,7 +27,6 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     retranslate();
 
     //Set the properties.
-//    setAcceptDrops(true);
     setContentsMargins(0,0,0,0);
 
     //Set the player widget animations.
@@ -38,6 +37,21 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     m_playerOut=new QPropertyAnimation(this);
     m_playerOut->setPropertyName("geometry");
     m_playerOut->setEasingCurve(QEasingCurve::OutCubic);
+
+    //Set the playlist in out animation.
+    m_playlistIn=new QPropertyAnimation(this);
+    m_playlistIn->setPropertyName("geometry");
+    m_playlistIn->setEasingCurve(QEasingCurve::OutCubic);
+
+    m_playlistOut=new QPropertyAnimation(this);
+    m_playlistOut->setPropertyName("geometry");
+    m_playlistOut->setEasingCurve(QEasingCurve::OutCubic);
+
+    //Connect signals and slots.
+    connect(this, &KNMusicViewer::dragEntered,
+            this, &KNMusicViewer::onActionDragEntered);
+    connect(this, &KNMusicViewer::dropped,
+            this, &KNMusicViewer::onActionDropped);
 
     //Add plugins
     addListViewPlugin(new KNMusicListViewItem);
@@ -138,6 +152,15 @@ void KNMusicViewer::addGenreViewPlugin(KNMusicViewerItemBase *plugin)
 
 void KNMusicViewer::addPlaylistPlugin(KNMusicViewerPlaylistItemBase *plugin)
 {
+    //Get playlist list view.
+    m_playlistListView=plugin->playlistListView();
+    m_playlistListView->setParent(this);
+    m_playlistListView->hide();
+    m_playlistIn->setTargetObject(m_playlistListView);
+    m_playlistOut->setTargetObject(m_playlistListView);
+    connect(m_playlistOut, &QPropertyAnimation::finished,
+            m_playlistListView, &QWidget::hide);
+
     //Connect actions
     connect(this, &KNMusicViewer::requireSetPlaylistManager,
             plugin, &KNMusicViewerPlaylistItemBase::setPlaylistManager);
@@ -237,6 +260,59 @@ void KNMusicViewer::resizeEvent(QResizeEvent *event)
     KNStdLibViewer::resizeEvent(event);
     m_playerWidget->setGeometry(m_playerWidget->y()==0?
                             geometry():QRect(0, -height(), width(), height()));
+    if(m_playlistListView->isVisible())
+    {
+        m_playlistListView->setGeometry(width()-m_playlistListView->width(),
+                                        0,
+                                        m_playlistListView->width(),
+                                        height());
+    }
+}
+
+void KNMusicViewer::onActionDragEntered()
+{
+    if(m_playlistListView->isVisible())
+    {
+        return;
+    }
+    m_playlistListView->resize(m_playlistListView->width(),
+                               height());
+    m_playlistOut->stop();
+    if(m_playlistIn->state()==QPropertyAnimation::Running)
+    {
+        m_playlistIn->pause();
+    }
+    else
+    {
+        m_playlistIn->setStartValue(QRect(width(),
+                                          0,
+                                          m_playlistListView->width(),
+                                          m_playlistListView->height()));
+    }
+    m_playlistIn->setEndValue(QRect(width()-m_playlistListView->width(),
+                                    0,
+                                    m_playlistListView->width(),
+                                    m_playlistListView->height()));
+    m_playlistListView->show();
+    m_playlistIn->start();
+}
+
+void KNMusicViewer::onActionDropped()
+{
+    m_playlistIn->stop();
+    if(m_playlistOut->state()==QPropertyAnimation::Running)
+    {
+        m_playlistOut->pause();
+    }
+    else
+    {
+        m_playlistOut->setStartValue(m_playlistListView->geometry());
+    }
+    m_playlistOut->setEndValue(QRect(width(),
+                                   0,
+                                   m_playlistListView->width(),
+                                   m_playlistListView->height()));
+    m_playlistOut->start();
 }
 
 void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
@@ -265,6 +341,10 @@ void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
             this, &KNMusicViewer::addCategory);
     connect(plugin, &KNMusicViewerItemBase::requireAnalysisUrls,
             this, &KNMusicViewer::requireAnalysisUrls);
+    connect(plugin, &KNMusicViewerItemBase::dragEntered,
+            this, &KNMusicViewer::dragEntered);
+    connect(plugin, &KNMusicViewerItemBase::dropped,
+            this, &KNMusicViewer::dropped);
 
     //Apply plugin.
     plugin->applyPlugin();

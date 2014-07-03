@@ -45,6 +45,10 @@ KNMusicGenreViewItem::KNMusicGenreViewItem(QObject *parent) :
     m_genreView->setDetailModel(m_genreDetails);
     connect(m_genreView, &KNMusicCategoryView::requireAnalysisUrls,
             this, &KNMusicGenreViewItem::requireAnalysisUrls);
+    connect(m_genreView, &KNMusicCategoryView::dragEntered,
+            this, &KNMusicGenreViewItem::dragEntered);
+    connect(m_genreView, &KNMusicCategoryView::dropped,
+            this, &KNMusicGenreViewItem::dropped);
 }
 
 KNMusicGenreViewItem::~KNMusicGenreViewItem()

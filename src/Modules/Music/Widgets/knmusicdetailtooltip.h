@@ -82,7 +82,7 @@ private:
         FilePath,
         ToolTipItemsCount
     };
-
+    void setEliedText(QLabel *widget, const QString &rawTextData);
     QPoint bestPosition(const QPoint &pos);
     QLabel *m_albumArt, *m_labels[ToolTipItemsCount];
     QString m_inFile, m_filePath;

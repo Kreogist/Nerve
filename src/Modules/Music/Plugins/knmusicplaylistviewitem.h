@@ -4,6 +4,7 @@
 #include "../Base/knmusicviewerplaylistitembase.h"
 
 class KNMusicPlaylistView;
+class KNMusicPlaylistDragListView;
 class KNMusicPlaylistViewItem : public KNMusicViewerPlaylistItemBase
 {
     Q_OBJECT
@@ -11,6 +12,7 @@ public:
     explicit KNMusicPlaylistViewItem(QObject *parent = 0);
     ~KNMusicPlaylistViewItem();
     void applyPlugin();
+    QWidget *playlistListView();
 
 signals:
 
@@ -20,6 +22,7 @@ public slots:
 
 private:
     KNMusicPlaylistView *m_playlistView;
+    KNMusicPlaylistDragListView *m_dragListView;
     QString m_title;
 };
 

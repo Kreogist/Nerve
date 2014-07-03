@@ -16,6 +16,7 @@
 #include "../Base/knmusicplaylistmanagerbase.h"
 
 class QStandardItem;
+class KNMusicPlaylistListModel;
 class KNMusicPlaylistManager : public KNMusicPlaylistManagerBase
 {
     Q_OBJECT
@@ -83,7 +84,7 @@ private:
     //Current playlist pointer
     QString m_currentPath, m_playlistPath;
     KNMusicLibraryModelBase *m_musicModel;
-    QStandardItemModel *m_playlistModel;
+    KNMusicPlaylistListModel *m_playlistListModel;
     QThread m_dataModelThread, m_infoThread;
     KNMusicInfoCollector *m_infoCollector;
 

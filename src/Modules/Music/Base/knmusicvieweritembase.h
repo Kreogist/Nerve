@@ -25,6 +25,8 @@ signals:
                             const QString &title,
                             QWidget *widget);
     void requireAnalysisUrls(QList<QUrl> urls);
+    void dragEntered();
+    void dropped();
 
 public slots:
     virtual void setMusicSourceModel(KNMusicLibraryModelBase *model)=0;

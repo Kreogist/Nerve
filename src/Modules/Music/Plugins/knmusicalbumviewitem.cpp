@@ -46,6 +46,10 @@ KNMusicAlbumViewItem::KNMusicAlbumViewItem(QObject *parent) :
     m_container->setCentralWidget(m_albumView);
     connect(m_container, &KNMusicViewContainer::requireAnalysisUrls,
             this, &KNMusicAlbumViewItem::requireAnalysisUrls);
+    connect(m_container, &KNMusicViewContainer::dragEntered,
+            this, &KNMusicAlbumViewItem::dragEntered);
+    connect(m_container, &KNMusicViewContainer::dropped,
+            this, &KNMusicAlbumViewItem::dropped);
 }
 
 KNMusicAlbumViewItem::~KNMusicAlbumViewItem()

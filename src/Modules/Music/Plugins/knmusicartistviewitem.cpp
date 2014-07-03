@@ -45,6 +45,10 @@ KNMusicArtistViewItem::KNMusicArtistViewItem(QObject *parent) :
     m_artistView->setDetailModel(m_artistDetails);
     connect(m_artistView, &KNMusicCategoryView::requireAnalysisUrls,
             this, &KNMusicArtistViewItem::requireAnalysisUrls);
+    connect(m_artistView, &KNMusicCategoryView::dragEntered,
+            this, &KNMusicArtistViewItem::dragEntered);
+    connect(m_artistView, &KNMusicCategoryView::dropped,
+            this, &KNMusicArtistViewItem::dropped);
 }
 
 KNMusicArtistViewItem::~KNMusicArtistViewItem()

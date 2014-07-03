@@ -7,8 +7,6 @@
 class QBoxLayout;
 class QMouseEvent;
 class QPaintEvent;
-class QDragEnterEvent;
-class QDropEvent;
 class QPropertyAnimation;
 class QResizeEvent;
 class QParallelAnimationGroup;

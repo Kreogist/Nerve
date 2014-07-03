@@ -8,10 +8,14 @@ KNMusicPlaylistListView::KNMusicPlaylistListView(QWidget *parent) :
     //Set viewport properties.
     viewport()->setContentsMargins(0,0,0,0);
     viewport()->installEventFilter(this);
+    viewport()->setAcceptDrops(true);
 
     //Set properties.
     setAutoFillBackground(true);
+    setAcceptDrops(true);
     setContentsMargins(0,0,0,0);
+    setDragDropMode(QAbstractItemView::DragDrop);
+    setDropIndicatorShown(true);
     setFrameShape(QFrame::NoFrame);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setIconSize(QSize(40, 40));

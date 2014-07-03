@@ -22,7 +22,7 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    int b0=0,i,y,b1, bandWidth=10,bandCount=width()/(bandWidth+1), currentX=0;
+    int b0=0,i,y,b1, bandWidth=width()/20,bandCount=20, currentX=0;
     float peak, heightF=(float)(height());
     painter.setPen(Qt::NoPen);
     painter.setBrush(m_itemColor);
