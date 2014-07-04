@@ -13,6 +13,8 @@ signals:
 
 public slots:
 
+protected:
+
 };
 
 #endif // KNMUSICPLAYLISTDRAGLISTVIEW_H

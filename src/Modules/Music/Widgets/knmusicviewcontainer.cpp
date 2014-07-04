@@ -3,6 +3,8 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
+#include <QDebug>
+
 #include "knmusicviewcontainer.h"
 
 KNMusicViewContainer::KNMusicViewContainer(QWidget *parent) :
