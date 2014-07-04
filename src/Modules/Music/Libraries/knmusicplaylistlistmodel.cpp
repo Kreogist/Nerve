@@ -37,10 +37,19 @@ bool KNMusicPlaylistListModel::dropMimeData(const QMimeData *data,
                                             int column,
                                             const QModelIndex &parent)
 {
-    qDebug()<<data->formats();
-    if(data->hasUrls())
+    Q_UNUSED(row);
+    Q_UNUSED(column);
+    if(data->hasUrls() && (action==Qt::MoveAction || action==Qt::CopyAction))
     {
-        ;
+        if(parent.isValid())
+        {
+            emit requireAddToPlaylist(parent.row(), data->urls());
+        }
+        else
+        {
+            emit requireCreatePlaylist(data->urls());
+        }
+        return true;
     }
-    return true;
+    return false;
 }

@@ -21,10 +21,6 @@ KNMusicPlaylistViewItem::KNMusicPlaylistViewItem(QObject *parent) :
     //Prepare the playlist list view.
     m_dragListView=new KNMusicPlaylistDragListView;
     m_dragListView->setDragEnabled(true);
-//    m_dragListView->setViewMode(QListView::IconMode);
-//    m_dragListView->setIconSize(QSize(puzzleWidget->pieceSize() - 20, puzzleWidget->pieceSize() - 20));
-//    m_dragListView->setGridSize(QSize(puzzleWidget->pieceSize(), puzzleWidget->pieceSize()));
-//    m_dragListView->setSpacing(10);
     m_dragListView->setAcceptDrops(true);
     m_dragListView->setDropIndicatorShown(true);
 }

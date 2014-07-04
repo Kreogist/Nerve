@@ -50,13 +50,15 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
 
     //Initial playlist manager.
     m_playlistManager=new KNMusicPlaylistManager(this);
-    m_playlistManager->setBackend(m_backend);
+    m_playlistManager->setMusicBackend(m_backend);
 
     //Initial music viewer.
     m_musicViewer=new KNMusicViewer(m_global->mainWindow());
     m_musicViewer->setMusicModel(m_libraryModel);
     m_musicViewer->requireSetPlaylistManager(m_playlistManager);
     m_musicViewer->requireSetBackend(m_backend);
+    connect(m_playlistManager, &KNMusicPlaylistManagerBase::requireHideDragList,
+            m_musicViewer, &KNMusicViewer::hidePlaylistDragList);
     connect(m_musicViewer, &KNMusicViewer::requireAnalysisUrls,
             this, &KNMusicPlugin::requireAnalysisUrls);
     connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,

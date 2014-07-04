@@ -27,7 +27,7 @@ public:
     virtual int loopMode()=0;
 
     //Backend sets.
-    virtual void setBackend(KNMusicBackend *backend)=0;
+    virtual void setMusicBackend(KNMusicBackend *backend)=0;
 
     //Music model.
     virtual void setMusicModel(KNMusicLibraryModelBase *model)=0;
@@ -52,6 +52,7 @@ public:
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
     void requireUpdateItem(const QModelIndex &index);
+    void requireHideDragList();
     void playlistListUpdated();
 
 public slots:

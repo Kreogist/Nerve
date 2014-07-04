@@ -49,9 +49,9 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
 
     //Connect signals and slots.
     connect(this, &KNMusicViewer::dragEntered,
-            this, &KNMusicViewer::onActionDragEntered);
+            this, &KNMusicViewer::showPlaylistDragList);
     connect(this, &KNMusicViewer::dropped,
-            this, &KNMusicViewer::onActionDropped);
+            this, &KNMusicViewer::hidePlaylistDragList);
 
     //Add plugins
     addListViewPlugin(new KNMusicListViewItem);
@@ -269,7 +269,7 @@ void KNMusicViewer::resizeEvent(QResizeEvent *event)
     }
 }
 
-void KNMusicViewer::onActionDragEntered()
+void KNMusicViewer::showPlaylistDragList()
 {
     if(m_playlistListView->isVisible())
     {
@@ -297,7 +297,7 @@ void KNMusicViewer::onActionDragEntered()
     m_playlistIn->start();
 }
 
-void KNMusicViewer::onActionDropped()
+void KNMusicViewer::hidePlaylistDragList()
 {
     m_playlistIn->stop();
     if(m_playlistOut->state()==QPropertyAnimation::Running)

@@ -47,6 +47,10 @@ KNMusicPlaylistManager::KNMusicPlaylistManager(QObject *parent) :
     m_playlistListModel=new KNMusicPlaylistListModel(this);
     connect(m_playlistListModel, &KNMusicPlaylistListModel::itemChanged,
             this, &KNMusicPlaylistManager::onActionPlaylistItemChanged);
+    connect(m_playlistListModel, &KNMusicPlaylistListModel::requireAddToPlaylist,
+            this, &KNMusicPlaylistManager::onActionAddToPlaylist);
+    connect(m_playlistListModel, &KNMusicPlaylistListModel::requireCreatePlaylist,
+            this, &KNMusicPlaylistManager::onActionCreateList);
     //Initial info collector.
     m_infoCollector=new KNMusicInfoCollector(this);
     m_infoCollector->setSignalMode(false);
@@ -209,6 +213,23 @@ void KNMusicPlaylistManager::onActionPlaylistItemChanged(QStandardItem *item)
     emit requireUpdateItem(item->index());
 }
 
+void KNMusicPlaylistManager::onActionAddToPlaylist(const int &row,
+                                                   const QList<QUrl> &fileList)
+{
+    KNMusicPlaylistItem *currentItem=
+            static_cast<KNMusicPlaylistItem *>(m_playlistListModel->item(row, 0));
+    for(int i=0; i<fileList.size(); i++)
+    {
+        addSongToPlaylist(currentItem, fileList.at(i).path());
+    }
+    emit requireHideDragList();
+}
+
+void KNMusicPlaylistManager::onActionCreateList(const QList<QUrl> &fileList)
+{
+    emit requireHideDragList();
+}
+
 KNMusicPlaylistItem *KNMusicPlaylistManager::createPlaylistItem()
 {
     KNMusicPlaylistItem *currentItem=new KNMusicPlaylistItem();
@@ -296,33 +317,38 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
         i<songCount;
         i++)
     {
-        QString filePath=parseList.at(i);
-        QModelIndex databaseIndex=m_musicModel->indexFromFilePath(filePath);
-        if(databaseIndex.isValid())
-        {
-            item->appendSongRow(m_musicModel->songRow(databaseIndex.row()));
-        }
-        else
-        {
-            //Check the song has been load before. If it does, load it.
-            QModelIndex exsistCheck=item->firstIndexFromMusicPath(filePath);
-            if(exsistCheck.isValid())
-            {
-                item->appendSongRow(item->songRow(exsistCheck.row()));
-                continue;
-            }
-            m_infoCollector->analysis(filePath);
-            if(m_infoCollector->currentMusicValue().isEmpty())
-            {
-                //!FIXME: Here should display when the file is not exsist.
-                continue;
-            }
-            item->appendSongItem(m_infoCollector->currentMusicValue(),
-                                 m_infoCollector->currentMusicDatas());
-        }
+        addSongToPlaylist(item, parseList.at(i));
     }
     item->clearSongPaths();
     return item->playlistModel();
+}
+
+void KNMusicPlaylistManager::addSongToPlaylist(KNMusicPlaylistItem *item,
+                                               const QString &filePath)
+{
+    QModelIndex databaseIndex=m_musicModel->indexFromFilePath(filePath);
+    if(databaseIndex.isValid())
+    {
+        item->appendSongRow(m_musicModel->songRow(databaseIndex.row()));
+    }
+    else
+    {
+        //Check the song has been load before. If it does, load it.
+        QModelIndex exsistCheck=item->firstIndexFromMusicPath(filePath);
+        if(exsistCheck.isValid())
+        {
+            item->appendSongRow(item->songRow(exsistCheck.row()));
+            return;
+        }
+        m_infoCollector->analysis(filePath);
+        if(m_infoCollector->currentMusicValue().isEmpty())
+        {
+            //!FIXME: Here should display when the file is not exsist.
+            return;
+        }
+        item->appendSongItem(m_infoCollector->currentMusicValue(),
+                             m_infoCollector->currentMusicDatas());
+    }
 }
 
 void KNMusicPlaylistManager::saveAllChanged()
@@ -343,7 +369,7 @@ int KNMusicPlaylistManager::loopMode()
     return m_nowPlaying->loopMode();
 }
 
-void KNMusicPlaylistManager::setBackend(KNMusicBackend *backend)
+void KNMusicPlaylistManager::setMusicBackend(KNMusicBackend *backend)
 {
     m_infoCollector->setMusicBackend(backend);
 }

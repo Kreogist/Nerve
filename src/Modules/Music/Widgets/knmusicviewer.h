@@ -63,13 +63,11 @@ public slots:
     void deleteSelections();
     void onActionShowPlayer();
     void onActionHidePlayer();
+    void showPlaylistDragList();
+    void hidePlaylistDragList();
 
 protected:
     void resizeEvent(QResizeEvent *event);
-
-private slots:
-    void onActionDragEntered();
-    void onActionDropped();
 
 private:
     void addDatabasePlugin(KNMusicViewerItemBase *plugin);

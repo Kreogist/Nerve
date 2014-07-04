@@ -2,6 +2,7 @@
 #define KNMUSICPLAYLISTMANAGER_H
 
 #include <QList>
+#include <QUrl>
 #include <QIcon>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -29,7 +30,7 @@ public:
     int loopMode();
 
     //Backend sets.
-    void setBackend(KNMusicBackend *backend);
+    void setMusicBackend(KNMusicBackend *backend);
     void setMusicModel(KNMusicLibraryModelBase *model);
     void setProxyModel(QSortFilterProxyModel *model);
     void setCurrentPlaying(const QString &string);
@@ -62,6 +63,9 @@ public slots:
 
 private slots:
     void onActionPlaylistItemChanged(QStandardItem *item);
+    void onActionAddToPlaylist(const int &row,
+                               const QList<QUrl> &fileList);
+    void onActionCreateList(const QList<QUrl> &fileList);
 
 private:
     KNMusicPlaylistItem *createPlaylistItem();
@@ -69,6 +73,8 @@ private:
     bool savePlaylist(KNMusicPlaylistItem *item);
     bool writePlaylist(KNMusicPlaylistItem *item);
     QAbstractItemModel *buildPlaylist(KNMusicPlaylistItem *item);
+    void addSongToPlaylist(KNMusicPlaylistItem *item,
+                           const QString &filePath);
     QString currentIndexPath();
     void saveAllChanged();
     //Playlist-List read & write data.
