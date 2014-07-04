@@ -25,43 +25,22 @@ KNMusicViewerMenu::KNMusicViewerMenu(QWidget *parent) :
     createActions();
 }
 
-void KNMusicViewerMenu::setMode(int category)
+void KNMusicViewerMenu::configureMenu(const int &category)
 {
-    for(int i=ShowInSongs;
-        i<=ShowInGenre;
-        i++)
-    {
-        m_action[i]->setVisible(true);
-    }
-    m_action[ShowInSongs+category]->setVisible(false);
-}
-
-void KNMusicViewerMenu::readIndexesFromGlobal()
-{
+    //Read the selected indexes from global.
     QModelIndexList indexesList=m_musicGlobal->selectedIndexes();
+    //If there's only one item in the list.
     if(indexesList.size()==1)
     {
-        for(int i=0; i<MusicActionCount; i++)
-        {
-            m_action[i]->setVisible(true);
-        }
-        for(int i=0; i<MusicBatchActionCount; i++)
-        {
-            m_batchAction[i]->setVisible(false);
-        }
+        //Enabled the single file mode.
+        setMultiActionVisible(false);
+        setSingleActionVisible(true);
+        m_action[ShowInSongs+category]->setVisible(false);
         setItemIndex(indexesList.first());
+        return;
     }
-    else
-    {
-        for(int i=0; i<MusicActionCount; i++)
-        {
-            m_action[i]->setVisible(false);
-        }
-        for(int i=0; i<MusicBatchActionCount; i++)
-        {
-            m_batchAction[i]->setVisible(true);
-        }
-    }
+    setSingleActionVisible(false);
+    setMultiActionVisible(true);
 }
 
 void KNMusicViewerMenu::setItemIndex(const QModelIndex &index)
@@ -173,6 +152,22 @@ void KNMusicViewerMenu::onActionOpen()
 void KNMusicViewerMenu::onActionDelete()
 {
     emit requireDelete(m_currentIndex);
+}
+
+void KNMusicViewerMenu::setSingleActionVisible(bool visible)
+{
+    for(int i=0; i<MusicActionCount; i++)
+    {
+        m_action[i]->setVisible(visible);
+    }
+}
+
+void KNMusicViewerMenu::setMultiActionVisible(bool visible)
+{
+    for(int i=0; i<MusicBatchActionCount; i++)
+    {
+        m_batchAction[i]->setVisible(visible);
+    }
 }
 
 void KNMusicViewerMenu::createActions()

@@ -16,8 +16,7 @@ class KNMusicViewerMenu : public KNMusicViewerMenuBase
 public:
     explicit KNMusicViewerMenu(QWidget *parent = 0);
     void setFilePath(const QString &filePath);
-    void setMode(int category);
-    void readIndexesFromGlobal();
+    void configureMenu(const int &category);
     void setItemIndex(const QModelIndex &index);
     void setModel(QStandardItemModel *model);
 
@@ -61,12 +60,13 @@ private:
         DeleteSelects,
         MusicBatchActionCount
     };
-
+    void setSingleActionVisible(bool visible);
+    void setMultiActionVisible(bool visible);
+    void createActions();
     QString m_actionTitle[MusicActionCount],
             m_batchActionTitle[MusicBatchActionCount];
     QAction *m_action[MusicActionCount],
             *m_batchAction[MusicBatchActionCount];
-    void createActions();
 
     QStandardItemModel *m_model;
     QModelIndex m_currentIndex;
