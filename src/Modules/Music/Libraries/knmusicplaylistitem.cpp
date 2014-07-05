@@ -84,12 +84,14 @@ QStringList KNMusicPlaylistItem::songPaths() const
 void KNMusicPlaylistItem::appendSongRow(const QList<QStandardItem *> &rowData)
 {
     m_playlistModel->appendRow(rowData);
+    setData(true, DataChanged);
 }
 
 void KNMusicPlaylistItem::appendSongItem(QStringList textList,
                                          KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
     m_playlistModel->appendMusicItem(textList, currentDetails);
+    setData(true, DataChanged);
 }
 
 int KNMusicPlaylistItem::songCount() const

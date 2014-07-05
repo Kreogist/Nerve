@@ -37,8 +37,7 @@ bool KNMusicPlaylistListModel::dropMimeData(const QMimeData *data,
                                             int column,
                                             const QModelIndex &parent)
 {
-    Q_UNUSED(row);
-    Q_UNUSED(column);
+//    qDebug()<<data->formats()<<row<<column;
     if(data->hasUrls() && (action==Qt::MoveAction || action==Qt::CopyAction))
     {
         if(parent.isValid())

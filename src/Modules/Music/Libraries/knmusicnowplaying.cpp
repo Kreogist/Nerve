@@ -35,12 +35,17 @@ void KNMusicNowPlaying::setProxyModel(QSortFilterProxyModel *model)
         m_categoryProxyModel->sort(model->sortColumn(), model->sortOrder());
         m_proxyModel=m_categoryProxyModel;
     }
-    m_currentModel=m_proxyModel;
-    emit requireUpdatePlaylistModel(m_currentModel);
+    setCurrentModel(m_proxyModel);
 }
 
 QString KNMusicNowPlaying::prevSong()
 {
+    if(m_playlist==nullptr)
+    {
+        m_currentItem=nullptr;
+        m_currentPath.clear();
+        return m_currentPath;
+    }
     int nowPlayingIndex;
     //If we are using proxy mode, search in the proxy model.
     switch(m_mode)
@@ -94,6 +99,12 @@ QString KNMusicNowPlaying::prevSong()
 
 QString KNMusicNowPlaying::nextSong()
 {
+    if(m_playlist==nullptr)
+    {
+        m_currentItem=nullptr;
+        m_currentPath.clear();
+        return m_currentPath;
+    }
     int nowPlayingIndex;
     //If we are using proxy mode, search in the proxy model.
     switch(m_mode)
@@ -247,6 +258,29 @@ int KNMusicNowPlaying::prevSongRow(int currentRow, int rowCount)
     return nowPlayingIndex;
 }
 
+void KNMusicNowPlaying::setCurrentModel(QAbstractItemModel *playlistModel)
+{
+    m_currentModel=playlistModel;
+    emit requireUpdatePlaylistModel(m_currentModel);
+}
+
+QString KNMusicNowPlaying::playlistPath() const
+{
+    return m_playlistPath;
+}
+
+void KNMusicNowPlaying::resetPlaylistModel()
+{
+    m_playlistPath=QString();
+    m_playlist=nullptr;
+    setCurrentModel(m_playlist);
+}
+
+void KNMusicNowPlaying::setPlaylistPath(const QString &playlistPath)
+{
+    m_playlistPath=playlistPath;
+}
+
 void KNMusicNowPlaying::setPlaylist(QAbstractItemModel *playlistModel)
 {
     //Disable proxy from database.
@@ -256,7 +290,6 @@ void KNMusicNowPlaying::setPlaylist(QAbstractItemModel *playlistModel)
     //Set the playlist pointer.
     m_playlist=static_cast<KNMusicPlaylistModel *>(playlistModel);
     //Set the current model.
-    m_currentModel=m_playlist;
-    emit requireUpdatePlaylistModel(m_currentModel);
+    setCurrentModel(m_playlist);
 }
 

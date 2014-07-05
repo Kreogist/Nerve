@@ -158,8 +158,8 @@ void KNMusicPlaylistManager::importPlaylist(QStringList filePaths)
 void KNMusicPlaylistManager::removePlaylist(QString filePath)
 {
     QModelIndexList indexSearch=m_playlistListModel->match(m_playlistListModel->index(0,0),
-                                                       KNMusicPlaylistItem::PlaylistPath,
-                                                       filePath);
+                                                           KNMusicPlaylistItem::PlaylistPath,
+                                                           filePath);
     //If we cannot find the file, just return. Although this should never happen.
     if(indexSearch.isEmpty())
     {
@@ -177,6 +177,10 @@ void KNMusicPlaylistManager::removePlaylist(QString filePath)
                 return;
             }
         }
+    }
+    if(m_nowPlaying->playlistPath()==filePath)
+    {
+        m_nowPlaying->resetPlaylistModel();
     }
     m_playlistListModel->removeRow(indexSearch.first().row());
 }
@@ -203,6 +207,7 @@ void KNMusicPlaylistManager::setPlaylist(const QString &filePath)
     }
     KNMusicPlaylistItem *currentItem=
                static_cast<KNMusicPlaylistItem *>(m_playlistListModel->item(fileCheck.first().row()));
+    m_nowPlaying->setPlaylistPath(filePath);
     m_nowPlaying->setPlaylist(currentItem->playlistModel());
 }
 

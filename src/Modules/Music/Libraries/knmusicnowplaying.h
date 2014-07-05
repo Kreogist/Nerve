@@ -29,6 +29,9 @@ public:
     void setCurrentPlaying(const QModelIndex &index);
     QAbstractItemModel *playlist() const;
     void setPlaylist(QAbstractItemModel *playlistModel);
+    QString playlistPath() const;
+    void resetPlaylistModel();
+    void setPlaylistPath(const QString &playlistPath);
 
 signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlistModel);
@@ -46,12 +49,13 @@ private:
     };
     int nextSongRow(int currentRow, int rowCount);
     int prevSongRow(int currentRow, int rowCount);
+    void setCurrentModel(QAbstractItemModel *playlistModel);
 
     int m_loopMode=KNMusicGlobal::NoRepeat,
         m_mode=NoListMode;
     KNMusicLibraryModelBase *m_musicModel;
     QSortFilterProxyModel *m_proxyModel;
-    QString m_currentPath;
+    QString m_currentPath, m_playlistPath;
     QStandardItem *m_currentItem;
     QAbstractItemModel *m_currentModel;
     KNMusicPlaylistModel *m_playlist;

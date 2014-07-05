@@ -5,6 +5,7 @@
 
 #include "knmusicmodelbase.h"
 
+class KNLibInfoCollectorManager;
 class KNMusicLibraryModelBase : public KNMusicModelBase
 {
     Q_OBJECT
@@ -19,6 +20,8 @@ public:
     virtual void updateIndexInfo(const QModelIndex &index,
                                  const QString &filePath)=0;
     virtual void removeAppendData(const QModelIndex &removedIndex)=0;
+    KNLibInfoCollectorManager *infoCollectorManager();
+    virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:
     void musicAppend(QModelIndex index);
@@ -32,6 +35,8 @@ signals:
 public slots:
     virtual void onActionRecoverComplete()=0;
 
+private:
+    KNLibInfoCollectorManager *m_infoCollectorManager;
 };
 
 #endif // KNMUSICLIBRARYMODELBASE_H

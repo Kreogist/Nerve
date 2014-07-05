@@ -5,8 +5,6 @@
 
 #include <QStandardItemModel>
 
-class KNLibInfoCollectorManager;
-class KNStdLibDatabase;
 class KNModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -15,9 +13,6 @@ public:
     void resetHeaderOrder();
     virtual void addRawFileItem(QString filePath);
     virtual void addRawFileItems(QStringList fileList);
-    KNLibInfoCollectorManager *infoCollectorManager() const;
-    virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
-    void setDatabase(KNStdLibDatabase *database);
 
 signals:
     void requireResetHeaderOrder();
@@ -30,9 +25,6 @@ public slots:
 
 protected slots:
     virtual void onActionUpdateRowInfo();
-
-private:
-    KNLibInfoCollectorManager *m_infoCollectorManager;
 };
 
 #endif // KNMODEL_H
