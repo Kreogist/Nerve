@@ -119,6 +119,7 @@ void KNMusicHeaderWidget::setSearchFocus()
 void KNMusicHeaderWidget::clearSearch()
 {
     m_searchBox->clear();
+    emit requireSearch("");
 }
 
 void KNMusicHeaderWidget::onActionPlayMusic(const QString &filePath)
