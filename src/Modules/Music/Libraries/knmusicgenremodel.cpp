@@ -33,13 +33,12 @@ void KNMusicGenreModel::updateImage(const int &index)
 
 QIcon KNMusicGenreModel::itemIcon(const int &index) const
 {
-    QPixmap genreArt=m_musicGlobal->getGenreImage(m_sourceModel->item(index,
-                                                                      KNMusicGlobal::Genre)->text());
+    QPixmap genreArt=m_musicGlobal->getGenreImage(
+                m_sourceModel->itemText(index, KNMusicGlobal::Genre));
     return genreArt.isNull()?KNMusicCategoryModel::itemIcon(index):QIcon(genreArt);
 }
 
 QString KNMusicGenreModel::categoryName(const int &index) const
 {
-    return m_sourceModel->item(index,
-                               KNMusicGlobal::Genre)->data(Qt::DisplayRole).toString();
+    return m_sourceModel->itemText(index, KNMusicGlobal::Genre);
 }

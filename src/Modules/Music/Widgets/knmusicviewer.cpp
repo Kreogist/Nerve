@@ -166,6 +166,8 @@ void KNMusicViewer::addPlaylistPlugin(KNMusicViewerPlaylistItemBase *plugin)
             plugin, &KNMusicViewerPlaylistItemBase::setPlaylistManager);
 
     //Connect requires
+    connect(plugin, &KNMusicViewerPlaylistItemBase::requireSwitchToPlaylist,
+            [=]{setCategoryIndex(Playlists);});
     connect(plugin, &KNMusicViewerPlaylistItemBase::requireAddCategory,
             this, &KNMusicViewer::addCategory);
     connect(plugin, &KNMusicViewerPlaylistItemBase::requirePlayMusic,

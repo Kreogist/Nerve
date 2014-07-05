@@ -18,6 +18,7 @@ signals:
     void requireAddCategory(const QPixmap &icon,
                             const QString &title,
                             QWidget *widget);
+    void requireSwitchToPlaylist();
 
 public slots:
     virtual void setPlaylistManager(KNMusicPlaylistManagerBase *manager)=0;

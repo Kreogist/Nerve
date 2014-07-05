@@ -227,7 +227,11 @@ void KNMusicPlaylistManager::onActionAddToPlaylist(const int &row,
 
 void KNMusicPlaylistManager::onActionCreateList(const QList<QUrl> &fileList)
 {
+    QModelIndex createdIndex=createPlaylist(tr("New Playlist"));
+    onActionAddToPlaylist(createdIndex.row(),
+                          fileList);
     emit requireHideDragList();
+    emit requireRenameRow(createdIndex);
 }
 
 KNMusicPlaylistItem *KNMusicPlaylistManager::createPlaylistItem()

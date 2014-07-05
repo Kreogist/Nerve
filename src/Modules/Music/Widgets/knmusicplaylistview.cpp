@@ -70,14 +70,18 @@ void KNMusicPlaylistView::setListEditor(KNMusicPlaylistListEditorBase *editor)
 
 void KNMusicPlaylistView::onActionAddPlaylist()
 {
-    QModelIndex createdIndex=m_manager->createPlaylist(tr("New Playlist"));
-    m_playlistListView->setCurrentIndex(createdIndex);
-    m_playlistListView->edit(createdIndex);
+    onActionEditPlaylist(m_manager->createPlaylist(tr("New Playlist")));
 }
 
 void KNMusicPlaylistView::onActionRemoveCurrentPlaylist()
 {
     m_manager->removePlaylist(m_currentPath);
+}
+
+void KNMusicPlaylistView::onActionEditPlaylist(const QModelIndex &index)
+{
+    m_playlistListView->setCurrentIndex(index);
+    m_playlistListView->edit(index);
 }
 
 void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)

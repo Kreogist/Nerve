@@ -24,6 +24,7 @@ signals:
 public slots:
     void onActionAddPlaylist();
     void onActionRemoveCurrentPlaylist();
+    void onActionEditPlaylist(const QModelIndex &index);
 
 private slots:
     void onActionShowPlaylist(const QModelIndex &index);

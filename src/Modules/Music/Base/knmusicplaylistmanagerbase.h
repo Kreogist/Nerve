@@ -53,6 +53,7 @@ signals:
     void requireUpdatePlaylistModel(QAbstractItemModel *playlist);
     void requireUpdateItem(const QModelIndex &index);
     void requireHideDragList();
+    void requireRenameRow(const QModelIndex &row);
     void playlistListUpdated();
 
 public slots:

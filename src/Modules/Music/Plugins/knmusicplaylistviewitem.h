@@ -20,6 +20,9 @@ public slots:
     void retranslate();
     void setPlaylistManager(KNMusicPlaylistManagerBase *manager);
 
+private slots:
+    void onActionRenameList(const QModelIndex &index);
+
 private:
     KNMusicPlaylistView *m_playlistView;
     KNMusicPlaylistDragListView *m_dragListView;

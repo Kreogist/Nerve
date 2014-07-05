@@ -50,6 +50,14 @@ void KNMusicPlaylistViewItem::setPlaylistManager(KNMusicPlaylistManagerBase *man
 {
     m_playlistView->setManager(manager);
     m_dragListView->setModel(manager->playlistModel());
+    connect(manager, &KNMusicPlaylistManagerBase::requireRenameRow,
+            this, &KNMusicPlaylistViewItem::onActionRenameList);
+}
+
+void KNMusicPlaylistViewItem::onActionRenameList(const QModelIndex &index)
+{
+    emit requireSwitchToPlaylist();
+    m_playlistView->onActionEditPlaylist(index);
 }
 
 void KNMusicPlaylistViewItem::retranslate()

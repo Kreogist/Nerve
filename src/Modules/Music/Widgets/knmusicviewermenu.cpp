@@ -35,10 +35,13 @@ void KNMusicViewerMenu::configureMenu(const int &category)
         //Enabled the single file mode.
         setMultiActionVisible(false);
         setSingleActionVisible(true);
+        //Set the 'Go to' action visible via category.
         m_action[ShowInSongs+category]->setVisible(false);
+        //Set current index.
         setItemIndex(indexesList.first());
         return;
     }
+    //Enabled the multi-files mode.
     setSingleActionVisible(false);
     setMultiActionVisible(true);
 }
