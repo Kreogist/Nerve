@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     setContentsMargins(0,0,0,0);
-    setMinimumSize(700, 432);
+    setMinimumSize(730, 432);
 
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);

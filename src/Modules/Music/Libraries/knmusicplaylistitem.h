@@ -43,6 +43,7 @@ private:
     void resetPlaylist(const QString &fileName=QString());
     KNMusicPlaylistModel *m_playlistModel;
     QStringList m_songPaths;
+    bool m_dataChanged=false;
 };
 
 #endif // KNMUSICPLAYLISTITEM_H

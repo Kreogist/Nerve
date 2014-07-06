@@ -7,7 +7,7 @@
 KNMusicPlaylistItem::KNMusicPlaylistItem() :
     QStandardItem()
 {
-    setData(false, DataChanged);
+    m_dataChanged=false;
     setData(false, ModelBuild);
     m_playlistModel=new KNMusicPlaylistModel;
 }
@@ -20,17 +20,18 @@ KNMusicPlaylistItem::~KNMusicPlaylistItem()
 void KNMusicPlaylistItem::setName(const QString &name)
 {
     setText(name);
-    setData(true, DataChanged);
+    setChanged(true);
 }
 
 bool KNMusicPlaylistItem::changed()
 {
-    return data(DataChanged).toBool();
+    return m_dataChanged;
 }
 
 void KNMusicPlaylistItem::setChanged(const bool &changed)
 {
-    setData(changed, DataChanged);
+    qDebug()<<this->index()<<changed;
+    m_dataChanged=changed;
 }
 
 QString KNMusicPlaylistItem::filePath() const
@@ -41,7 +42,7 @@ QString KNMusicPlaylistItem::filePath() const
 void KNMusicPlaylistItem::setFilePath(const QString &path)
 {
     setData(path, PlaylistPath);
-    setData(true, DataChanged);
+    setChanged(true);
 }
 
 bool KNMusicPlaylistItem::modelBuild() const
@@ -73,7 +74,7 @@ void KNMusicPlaylistItem::clearSongPaths()
 void KNMusicPlaylistItem::resetPlaylist(const QString &fileName)
 {
     setName(fileName.isEmpty()?data(PlaylistPath).toString():fileName);
-    setData(false, DataChanged);
+    setChanged(false);
 }
 
 QStringList KNMusicPlaylistItem::songPaths() const
@@ -84,14 +85,14 @@ QStringList KNMusicPlaylistItem::songPaths() const
 void KNMusicPlaylistItem::appendSongRow(const QList<QStandardItem *> &rowData)
 {
     m_playlistModel->appendRow(rowData);
-    setData(true, DataChanged);
+    setChanged(true);
 }
 
 void KNMusicPlaylistItem::appendSongItem(QStringList textList,
                                          KNMusicGlobal::MusicDetailsInfo currentDetails)
 {
     m_playlistModel->appendMusicItem(textList, currentDetails);
-    setData(true, DataChanged);
+    setChanged(true);
 }
 
 int KNMusicPlaylistItem::songCount() const

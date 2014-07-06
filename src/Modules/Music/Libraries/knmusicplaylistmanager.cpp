@@ -91,6 +91,7 @@ void KNMusicPlaylistManager::loadPlayLists()
             KNMusicPlaylistItem *playlistItem=createPlaylistItem();
             playlistItem->setFilePath(currentFilePath);
             loadPlaylist(playlistItem);
+            playlistItem->setChanged(false);
             m_playlistListModel->appendRow(playlistItem);
         }
     }
@@ -141,6 +142,8 @@ QModelIndex KNMusicPlaylistManager::createPlaylist(const QString &title)
     writePlaylist(playlistItem);
     //Create the model.
     buildPlaylist(playlistItem);
+    //Reset changed flags.
+    playlistItem->setChanged(false);
     //Add to playlist list.
     m_playlistListModel->appendRow(playlistItem);
     return playlistItem->index();
@@ -283,6 +286,7 @@ bool KNMusicPlaylistManager::loadPlaylist(KNMusicPlaylistItem *item)
 
 bool KNMusicPlaylistManager::savePlaylist(KNMusicPlaylistItem *item)
 {
+    qDebug()<<item->changed();
     if(item->changed())
     {
         return writePlaylist(item);
@@ -329,6 +333,8 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
         addSongToPlaylist(item, parseList.at(i));
     }
     item->clearSongPaths();
+    item->setChanged(false);
+    qDebug()<<"Build complete.";
     return item->playlistModel();
 }
 
