@@ -226,22 +226,35 @@ void KNMusicPlaylistManager::onActionAddToPlaylist(const int &row,
 {
     KNMusicPlaylistItem *currentItem=
             static_cast<KNMusicPlaylistItem *>(m_playlistListModel->item(row, 0));
+    //Check the model has been built or not.
     if(!currentItem->modelBuild())
     {
         buildPlaylist(currentItem);
     }
+    //Add all the music to the list.
     for(int i=0; i<fileList.size(); i++)
     {
+        //The fucking windows, we have to remove the first '/' for you!
+#ifdef Q_OS_WIN32
+        QString currentUrlPath=fileList.at(i).path();
+        currentUrlPath.remove(0, 1);
+        addSongToPlaylist(currentItem, currentUrlPath);
+#endif
+#ifdef Q_OS_UNIX
         addSongToPlaylist(currentItem, fileList.at(i).path());
+#endif
     }
     emit requireHideDragList();
 }
 
 void KNMusicPlaylistManager::onActionCreateList(const QList<QUrl> &fileList)
 {
+    //Create a new playlist for these files.
     QModelIndex createdIndex=createPlaylist(tr("New Playlist"));
+    //Add all the files to this playlist.
     onActionAddToPlaylist(createdIndex.row(),
                           fileList);
+    //Ask tbe user to rename the playlist.
     emit requireHideDragList();
     emit requireRenameRow(createdIndex);
 }

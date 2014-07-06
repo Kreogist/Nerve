@@ -14,7 +14,7 @@ public:
     explicit KNMusicModelBase(QObject *parent = 0);
     void resetHeader();
     QString filePathFromIndex(const QModelIndex &index);
-    QString filePathFromIndex(const int &index);
+    QString filePathFromIndex(const int &row);
     QModelIndex indexFromFilePath(const QString &filePath);
     QString itemText(const int &row, const int &column) const;
     QVariant itemRoleData(int row, int column, int role) const;

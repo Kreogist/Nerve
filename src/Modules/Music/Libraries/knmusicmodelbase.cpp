@@ -1,5 +1,7 @@
 #include "../../knglobal.h"
 
+#include <QDebug>
+
 #include "knmusicmodelbase.h"
 
 KNMusicModelBase::KNMusicModelBase(QObject *parent) :
@@ -46,9 +48,9 @@ QString KNMusicModelBase::filePathFromIndex(const QModelIndex &index)
     return data(this->index(index.row(), KNMusicGlobal::Name), KNMusicGlobal::FilePathRole).toString();
 }
 
-QString KNMusicModelBase::filePathFromIndex(const int &index)
+QString KNMusicModelBase::filePathFromIndex(const int &row)
 {
-    return data(this->index(index, KNMusicGlobal::Name), KNMusicGlobal::FilePathRole).toString();
+    return data(index(row, KNMusicGlobal::Name), KNMusicGlobal::FilePathRole).toString();
 }
 
 QModelIndex KNMusicModelBase::indexFromFilePath(const QString &filePath)

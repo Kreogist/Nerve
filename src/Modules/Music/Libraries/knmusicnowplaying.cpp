@@ -40,12 +40,6 @@ void KNMusicNowPlaying::setProxyModel(QSortFilterProxyModel *model)
 
 QString KNMusicNowPlaying::prevSong()
 {
-    if(m_playlist==nullptr)
-    {
-        m_currentItem=nullptr;
-        m_currentPath.clear();
-        return m_currentPath;
-    }
     int nowPlayingIndex;
     //If we are using proxy mode, search in the proxy model.
     switch(m_mode)
@@ -70,6 +64,12 @@ QString KNMusicNowPlaying::prevSong()
                         m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
         break;
     case PlayListMode:
+        if(m_playlist==nullptr)
+        {
+            m_currentItem=nullptr;
+            m_currentPath.clear();
+            return m_currentPath;
+        }
         //If current path is empty, set to the initial position.
         if(m_currentPath.isEmpty())
         {
@@ -99,12 +99,6 @@ QString KNMusicNowPlaying::prevSong()
 
 QString KNMusicNowPlaying::nextSong()
 {
-    if(m_playlist==nullptr)
-    {
-        m_currentItem=nullptr;
-        m_currentPath.clear();
-        return m_currentPath;
-    }
     int nowPlayingIndex;
     //If we are using proxy mode, search in the proxy model.
     switch(m_mode)
@@ -128,6 +122,14 @@ QString KNMusicNowPlaying::nextSong()
                         m_proxyModel->mapToSource(m_proxyModel->index(nowPlayingIndex,0)));
         break;
     case PlayListMode:
+        //Check the playlist model is null or not. If it's null, means the
+        //current model has been delete.
+        if(m_playlist==nullptr)
+        {
+            m_currentItem=nullptr;
+            m_currentPath.clear();
+            return m_currentPath;
+        }
         //If current path is empty, set to the initial position.
         if(m_currentPath.isEmpty())
         {
