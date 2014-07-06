@@ -7,8 +7,6 @@
 KNMusicPlaylistItem::KNMusicPlaylistItem() :
     QStandardItem()
 {
-    m_dataChanged=false;
-    setData(false, ModelBuild);
     m_playlistModel=new KNMusicPlaylistModel;
 }
 
@@ -30,7 +28,6 @@ bool KNMusicPlaylistItem::changed()
 
 void KNMusicPlaylistItem::setChanged(const bool &changed)
 {
-    qDebug()<<this->index()<<changed;
     m_dataChanged=changed;
 }
 
@@ -47,7 +44,7 @@ void KNMusicPlaylistItem::setFilePath(const QString &path)
 
 bool KNMusicPlaylistItem::modelBuild() const
 {
-    return data(ModelBuild).toBool();
+    return m_modelBuild;
 }
 
 QModelIndex KNMusicPlaylistItem::firstIndexFromMusicPath(const QString &filePath)
@@ -68,7 +65,7 @@ QStandardItemModel *KNMusicPlaylistItem::playlistModel()
 void KNMusicPlaylistItem::clearSongPaths()
 {
     m_songPaths.clear();
-    setData(true, ModelBuild);
+    m_modelBuild=true;
 }
 
 void KNMusicPlaylistItem::resetPlaylist(const QString &fileName)

@@ -14,9 +14,7 @@ class KNMusicPlaylistItem : public QStandardItem
 public:
     enum PlayListProperties
     {
-        PlaylistPath=Qt::UserRole,
-        DataChanged,
-        ModelBuild
+        PlaylistPath=Qt::UserRole
     };
 
     explicit KNMusicPlaylistItem();
@@ -43,7 +41,8 @@ private:
     void resetPlaylist(const QString &fileName=QString());
     KNMusicPlaylistModel *m_playlistModel;
     QStringList m_songPaths;
-    bool m_dataChanged=false;
+    bool m_dataChanged=false,
+         m_modelBuild=false;
 };
 
 #endif // KNMUSICPLAYLISTITEM_H

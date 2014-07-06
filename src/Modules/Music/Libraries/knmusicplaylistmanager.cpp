@@ -226,6 +226,10 @@ void KNMusicPlaylistManager::onActionAddToPlaylist(const int &row,
 {
     KNMusicPlaylistItem *currentItem=
             static_cast<KNMusicPlaylistItem *>(m_playlistListModel->item(row, 0));
+    if(!currentItem->modelBuild())
+    {
+        buildPlaylist(currentItem);
+    }
     for(int i=0; i<fileList.size(); i++)
     {
         addSongToPlaylist(currentItem, fileList.at(i).path());
@@ -286,7 +290,6 @@ bool KNMusicPlaylistManager::loadPlaylist(KNMusicPlaylistItem *item)
 
 bool KNMusicPlaylistManager::savePlaylist(KNMusicPlaylistItem *item)
 {
-    qDebug()<<item->changed();
     if(item->changed())
     {
         return writePlaylist(item);
@@ -334,7 +337,6 @@ QAbstractItemModel *KNMusicPlaylistManager::buildPlaylist(KNMusicPlaylistItem *i
     }
     item->clearSongPaths();
     item->setChanged(false);
-    qDebug()<<"Build complete.";
     return item->playlistModel();
 }
 
