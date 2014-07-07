@@ -42,7 +42,21 @@ void KNMusicAlbumSongListView::resizeHeader()
     QString longestTrack=model()->data(model()->index(model()->rowCount()-1,
                                                       KNMusicGlobal::TrackNumber),
                                        Qt::DisplayRole).toString();
-    setColumnWidth(KNMusicGlobal::TrackNumber,
-                   longestTrack.length()*m_widthTweak+fontMetrics().width(longestTrack));
+    int maximumTrack=0, maximumDuration=0;
+    for(int i=0; i<model()->rowCount(); i++)
+    {
+        QString currentTrackString=model()->data(model()->index(i,
+                                                                KNMusicGlobal::TrackNumber),
+                                                 Qt::DisplayRole).toString(),
+                currentDuration=model()->data(model()->index(i,
+                                                             KNMusicGlobal::Time),
+                                              Qt::DisplayRole).toString();
+        int currentTrackWidth=fontMetrics().width(currentTrackString),
+            currentDurationWidth=fontMetrics().width(currentDuration);
+        maximumTrack=maximumTrack<currentTrackWidth?currentTrackWidth:maximumTrack;
+        maximumDuration=maximumDuration<currentDurationWidth?currentDurationWidth:maximumDuration;
+    }
+    setColumnWidth(KNMusicGlobal::TrackNumber, maximumTrack+(maximumTrack>>1));
+    setColumnWidth(KNMusicGlobal::Time, maximumDuration+(maximumDuration>>2));
     resizeColumnToContents(KNMusicGlobal::Name);
 }

@@ -190,7 +190,7 @@ private:
     int m_gridMinimumWidth=124;
     int m_gridWidth=124;
     int m_gridHeight=144;
-    int m_spacing=10;
+    int m_spacing=13;
     int m_maxColumnCount=1;
     int m_firstVisibleIndex=0;
     int m_lineCount=0;
