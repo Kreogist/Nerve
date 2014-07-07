@@ -17,6 +17,8 @@
 
 KNGlobal *KNGlobal::m_instance=nullptr;
 
+QString KNGlobal::m_applicationName=QChar(0x03BC);
+
 KNGlobal *KNGlobal::instance()
 {
     return m_instance==nullptr?m_instance=new KNGlobal:m_instance;
@@ -140,6 +142,11 @@ void KNGlobal::showInGraphicalShell(const QString &filePath)
     QString browserArgs = substituteFileBrowserParameters(app, folder);
     QProcess::startDetached(browserArgs);
 #endif
+}
+
+QString KNGlobal::applicationName()
+{
+    return m_applicationName;
 }
 
 void KNGlobal::openLocalUrl(const QString &filePath)

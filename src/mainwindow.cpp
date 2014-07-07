@@ -1,6 +1,8 @@
 #include <QBoxLayout>
 #include <QCloseEvent>
 
+#include <QDebug>
+
 #include "Modules/Base/knpluginbase.h"
 #include "Modules/Base/knstdlibheadercontainer.h"
 #include "Modules/Base/knstdlibcategoryswitcher.h"
@@ -18,11 +20,12 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    setContentsMargins(0,0,0,0);
-    setMinimumSize(730, 432);
-
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);
+
+    setContentsMargins(0,0,0,0);
+    setMinimumSize(730, 432);
+    setWindowTitle(m_global->applicationName());
 
     m_fontManager=KNFontManager::instance();
     m_fontManager->loadCustomFont();
