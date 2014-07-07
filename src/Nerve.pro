@@ -22,6 +22,7 @@ linux{
 macx{
     QMAKE_LFLAGS += -framework CoreFoundation
     LIBS += /usr/lib/libbass.dylib
+    ICON += Platforms/Mac/Nerve.icns
 }
 
 unix{
