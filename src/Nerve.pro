@@ -11,6 +11,8 @@ QMAKE_RPATHDIR += \$\$ORIGIN/Plugins
 
 win32{
     LIBS += -lbass
+    RC_FILE += Platforms/Windows/winico.rc
+    ICON += Platforms/Windows/Nerve.ico
 }
 
 linux{
@@ -179,7 +181,8 @@ SOURCES += \
     Modules/Music/Widgets/knmusicviewcontainer.cpp \
     Modules/Music/Base/knmusicvieweritembase.cpp \
     Modules/Music/Widgets/knmusicplaylistdraglistview.cpp \
-    Modules/Music/Libraries/knmusicplaylistlistmodel.cpp
+    Modules/Music/Libraries/knmusicplaylistlistmodel.cpp \
+    Modules/Music/Widgets/knmusiclrcviewer.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -335,7 +338,8 @@ HEADERS += \
     Modules/Music/Base/knmusicplaylistlistviewbase.h \
     Modules/Music/Widgets/knmusicviewcontainer.h \
     Modules/Music/Widgets/knmusicplaylistdraglistview.h \
-    Modules/Music/Libraries/knmusicplaylistlistmodel.h
+    Modules/Music/Libraries/knmusicplaylistlistmodel.h \
+    Modules/Music/Widgets/knmusiclrcviewer.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \
