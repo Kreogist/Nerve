@@ -45,6 +45,13 @@ KNGlobal::KNGlobal() :
     m_storageUnit[2]="MB";
     m_storageUnit[3]="GB";
     m_storageUnit[4]="TB";
+
+    //Initial the application settings.
+    QApplication::setApplicationName(m_applicationName);
+    QApplication::setApplicationDisplayName(m_applicationName);
+    QApplication::setOrganizationName("Kreogist Dev Team");
+    QApplication::setOrganizationDomain("http://kreogist.github.com");
+    QApplication::setApplicationVersion("0.0");
     //Initial the system clipboard.
     m_clipboard=QApplication::clipboard();
     //Initial the default library path.

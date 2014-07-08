@@ -229,7 +229,7 @@ void KNMusicViewer::deleteSelections()
     {
         rowLists.append(selectionList.takeFirst().row());
     }
-    qStableSort(rowLists.begin(), rowLists.end(), qGreater<int>());
+    qSort(rowLists.begin(), rowLists.end(), qGreater<int>());
     while(!rowLists.isEmpty())
     {
         deleteMusic(m_musicModel->index(rowLists.takeFirst(), 0));

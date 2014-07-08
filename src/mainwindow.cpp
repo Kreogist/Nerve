@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setContentsMargins(0,0,0,0);
     setMinimumSize(730, 432);
-    setWindowTitle(m_global->applicationName());
 
     m_fontManager=KNFontManager::instance();
     m_fontManager->loadCustomFont();
