@@ -8,17 +8,27 @@
 KNMusicRatingEditor::KNMusicRatingEditor(QWidget *parent) :
     QWidget(parent)
 {
+    //Set pixmap data.
+    m_star=QPixmap(":/Music/Resources/Music/stars/star.png");
+    m_unstar=QPixmap(":/Music/Resources/Music/stars/unstar.png");
+
+    //Set properties.
     setContentsMargins(0,0,0,0);
     setMouseTracking(true);
     setAutoFillBackground(true);
-    m_star=QPixmap(":/Music/Resources/Music/stars/star.png");
-    m_unstar=QPixmap(":/Music/Resources/Music/stars/unstar.png");
 }
 
 void KNMusicRatingEditor::paintEvent(QPaintEvent *event)
 {
+    //Do the original paint.
     QWidget::paintEvent(event);
+    //Set the painter.
     QPainter painter(this);
+    //Set the pen and brush.
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(palette().color(QPalette::Window));
+    painter.drawRect(rect());
+    //Paint the star number.
     for(int i=0; i<m_starNum; i++)
     {
         painter.drawPixmap(i*m_starSizeHint,
@@ -35,6 +45,7 @@ void KNMusicRatingEditor::paintEvent(QPaintEvent *event)
 
 void KNMusicRatingEditor::mouseMoveEvent(QMouseEvent *event)
 {
+    //When the mouse is moving, change the value.
     int star=starAtPosition(event->x());
     if(star!=-1)
     {

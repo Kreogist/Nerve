@@ -164,7 +164,7 @@ SOURCES += \
     Modules/Music/Libraries/knmusiclibrarymodel.cpp \
     Modules/Music/Libraries/knmusicsearcher.cpp \
     Modules/Music/Libraries/knmusiclibrarymodelbase.cpp \
-    Modules/Music/Libraries/knmusicdatabasebase.cpp \
+    Modules/Music/Base/knmusicdatabasebase.cpp \
     Modules/Music/Widgets/knmusicdetailinfobase.cpp \
     Modules/Base/knlibseacher.cpp \
     Modules/Public/Base/knmusicbackend.cpp \
@@ -183,7 +183,8 @@ SOURCES += \
     Modules/Music/Base/knmusicvieweritembase.cpp \
     Modules/Music/Widgets/knmusicplaylistdraglistview.cpp \
     Modules/Music/Libraries/knmusicplaylistlistmodel.cpp \
-    Modules/Music/Widgets/knmusiclrcviewer.cpp
+    Modules/Music/Widgets/knmusiclrcviewer.cpp \
+    Modules/Music/Widgets/knmusicalbumart.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -321,7 +322,7 @@ HEADERS += \
     Modules/Music/Libraries/knmusiclibrarymodel.h \
     Modules/Music/Libraries/knmusicsearcher.h \
     Modules/Music/Libraries/knmusiclibrarymodelbase.h \
-    Modules/Music/Libraries/knmusicdatabasebase.h \
+    Modules/Music/Base/knmusicdatabasebase.h \
     Modules/Music/Widgets/knmusicdetailinfobase.h \
     Modules/Base/knlibsearcher.h \
     Modules/Public/Base/knmusicbackend.h \
@@ -340,7 +341,8 @@ HEADERS += \
     Modules/Music/Widgets/knmusicviewcontainer.h \
     Modules/Music/Widgets/knmusicplaylistdraglistview.h \
     Modules/Music/Libraries/knmusicplaylistlistmodel.h \
-    Modules/Music/Widgets/knmusiclrcviewer.h
+    Modules/Music/Widgets/knmusiclrcviewer.h \
+    Modules/Music/Widgets/knmusicalbumart.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

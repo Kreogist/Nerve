@@ -12,14 +12,18 @@ class KNMusicPlaylistDisplay : public QWidget
 public:
     explicit KNMusicPlaylistDisplay(QWidget *parent = 0);
     void setPlaylistName(const QString &name);
+    void setSongCount(const int &songCount);
     void setSongsView(KNMusicPlaylistSongs *songsView);
 
 signals:
 
 public slots:
+    void retranslate();
+    void retranslateAndSet();
 
 private:
     QLabel *m_playlistName, *m_playlistSongCount;
+    QString m_songCaption, m_songsCaption;
     QBoxLayout *m_layout;
     KNMusicPlaylistSongs *m_songsView;
 };

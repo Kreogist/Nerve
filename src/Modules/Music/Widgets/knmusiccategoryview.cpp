@@ -28,9 +28,14 @@
 KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     QWidget(parent)
 {
+    //Get the latest translation.
+    retranslate();
+
+    //Set properties.
     setAutoFillBackground(true);
     setContentsMargins(0,0,0,0);
 
+    //Set the icon background.
     m_largeIcon=new QLabel(this);
     m_largeIcon->installEventFilter(this);
     m_largeIcon->setScaledContents(true);
@@ -48,11 +53,13 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     m_opacityEffect->setOpacityMask(m_alphaGradient);
     m_largeIcon->setGraphicsEffect(m_opacityEffect);
 
+    //Set layout.
     m_layout=new QBoxLayout(QBoxLayout::TopToBottom, this);
     m_layout->setContentsMargins(0,0,0,0);
     m_layout->setSpacing(0);
     setLayout(m_layout);
 
+    //Set palette.
     QPalette pal=palette();
     pal.setColor(QPalette::Base, QColor(0x20, 0x20, 0x20));
     pal.setColor(QPalette::Window, QColor(0x20, 0x20, 0x20));
@@ -62,9 +69,7 @@ KNMusicCategoryDetailsDisplay::KNMusicCategoryDetailsDisplay(QWidget *parent) :
     pal.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(pal);
 
-    m_song=tr("1 song");
-    m_songs=tr("%1 songs");
-
+    //Add captions.
     m_layout->addSpacing(20);
     m_artistName=new QLabel(this);
     m_artistName->setContentsMargins(20,0,0,0);
@@ -133,6 +138,17 @@ void KNMusicCategoryDetailsDisplay::setBackground(const QIcon &background)
 void KNMusicCategoryDetailsDisplay::resetHeader()
 {
     m_songViewer->resetHeader();
+}
+
+void KNMusicCategoryDetailsDisplay::retranslate()
+{
+    m_song=tr("1 song");
+    m_songs=tr("%1 songs");
+}
+
+void KNMusicCategoryDetailsDisplay::retranslateAndSet()
+{
+    ;
 }
 
 void KNMusicCategoryDetailsDisplay::resizeEvent(QResizeEvent *event)

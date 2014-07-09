@@ -25,9 +25,6 @@ void KNMusicAlbumSongListView::resetHeader()
         setColumnHidden(i, true);
     }
     setColumnHidden(KNMusicGlobal::Time, false);
-    setColumnHidden(KNMusicGlobal::Artist, false);
-    setColumnHidden(KNMusicGlobal::Genre, false);
-    setColumnHidden(KNMusicGlobal::Rating, false);
     setColumnHidden(KNMusicGlobal::TrackNumber, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
@@ -39,9 +36,6 @@ void KNMusicAlbumSongListView::resetHeader()
 
 void KNMusicAlbumSongListView::resizeHeader()
 {
-    QString longestTrack=model()->data(model()->index(model()->rowCount()-1,
-                                                      KNMusicGlobal::TrackNumber),
-                                       Qt::DisplayRole).toString();
     int maximumTrack=0, maximumDuration=0;
     for(int i=0; i<model()->rowCount(); i++)
     {

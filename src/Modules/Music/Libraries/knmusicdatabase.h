@@ -4,7 +4,7 @@
 #include <QModelIndex>
 #include <QDateTime>
 
-#include "knmusicdatabasebase.h"
+#include "../Base/knmusicdatabasebase.h"
 
 class QAbstractItemModel;
 class KNMusicLibraryModelBase;

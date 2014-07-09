@@ -9,7 +9,7 @@
 //Abstract class.
 #include "../Base/knlibsearcher.h"
 #include "../Public/Base/knmusicbackend.h"
-#include "Libraries/knmusicdatabasebase.h"
+#include "Base/knmusicdatabasebase.h"
 #include "Libraries/knmusiclibrarymodelbase.h"
 
 //Differentiation class.
@@ -108,6 +108,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
     m_musicPlayerWidget->setBackend(m_backend);
     connect(m_headerWidget, &KNMusicHeaderWidget::requireUpdatePlaylistModel,
             m_musicPlayerWidget, &KNMusicPlayerWidget::setPlayListModel);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireShowMusicPlayer,
+            m_musicPlayerWidget, &KNMusicPlayerWidget::onActionSetProgressBar);
+    connect(m_headerWidget, &KNMusicHeaderWidget::requireHideMusicPlayer,
+            m_musicPlayerWidget, &KNMusicPlayerWidget::onActionRestoreProgreeBar);
 
     m_equalizer=new KNMusicEQ(m_backend);
     m_musicPlayerWidget->setEqualizer(m_equalizer);

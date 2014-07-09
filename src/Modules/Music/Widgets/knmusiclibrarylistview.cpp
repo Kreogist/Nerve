@@ -127,6 +127,7 @@ void KNMusicLibraryListview::hideEvent(QHideEvent *event)
 
 void KNMusicLibraryListview::startDrag(Qt::DropActions supportedActions)
 {
+    Q_UNUSED(supportedActions)
     QModelIndexList indexes=selectedIndexes();
     if(indexes.size()>0)
     {
@@ -152,7 +153,7 @@ void KNMusicLibraryListview::startDrag(Qt::DropActions supportedActions)
         }
         m_mimeData->setUrls(fileUrlList);
         m_dragAction->setMimeData(m_mimeData);
-        m_dragAction->exec(supportedActions, Qt::CopyAction);
+        m_dragAction->exec(Qt::CopyAction);
     }
 }
 

@@ -2,12 +2,15 @@
 #include <QPropertyAnimation>
 #include <QBoxLayout>
 #include <QResizeEvent>
+#include <QShowEvent>
+#include <QHideEvent>
 
 #include <QDebug>
 
 #include "../../Base/knopacitybutton.h"
 #include "../Libraries/knmusiclibrarymodel.h"
 #include "../../Public/Base/knmusicbackend.h"
+#include "knmusicalbumart.h"
 #include "knmusicvisualeffect.h"
 #include "knmusicheaderplayer.h"
 #include "knmusicplayerwidget.h"
@@ -15,14 +18,18 @@
 KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     QWidget(parent)
 {
-    setAutoFillBackground(true);
     retranslate();
 
+    //Set proproties.
+    setAutoFillBackground(true);
+
+    //Set palette.
     QPalette pal=palette();
     pal.setColor(QPalette::Window, QColor(0,0,0,230));
     pal.setColor(QPalette::WindowText, QColor(255,255,255));
     setPalette(pal);
 
+    //Set layout.
     m_mainLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                 this);
     m_mainLayout->setContentsMargins(0,0,0,0);
@@ -31,8 +38,8 @@ KNMusicPlayerWidget::KNMusicPlayerWidget(QWidget *parent) :
     m_visualEffect=new KNMusicVisualEffect(this);
     m_mainLayout->addWidget(m_visualEffect, 1);
     m_artworkLayout=new QBoxLayout(QBoxLayout::LeftToRight,
-                                             m_mainLayout->widget());
-    m_albumArtWork=new QLabel(this);
+                                   m_mainLayout->widget());
+    m_albumArtWork=new KNMusicAlbumArt(this);
     m_albumArtWork->setScaledContents(true);
     m_artworkLayout->addWidget(m_albumArtWork, 0, Qt::AlignBottom | Qt::AlignRight);
     m_detailsLayout=new QBoxLayout(QBoxLayout::TopToBottom,
@@ -99,6 +106,7 @@ void KNMusicPlayerWidget::setBackend(KNMusicBackend *backend)
 
 void KNMusicPlayerWidget::setPlayListModel(QAbstractItemModel *model)
 {
+    Q_UNUSED(model);
     ;
 }
 
@@ -152,6 +160,7 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
                                         bottomMargin);
     m_artworkLayout->setSpacing((int)(artWorkSizeF*0.23));
     m_detailsLayout->setSpacing((int)(artWorkSizeF*0.03));
+    m_detailsLayout->setContentsMargins(0,0,(int)(artWorkSizeF*0.1),0);
     m_albumArtWork->setFixedSize(artWorkSize,artWorkSize);
     m_artistAlbumName->setContentsMargins(bottomMargin,0,0,0);
     m_title->setContentsMargins(bottomMargin,0,0,0);
@@ -168,6 +177,16 @@ void KNMusicPlayerWidget::resizeEvent(QResizeEvent *event)
                              m_equalizer->height()==0?0:equalizerHeight);
     m_equalizerControl->setFixedSize(normalTextSize, normalTextSize);
     m_playlistControl->setFixedSize(normalTextSize, normalTextSize);
+}
+
+void KNMusicPlayerWidget::onActionSetProgressBar()
+{
+    m_detailsLayout->addWidget(m_headerPlayer->progressBar());
+}
+
+void KNMusicPlayerWidget::onActionRestoreProgreeBar()
+{
+    m_headerPlayer->putBackProgressBar();
 }
 
 void KNMusicPlayerWidget::onActionPositionChanged(const int &position)

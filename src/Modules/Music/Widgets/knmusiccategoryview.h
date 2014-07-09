@@ -37,6 +37,10 @@ public:
 
 signals:
 
+public slots:
+    void retranslate();
+    void retranslateAndSet();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 

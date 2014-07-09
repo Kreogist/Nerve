@@ -23,8 +23,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_global=KNGlobal::instance();
     m_global->setMainWindow(this);
 
+    //Set properties.
     setContentsMargins(0,0,0,0);
     setMinimumSize(730, 432);
+#ifdef Q_OS_MACX
+    setWindowTitle(m_global->applicationName());
+#endif
 
     m_fontManager=KNFontManager::instance();
     m_fontManager->loadCustomFont();

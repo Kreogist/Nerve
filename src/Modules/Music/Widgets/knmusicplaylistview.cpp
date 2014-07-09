@@ -86,8 +86,10 @@ void KNMusicPlaylistView::onActionEditPlaylist(const QModelIndex &index)
 
 void KNMusicPlaylistView::onActionShowPlaylist(const QModelIndex &index)
 {
+    QAbstractItemModel *playlistModel=m_manager->playlistDataModel(index);
     m_displayer->setPlaylistName(m_manager->playlistName(index));
-    m_songsView->setModel(m_manager->playlistDataModel(index));
+    m_displayer->setSongCount(playlistModel->rowCount());
+    m_songsView->setModel(playlistModel);
     m_currentPath=m_manager->playlistPath(index.row());
 }
 

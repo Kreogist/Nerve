@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QUrl>
 #include <QList>
+#include <QThread>
 
 class QSortFilterProxyModel;
 class KNMusicBackend;

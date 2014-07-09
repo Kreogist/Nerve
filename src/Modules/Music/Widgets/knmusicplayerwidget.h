@@ -6,10 +6,13 @@
 class QAbstractItemModel;
 class QPropertyAnimation;
 class QLabel;
+class QShowEvent;
+class QHideEvent;
 class QSpacerItem;
 class QBoxLayout;
 class KNMusicLibraryModelBase;
 class KNOpacityButton;
+class KNMusicAlbumArt;
 class KNMusicBackend;
 class KNMusicHeaderPlayer;
 class KNMusicVisualEffect;
@@ -30,6 +33,8 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void syncData();
+    void onActionSetProgressBar();
+    void onActionRestoreProgreeBar();
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -40,7 +45,8 @@ private slots:
     void onActionHideEqualizer();
 
 private:
-    QLabel *m_albumArtWork, *m_nowPlaying, *m_artistAlbumName, *m_title;
+    KNMusicAlbumArt *m_albumArtWork;
+    QLabel *m_nowPlaying, *m_artistAlbumName, *m_title;
     QFont m_nowPlayingFont, m_titleFont;
     QWidget *m_equalizer;
     QString m_nowPlayingText, m_noAlbumName, m_noArtistName;

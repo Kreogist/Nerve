@@ -4,38 +4,23 @@
 #include <QWidget>
 #include <QLabel>
 
-class QPropertyAnimation;
 class QMouseEvent;
+class QBoxLayout;
+class QPropertyAnimation;
 class KNPlayerProgress;
 class KNLabelEditor;
 class KNMusicBackend;
 class KNMusicLoop;
 class KNMusicPlayerControl;
-class KNMusicHeaderAlbumArt : public QLabel
-{
-    Q_OBJECT
-public:
-    explicit KNMusicHeaderAlbumArt(QWidget *parent = 0);
-
-signals:
-    void requireShowMusicPlayer();
-    void requireHideMusicPlayer();
-
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-
-private:
-    bool m_isPressed;
-    bool m_isPlayerShown=false;
-};
-
+class KNMusicAlbumArt;
 class KNMusicHeaderPlayer : public QWidget
 {
     Q_OBJECT
 public:
     explicit KNMusicHeaderPlayer(QWidget *parent = 0);
+    ~KNMusicHeaderPlayer();
     QPixmap albumArt() const;
+    QWidget *progressBar();
     QString title() const;
     QString artistAlbum() const;
     void setAlbumArt(const QPixmap &albumArt);
@@ -43,6 +28,7 @@ public:
     void setArtist(const QString &string);
     void setAlbum(const QString &string);
     float position() const;
+    void putBackProgressBar();
     void setBackend(KNMusicBackend *player);
     void playFile(const QString &filePath);
     void play();
@@ -76,7 +62,7 @@ private slots:
 private:
     void resetPosition();
     KNMusicLoop *m_loopControl;
-    KNMusicHeaderAlbumArt *m_albumArt;
+    KNMusicAlbumArt *m_albumArt;
     QLabel *m_title, *m_artistAlbum;
     QString m_artist, m_album;
     KNPlayerProgress *m_progress;
@@ -86,6 +72,8 @@ private:
     KNLabelEditor *m_time;
     QPropertyAnimation *m_mouseIn, *m_mouseOut;
     QPixmap m_albumArtImage;
+    QWidget *m_progresBar;
+    QBoxLayout *m_detailsArtLayout;
     bool m_sliderPressed=false, m_animate=true;
 };
 

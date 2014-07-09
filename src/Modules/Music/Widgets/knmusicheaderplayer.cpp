@@ -6,42 +6,12 @@
 
 #include "knmusicplayercontrol.h"
 #include "knmusicloop.h"
+#include "knmusicalbumart.h"
 #include "../../Public/Base/knmusicbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
 
 #include "knmusicheaderplayer.h"
-
-KNMusicHeaderAlbumArt::KNMusicHeaderAlbumArt(QWidget *parent) :
-    QLabel(parent)
-{
-    ;
-}
-
-void KNMusicHeaderAlbumArt::mousePressEvent(QMouseEvent *event)
-{
-    QLabel::mousePressEvent(event);
-    m_isPressed=true;
-}
-
-void KNMusicHeaderAlbumArt::mouseReleaseEvent(QMouseEvent *event)
-{
-    QLabel::mouseReleaseEvent(event);
-    if(m_isPressed && rect().contains(event->pos()))
-    {
-        m_isPressed=false;
-        if(m_isPlayerShown)
-        {
-            m_isPlayerShown=false;
-            emit requireHideMusicPlayer();
-        }
-        else
-        {
-            m_isPlayerShown=true;
-            emit requireShowMusicPlayer();
-        }
-    }
-}
 
 KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     QWidget(parent)
@@ -58,39 +28,42 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
     albumArtLayout->setSpacing(10);
     setLayout(albumArtLayout);
 
-    m_albumArt=new KNMusicHeaderAlbumArt(this);
+    m_albumArt=new KNMusicAlbumArt(this);
     m_albumArt->setFixedSize(50,50);
     m_albumArt->setScaledContents(true);
-    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireShowMusicPlayer,
+    connect(m_albumArt, &KNMusicAlbumArt::requireShowMusicPlayer,
             [=]{
                     emit requireShowMusicPlayer();
                     m_animate=false;
                });
-    connect(m_albumArt, &KNMusicHeaderAlbumArt::requireHideMusicPlayer,
+    connect(m_albumArt, &KNMusicAlbumArt::requireHideMusicPlayer,
             [=]{
                     emit requireHideMusicPlayer();
                     m_animate=true;
                });
     albumArtLayout->addWidget(m_albumArt);
 
-    QBoxLayout *detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,
-                                                albumArtLayout->widget());
-    detailsArtLayout->setContentsMargins(0,10,0,10);
-    detailsArtLayout->setSpacing(0);
+    m_detailsArtLayout=new QBoxLayout(QBoxLayout::TopToBottom,
+                                      albumArtLayout->widget());
+    m_detailsArtLayout->setContentsMargins(0,10,0,10);
+    m_detailsArtLayout->setSpacing(0);
     m_title=new QLabel(this);
     m_textPalette=m_title->palette();
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255));
     m_title->setPalette(m_textPalette);
-    detailsArtLayout->addWidget(m_title);
+    m_detailsArtLayout->addWidget(m_title);
 
     m_artistAlbum=new QLabel(this);
     m_artistAlbum->setPalette(m_textPalette);
-    detailsArtLayout->addWidget(m_artistAlbum);
+    m_detailsArtLayout->addWidget(m_artistAlbum);
 
+    m_progresBar=new QWidget;
+    m_progresBar->setContentsMargins(0,0,0,0);
     QBoxLayout *durationLayout=new QBoxLayout(QBoxLayout::LeftToRight,
-                                              detailsArtLayout->widget());
+                                              m_detailsArtLayout->widget());
     durationLayout->setContentsMargins(0,0,0,0);
     durationLayout->setSpacing(3);
+    m_progresBar->setLayout(durationLayout);
     //Add loop controller.
     m_loopControl=new KNMusicLoop(this);
     connect(m_loopControl, &KNMusicLoop::requireChangeLoopType,
@@ -121,8 +94,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
                     m_player->setPosition(m_progress->value());
                });
     durationLayout->addWidget(m_progress, 1, Qt::AlignVCenter);
-    detailsArtLayout->addLayout(durationLayout);
-    albumArtLayout->addLayout(detailsArtLayout);
+    m_detailsArtLayout->addWidget(m_progresBar);
+    albumArtLayout->addLayout(m_detailsArtLayout);
 
     m_playerControl=new KNMusicPlayerControl(this);
     m_playerControl->hide();
@@ -140,9 +113,19 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
             this, &KNMusicHeaderPlayer::onActionMouseInOut);
 }
 
+KNMusicHeaderPlayer::~KNMusicHeaderPlayer()
+{
+    m_progresBar->deleteLater();
+}
+
 QPixmap KNMusicHeaderPlayer::albumArt() const
 {
     return m_albumArtImage;
+}
+
+QWidget *KNMusicHeaderPlayer::progressBar()
+{
+    return m_progresBar;
 }
 
 void KNMusicHeaderPlayer::setAlbumArt(const QPixmap &albumArt)
@@ -190,6 +173,11 @@ void KNMusicHeaderPlayer::setAlbum(const QString &string)
 float KNMusicHeaderPlayer::position() const
 {
     return m_player->position();
+}
+
+void KNMusicHeaderPlayer::putBackProgressBar()
+{
+    m_detailsArtLayout->addWidget(m_progresBar);
 }
 
 void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
@@ -266,7 +254,7 @@ void KNMusicHeaderPlayer::leaveEvent(QEvent *event)
         m_mouseOut->stop();
         m_mouseOut->setStartValue(m_playerControl->pos());
         m_mouseOut->setEndValue(QPoint(m_albumArt->width(),
-                                       -m_progress->y()));
+                                       -m_artistAlbum->geometry().bottom()));
         m_mouseOut->start();
     }
 }
@@ -275,7 +263,7 @@ void KNMusicHeaderPlayer::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     m_playerControl->resize(width()-m_albumArt->width(),
-                            m_progress->y());
+                            m_artistAlbum->geometry().bottom());
 }
 
 void KNMusicHeaderPlayer::onActionPositonChanged(const int &position)
