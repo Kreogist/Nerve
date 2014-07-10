@@ -12,11 +12,9 @@ KNLibBass::KNLibBass(QObject *parent) :
 {
     //Connect the signals.
     connect(m_main.positionUpdater, &QTimer::timeout,
-            [=]{DWORD currentPos=
-                    BASS_ChannelBytes2Seconds(m_main.channel,
-                                              BASS_ChannelGetPosition(m_main.channel, BASS_POS_BYTE));
-                emit positionChanged(currentPos);
-                if(currentPos==m_main.duration)
+            [=]{DWORD currentPos=BASS_ChannelGetPosition(m_main.channel, BASS_POS_BYTE);
+                emit positionChanged((float)(currentPos)/m_main.timeRate);
+                if(currentPos==m_main.byteDuration)
                 {
                     stop();
                     m_main.stopped=true;
@@ -368,6 +366,7 @@ void KNLibBass::loadMusicFile(MusicThread &musicThread)
     //Get the byte duration.
     musicThread.byteDuration=BASS_ChannelGetLength(musicThread.channel, BASS_POS_BYTE);
     musicThread.duration=BASS_ChannelBytes2Seconds(musicThread.channel, musicThread.byteDuration);
+    musicThread.timeRate=(float)(musicThread.byteDuration)/(float)(musicThread.duration);
 }
 
 void KNLibBass::loadPlugins()

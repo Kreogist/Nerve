@@ -9,11 +9,12 @@
 class QAbstractItemModel;
 class QBoxLayout;
 class QResizeEvent;
+class KNSearchBox;
 class KNMusicPlaylistManagerBase;
 class KNMusicInfoCollector;
 class KNMusicLibraryModelBase;
 class KNMusicBackend;
-class KNSearchBox;
+class KNMusicLRCViewer;
 class KNMusicHeaderPlayer;
 class KNMusicHeaderWidget : public KNStdLibHeaderWidget
 {
@@ -51,11 +52,13 @@ private slots:
 
 private:
     void playCurrent();
+    void loadCurrentLyrics();
     void resetPlayer();
     QBoxLayout *m_mainLayout;
     QWidget *m_visualEffect;
     KNSearchBox *m_searchBox;
     KNMusicLibraryModelBase *m_musicModel;
+    KNMusicLRCViewer *m_lrcViewer;
     KNMusicPlaylistManagerBase *m_playlistManager;
     KNMusicHeaderPlayer *m_headerPlayer;
     KNMusicInfoCollector *m_infoCollector;

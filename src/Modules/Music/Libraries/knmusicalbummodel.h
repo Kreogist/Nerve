@@ -21,7 +21,7 @@ public slots:
     void retranslate();
     void retranslateAndSet();
     void onMusicAdded(const QModelIndex &index);
-    void onMusicRemoved(const QModelIndex &index);
+    void onMusicRemoved(const QModelIndex &removedIndex);
     void onMusicRecover(const QModelIndex &index);
 
 protected:

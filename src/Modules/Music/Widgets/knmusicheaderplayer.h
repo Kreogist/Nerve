@@ -29,7 +29,7 @@ public:
     void setAlbum(const QString &string);
     float position() const;
     void putBackProgressBar();
-    void setBackend(KNMusicBackend *player);
+    void setMusicBackend(KNMusicBackend *player);
     void playFile(const QString &filePath);
     void play();
     void stop();

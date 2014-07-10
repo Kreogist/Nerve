@@ -94,13 +94,13 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     }
 }
 
-void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &index)
+void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &removedIndex)
 {
-    QString currentName=categoryName(index.row());
+    QString currentName=categoryName(removedIndex.row());
     QModelIndex searchResult;
     if(currentName.isEmpty())
     {
-        searchResult=this->index(0,0);
+        searchResult=index(0,0);
         setData(searchResult, data(searchResult, MusicCount).toInt()-1, MusicCount);
         if(data(searchResult, MusicCount).toInt()==0)
         {

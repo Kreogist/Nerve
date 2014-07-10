@@ -1,27 +1,30 @@
 #ifndef KNMUSICVIEWER_H
 #define KNMUSICVIEWER_H
 
+#include <QLinkedList>
 #include <QList>
 #include <QUrl>
+#include <QThread>
 #include <QModelIndex>
 #include <QSortFilterProxyModel>
 
 #include "../knmusicglobal.h"
 #include "../../Public/Base/knmusicbackend.h"
 #include "../Base/knmusicplaylistmanagerbase.h"
+#include "../Base/knmusicvieweritembase.h"
 
 #include "../../Base/knstdlibviewer.h"
 
 class QEvent;
 class QPropertyAnimation;
 class KNMusicLibraryModelBase;
-class KNMusicViewerItemBase;
 class KNMusicViewerPlaylistItemBase;
 class KNMusicViewer : public KNStdLibViewer
 {
     Q_OBJECT
 public:
     explicit KNMusicViewer(QWidget *parent = 0);
+    ~KNMusicViewer();
     void setMusicModel(KNMusicLibraryModelBase *model);
     bool eventFilter(QObject *watched, QEvent *event);
     void setPlayWidget(QWidget *widget);
@@ -82,6 +85,8 @@ private:
     };
     QPropertyAnimation *m_playerIn, *m_playerOut, *m_playlistIn, *m_playlistOut;
     QWidget *m_playerWidget, *m_playlistListView;
+    QLinkedList<KNMusicViewerItemBase *> m_itemList;
+//    QLinkedList<QThread *> m_itemThreads;
 
     KNMusicLibraryModelBase *m_musicModel;
 };

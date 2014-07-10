@@ -1,5 +1,6 @@
 #include <QBoxLayout>
 #include <QResizeEvent>
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -9,6 +10,7 @@
 #include "../Libraries/knmusicinfocollector.h"
 #include "../knmusicglobal.h"
 #include "knmusicheaderplayer.h"
+#include "knmusiclrcviewer.h"
 
 #include "knmusicheaderwidget.h"
 
@@ -39,7 +41,10 @@ KNMusicHeaderWidget::KNMusicHeaderWidget(QWidget *parent) :
             );
     connect(m_headerPlayer, &KNMusicHeaderPlayer::requireHideMusicPlayer,
             this, &KNMusicHeaderWidget::requireHideMusicPlayer);
-    m_mainLayout->addWidget(m_headerPlayer, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    m_mainLayout->addWidget(m_headerPlayer, 0, Qt::AlignLeft | Qt::AlignVCenter);
+
+    m_lrcViewer=new KNMusicLRCViewer(this);
+    m_mainLayout->addWidget(m_lrcViewer, 1);
 
     m_searchBox=new KNSearchBox(this);
     m_searchBox->setFixedWidth(200);
@@ -71,8 +76,9 @@ void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModelBase *model)
 
 void KNMusicHeaderWidget::setBackend(KNMusicBackend *backend)
 {
-    m_headerPlayer->setBackend(backend);
+    m_headerPlayer->setMusicBackend(backend);
     m_infoCollector->setMusicBackend(backend);
+    m_lrcViewer->setMusicBackend(backend);
 }
 
 void KNMusicHeaderWidget::setAlbumArt(const QPixmap &albumArt)
@@ -198,7 +204,16 @@ void KNMusicHeaderWidget::playCurrent()
         m_headerPlayer->setAlbum(values.at(KNMusicGlobal::Album));
     }
     m_headerPlayer->syncData();
+    loadCurrentLyrics();
     m_headerPlayer->playFile(m_currentPath);
+}
+
+void KNMusicHeaderWidget::loadCurrentLyrics()
+{
+    QFileInfo currentFile(m_currentPath);
+    m_lrcViewer->loadLyrics(currentFile.absolutePath()+"/"+
+                            currentFile.completeBaseName()+"."+
+                            "lrc");
 }
 
 void KNMusicHeaderWidget::resetPlayer()

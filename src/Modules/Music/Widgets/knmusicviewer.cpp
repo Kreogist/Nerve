@@ -7,7 +7,6 @@
 
 #include <QDebug>
 
-#include "../Base/knmusicvieweritembase.h"
 #include "../Base/knmusicviewerplaylistitembase.h"
 #include "../../Base/knlibsearcher.h"
 #include "../Libraries/knmusiclibrarymodelbase.h"
@@ -59,6 +58,15 @@ KNMusicViewer::KNMusicViewer(QWidget *parent) :
     addAlbumViewPlugin(new KNMusicAlbumViewItem);
     addGenreViewPlugin(new KNMusicGenreViewItem);
     addPlaylistPlugin(new KNMusicPlaylistViewItem);
+}
+
+KNMusicViewer::~KNMusicViewer()
+{
+    while(!m_itemList.isEmpty())
+    {
+        KNMusicViewerItemBase *item=m_itemList.takeFirst();
+        item->deleteLater();
+    }
 }
 
 void KNMusicViewer::setMusicModel(KNMusicLibraryModelBase *model)
@@ -322,6 +330,7 @@ void KNMusicViewer::hidePlaylistDragList()
 
 void KNMusicViewer::addDatabasePlugin(KNMusicViewerItemBase *plugin)
 {
+    m_itemList.append(plugin);
     //Connect actions.
     connect(this, &KNMusicViewer::requireResort,
             plugin, &KNMusicViewerItemBase::onActionResort);

@@ -18,8 +18,8 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 {
     //Set properties.
     setContentsMargins(0,0,0,0);
-    setSizePolicy(QSizePolicy::MinimumExpanding,
-                  QSizePolicy::MinimumExpanding);
+    setFixedWidth(310);
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     //Initial the layouts and widgets.
     QBoxLayout *albumArtLayout=new QBoxLayout(QBoxLayout::LeftToRight,
@@ -180,7 +180,7 @@ void KNMusicHeaderPlayer::putBackProgressBar()
     m_detailsArtLayout->addWidget(m_progresBar);
 }
 
-void KNMusicHeaderPlayer::setBackend(KNMusicBackend *player)
+void KNMusicHeaderPlayer::setMusicBackend(KNMusicBackend *player)
 {
     m_player=player;
     connect(m_player, &KNMusicBackend::positionChanged,

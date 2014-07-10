@@ -25,6 +25,9 @@ void KNMusicAlbumSongListView::resetHeader()
         setColumnHidden(i, true);
     }
     setColumnHidden(KNMusicGlobal::Time, false);
+    setColumnHidden(KNMusicGlobal::Artist, false);
+    setColumnHidden(KNMusicGlobal::Genre, false);
+    setColumnHidden(KNMusicGlobal::Rating, false);
     setColumnHidden(KNMusicGlobal::TrackNumber, false);
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);

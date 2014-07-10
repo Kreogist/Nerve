@@ -6,7 +6,7 @@ QT += core\
       network
 
 CONFIG += c++11 mmx sse sse2 sse3
-QMAKE_CXXFLAGS += -mmmx -msse -msse2 -msse3
+QMAKE_CXXFLAGS += -mmmx -msse -msse2 -msse3 -finline-functions
 QMAKE_RPATHDIR += \$\$ORIGIN/Plugins
 
 win32{
@@ -184,7 +184,9 @@ SOURCES += \
     Modules/Music/Widgets/knmusicplaylistdraglistview.cpp \
     Modules/Music/Libraries/knmusicplaylistlistmodel.cpp \
     Modules/Music/Widgets/knmusiclrcviewer.cpp \
-    Modules/Music/Widgets/knmusicalbumart.cpp
+    Modules/Music/Widgets/knmusicalbumart.cpp \
+    Modules/Music/Libraries/knmusiclrcparser.cpp \
+    Modules/Music/Libraries/knmusiclrcparserbase.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -342,7 +344,9 @@ HEADERS += \
     Modules/Music/Widgets/knmusicplaylistdraglistview.h \
     Modules/Music/Libraries/knmusicplaylistlistmodel.h \
     Modules/Music/Widgets/knmusiclrcviewer.h \
-    Modules/Music/Widgets/knmusicalbumart.h
+    Modules/Music/Widgets/knmusicalbumart.h \
+    Modules/Music/Libraries/knmusiclrcparser.h \
+    Modules/Music/Libraries/knmusiclrcparserbase.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \

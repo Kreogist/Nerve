@@ -93,6 +93,7 @@ private:
         bool stopped=true;
         DWORD channel;
         DWORD duration;
+        float timeRate=1.0;
         BASS_CHANNELINFO channelInfo;
         QWORD byteDuration;
         QTimer *positionUpdater;
