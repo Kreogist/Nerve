@@ -23,6 +23,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
     m_palette.setColor(QPalette::HighlightedText, QColor(0xf7, 0xcf, 0x3d));
     setPalette(m_palette);
 
+    //Set mouse in/out animation time line.
     m_mouseIn=new QTimeLine(200, this);
     m_mouseIn->setUpdateInterval(5);
     m_mouseIn->setEasingCurve(QEasingCurve::OutCubic);

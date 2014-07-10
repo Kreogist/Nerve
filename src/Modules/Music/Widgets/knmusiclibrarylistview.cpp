@@ -185,7 +185,7 @@ bool KNMusicLibraryListview::event(QEvent *event)
 }
 
 void KNMusicLibraryListview::onSectionVisibleChanged(const int &index,
-                                              const bool &visible)
+                                                     const bool &visible)
 {
     setColumnHidden(index, !visible);
 }

@@ -3,6 +3,7 @@
 
 #include "knmusiclistviewbase.h"
 
+class KNMusicPlaylistHeader;
 class KNMusicPlaylistSongs : public KNMusicListViewBase
 {
     Q_OBJECT
@@ -15,6 +16,9 @@ public slots:
 
 private slots:
     void onItemActived(const QModelIndex &index);
+
+private:
+    KNMusicPlaylistHeader *m_headerWidget;
 };
 
 #endif // KNMUSICPLAYLISTSONGS_H

@@ -186,7 +186,9 @@ SOURCES += \
     Modules/Music/Widgets/knmusiclrcviewer.cpp \
     Modules/Music/Widgets/knmusicalbumart.cpp \
     Modules/Music/Libraries/knmusiclrcparser.cpp \
-    Modules/Music/Libraries/knmusiclrcparserbase.cpp
+    Modules/Music/Libraries/knmusiclrcparserbase.cpp \
+    Modules/Music/Widgets/knmusiclistviewheaderbase.cpp \
+    Modules/Music/Widgets/knmusicplaylistheader.cpp
     Modules/Store/Music/knmusicresultview.cpp
 
 HEADERS += \
@@ -346,7 +348,9 @@ HEADERS += \
     Modules/Music/Widgets/knmusiclrcviewer.h \
     Modules/Music/Widgets/knmusicalbumart.h \
     Modules/Music/Libraries/knmusiclrcparser.h \
-    Modules/Music/Libraries/knmusiclrcparserbase.h
+    Modules/Music/Libraries/knmusiclrcparserbase.h \
+    Modules/Music/Widgets/knmusiclistviewheaderbase.h \
+    Modules/Music/Widgets/knmusicplaylistheader.h
     Modules/Store/Music/knmusicresultview.h
 
 RESOURCES += \
