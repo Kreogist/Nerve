@@ -22,10 +22,9 @@ KNLibBass::KNLibBass(QObject *parent) :
                 }
                 });
     connect(m_preview.positionUpdater, &QTimer::timeout,
-            [=]{DWORD currentPos=BASS_ChannelBytes2Seconds(m_preview.channel,
-                                                             BASS_ChannelGetPosition(m_preview.channel,BASS_POS_BYTE));
-                emit previewPositionChanged(currentPos);
-                if(currentPos==m_preview.duration)
+            [=]{DWORD currentPos=BASS_ChannelGetPosition(m_preview.channel, BASS_POS_BYTE);
+                emit previewPositionChanged((float)(currentPos)/m_preview.timeRate);
+                if(currentPos==m_preview.byteDuration)
                 {
                     stopPreview();
                     m_preview.stopped=true;

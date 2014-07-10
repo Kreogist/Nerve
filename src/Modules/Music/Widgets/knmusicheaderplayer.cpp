@@ -18,7 +18,7 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
 {
     //Set properties.
     setContentsMargins(0,0,0,0);
-    setFixedWidth(310);
+    setFixedWidth(325);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     //Initial the layouts and widgets.

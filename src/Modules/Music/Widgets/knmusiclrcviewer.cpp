@@ -11,10 +11,14 @@
 KNMusicLRCViewer::KNMusicLRCViewer(QWidget *parent) :
     QWidget(parent)
 {
+    //Set properties.
+    setMinimumWidth(0);
+
+    //Set LRC Parser.
     m_lrcParser=new KNMusicLRCParser(this);
+
     m_centerAnime=new QTimeLine(100, this);
     m_centerAnime->setUpdateInterval(2);
-//    m_centerAnime->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_centerAnime, &QTimeLine::frameChanged,
             [=](const int &frame)
             {
