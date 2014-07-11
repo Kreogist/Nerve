@@ -13,6 +13,7 @@
 KNStdLibCategoryButton::KNStdLibCategoryButton(QWidget *parent) :
     QWidget(parent)
 {
+    //Set properties.
     setContentsMargins(0,0,0,0);
     QPalette pal=palette();
     pal.setColor(QPalette::WindowText, QColor(0xff,0xff,0xff));

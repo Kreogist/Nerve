@@ -4,8 +4,8 @@
 #include "knlibviewercategorybutton.h"
 
 class QBoxLayout;
-class QGraphicsOpacityEffect;
 class QMouseEvent;
+class QPaintEvent;
 class QResizeEvent;
 class QTimeLine;
 class KNStdLibViewerCategoryButton : public KNLibViewerCategoryButton
@@ -13,6 +13,10 @@ class KNStdLibViewerCategoryButton : public KNLibViewerCategoryButton
     Q_OBJECT
 public:
     explicit KNStdLibViewerCategoryButton(QWidget *parent = 0);
+    QPixmap icon() const;
+    QString text() const;
+    void setIcon(const QPixmap &icon);
+    void setText(const QString &text);
 
 signals:
 
@@ -25,30 +29,13 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void onCheckedChanged();
+    void paintEvent(QPaintEvent *event);
 
 private slots:
-    void moveCaption(int frame);
-    void setCaptionFontSize(int pixelSize);
-    void mouseInAnime(qreal value);
-    void mouseOutAnime(qreal value);
 
 private:
-    const int animeDuration=300;
-    const int textDuration=100;
-
-    void showTextAnime();
-    void hideTextAnime();
-    void startMouseDownAnime();
-    void startMouseUPAnime();
-
-    QTimeLine *m_mouseInAnime, *m_mouseOutAnime,
-              *m_mouseDownAnime, *m_mouseUpAnime;
-    QGraphicsOpacityEffect *m_iconOpacity;
-    QPalette m_pal;
-    QColor m_backcolor=QColor(0x85,0x85,0x85,0);
-    QFont m_captionFont;
-    int m_defaultFontSize, m_pressedFontSize;
+    QPixmap m_icon;
+    QString m_text;
     bool m_mousePressed=false;
 };
 

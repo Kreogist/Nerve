@@ -1,11 +1,7 @@
-
-#include <QBoxLayout>
 #include <QEvent>
-#include <QGraphicsOpacityEffect>
-#include <QLabel>
 #include <QMouseEvent>
+#include <QPaintEvent>
 #include <QResizeEvent>
-#include <QTimeLine>
 
 #include <QDebug>
 
@@ -20,74 +16,16 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
     setFixedHeight(30);
 
     //Get palette.
-    m_pal=palette();
-    m_pal.setColor(QPalette::Window, m_backcolor);
-    setPalette(m_pal);
+    m_palette=palette();
+    m_palette.setColor(QPalette::Window, m_backcolor);
+    setPalette(m_palette);
 
-    //Set layout
-    QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
-    mainLayout->setContentsMargins(0,0,0,0);
-    mainLayout->setSpacing(0);
-    mainLayout->setAlignment(Qt::AlignCenter);
-    setLayout(mainLayout);
-
-    //Init labels.
-    m_icon->setFixedSize(20, 20);
-    m_icon->setScaledContents(true);
-    mainLayout->addWidget(m_icon);
-
-    m_iconOpacity=new QGraphicsOpacityEffect(this);
-    m_iconOpacity->setOpacity(1.0);
-    m_icon->setGraphicsEffect(m_iconOpacity);
-
-    m_caption->setAlignment(Qt::AlignCenter);
-    QPalette captionPal=m_caption->palette();
-    captionPal.setColor(QPalette::WindowText, QColor(255,255,255));
-    m_caption->setPalette(captionPal);
-    m_caption->move(0, -height());
-
-    m_captionFont=m_caption->font();
-    m_defaultFontSize=m_captionFont.pixelSize();
-    m_pressedFontSize=m_defaultFontSize-2;
-
-    //Init animes.
-    m_mouseInAnime=new QTimeLine(animeDuration, this);
-    m_mouseInAnime->setUpdateInterval(5);
-    m_mouseInAnime->setEndFrame(0);
-    m_mouseInAnime->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseInAnime, &QTimeLine::frameChanged,
-            this, &KNStdLibViewerCategoryButton::moveCaption);
-    connect(m_mouseInAnime, &QTimeLine::valueChanged,
-            this, &KNStdLibViewerCategoryButton::mouseInAnime);
-
-    m_mouseOutAnime=new QTimeLine(animeDuration, this);
-    m_mouseOutAnime->setUpdateInterval(5);
-    m_mouseOutAnime->setEndFrame(-height());
-    m_mouseOutAnime->setEasingCurve(QEasingCurve::OutCubic);
-    connect(m_mouseOutAnime, &QTimeLine::frameChanged,
-            this, &KNStdLibViewerCategoryButton::moveCaption);
-    connect(m_mouseOutAnime, &QTimeLine::valueChanged,
-            this, &KNStdLibViewerCategoryButton::mouseOutAnime);
-
-    m_mouseDownAnime=new QTimeLine(textDuration, this);
-    m_mouseDownAnime->setEasingCurve(QEasingCurve::OutBack);
-    m_mouseDownAnime->setUpdateInterval(1);
-    m_mouseDownAnime->setEndFrame(m_pressedFontSize);
-    connect(m_mouseDownAnime, &QTimeLine::frameChanged,
-            this, &KNStdLibViewerCategoryButton::setCaptionFontSize);
-
-    m_mouseUpAnime=new QTimeLine(textDuration, this);
-    m_mouseUpAnime->setEasingCurve(QEasingCurve::OutBack);
-    m_mouseUpAnime->setUpdateInterval(1);
-    m_mouseUpAnime->setEndFrame(m_defaultFontSize);
-    connect(m_mouseUpAnime, &QTimeLine::frameChanged,
-            this, &KNStdLibViewerCategoryButton::setCaptionFontSize);
+    ;
 }
 
 void KNStdLibViewerCategoryButton::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    m_caption->setFixedWidth(width());
 }
 
 void KNStdLibViewerCategoryButton::enterEvent(QEvent *event)
@@ -95,7 +33,7 @@ void KNStdLibViewerCategoryButton::enterEvent(QEvent *event)
     QWidget::enterEvent(event);
     if(!m_checked)
     {
-        showTextAnime();
+        //Show Mouse Enter State
     }
 }
 
@@ -104,7 +42,7 @@ void KNStdLibViewerCategoryButton::leaveEvent(QEvent *event)
     QWidget::leaveEvent(event);
     if(!m_checked)
     {
-        hideTextAnime();
+        //Show Normal State
     }
 }
 
@@ -113,7 +51,7 @@ void KNStdLibViewerCategoryButton::mousePressEvent(QMouseEvent *event)
     KNLibViewerCategoryButton::mousePressEvent(event);
     if(!m_checked)
     {
-        startMouseDownAnime();
+        //Show Mouse Down State
         m_mousePressed=true;
     }
 }
@@ -121,20 +59,8 @@ void KNStdLibViewerCategoryButton::mousePressEvent(QMouseEvent *event)
 void KNStdLibViewerCategoryButton::mouseMoveEvent(QMouseEvent *event)
 {
     KNLibViewerCategoryButton::mouseMoveEvent(event);
-    if(!m_checked)
-    {
-        if(event->buttons()==0x1)
-        {
-            if(rect().contains(event->pos()))
-            {
-                startMouseDownAnime();
-                m_mousePressed=true;
-                return;
-            }
-            startMouseUPAnime();
-            m_mousePressed=false;
-        }
-    }
+    //Here's pressed check.
+    ;
 }
 
 void KNStdLibViewerCategoryButton::mouseReleaseEvent(QMouseEvent *event)
@@ -142,90 +68,33 @@ void KNStdLibViewerCategoryButton::mouseReleaseEvent(QMouseEvent *event)
     KNLibViewerCategoryButton::mouseReleaseEvent(event);
     if(!m_checked)
     {
-        if(m_mousePressed)
-        {
-            startMouseUPAnime();
-            emit clicked();
-        }
+        //
+        ;
     }
 }
 
-void KNStdLibViewerCategoryButton::onCheckedChanged()
+void KNStdLibViewerCategoryButton::paintEvent(QPaintEvent *event)
 {
-    if(m_checked)
-    {
-        moveCaption(0);
-        mouseInAnime(1.0);
-    }
-    else
-    {
-        hideTextAnime();
-    }
+    ;
 }
 
-void KNStdLibViewerCategoryButton::moveCaption(int frame)
+QString KNStdLibViewerCategoryButton::text() const
 {
-    m_caption->move(0, frame);
+    return m_text;
 }
 
-void KNStdLibViewerCategoryButton::setCaptionFontSize(int pixelSize)
+void KNStdLibViewerCategoryButton::setText(const QString &text)
 {
-    m_captionFont.setPixelSize(pixelSize);
-    m_caption->setFont(m_captionFont);
+    m_text = text;
 }
 
-void KNStdLibViewerCategoryButton::mouseInAnime(qreal value)
+QPixmap KNStdLibViewerCategoryButton::icon() const
 {
-    m_iconOpacity->setOpacity(1-value);
-    m_backcolor.setAlphaF(value);
-    m_pal.setColor(QPalette::Window, m_backcolor);
-    setPalette(m_pal);
+    return m_icon;
 }
 
-void KNStdLibViewerCategoryButton::mouseOutAnime(qreal value)
+void KNStdLibViewerCategoryButton::setIcon(const QPixmap &icon)
 {
-    m_iconOpacity->setOpacity(value);
-    m_backcolor.setAlpha(1-value);
-    m_pal.setColor(QPalette::Window, m_backcolor);
-    setPalette(m_pal);
+    m_icon = icon;
 }
 
-void KNStdLibViewerCategoryButton::showTextAnime()
-{
-    m_mouseOutAnime->stop();
-    if(m_mouseInAnime->state()!=QTimeLine::Running)
-    {
-        m_mouseInAnime->setStartFrame(m_caption->pos().y());
-        m_mouseInAnime->start();
-    }
-}
-
-void KNStdLibViewerCategoryButton::hideTextAnime()
-{
-    m_mouseInAnime->stop();
-    if(m_mouseOutAnime->state()!=QTimeLine::Running)
-    {
-        m_mouseOutAnime->setStartFrame(m_caption->pos().y());
-        m_mouseOutAnime->start();
-    }
-}
-
-void KNStdLibViewerCategoryButton::startMouseDownAnime()
-{
-    m_mouseUpAnime->stop();
-    if(m_mouseDownAnime->state()!=QTimeLine::Running)
-    {
-        m_mouseDownAnime->setStartFrame(m_caption->font().pixelSize());
-        m_mouseDownAnime->start();
-    }
-}
-
-void KNStdLibViewerCategoryButton::startMouseUPAnime()
-{
-    m_mouseDownAnime->stop();
-    if(m_mouseUpAnime->state()!=QTimeLine::Running)
-    {
-        m_mouseUpAnime->setStartFrame(m_caption->font().pixelSize());
-        m_mouseUpAnime->start();
-    }
-}
