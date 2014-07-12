@@ -8,6 +8,7 @@ class KNMusicPlaylistModel : public KNMusicModelBase
     Q_OBJECT
 public:
     explicit KNMusicPlaylistModel(QObject *parent = 0);
+    void resetHeader();
 
 signals:
 

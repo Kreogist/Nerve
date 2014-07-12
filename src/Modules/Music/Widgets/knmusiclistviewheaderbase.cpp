@@ -74,8 +74,8 @@ void KNMusicListViewHeaderBase::leaveEvent(QEvent *e)
 }
 
 void KNMusicListViewHeaderBase::paintSection(QPainter *painter,
-                                         const QRect &rect,
-                                         int logicalIndex) const
+                                             const QRect &rect,
+                                             int logicalIndex) const
 {
     QRect contentRect;
     if(logicalIndex==sortIndicatorSection())

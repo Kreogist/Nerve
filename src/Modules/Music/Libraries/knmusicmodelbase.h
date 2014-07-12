@@ -12,7 +12,7 @@ class KNMusicModelBase : public KNModel
     Q_OBJECT
 public:
     explicit KNMusicModelBase(QObject *parent = 0);
-    void resetHeader();
+    virtual void resetHeader();
     QString filePathFromIndex(const QModelIndex &index);
     QString filePathFromIndex(const int &row);
     QModelIndex indexFromFilePath(const QString &filePath);
@@ -29,10 +29,10 @@ public slots:
 protected:
     void setMusicDetailsInfo(const int &currentRow,
                              const KNMusicGlobal::MusicDetailsInfo &currentDetails);
+    KNMusicGlobal *m_musicGlobal;
 
 private:
     KNGlobal *m_global;
-    KNMusicGlobal *m_musicGlobal;
 };
 
 #endif // KNMUSICMODELBASE_H

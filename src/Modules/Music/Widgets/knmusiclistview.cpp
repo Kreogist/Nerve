@@ -41,6 +41,7 @@ KNMusicListView::KNMusicListView(QWidget *parent) :
 
 void KNMusicListView::resetHeader()
 {
+    //Resize headers.
     KNMusicLibraryListview::resetHeader();
     setColumnWidth(KNMusicGlobal::Name, 430);
     setColumnWidth(KNMusicGlobal::Time, 60);

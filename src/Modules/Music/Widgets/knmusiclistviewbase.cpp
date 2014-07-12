@@ -22,11 +22,13 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ContiguousSelection);
 
+    //Set scroll bar properties.
     horizontalScrollBar()->setSingleStep(5);
     horizontalScrollBar()->setPageStep(5);
     verticalScrollBar()->setSingleStep(4);
     verticalScrollBar()->setPageStep(4);
 
+    //Set delegate and edit triggers.
     setItemDelegateForColumn(KNMusicGlobal::Rating,
                              new KNMusicRatingDelegate(this));
     setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -34,17 +36,20 @@ KNMusicListViewBase::KNMusicListViewBase(QWidget *parent) :
 
 void KNMusicListViewBase::resetHeader()
 {
+    //Hide all columns
     for(int i=KNMusicGlobal::Name+1;
         i<KNMusicGlobal::MusicDataCount;
         i++)
     {
         setColumnHidden(i, true);
     }
+    //Show default columns.
     setColumnHidden(KNMusicGlobal::Time, false);
     setColumnHidden(KNMusicGlobal::Artist, false);
     setColumnHidden(KNMusicGlobal::Album, false);
     setColumnHidden(KNMusicGlobal::Genre, false);
     setColumnHidden(KNMusicGlobal::Rating, false);
+    //Reorder the columns.
     moveToFirst(KNMusicGlobal::Rating);
     moveToFirst(KNMusicGlobal::Genre);
     moveToFirst(KNMusicGlobal::Album);
@@ -55,6 +60,7 @@ void KNMusicListViewBase::resetHeader()
 
 void KNMusicListViewBase::moveToFirst(const int &logicalHeaderIndex)
 {
+    //The reorder function: move section!
     header()->moveSection(header()->visualIndex(logicalHeaderIndex), 0);
 }
 
