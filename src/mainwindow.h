@@ -10,6 +10,7 @@ class KNStdLibCategorySwitcher;
 class KNStdLibHeaderSwitcher;
 class KNStdLibHeaderContainer;
 class KNStdLibCategoryList;
+class KNLibStatusBar;
 class KNGlobal;
 class MainWindow : public QMainWindow
 {
@@ -26,6 +27,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private:
+    KNLibStatusBar *m_statusBar;
     KNStdLibCategorySwitcher *m_mainWidget;
     KNStdLibCategoryList *m_categoryList;
     KNStdLibHeaderContainer *m_headerContainer;

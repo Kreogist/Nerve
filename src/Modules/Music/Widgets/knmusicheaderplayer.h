@@ -7,6 +7,7 @@
 class QMouseEvent;
 class QBoxLayout;
 class QPropertyAnimation;
+class KNScrollLabel;
 class KNPlayerProgress;
 class KNLabelEditor;
 class KNMusicBackend;
@@ -63,7 +64,7 @@ private:
     void resetPosition();
     KNMusicLoop *m_loopControl;
     KNMusicAlbumArt *m_albumArt;
-    QLabel *m_title, *m_artistAlbum;
+    KNScrollLabel *m_title, *m_artistAlbum;
     QString m_artist, m_album;
     KNPlayerProgress *m_progress;
     QPalette m_textPalette;

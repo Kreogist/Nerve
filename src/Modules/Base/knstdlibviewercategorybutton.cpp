@@ -45,7 +45,7 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
     //Initial the mouse-down animation.
     m_mouseDown=new QTimeLine(200, this);
     m_mouseDown->setUpdateInterval(2);
-    m_mouseDown->setEndFrame(200);
+    m_mouseDown->setEndFrame(150);
     m_mouseDown->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseDown, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategoryButton::onActionMousePressedChange);
@@ -53,7 +53,7 @@ KNStdLibViewerCategoryButton::KNStdLibViewerCategoryButton(QWidget *parent) :
     //Initial the mouse-up animation.
     m_mouseUp=new QTimeLine(200, this);
     m_mouseUp->setUpdateInterval(2);
-    m_mouseUp->setEndFrame(255);
+    m_mouseUp->setEndFrame(200);
     m_mouseUp->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseUp, &QTimeLine::frameChanged,
             this, &KNStdLibViewerCategoryButton::onActionMousePressedChange);

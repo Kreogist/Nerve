@@ -3,6 +3,7 @@
 
 #include <QDebug>
 
+#include "Modules/Widgets/knstatusbar.h"
 #include "Modules/Base/knpluginbase.h"
 #include "Modules/Base/knstdlibheadercontainer.h"
 #include "Modules/Base/knstdlibcategoryswitcher.h"

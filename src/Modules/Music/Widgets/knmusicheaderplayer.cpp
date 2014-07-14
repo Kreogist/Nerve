@@ -10,6 +10,7 @@
 #include "../../Public/Base/knmusicbackend.h"
 #include "../../Base/knplayerprogress.h"
 #include "../../Base/knlabeleditor.h"
+#include "../../Base/knscrolllabel.h"
 
 #include "knmusicheaderplayer.h"
 
@@ -47,13 +48,13 @@ KNMusicHeaderPlayer::KNMusicHeaderPlayer(QWidget *parent) :
                                       albumArtLayout->widget());
     m_detailsArtLayout->setContentsMargins(0,10,0,10);
     m_detailsArtLayout->setSpacing(0);
-    m_title=new QLabel(this);
+    m_title=new KNScrollLabel(this);
     m_textPalette=m_title->palette();
     m_textPalette.setColor(QPalette::WindowText, QColor(255,255,255));
     m_title->setPalette(m_textPalette);
     m_detailsArtLayout->addWidget(m_title);
 
-    m_artistAlbum=new QLabel(this);
+    m_artistAlbum=new KNScrollLabel(this);
     m_artistAlbum->setPalette(m_textPalette);
     m_detailsArtLayout->addWidget(m_artistAlbum);
 
