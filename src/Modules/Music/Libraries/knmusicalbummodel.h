@@ -15,6 +15,7 @@ public:
 
 signals:
     void requireFlyAway();
+    void albumArtistChanged(const QModelIndex &index);
     void albumRemoved(const QModelIndex &index);
 
 public slots:

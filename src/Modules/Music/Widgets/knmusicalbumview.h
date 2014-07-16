@@ -12,6 +12,7 @@ class QResizeEvent;
 class QParallelAnimationGroup;
 class QTimeLine;
 class KNMusicBackend;
+class KNScrollLabel;
 class KNMusicLibraryModelBase;
 class KNMusicAlbumSongListView;
 class KNMusicAlbumDetailModel;
@@ -62,7 +63,7 @@ public slots:
     void showDetailInfo();
 
 private:
-    QLabel *m_albumName;
+    KNScrollLabel *m_albumName;
     QLabel *m_artistName;
     KNMusicAlbumSongListView *m_albumSongs;
     QBoxLayout *m_mainLayout;
@@ -178,8 +179,10 @@ private slots:
     void onActionFlyAwayAlbumDetail();
     void onActionFlyAwayAlbumDetailFinished();
     void onActionScrolling();
+    void onActionAlbumArtistChagned(const QModelIndex &index);
 
 private:
+    void syncDetailData();
     void flyAwayAlbumDetail();
     void foldAlbumDetail();
     QRect itemRect(const QModelIndex &index) const;

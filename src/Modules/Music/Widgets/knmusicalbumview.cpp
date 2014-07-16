@@ -19,6 +19,7 @@
 #include "../Libraries/knmusiccategorysortfiltermodel.h"
 #include "../Libraries/knmusicalbumdetailmodel.h"
 #include "../../Base/knsideshadows.h"
+#include "../../Base/knscrolllabel.h"
 
 #include "knmusicalbumview.h"
 
@@ -57,12 +58,14 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_mainLayout->setSpacing(0);
     setLayout(m_mainLayout);
 
-    m_albumName=new QLabel(this);
+    m_albumName=new KNScrollLabel(this);
     m_albumName->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
     artistFont.setBold(true);
     artistFont.setPixelSize(artistFont.pixelSize()+(artistFont.pixelSize()>>1));
+    qDebug()<<"Preset font size:"<<artistFont.pixelSize();
     m_albumName->setFont(artistFont);
+//    m_albumName->setFixedHeight(artistFont.pixelSize());
     m_mainLayout->addSpacing(25);
     m_mainLayout->addWidget(m_albumName);
 
@@ -564,6 +567,8 @@ void KNMusicAlbumView::setCategoryModel(KNMusicCategorySortFilterModel *model)
     m_model=static_cast<KNMusicAlbumModel *>(model->sourceModel());
     connect(m_model, &KNMusicAlbumModel::albumRemoved,
             this, &KNMusicAlbumView::onActionAlbumRemoved);
+    connect(m_model, &KNMusicAlbumModel::albumArtistChanged,
+            this, &KNMusicAlbumView::onActionAlbumArtistChagned);
     connect(m_model, &KNMusicAlbumModel::requireFlyAway,
             this, &KNMusicAlbumView::flyAwayAlbumDetail);
 }
@@ -804,19 +809,13 @@ void KNMusicAlbumView::expandAlbumDetail(const QModelIndex &index)
 {
     m_albumDetail->hide();
     m_albumDetail->disableArtworkExpand();
-    //QModelIndex dataIndex=m_detailIndex;
     if(!index.isValid())
     {
         return;
     }
     m_detailIndex=index;
-    QIcon currentIcon=m_model->data(m_detailIndex, Qt::DecorationRole).value<QIcon>();
-    m_albumDetail->setAlbumArt(currentIcon.pixmap(height(), height()),
-                               QSize(height(), height()));
+    syncDetailData();
     m_detailModel->setCategoryIndex(m_detailIndex);
-    m_albumDetail->setAlbumName(m_model->data(m_detailIndex).toString());
-    m_albumDetail->setArtistName(m_model->indexArtist(m_detailIndex));
-    m_albumDetail->setYear(m_model->indexYear(m_detailIndex));
     m_albumDetail->resetSongState();
     QRect startPosition=visualRect(m_proxyModel->mapFromSource(m_detailIndex));
     m_albumDetail->setGeometry(startPosition.x()+2,
@@ -890,6 +889,26 @@ void KNMusicAlbumView::onActionScrolling()
                                        m_iconSizeParam-2,
                                        m_iconSizeParam-2));
     }
+}
+
+void KNMusicAlbumView::onActionAlbumArtistChagned(const QModelIndex &index)
+{
+    update();
+    if(m_detailIndex==index)
+    {
+        m_model->indexArtist(index);
+        syncDetailData();
+    }
+}
+
+void KNMusicAlbumView::syncDetailData()
+{
+    QIcon currentIcon=m_model->data(m_detailIndex, Qt::DecorationRole).value<QIcon>();
+    m_albumDetail->setAlbumArt(currentIcon.pixmap(height(), height()),
+                               QSize(height(), height()));
+    m_albumDetail->setAlbumName(m_model->data(m_detailIndex).toString());
+    m_albumDetail->setArtistName(m_model->indexArtist(m_detailIndex));
+    m_albumDetail->setYear(m_model->indexYear(m_detailIndex));
 }
 
 void KNMusicAlbumView::flyAwayAlbumDetail()

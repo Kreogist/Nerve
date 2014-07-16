@@ -38,8 +38,8 @@ protected:
     {
         IconKey = Qt::UserRole,
         MusicCount,
-        VariousArtist,
-        ArtistName,
+        Artists,
+        ArtistCount,
         Year
     };
 

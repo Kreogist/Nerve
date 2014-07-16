@@ -27,14 +27,19 @@ void KNMusicAlbumModel::resetModel()
     currentItem->setData(noCategoryText(), Qt::DisplayRole);
     currentItem->setData(m_noAlbumArtIcon, Qt::DecorationRole);
     currentItem->setData(0, MusicCount);
-    currentItem->setData(false, VariousArtist);
-    currentItem->setData("", ArtistName);
+    currentItem->setData(QStringList(), Artists);
+    currentItem->setData(QVariantList(), ArtistCount);
     appendRow(currentItem);
 }
 
 QString KNMusicAlbumModel::indexArtist(const QModelIndex &index) const
 {
-    return data(index, ArtistName).toString();
+    QStringList artistList=data(index, Artists).toStringList();
+    if(artistList.size()==1)
+    {
+        return artistList.first();
+    }
+    return m_variousArtist;
 }
 
 QString KNMusicAlbumModel::indexYear(const QModelIndex &index) const
@@ -71,16 +76,26 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
     {
         currentAlbum=itemFromIndex(searchResult);
         currentAlbum->setData(currentAlbum->data(MusicCount).toInt()+1, MusicCount);
-        if(currentAlbum->data(VariousArtist)==false &&
-           currentAlbum->data(ArtistName).toString()!=currentArtist)
-        {
-            currentAlbum->setData(true, VariousArtist);
-            currentAlbum->setData(m_variousArtist, ArtistName);
-        }
         if(currentAlbum->data(Year).toString().isEmpty())
         {
             currentAlbum->setData(yearFromSource(index.row()), Year);
         }
+        QStringList artistList=currentAlbum->data(Artists).toStringList();
+        QVariantList countList=currentAlbum->data(ArtistCount).toList();
+        int artistIndex=artistList.indexOf(currentArtist);
+        if(artistIndex==-1)
+        {
+            artistList.append(currentArtist);
+            countList.append(1);
+            currentAlbum->setData(artistList, Artists);
+            emit albumArtistChanged(searchResult);
+        }
+        else
+        {
+            countList.replace(artistIndex,
+                              countList.at(artistIndex).toInt()+1);
+        }
+        currentAlbum->setData(countList, ArtistCount);
     }
     else
     {
@@ -88,8 +103,10 @@ void KNMusicAlbumModel::onMusicAdded(const QModelIndex &index)
         currentAlbum->setEditable(false);
         currentAlbum->setData(m_noAlbumArtIcon, Qt::DecorationRole);
         currentAlbum->setData(1, MusicCount);
-        currentAlbum->setData(currentArtist, ArtistName);
-        currentAlbum->setData(false, VariousArtist);
+        currentAlbum->setData(QStringList(currentArtist), Artists);
+        QList<QVariant> artistCount;
+        artistCount.append(1);
+        currentAlbum->setData(QVariant(artistCount), ArtistCount);
         appendRow(currentAlbum);
     }
 }
@@ -123,6 +140,23 @@ void KNMusicAlbumModel::onMusicRemoved(const QModelIndex &removedIndex)
     else
     {
         currentAlbum->setData(currentMusicCount-1, MusicCount);
+        QString currentArtist=artistFromSource(removedIndex.row());
+        QStringList artistList=currentAlbum->data(Artists).toStringList();
+        QVariantList countList=currentAlbum->data(ArtistCount).toList();
+        int removedArtistIndex=artistList.indexOf(currentArtist);
+        if(countList.at(removedArtistIndex).toInt()==1)
+        {
+            artistList.removeAt(removedArtistIndex);
+            countList.removeAt(removedArtistIndex);
+            currentAlbum->setData(artistList, Artists);
+            emit albumArtistChanged(searchResult);
+        }
+        else
+        {
+            countList.replace(removedArtistIndex,
+                              countList.at(removedArtistIndex).toInt()-1);
+        }
+        currentAlbum->setData(countList, ArtistCount);
     }
 }
 
@@ -143,16 +177,25 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
     {
         currentAlbum=itemFromIndex(searchResult);
         currentAlbum->setData(currentAlbum->data(MusicCount).toInt()+1, MusicCount);
-        if(currentAlbum->data(VariousArtist)==false &&
-           currentAlbum->data(ArtistName).toString()!=currentArtist)
-        {
-            currentAlbum->setData(true, VariousArtist);
-            currentAlbum->setData(m_variousArtist, ArtistName);
-        }
         if(currentAlbum->data(Year).toString().isEmpty())
         {
             currentAlbum->setData(yearFromSource(index.row()), Year);
         }
+        QStringList artistList=currentAlbum->data(Artists).toStringList();
+        QVariantList countList=currentAlbum->data(ArtistCount).toList();
+        int artistIndex=artistList.indexOf(currentArtist);
+        if(artistIndex==-1)
+        {
+            artistList.append(currentArtist);
+            countList.append(1);
+            currentAlbum->setData(artistList, Artists);
+        }
+        else
+        {
+            countList.replace(artistIndex,
+                              countList.at(artistIndex).toInt()+1);
+        }
+        currentAlbum->setData(countList, ArtistCount);
     }
     else
     {
@@ -160,8 +203,10 @@ void KNMusicAlbumModel::onMusicRecover(const QModelIndex &index)
         currentAlbum->setEditable(false);
         currentAlbum->setData(m_sourceModel->artworkKey(index.row()), IconKey);
         currentAlbum->setData(1, MusicCount);
-        currentAlbum->setData(currentArtist, ArtistName);
-        currentAlbum->setData(false, VariousArtist);
+        currentAlbum->setData(QStringList(currentArtist), Artists);
+        QList<QVariant> countList;
+        countList.append(1);
+        currentAlbum->setData(countList, ArtistCount);
         appendRow(currentAlbum);
     }
 }
