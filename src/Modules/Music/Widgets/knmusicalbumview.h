@@ -45,8 +45,9 @@ class KNMusicAlbumSongDetail : public QWidget
 public:
     explicit KNMusicAlbumSongDetail(QWidget *parent = 0);
     ~KNMusicAlbumSongDetail();
-    void setAlbumName(const QString &name);
-    void setArtistName(const QString &name);
+    void setAlbumText(const QString &name);
+    void setArtistText(const QString &name);
+    void setYearText(const QString &name);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void selectItem(const QModelIndex &index);
     void resetHeader();
@@ -63,10 +64,11 @@ public slots:
     void showDetailInfo();
 
 private:
-    KNScrollLabel *m_albumName;
-    QLabel *m_artistName;
+    void setDetailInfoVisible(bool visible);
+    KNScrollLabel *m_albumCaption;
+    QLabel *m_artistCaption, *m_yearCaption;
     KNMusicAlbumSongListView *m_albumSongs;
-    QBoxLayout *m_mainLayout;
+    QBoxLayout *m_mainLayout, *m_artistYearLayout;
     QBoxLayout *m_detailLayout;
 };
 
@@ -78,9 +80,9 @@ public:
     ~KNMusicAlbumDetail();
     void setAlbumArt(const QPixmap &pixmap,
                      const QSize &size);
-    void setAlbumName(const QString &name);
-    void setArtistName(const QString &name);
-    void setYear(const QString &value);
+    void setAlbumText(const QString &name);
+    void setArtistText(const QString &name);
+    void setYearText(const QString &value);
     void setDetailModel(KNMusicAlbumDetailModel *model);
     void setSourceModel(KNMusicLibraryModelBase *model);
     void selectItem(const QModelIndex &index);

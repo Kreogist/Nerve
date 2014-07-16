@@ -58,23 +58,32 @@ KNMusicAlbumSongDetail::KNMusicAlbumSongDetail(QWidget *parent) :
     m_mainLayout->setSpacing(0);
     setLayout(m_mainLayout);
 
-    m_albumName=new KNScrollLabel(this);
-    m_albumName->setContentsMargins(20,0,0,0);
+    m_albumCaption=new KNScrollLabel(this);
+    m_albumCaption->setContentsMargins(20,0,0,0);
     QFont artistFont=font();
     artistFont.setBold(true);
     artistFont.setPixelSize(artistFont.pixelSize()+(artistFont.pixelSize()>>1));
-    qDebug()<<"Preset font size:"<<artistFont.pixelSize();
-    m_albumName->setFont(artistFont);
-//    m_albumName->setFixedHeight(artistFont.pixelSize());
+    m_albumCaption->setFont(artistFont);
     m_mainLayout->addSpacing(25);
-    m_mainLayout->addWidget(m_albumName);
+    m_mainLayout->addWidget(m_albumCaption);
 
     m_detailLayout=new QBoxLayout(QBoxLayout::LeftToRight);
 
-    m_artistName=new QLabel(this);
-    //This hack is going to show the left margins instead of the layout.
-    m_artistName->setContentsMargins(20,0,0,0);
-    m_detailLayout->addWidget(m_artistName);
+    //Set the artist
+    m_artistYearLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                      m_detailLayout->widget());
+    //Hack here, instead of the artist caption hack.
+    m_artistYearLayout->setContentsMargins(20,0,0,0);
+    m_artistYearLayout->setSpacing(5);
+
+    m_artistCaption=new QLabel(this);
+    m_artistCaption->setMinimumWidth(0);
+    m_artistYearLayout->addWidget(m_artistCaption);
+    m_yearCaption=new QLabel(this);
+    m_yearCaption->setMinimumWidth(0);
+    m_artistYearLayout->addWidget(m_yearCaption);
+    m_artistYearLayout->addStretch();
+    m_detailLayout->addLayout(m_artistYearLayout);
     m_detailLayout->addStretch();
 
     m_mainLayout->addLayout(m_detailLayout);
@@ -93,14 +102,21 @@ KNMusicAlbumSongDetail::~KNMusicAlbumSongDetail()
     m_detailLayout->deleteLater();
 }
 
-void KNMusicAlbumSongDetail::setAlbumName(const QString &name)
+void KNMusicAlbumSongDetail::setAlbumText(const QString &name)
 {
-    m_albumName->setText(name);
+    m_albumCaption->setText(name);
 }
 
-void KNMusicAlbumSongDetail::setArtistName(const QString &name)
+void KNMusicAlbumSongDetail::setArtistText(const QString &name)
 {
-    m_artistName->setText(name);
+    m_artistCaption->setText(name);
+}
+
+void KNMusicAlbumSongDetail::setYearText(const QString &name)
+{
+    m_yearCaption->setText(name.isEmpty()?
+                               "":
+                               "("+name+")");
 }
 
 void KNMusicAlbumSongDetail::setDetailModel(KNMusicAlbumDetailModel *model)
@@ -137,16 +153,20 @@ void KNMusicAlbumSongDetail::setSourceModel(KNMusicLibraryModelBase *model)
 
 void KNMusicAlbumSongDetail::hideDetailInfo()
 {
-    m_albumName->hide();
-    m_artistName->hide();
-    m_albumSongs->hide();
+    setDetailInfoVisible(false);
 }
 
 void KNMusicAlbumSongDetail::showDetailInfo()
 {
-    m_albumName->show();
-    m_artistName->show();
-    m_albumSongs->show();
+    setDetailInfoVisible(true);
+}
+
+void KNMusicAlbumSongDetail::setDetailInfoVisible(bool visible)
+{
+    m_albumCaption->setVisible(visible);
+    m_artistCaption->setVisible(visible);
+    m_albumSongs->setVisible(visible);
+    m_yearCaption->setVisible(visible);
 }
 
 KNMusicAlbumDetail::KNMusicAlbumDetail(QWidget *parent) :
@@ -236,20 +256,19 @@ void KNMusicAlbumDetail::showDetailWidget()
     m_songPanel->show();
 }
 
-void KNMusicAlbumDetail::setAlbumName(const QString &name)
+void KNMusicAlbumDetail::setAlbumText(const QString &name)
 {
-    m_songPanel->setAlbumName(name);
+    m_songPanel->setAlbumText(name);
 }
 
-void KNMusicAlbumDetail::setArtistName(const QString &name)
+void KNMusicAlbumDetail::setArtistText(const QString &name)
 {
-    m_songPanel->setArtistName(name);
+    m_songPanel->setArtistText(name);
 }
 
-void KNMusicAlbumDetail::setYear(const QString &value)
+void KNMusicAlbumDetail::setYearText(const QString &value)
 {
-    /*m_infoPanel->setCaption(KNMusicAlbumInfoDetail::Year,
-                            value);*/
+    m_songPanel->setYearText(value);
 }
 
 void KNMusicAlbumDetail::setDetailModel(KNMusicAlbumDetailModel *model)
@@ -906,9 +925,9 @@ void KNMusicAlbumView::syncDetailData()
     QIcon currentIcon=m_model->data(m_detailIndex, Qt::DecorationRole).value<QIcon>();
     m_albumDetail->setAlbumArt(currentIcon.pixmap(height(), height()),
                                QSize(height(), height()));
-    m_albumDetail->setAlbumName(m_model->data(m_detailIndex).toString());
-    m_albumDetail->setArtistName(m_model->indexArtist(m_detailIndex));
-    m_albumDetail->setYear(m_model->indexYear(m_detailIndex));
+    m_albumDetail->setAlbumText(m_model->data(m_detailIndex).toString());
+    m_albumDetail->setArtistText(m_model->indexArtist(m_detailIndex));
+    m_albumDetail->setYearText(m_model->indexYear(m_detailIndex));
 }
 
 void KNMusicAlbumView::flyAwayAlbumDetail()
