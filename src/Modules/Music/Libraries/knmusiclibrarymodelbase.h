@@ -19,7 +19,7 @@ public:
                              KNMusicGlobal::MusicDetailsInfo currentDetails)=0;
     virtual void updateIndexInfo(QStandardItem *index,
                                  const QString &filePath)=0;
-    virtual void removeAppendData(const QModelIndex &removedIndex)=0;
+    virtual void removeRelateData(const QModelIndex &removedIndex)=0;
     KNLibInfoCollectorManager *infoCollectorManager();
     virtual void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 

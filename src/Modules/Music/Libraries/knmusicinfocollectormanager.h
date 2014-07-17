@@ -2,7 +2,7 @@
 #define KNMUSICINFOCOLLECTORMANAGER_H
 
 #include <QThread>
-#include <QLinkedList>
+#include <QList>
 #include <QModelIndex>
 
 #include "../Base/knmusicinfocollectormanagerbase.h"
@@ -28,7 +28,7 @@ signals:
 
 public slots:
     void addAnalysisList(QStandardItem *index, QString filePath);
-    void onActionItemRemoved(int index);
+    void removedIndexesInList(QModelIndex removedIndex);
 
 private slots:
     void analysisNext();
@@ -51,8 +51,8 @@ private:
 
     KNMusicInfoCollector *m_collector;
     QThread m_collectThread;
-    QLinkedList<AnalysisQueueItem> m_analysisQueue;
-    QLinkedList<ResultQueueItem> m_resultQueue;
+    QList<AnalysisQueueItem> m_analysisQueue;
+    QList<ResultQueueItem> m_resultQueue;
     bool m_working=false, m_noUpdating=true;
 };
 

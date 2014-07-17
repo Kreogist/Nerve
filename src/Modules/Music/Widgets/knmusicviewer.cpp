@@ -225,7 +225,7 @@ void KNMusicViewer::showInCurrent(const QModelIndex &index)
 void KNMusicViewer::deleteMusic(const QModelIndex &index)
 {
     emit requireRemoveMusic(index);
-    m_musicModel->removeAppendData(index);
+    m_musicModel->removeRelateData(index);
     emit requireRemoveOriginal(index);
 }
 

@@ -1,6 +1,8 @@
 #ifndef KNSTDLIBDATABASE_H
 #define KNSTDLIBDATABASE_H
 
+#include <QModelIndex>
+
 #include "knlibdatabase.h"
 
 class QAbstractItemModel;

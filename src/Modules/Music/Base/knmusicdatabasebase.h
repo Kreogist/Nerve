@@ -14,9 +14,9 @@ signals:
 public slots:
 
 protected slots:
-    virtual void onActionRowAppend(const QModelIndex &index)=0;
-    virtual void onActionRowUpdate(const QModelIndex &index)=0;
-    virtual void onActionRowRemove(const QModelIndex &index)=0;
+    virtual void onActionRowAppend(QModelIndex index)=0;
+    virtual void onActionRowUpdate(QModelIndex index)=0;
+    virtual void onActionRowRemove(QModelIndex index)=0;
     virtual void onActionUpdateCoverImage(const int &index)=0;
 
 };

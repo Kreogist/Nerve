@@ -23,7 +23,7 @@ public:
                      KNMusicGlobal::MusicDetailsInfo currentDetails);
     void updateIndexInfo(QStandardItem *index,
                          const QString &filePath);
-    void removeAppendData(const QModelIndex &removedIndex);
+    void removeRelateData(const QModelIndex &removedIndex);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);
 
 signals:

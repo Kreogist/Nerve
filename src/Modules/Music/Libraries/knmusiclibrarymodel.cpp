@@ -223,10 +223,11 @@ void KNMusicLibraryModel::updateIndexInfo(QStandardItem *index,
                                             filePath);
 }
 
-void KNMusicLibraryModel::removeAppendData(const QModelIndex &removedIndex)
+void KNMusicLibraryModel::removeRelateData(const QModelIndex &removedIndex)
 {
     //Here, we have to remove the image first.
     QString currentKey=artworkKey(removedIndex.row());
+    infoCollectorManager()->removedIndexesInList(removedIndex);
     QModelIndexList artworkCheck=match(index(0,0),
                                        KNMusicGlobal::ArtworkKeyRole,
                                        currentKey);

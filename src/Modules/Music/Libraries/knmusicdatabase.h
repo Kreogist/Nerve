@@ -20,9 +20,9 @@ public:
 signals:
 
 protected slots:
-    void onActionRowAppend(const QModelIndex &index);
-    void onActionRowUpdate(const QModelIndex &index);
-    void onActionRowRemove(const QModelIndex &index);
+    void onActionRowAppend(QModelIndex index);
+    void onActionRowUpdate(QModelIndex index);
+    void onActionRowRemove(QModelIndex index);
     void onActionUpdateCoverImage(const int &index);
 
 private:

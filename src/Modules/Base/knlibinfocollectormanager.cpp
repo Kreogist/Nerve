@@ -11,3 +11,8 @@ void KNLibInfoCollectorManager::addAnalysisList(QStandardItem *index,
     Q_UNUSED(index);
     Q_UNUSED(filePath);
 }
+
+void KNLibInfoCollectorManager::removedIndexesInList(QModelIndex removedIndex)
+{
+    Q_UNUSED(removedIndex);
+}

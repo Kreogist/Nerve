@@ -70,17 +70,17 @@ void KNMusicDatabase::recoverData()
     emit recoverComplete();
 }
 
-void KNMusicDatabase::onActionRowAppend(const QModelIndex &index)
+void KNMusicDatabase::onActionRowAppend(QModelIndex index)
 {
     append(createRowObject(index.row()));
 }
 
-void KNMusicDatabase::onActionRowUpdate(const QModelIndex &index)
+void KNMusicDatabase::onActionRowUpdate(QModelIndex index)
 {
     replace(index.row(), createRowObject(index.row()));
 }
 
-void KNMusicDatabase::onActionRowRemove(const QModelIndex &index)
+void KNMusicDatabase::onActionRowRemove(QModelIndex index)
 {
     removeAt(index.row());
 }

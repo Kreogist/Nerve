@@ -41,9 +41,26 @@ void KNMusicInfoCollectorManager::addAnalysisList(QStandardItem *index,
     }
 }
 
-void KNMusicInfoCollectorManager::onActionItemRemoved(int index)
+void KNMusicInfoCollectorManager::removedIndexesInList(QModelIndex removedIndex)
 {
-    ;
+    for(int i=m_analysisQueue.size()-1;
+        i>-1;
+        i--)
+    {
+        if(m_analysisQueue.at(i).index->row()==removedIndex.row())
+        {
+            m_analysisQueue.removeAt(i);
+        }
+    }
+    for(int i=m_resultQueue.size()-1;
+        i>-1;
+        i--)
+    {
+        if(m_resultQueue.at(i).index->row()==removedIndex.row())
+        {
+            m_resultQueue.removeAt(i);
+        }
+    }
 }
 
 void KNMusicInfoCollectorManager::analysisNext()

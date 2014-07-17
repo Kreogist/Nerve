@@ -18,6 +18,7 @@ signals:
 public slots:
     virtual void addAnalysisList(QStandardItem *index,
                                  QString filePath);
+    virtual void removedIndexesInList(QModelIndex removedIndex);
 
 };
 
