@@ -33,6 +33,7 @@ KNMusicLibraryModel::KNMusicLibraryModel(QObject *parent) :
     //All the album art data will get from here.
     m_pixmapList=new KNLibHashPixmapList;
     m_pixmapList->moveToThread(&m_pixmapListThread);
+    m_pixmapList->setIdentifyDataRole(KNMusicGlobal::FilePathRole);
     connect(m_pixmapList, &KNLibHashPixmapList::requireUpdatePixmap,
             this, &KNMusicLibraryModel::onActionUpdatePixmap);
     connect(m_pixmapList, &KNLibHashPixmapList::loadComplete,
@@ -166,11 +167,11 @@ void KNMusicLibraryModel::onActionUpdateRowInfo()
         songItem->setText(currentText.at(i));
     }
     setMusicDetailsInfo(currentRow, currentDetails);
+    songItem=item(currentRow, KNMusicGlobal::Name);
     if(!currentDetails.coverImage.isNull())
     {
-        m_pixmapList->appendImage(currentRow, currentDetails.coverImage);
+        m_pixmapList->appendImage(songItem, currentDetails.coverImage);
     }
-    songItem=item(currentRow,KNMusicGlobal::Name);
     songItem->setData(currentDetails.filePath, KNMusicGlobal::FilePathRole);
     if(songItem->data().toInt()==1)
     {
@@ -208,8 +209,7 @@ void KNMusicLibraryModel::onActionImageLoadComplete()
 
 void KNMusicLibraryModel::onActionUpdatePixmap()
 {
-    setData(index(m_pixmapList->currentRow(),
-                  KNMusicGlobal::Name),
+    setData(index(m_pixmapList->currentRow(), KNMusicGlobal::Name),
             m_pixmapList->currentKey(),
             KNMusicGlobal::ArtworkKeyRole);
     emit musicAlbumArtUpdate(m_pixmapList->currentRow());
@@ -228,6 +228,7 @@ void KNMusicLibraryModel::removeRelateData(const QModelIndex &removedIndex)
     //Here, we have to remove the image first.
     QString currentKey=artworkKey(removedIndex.row());
     infoCollectorManager()->removedIndexesInList(removedIndex);
+    m_pixmapList->removedIndexesInList(removedIndex);
     QModelIndexList artworkCheck=match(index(0,0),
                                        KNMusicGlobal::ArtworkKeyRole,
                                        currentKey);

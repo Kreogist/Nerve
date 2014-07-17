@@ -1,5 +1,6 @@
 #include <QCryptographicHash>
 #include <QBuffer>
+#include <QStandardItem>
 #include <QStringList>
 #include <QDir>
 #include <QDataStream>
@@ -30,12 +31,18 @@ QString KNLibImageBuffer::albumArtPath() const
     return m_albumArtFolder;
 }
 
+QString KNLibImageBuffer::identifyData() const
+{
+    return m_identifyData;
+}
+
 QString KNLibImageBuffer::hash() const
 {
     return m_hash;
 }
 
-void KNLibImageBuffer::hashImage(const QImage &image)
+void KNLibImageBuffer::hashImage(QString identifyData,
+                                 const QImage &image)
 {
     m_hash.clear();
     m_imageByteCache.clear();
@@ -47,6 +54,7 @@ void KNLibImageBuffer::hashImage(const QImage &image)
         m_hash+=QString::number((quint8)m_hashResult.at(i), 16);
     }
     m_imageCache=image;
+    m_identifyData=identifyData;
     emit hashComplete();
 }
 
@@ -86,19 +94,30 @@ QImage KNLibHashPixmapList::pixmap(const QString &key) const
     return m_list[key];
 }
 
-void KNLibHashPixmapList::appendImage(const int rowIndex,
-                                 const QImage pixmap)
+void KNLibHashPixmapList::appendImage(QStandardItem *rowIndex,
+                                      const QImage pixmap)
 {
     //Prepare the analysis queue.
     AnalysisQueueItem analysisItem;
-    analysisItem.row=rowIndex;
+    analysisItem.index=rowIndex;
     analysisItem.pixmap=pixmap;
     //Append the analysis queue.
     m_analysisQueue.append(analysisItem);
     if(!m_working)
     {
-        m_working=true;
-        emit requireCacheImage(m_analysisQueue.first().pixmap);
+        //I can't understand here:
+        //Though I wrote a isEmpty() check here to avoid a bug.
+        //But I think it's impossible:
+        //As you can see: I wrote m_analysisQueue.append() above.
+        //So if a code can runs to here, m_analysisQueue cannot be empty.
+        //Anyone can tell me why? because of multi-thread?!
+        if(!m_analysisQueue.isEmpty())
+        {
+
+            m_working=true;
+            emit requireCacheImage(m_analysisQueue.first().index->data(m_identifyDataRole).toString(),
+                                   m_analysisQueue.first().pixmap);
+        }
     }
 }
 
@@ -109,6 +128,7 @@ bool KNLibHashPixmapList::removeImage(const QString &key)
         qDebug()<<"File cannot delete.";
     }
     m_list.remove(key);
+    return true;
 }
 
 void KNLibHashPixmapList::loadImages()
@@ -145,7 +165,7 @@ void KNLibHashPixmapList::setAlbumArtPath(const QString &path)
 
 int KNLibHashPixmapList::currentRow() const
 {
-    return m_updateQueue.first().row;
+    return m_updateQueue.first().index->row();
 }
 
 QString KNLibHashPixmapList::currentKey() const
@@ -153,28 +173,57 @@ QString KNLibHashPixmapList::currentKey() const
     return m_updateQueue.first().key;
 }
 
+void KNLibHashPixmapList::removedIndexesInList(QModelIndex removedIndex)
+{
+    for(int i=m_analysisQueue.size()-1;
+        i>-1;
+        i--)
+    {
+        if(m_analysisQueue.at(i).index->row()==removedIndex.row())
+        {
+            m_analysisQueue.removeAt(i);
+        }
+    }
+    for(int i=m_updateQueue.size()-1;
+        i>-1;
+        i--)
+    {
+        if(m_updateQueue.at(i).index->row()==removedIndex.row())
+        {
+            m_updateQueue.removeAt(i);
+        }
+    }
+}
+
 void KNLibHashPixmapList::onActionHashComplete()
 {
-    QString currentKey=m_buffer->hash();
-    m_needToSaveImage=!m_list.contains(currentKey);
-    if(m_needToSaveImage)
+    if(m_buffer->identifyData()==
+            m_analysisQueue.first().index->data(m_identifyDataRole).toString())
     {
-        m_list[currentKey]=m_analysisQueue.first().pixmap;
+        QString currentKey=m_buffer->hash();
+        m_needToSaveImage=!m_list.contains(currentKey);
+        if(m_needToSaveImage)
+        {
+            m_list[currentKey]=m_analysisQueue.first().pixmap;
+        }
+        UpdateQueueItem updateItem;
+        updateItem.index=m_analysisQueue.first().index;
+        updateItem.key=currentKey;
+        m_updateQueue.append(updateItem);
+        emit requireUpdatePixmap();
+        m_analysisQueue.removeFirst();
+        if(m_needToSaveImage)
+        {
+            emit requireSaveImage();
+        }
+        else
+        {
+            onActionSaveComplete();
+        }
+        return;
     }
-    UpdateQueueItem updateItem;
-    updateItem.row=m_analysisQueue.first().row;
-    updateItem.key=currentKey;
-    m_updateQueue.append(updateItem);
-    emit requireUpdatePixmap();
     m_analysisQueue.removeFirst();
-    if(m_needToSaveImage)
-    {
-        emit requireSaveImage();
-    }
-    else
-    {
-        onActionSaveComplete();
-    }
+    onActionSaveComplete();
 }
 
 void KNLibHashPixmapList::onActionSaveComplete()
@@ -184,7 +233,8 @@ void KNLibHashPixmapList::onActionSaveComplete()
         m_working=false;
         return;
     }
-    emit requireCacheImage(m_analysisQueue.first().pixmap);
+    emit requireCacheImage(m_analysisQueue.first().index->data(m_identifyDataRole).toString(),
+                           m_analysisQueue.first().pixmap);
 }
 
 void KNLibHashPixmapList::onActionRecoverData(const QString &key,
@@ -204,3 +254,14 @@ bool KNLibHashPixmapList::removeImageFile(const QString &key)
     //File is not exsist.
     return true;
 }
+
+int KNLibHashPixmapList::identifyDataRole() const
+{
+    return m_identifyDataRole;
+}
+
+void KNLibHashPixmapList::setIdentifyDataRole(int identifyDataRole)
+{
+    m_identifyDataRole = identifyDataRole;
+}
+

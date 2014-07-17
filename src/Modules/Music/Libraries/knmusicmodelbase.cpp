@@ -99,8 +99,7 @@ QModelIndex KNMusicModelBase::appendMusicItem(const QStringList &textList,
     int currentRow=songItem->index().row();
     songItem=item(currentRow, KNMusicGlobal::DateAdded);
     songItem->setData(currentDetails.dateAdded, Qt::UserRole);
-    setMusicDetailsInfo(currentRow,
-                        currentDetails);
+    setMusicDetailsInfo(currentRow, currentDetails);
     songItem=item(currentRow, KNMusicGlobal::Name);
     songItem->setData(currentDetails.coverImageHash, KNMusicGlobal::ArtworkKeyRole);
     songItem->setData(currentDetails.filePath, KNMusicGlobal::FilePathRole);
