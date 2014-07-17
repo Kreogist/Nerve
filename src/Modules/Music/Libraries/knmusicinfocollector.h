@@ -33,7 +33,8 @@ public:
     KNMusicGlobal::MusicDetailsInfo currentMusicDatas() const;
 
 signals:
-    void requireAppendMusic(QStringList value,
+    void requireAppendMusic(QString filePath,
+                            QStringList value,
                             KNMusicGlobal::MusicDetailsInfo datas);
     void requireSkipCurrent();
 

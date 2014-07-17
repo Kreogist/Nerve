@@ -101,7 +101,8 @@ void KNMusicInfoCollector::analysis(const QString &filePath)
     }
     if(m_signalMode)
     {
-        emit requireAppendMusic(musicInfo,
+        emit requireAppendMusic(filePathBackup,
+                                musicInfo,
                                 currentFileInfo);
     }
     else

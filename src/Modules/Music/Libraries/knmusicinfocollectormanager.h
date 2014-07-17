@@ -32,7 +32,8 @@ public slots:
 
 private slots:
     void analysisNext();
-    void currentWorkDone(QStringList value,
+    void currentWorkDone(QString filePath,
+                         QStringList value,
                          KNMusicGlobal::MusicDetailsInfo datas);
 
 private:

@@ -57,18 +57,23 @@ void KNMusicInfoCollectorManager::analysisNext()
     emit requireAnalysis(m_analysisQueue.first().filePath);
 }
 
-void KNMusicInfoCollectorManager::currentWorkDone(QStringList value,
+void KNMusicInfoCollectorManager::currentWorkDone(QString filePath,
+                                                  QStringList value,
                                                   KNMusicGlobal::MusicDetailsInfo datas)
 {
-    ResultQueueItem resultItem;
-    resultItem.index=m_analysisQueue.first().index;
-    resultItem.text=value;
-    resultItem.details=datas;
-    m_resultQueue.append(resultItem);
-    if(m_noUpdating) //Before this item is add, the result queue is empty.
-    {                //Emit a signal to let model know they should update.
-        emit requireUpdateRowInfo();
-        m_noUpdating=false;
+    QStandardItem *properItem=m_analysisQueue.first().index;
+    if(properItem->data(KNMusicGlobal::FilePathRole).toString()==filePath)
+    {
+        ResultQueueItem resultItem;
+        resultItem.index=properItem;
+        resultItem.text=value;
+        resultItem.details=datas;
+        m_resultQueue.append(resultItem);
+        if(m_noUpdating) //Before this item is add, the result queue is empty.
+        {                //Emit a signal to let model know they should update.
+            emit requireUpdateRowInfo();
+            m_noUpdating=false;
+        }
     }
     analysisNext();
 }
