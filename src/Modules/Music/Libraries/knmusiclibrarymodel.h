@@ -21,7 +21,7 @@ public:
     void setAlbumArtPath(const QString &path);
     void recoverFile(QStringList textList,
                      KNMusicGlobal::MusicDetailsInfo currentDetails);
-    void updateIndexInfo(const QModelIndex &index,
+    void updateIndexInfo(QStandardItem *index,
                          const QString &filePath);
     void removeAppendData(const QModelIndex &removedIndex);
     void setInfoCollectorManager(KNLibInfoCollectorManager *infoCollectorManager);

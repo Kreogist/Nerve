@@ -4,6 +4,7 @@
 #include <QModelIndex>
 #include <QObject>
 
+class QStandardItem;
 class KNLibInfoCollectorManager : public QObject
 {
     Q_OBJECT
@@ -12,9 +13,10 @@ public:
 
 signals:
     void requireUpdateRowInfo();
+    void removedItemClear();
 
 public slots:
-    virtual void addAnalysisList(int index,
+    virtual void addAnalysisList(QStandardItem *index,
                                  QString filePath);
 
 };

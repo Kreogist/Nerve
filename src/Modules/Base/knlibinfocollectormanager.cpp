@@ -5,7 +5,7 @@ KNLibInfoCollectorManager::KNLibInfoCollectorManager(QObject *parent) :
 {
 }
 
-void KNLibInfoCollectorManager::addAnalysisList(int index,
+void KNLibInfoCollectorManager::addAnalysisList(QStandardItem *index,
                                                 QString filePath)
 {
     Q_UNUSED(index);

@@ -17,7 +17,7 @@ public:
     virtual void setAlbumArtPath(const QString &path)=0;
     virtual void recoverFile(QStringList textList,
                              KNMusicGlobal::MusicDetailsInfo currentDetails)=0;
-    virtual void updateIndexInfo(const QModelIndex &index,
+    virtual void updateIndexInfo(QStandardItem *index,
                                  const QString &filePath)=0;
     virtual void removeAppendData(const QModelIndex &removedIndex)=0;
     KNLibInfoCollectorManager *infoCollectorManager();

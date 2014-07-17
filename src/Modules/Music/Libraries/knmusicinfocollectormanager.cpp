@@ -1,3 +1,5 @@
+#include <QStandardItem>
+
 #include <QDebug>
 
 #include "knmusicinfocollector.h"
@@ -25,7 +27,7 @@ KNMusicInfoCollectorManager::~KNMusicInfoCollectorManager()
     m_collector->deleteLater();
 }
 
-void KNMusicInfoCollectorManager::addAnalysisList(int index,
+void KNMusicInfoCollectorManager::addAnalysisList(QStandardItem *index,
                                                   QString filePath)
 {
     AnalysisQueueItem analysisItem;
@@ -37,6 +39,11 @@ void KNMusicInfoCollectorManager::addAnalysisList(int index,
         m_working=true;
         emit requireAnalysis(m_analysisQueue.first().filePath);
     }
+}
+
+void KNMusicInfoCollectorManager::onActionItemRemoved(int index)
+{
+    ;
 }
 
 void KNMusicInfoCollectorManager::analysisNext()
@@ -71,7 +78,7 @@ KNMusicGlobal::MusicDetailsInfo KNMusicInfoCollectorManager::currentFileAppendDa
     return m_resultQueue.first().details;
 }
 
-int KNMusicInfoCollectorManager::currentIndex() const
+QStandardItem *KNMusicInfoCollectorManager::currentIndex() const
 {
     return m_resultQueue.first().index;
 }

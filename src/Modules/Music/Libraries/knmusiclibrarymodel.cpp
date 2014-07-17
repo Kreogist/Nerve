@@ -78,7 +78,7 @@ void KNMusicLibraryModel::addRawFileItem(QString filePath)
     if(fileCheck.size()!=0)
     {
         //Find the same file in the model, update it's information.
-        updateIndexInfo(fileCheck.at(0), filePath);
+        updateIndexInfo(item(fileCheck.at(0).row()), filePath);
         return;
     }
     QList<QStandardItem *> songItemList;
@@ -99,7 +99,7 @@ void KNMusicLibraryModel::addRawFileItem(QString filePath)
     songItem->setData(1);
     appendRow(songItemList);
     m_rawFileCount++;
-    updateIndexInfo(songItem->index(), filePath);
+    updateIndexInfo(songItem, filePath);
 }
 
 void KNMusicLibraryModel::addRawFileItems(QStringList fileList)
@@ -158,7 +158,7 @@ void KNMusicLibraryModel::onActionUpdateRowInfo()
     QStringList currentText=m_infoCollectorManager->currentFileData();
     KNMusicGlobal::MusicDetailsInfo currentDetails=
             m_infoCollectorManager->currentFileAppendData();
-    int currentRow=m_infoCollectorManager->currentIndex();
+    int currentRow=m_infoCollectorManager->currentIndex()->row();
     QStandardItem *songItem;
     for(int i=0; i<KNMusicGlobal::MusicDataCount; i++)
     {
@@ -216,10 +216,10 @@ void KNMusicLibraryModel::onActionUpdatePixmap()
     m_pixmapList->removeCurrentUpdate();
 }
 
-void KNMusicLibraryModel::updateIndexInfo(const QModelIndex &index,
-                                   const QString &filePath)
+void KNMusicLibraryModel::updateIndexInfo(QStandardItem *index,
+                                          const QString &filePath)
 {
-    infoCollectorManager()->addAnalysisList(index.row(),
+    infoCollectorManager()->addAnalysisList(index,
                                             filePath);
 }
 

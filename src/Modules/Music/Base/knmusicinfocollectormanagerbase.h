@@ -7,6 +7,7 @@
 
 #include "../../Base/knlibinfocollectormanager.h"
 
+class QStandardItem;
 class KNMusicBackend;
 class KNMusicInfoCollectorManagerBase : public KNLibInfoCollectorManager
 {
@@ -15,7 +16,7 @@ public:
     explicit KNMusicInfoCollectorManagerBase(QObject *parent = 0);
     virtual QStringList currentFileData() const=0;
     virtual KNMusicGlobal::MusicDetailsInfo currentFileAppendData() const=0;
-    virtual int currentIndex() const=0;
+    virtual QStandardItem *currentIndex() const=0;
     virtual void removeFirstUpdateResult()=0;
     virtual bool isUpdateQueueEmpty()=0;
     virtual bool isWorking()=0;

@@ -7,6 +7,7 @@
 
 #include "../Base/knmusicinfocollectormanagerbase.h"
 
+class QStandardItem;
 class KNMusicInfoCollector;
 class KNMusicInfoCollectorManager : public KNMusicInfoCollectorManagerBase
 {
@@ -17,7 +18,7 @@ public:
 
     QStringList currentFileData() const;
     KNMusicGlobal::MusicDetailsInfo currentFileAppendData() const;
-    int currentIndex() const;
+    QStandardItem *currentIndex() const;
     void removeFirstUpdateResult();
     bool isUpdateQueueEmpty();
     bool isWorking();
@@ -26,7 +27,8 @@ public:
 signals:
 
 public slots:
-    void addAnalysisList(int index, QString filePath);
+    void addAnalysisList(QStandardItem *index, QString filePath);
+    void onActionItemRemoved(int index);
 
 private slots:
     void analysisNext();
@@ -36,12 +38,12 @@ private slots:
 private:
     struct AnalysisQueueItem
     {
-        int index;
+        QStandardItem *index;
         QString filePath;
     };
     struct ResultQueueItem
     {
-        int index;
+        QStandardItem *index;
         QStringList text;
         KNMusicGlobal::MusicDetailsInfo details;
     };
