@@ -100,6 +100,8 @@ void KNMusicPlayerWidget::setEqualizer(QWidget *equalizer)
 void KNMusicPlayerWidget::setBackend(KNMusicBackend *backend)
 {
     m_backend=backend;
+    connect(m_backend, &KNMusicBackend::sampleRateReset,
+            this, &KNMusicPlayerWidget::onActionSampleRateChanged);
     connect(m_backend, &KNMusicBackend::positionChanged,
             this, &KNMusicPlayerWidget::onActionPositionChanged);
 }
@@ -193,6 +195,7 @@ void KNMusicPlayerWidget::onActionPositionChanged(const int &position)
 {
     Q_UNUSED(position);
     m_backend->getFFTData(m_visualEffect->fftData());
+    m_visualEffect->prepareGraphic();
     m_visualEffect->update();
 }
 
@@ -212,4 +215,9 @@ void KNMusicPlayerWidget::onActionHideEqualizer()
     m_equalizerHide->setEndValue(QSize(m_visualEffect->width(),
                                        0));
     m_equalizerHide->start();
+}
+
+void KNMusicPlayerWidget::onActionSampleRateChanged(const float &sampleRate)
+{
+    m_visualEffect->setSampleRate(sampleRate);
 }

@@ -43,6 +43,7 @@ private slots:
     void onActionPositionChanged(const int &position);
     void onActionShowEqualizer();
     void onActionHideEqualizer();
+    void onActionSampleRateChanged(const float &sampleRate);
 
 private:
     KNMusicAlbumArt *m_albumArtWork;

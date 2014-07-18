@@ -86,6 +86,7 @@ void KNLibBass::loadMusic(const QString &filePath)
     m_main.filePath=filePath;
     m_main.positionUpdater->stop();
     loadMusicFile(m_main);
+    emit sampleRateReset(m_main.channelInfo.freq);
     BASS_ChannelFlags(m_main.channel, 0, BASS_SAMPLE_LOOP);
     loadEQ();
 }
@@ -104,7 +105,7 @@ void KNLibBass::loadUrl(const QString &url)
     m_onlinePreivew.filePath=url;
     m_onlinePreivew.positionUpdater->stop();
     BASS_StreamFree(m_onlinePreivew.channel);
-    qDebug()<<m_onlinePreivew.filePath.toStdString().data();
+//    qDebug()<<m_onlinePreivew.filePath.toStdString().data();
     m_onlinePreivew.channel=BASS_StreamCreateURL(m_onlinePreivew.filePath.toStdString().data(),
                                                  0,
                                                  BASS_STREAM_BLOCK|BASS_STREAM_STATUS|BASS_STREAM_AUTOFREE,
@@ -260,7 +261,7 @@ void KNLibBass::getFFTData(float *fftData)
 {
     BASS_ChannelGetData(m_main.channel,
                         fftData,
-                        BASS_DATA_FFT2048);
+                        BASS_DATA_FFT4096);
 }
 
 float KNLibBass::volume() const

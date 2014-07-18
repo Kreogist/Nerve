@@ -47,6 +47,7 @@ public:
 signals:
     void positionChanged(float position);
     void durationChanged(float duration);
+    void sampleRateReset(float sampleRate);
     void finished();
     void stopped();
     void previewPositionChanged(float position);
