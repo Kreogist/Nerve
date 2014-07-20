@@ -25,8 +25,8 @@ public:
     QString nextPlayingSong();
     QString filePathFromIndex(const QModelIndex &index);
     int loopMode();
-    void setCurrentPlaying(const QString &string);
-    void setCurrentPlaying(const QModelIndex &index);
+    void setNowPlaying(const QString &string);
+    void setNowPlaying(const QModelIndex &index);
     QAbstractItemModel *playlist() const;
     void setPlaylist(QAbstractItemModel *playlistModel);
     QString playlistPath() const;

@@ -33,7 +33,7 @@ public:
     void setMusicBackend(KNMusicBackend *backend);
     void setMusicModel(KNMusicLibraryModelBase *model);
     void setProxyModel(QSortFilterProxyModel *model);
-    void setCurrentPlaying(const QString &string);
+    void setNowPlaying(const QString &string);
     void setCurrentPlaylistPlaying(const QModelIndex &index);
     void addToCurrentList(const QString &index);
 
@@ -60,6 +60,7 @@ public slots:
     void removePlaylist(QString filePath);
     QString playlistPath(const int &index);
     void setPlaylist(const QString &filePath);
+    void playMusic(const QString &filePath);
 
 private slots:
     void onActionPlaylistItemChanged(QStandardItem *item);

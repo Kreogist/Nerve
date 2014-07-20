@@ -55,6 +55,7 @@ void KNMusicVisualEffect::prepareGraphic()
             spl+=pow(m_fft[j], 2.0);
         }
         m_frameHeight[i]=10*log10f(spl/(m_framePoint[i]-m_framePoint[i-1]));
+        m_frameHeight[i]+=m_frameAFixed[i];
         m_frameHeight[i]/=-60;
     }
 }
@@ -63,9 +64,15 @@ void KNMusicVisualEffect::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    int i,y,bandWidth=width()/20, currentX=0;
-    painter.setPen(Qt::NoPen);
+    int i,y,bandWidth=width()/20, currentX=0, referHeight=height()/6, referY=0;
+    painter.setPen(m_itemColor);
     painter.setBrush(m_itemColor);
+    for(i=0; i<6; i++)
+    {
+        painter.drawLine(0,referY,width(),referY);
+        referY+=referHeight;
+    }
+    painter.setPen(Qt::NoPen);
     for(i=1;i<21;i++)
     {
         y=m_frameHeight[i]*height();

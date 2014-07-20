@@ -33,7 +33,7 @@ public:
     virtual void setMusicModel(KNMusicLibraryModelBase *model)=0;
 
     virtual void setProxyModel(QSortFilterProxyModel *model)=0;
-    virtual void setCurrentPlaying(const QString &string)=0;
+    virtual void setNowPlaying(const QString &string)=0;
     virtual void setCurrentPlaylistPlaying(const QModelIndex &index)=0;
     virtual void addToCurrentList(const QString &index)=0;
 
@@ -54,7 +54,12 @@ signals:
     void requireUpdateItem(const QModelIndex &index);
     void requireHideDragList();
     void requireRenameRow(const QModelIndex &row);
+    void requireResetPlayer();
+    void requirePlayFile(QString filePath);
     void playlistListUpdated();
+    void currentTitleChanged(const QString &title);
+    void currentArtistChanged(const QString &artist);
+    void currentAlbumChanged(const QString &album);
 
 public slots:
     virtual void setLoopMode(const int &index)=0;
@@ -64,6 +69,7 @@ public slots:
     virtual void removePlaylist(QString filePath)=0;
     virtual QString playlistPath(const int &index)=0;
     virtual void setPlaylist(const QString &filePath)=0;
+    virtual void playMusic(const QString &filePath)=0;
 
 };
 

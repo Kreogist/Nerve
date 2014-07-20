@@ -66,6 +66,10 @@ void KNMusicHeaderWidget::setPlaylistManager(KNMusicPlaylistManagerBase *manager
             this, &KNMusicHeaderWidget::requireUpdatePlaylistModel);
     connect(m_headerPlayer, &KNMusicHeaderPlayer::requireChangeLoop,
             m_playlistManager, &KNMusicPlaylistManagerBase::setLoopMode);
+    connect(m_playlistManager, &KNMusicPlaylistManagerBase::requireResetPlayer,
+            this, &KNMusicHeaderWidget::resetPlayer);
+    connect(m_playlistManager, &KNMusicPlaylistManagerBase::requirePlayFile,
+            this, &KNMusicHeaderWidget::onActionPlayMusic);
 }
 
 void KNMusicHeaderWidget::setMusicModel(KNMusicLibraryModelBase *model)
@@ -130,9 +134,29 @@ void KNMusicHeaderWidget::clearSearch()
 
 void KNMusicHeaderWidget::onActionPlayMusic(const QString &filePath)
 {
-    m_currentPath=filePath;
-    m_playlistManager->setCurrentPlaying(m_currentPath);
-    playCurrent();
+//    m_currentPath=filePath;
+//    m_playlistManager->setCurrentPlaying(m_currentPath);
+    //    QModelIndex currentIndex=m_musicModel->indexFromFilePath(m_currentPath);
+    //    if(currentIndex.isValid())
+    //    {
+    //        m_headerPlayer->setAlbumArt(QPixmap::fromImage(m_musicModel->artwork(currentIndex.row())));
+    //        m_headerPlayer->setTitle(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Name));
+    //        m_headerPlayer->setArtist(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Artist));
+    //        m_headerPlayer->setAlbum(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Album));
+    //    }
+    //    else
+    //    {
+    //        m_infoCollector->analysis(m_currentPath);
+    //        QStringList values=m_infoCollector->currentMusicValue();
+    //        KNMusicGlobal::MusicDetailsInfo details=m_infoCollector->currentMusicDatas();
+    //        m_headerPlayer->setAlbumArt(QPixmap::fromImage(details.coverImage));
+    //        m_headerPlayer->setTitle(values.at(KNMusicGlobal::Name));
+    //        m_headerPlayer->setArtist(values.at(KNMusicGlobal::Artist));
+    //        m_headerPlayer->setAlbum(values.at(KNMusicGlobal::Album));
+    //    }
+        m_headerPlayer->syncData();
+    //    loadCurrentLyrics();
+        m_headerPlayer->playFile(filePath);
 }
 
 void KNMusicHeaderWidget::onActionPlayListPrev()
@@ -143,77 +167,52 @@ void KNMusicHeaderWidget::onActionPlayListPrev()
 //        m_headerPlayer->play();
 //        return;
 //    }
-    QString pathTest=m_playlistManager->prevSong();
-    if(pathTest.isEmpty())
-    {
-        resetPlayer();
-    }
-    else
-    {
-        m_currentPath=pathTest;
-        playCurrent();
-    }
+//    QString pathTest=m_playlistManager->prevSong();
+//    if(pathTest.isEmpty())
+//    {
+//        resetPlayer();
+//    }
+//    else
+//    {
+//        m_currentPath=pathTest;
+//        playCurrent();
+//    }
 }
 
 void KNMusicHeaderWidget::onActionPlayListNext()
 {
-    QString pathTest=m_playlistManager->nextSong();
-    if(pathTest.isEmpty())
-    {
-        resetPlayer();
-    }
-    else
-    {
-        m_currentPath=pathTest;
-        playCurrent();
-    }
+//    QString pathTest=m_playlistManager->nextSong();
+//    if(pathTest.isEmpty())
+//    {
+//        resetPlayer();
+//    }
+//    else
+//    {
+//        m_currentPath=pathTest;
+//        playCurrent();
+//    }
 }
 
 void KNMusicHeaderWidget::onActionCurrentFinished()
 {
-    QString pathTest=m_playlistManager->nextPlayingSong();
-    if(pathTest.isEmpty())
-    {
-        resetPlayer();
-    }
-    else
-    {
-        m_currentPath=pathTest;
-        playCurrent();
-    }
-}
-
-void KNMusicHeaderWidget::playCurrent()
-{
-    QModelIndex currentIndex=m_musicModel->indexFromFilePath(m_currentPath);
-    if(currentIndex.isValid())
-    {
-        m_headerPlayer->setAlbumArt(QPixmap::fromImage(m_musicModel->artwork(currentIndex.row())));
-        m_headerPlayer->setTitle(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Name));
-        m_headerPlayer->setArtist(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Artist));
-        m_headerPlayer->setAlbum(m_musicModel->itemText(currentIndex.row(), KNMusicGlobal::Album));
-    }
-    else
-    {
-        m_infoCollector->analysis(m_currentPath);
-        QStringList values=m_infoCollector->currentMusicValue();
-        KNMusicGlobal::MusicDetailsInfo details=m_infoCollector->currentMusicDatas();
-        m_headerPlayer->setAlbumArt(QPixmap::fromImage(details.coverImage));
-        m_headerPlayer->setTitle(values.at(KNMusicGlobal::Name));
-        m_headerPlayer->setArtist(values.at(KNMusicGlobal::Artist));
-        m_headerPlayer->setAlbum(values.at(KNMusicGlobal::Album));
-    }
-    m_headerPlayer->syncData();
-    loadCurrentLyrics();
-    m_headerPlayer->playFile(m_currentPath);
+//    QString pathTest=m_playlistManager->nextPlayingSong();
+//    if(pathTest.isEmpty())
+//    {
+//        resetPlayer();
+//    }
+//    else
+//    {
+//        m_currentPath=pathTest;
+//        playCurrent();
+//    }
 }
 
 void KNMusicHeaderWidget::loadCurrentLyrics()
 {
-    QFileInfo currentFile(m_currentPath);
-    m_lrcViewer->loadLyrics(currentFile.absolutePath()+"/"+
-                            currentFile.completeBaseName()+"."+
-                            "lrc");
+//    QFileInfo currentFile(m_currentPath);
+//    m_lrcViewer->loadLyrics(currentFile.absolutePath()+"/"+
+//                            currentFile.completeBaseName()+"."+
+//                            "lrc");
 }
 
 void KNMusicHeaderWidget::resetPlayer()

@@ -182,7 +182,7 @@ int KNMusicNowPlaying::loopMode()
     return m_loopMode;
 }
 
-void KNMusicNowPlaying::setCurrentPlaying(const QString &string)
+void KNMusicNowPlaying::setNowPlaying(const QString &string)
 {
     switch(m_mode)
     {
@@ -199,7 +199,7 @@ void KNMusicNowPlaying::setCurrentPlaying(const QString &string)
     //    m_playlist=m_temporaryPlaylist;
 }
 
-void KNMusicNowPlaying::setCurrentPlaying(const QModelIndex &index)
+void KNMusicNowPlaying::setNowPlaying(const QModelIndex &index)
 {
     //When calling this, this should must be in Playlist Mode.
     if(m_mode==PlayListMode)

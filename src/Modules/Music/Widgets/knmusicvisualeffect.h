@@ -28,7 +28,13 @@ private:
                           1200,   1600,   2200,   3000,   4100,
                           5600,   7700,   11000,  14000,  20000
                          },
-          m_frameHeight[21];
+          m_frameHeight[21],
+          m_frameAFixed[21]={0,
+                             4.0, -1, -3, 0.0, 0.0,
+                             -9.0,   -6.2,  -3.8,  -1.9,  -0.5,
+                             0.4,     0.9,   1.2,   1.2,   0.9,
+                             0.2,    -0.9,  21.0,  20.0,   16.0,
+                            };
     int m_framePoint[21], m_maxPoint[21], m_maxCount[21];
     QColor m_itemColor=QColor(255,255,255);
 };

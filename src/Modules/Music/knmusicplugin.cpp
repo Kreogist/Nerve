@@ -63,6 +63,10 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             this, &KNMusicPlugin::requireAnalysisUrls);
     connect(m_libraryModel, &KNMusicLibraryModelBase::requireResort,
             m_musicViewer, &KNMusicViewer::requireResort);
+    connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
+            m_playlistManager, &KNMusicPlaylistManagerBase::playMusic);
+    connect(m_musicViewer, &KNMusicViewer::requireSetProxy,
+            m_playlistManager, &KNMusicPlaylistManagerBase::setProxyModel);
 
     //Initial header widget
     m_headerWidget=new KNMusicHeaderWidget(m_global->mainWindow());
@@ -79,15 +83,17 @@ KNMusicPlugin::KNMusicPlugin(QObject *parent) :
             m_musicViewer, &KNMusicViewer::setContentsFocus);
     connect(m_musicViewer, &KNMusicViewer::requireClearSearch,
             m_headerWidget, &KNMusicHeaderWidget::clearSearch);
-    connect(m_musicViewer, &KNMusicViewer::requireSetProxy,
-            m_playlistManager, &KNMusicPlaylistManagerBase::setProxyModel);
-    connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
+//    connect(m_musicViewer, &KNMusicViewer::requirePlayMusic,
+//            m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
+    connect(m_playlistManager, &KNMusicPlaylistManagerBase::requirePlayFile,
             m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
 
     m_libraryViewMenu=new KNMusicViewerMenu(m_musicViewer);
     m_libraryViewMenu->setModel(m_libraryModel);
+//    connect(m_libraryViewMenu, &KNMusicViewerMenu::requirePlayMusic,
+//            m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requirePlayMusic,
-            m_headerWidget, &KNMusicHeaderWidget::onActionPlayMusic);
+            m_playlistManager, &KNMusicPlaylistManagerBase::playMusic);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireShowIn,
             m_musicViewer, &KNMusicViewer::showIn);
     connect(m_libraryViewMenu, &KNMusicViewerMenu::requireGetInfo,

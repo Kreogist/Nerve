@@ -51,7 +51,6 @@ private slots:
     void onActionCurrentFinished();
 
 private:
-    void playCurrent();
     void loadCurrentLyrics();
     void resetPlayer();
     QBoxLayout *m_mainLayout;

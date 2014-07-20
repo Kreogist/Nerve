@@ -214,6 +214,12 @@ void KNMusicPlaylistManager::setPlaylist(const QString &filePath)
     m_nowPlaying->setPlaylist(currentItem->playlistModel());
 }
 
+void KNMusicPlaylistManager::playMusic(const QString &filePath)
+{
+    setNowPlaying(filePath);
+    emit requirePlayFile(filePath);
+}
+
 void KNMusicPlaylistManager::onActionPlaylistItemChanged(QStandardItem *item)
 {
     KNMusicPlaylistItem *currentItem=static_cast<KNMusicPlaylistItem *>(item);
@@ -415,14 +421,14 @@ void KNMusicPlaylistManager::setProxyModel(QSortFilterProxyModel *model)
     m_nowPlaying->setProxyModel(model);
 }
 
-void KNMusicPlaylistManager::setCurrentPlaying(const QString &string)
+void KNMusicPlaylistManager::setNowPlaying(const QString &string)
 {
-    m_nowPlaying->setCurrentPlaying(string);
+    m_nowPlaying->setNowPlaying(string);
 }
 
 void KNMusicPlaylistManager::setCurrentPlaylistPlaying(const QModelIndex &index)
 {
-    m_nowPlaying->setCurrentPlaying(index);
+    m_nowPlaying->setNowPlaying(index);
 }
 
 void KNMusicPlaylistManager::addToCurrentList(const QString &index)
